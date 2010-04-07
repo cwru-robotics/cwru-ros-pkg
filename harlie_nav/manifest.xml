@@ -12,6 +12,7 @@
   <depend package="roscpp"/>
   <depend package="harlie_base"/>
   <depend package="move_base" />
+  <depend package="amcl" />
 
 </package>
 
