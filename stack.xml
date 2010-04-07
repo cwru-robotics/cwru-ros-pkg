@@ -1,16 +1,16 @@
 <stack>
-  <description brief="harlie">harlie</description>
+  <description brief="cwru_ros">cwru_ros</description>
   <author>Maintained by Eric Perko</author>
   <license>BSD</license>  
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/harlie</url>
+  <url>http://ros.org/wiki/cwru_ros</url>
   <depend stack="camera_drivers_experimental" /> <!-- camera1394 -->
   <depend stack="common_msgs" /> <!-- nav_msgs, geometry_msgs -->
   <depend stack="geometry" /> <!-- tf -->
   <depend stack="joystick_drivers" /> <!-- joy -->
   <depend stack="laser_drivers" /> <!-- sicktoolbox_wrapper -->
-  <depend stack="navigation" /> <!-- move_base, map_server -->
-  <depend stack="ros" />
+  <depend stack="navigation" /> <!-- move_base, map_server, amcl, nav_view -->
+  <depend stack="ros" /> <!-- std_msgs, rospy, roscpp -->
   <depend stack="simulator_stage" /> <!-- stage -->
   <depend stack="visual_feature_detectors" /> <!-- checkerboard_detector -->
 
