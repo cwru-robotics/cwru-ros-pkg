@@ -1,0 +1,9 @@
+<launch>
+
+    <node respawn="true" pkg="joy" type="joy_node" name="harlie_joy">
+	<param name="dev" type="string" value="/dev/input/js0" />
+	<param name="deadzone" value="0.12" />
+    </node>
+
+    <node pkg="harlie_teleop" type="teleop_harlie_joy" name="teleop_harlie_joy" />
+</launch>

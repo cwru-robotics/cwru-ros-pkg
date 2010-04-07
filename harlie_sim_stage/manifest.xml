@@ -1,0 +1,18 @@
+<package>
+  <description brief="harlie_sim_stage">
+
+     harlie_sim_stage
+
+  </description>
+  <author>Eric Perko</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/harlie_sim_stage</url>
+  <depend package="stage"/>
+  <depend package="harlie_nav"/>
+  <depend package="map_server" />
+  <depend package="cwru_maps" />
+
+</package>
+
+

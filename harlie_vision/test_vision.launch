@@ -1,0 +1,9 @@
+<launch>
+	<node name="front_camera" pkg="camera1394" type="camera1394" respawn="true" >
+		<param name="video_mode" value="640x480_mono" />
+		<param name="camera_info_manager/url" value="file:///opt/igvc_ros/harlie_vision/calibration/calibration_front_camera.yaml" />
+		<param name="bayer_method" value="Bilinear" />
+		<param name="bayer_pattern" value="GBRG" />
+	</node>
+	<node pkg="image_proc" type="image_proc" name="proc" ns="front_camera/camera" />
+</launch>

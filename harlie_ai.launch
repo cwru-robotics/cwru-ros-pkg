@@ -1,0 +1,5 @@
+<launch>
+	<node pkg="gmapping" type="slam_gmapping" name="slam_mapper" >
+		<remap from="scan" to="/harlie/base_laser1_scan" />
+	</node>
+</launch>

@@ -1,0 +1,17 @@
+<stack>
+  <description brief="harlie">harlie</description>
+  <author>Maintained by Eric Perko</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/harlie</url>
+  <depend stack="camera_drivers_experimental" /> <!-- camera1394 -->
+  <depend stack="common_msgs" /> <!-- nav_msgs, geometry_msgs -->
+  <depend stack="geometry" /> <!-- tf -->
+  <depend stack="joystick_drivers" /> <!-- joy -->
+  <depend stack="laser_drivers" /> <!-- sicktoolbox_wrapper -->
+  <depend stack="navigation" /> <!-- move_base, map_server -->
+  <depend stack="ros" />
+  <depend stack="simulator_stage" /> <!-- stage -->
+  <depend stack="visual_feature_detectors" /> <!-- checkerboard_detector -->
+
+</stack>

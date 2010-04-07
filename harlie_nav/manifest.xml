@@ -1,0 +1,18 @@
+<package>
+  <description brief="harlie_nav">
+
+     harlie_nav
+
+  </description>
+  <author>Eric Perko</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/harlie_nav</url>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+  <depend package="harlie_base"/>
+  <depend package="move_base" />
+
+</package>
+
+

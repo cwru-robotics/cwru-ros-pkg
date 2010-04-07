@@ -1,0 +1,20 @@
+<package>
+  <description brief="harlie_vision">
+
+     harlie_vision
+
+  </description>
+  <author>harlie</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/harlie_vision</url>
+  <depend package="camera1394"/>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <depend package="harlie_base"/>
+  <depend package="checkerboard_detector"/>
+
+</package>
+
+
