@@ -18,6 +18,7 @@ class GoalReader:
 	with open(filename, 'r') as filename:
 	    data = yaml.safe_load(filename)
 	self.goal_list = data['list']
+	rospy.logdebug("Goal list is %s", self.goal_list)
 	self.raw_goals = data['goals']
 	self.loop = data['loop']
 	
@@ -46,7 +47,8 @@ def main(filename):
 
 	while goal_reader.loop and not rospy.is_shutdown():
 	    rospy.loginfo("Looping")
-	    for g in goal_reader.raw_goals:
+	    print repr(goal_reader.raw_goals)
+	    for g in goal_reader.goal_list:
 		if rospy.is_shutdown():
 		    break
 	    	rospy.loginfo("Executing %s", g)
