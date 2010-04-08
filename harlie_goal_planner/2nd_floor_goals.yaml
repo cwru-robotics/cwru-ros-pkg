@@ -12,22 +12,22 @@ list:
     
 goals:
     lil_glennan_elevator:
-        frame_id: 'map'
-        x: 0
-        y: 0
+        frame_id: 'odom'
+        x: -1.8
+        y: -3.2
         theta: 0
     t_intersection:
-        frame_id: 'map'
-        x: 0
-        y: 0
-        theta: 0
-    end_white:
-        frame_id: 'map'
-        x: 0
-        y: 0
-        theta: 0
+        frame_id: 'odom'
+        x: 10.0
+        y: -0.1
+        theta: 1.57
     freight_elevator:
-        frame_id: 'map'
-        x: 0
-        y: 0
+        frame_id: 'odom'
+        x: 29.0
+        y: 0.0
+        theta: 3.14
+    end_white:
+        frame_id: 'odom'
+        x: 10.0
+        y: -56.0
         theta: 0
