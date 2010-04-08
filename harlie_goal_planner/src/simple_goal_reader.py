@@ -44,7 +44,7 @@ def main(filename):
 	client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
 	client.wait_for_server()
 
-	while goal_reader.loop:
+	while goal_reader.loop and not rospy.is_shutdown():
 	    rospy.loginfo("Looping")
 	    for g in goal_reader.raw_goals:
 	    	rospy.loginfo("Executing %s", g)
