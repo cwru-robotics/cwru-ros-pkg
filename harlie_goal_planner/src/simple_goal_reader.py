@@ -47,6 +47,8 @@ def main(filename):
 	while goal_reader.loop and not rospy.is_shutdown():
 	    rospy.loginfo("Looping")
 	    for g in goal_reader.raw_goals:
+		if rospy.is_shutdown():
+		    break
 	    	rospy.loginfo("Executing %s", g)
 	    	current_goal = goal_reader.move_base_goals[g]
 	    	client.send_goal(current_goal)
