@@ -73,7 +73,7 @@ def pose_broadcaster(fromCRIO):
     pose_pub = rospy.Publisher('pose', Pose)
     while not rospy.is_shutdown():
         p = Pose(x = fromCRIO.x, y = fromCRIO.y, theta = fromCRIO.heading, x_var = fromCRIO.x_var, y_var = fromCRIO.y_var, theta_var = fromCRIO.heading_var, x_vel = fromCRIO.x_vel, y_vel = fromCRIO.y_vel, theta_vel = fromCRIO.theta_vel)
-        rospy.loginfo(p)
+        rospy.logdebug(p)
 	pose_pub.publish(p)
 	fromCRIO.has_data.wait(10)
     fromCRIO.cleanup()
