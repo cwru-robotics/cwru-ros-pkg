@@ -6,6 +6,4 @@ global_costmap:
   rolling_window: true
   width: 200.0
   height: 200.0
-  origin_x: 50.0
-  origin_y: 50.0
   resolution: 0.05
