@@ -54,7 +54,7 @@ def main(filename):
 	    	if client.get_state() == GoalStatus.SUCCEEDED:
 	    	    rospy.loginfo("Goal executed successfully")
 	    	else:
-	    	    rospy.logerror("Could not execute goal for some reason")
+	    	    rospy.logerr("Could not execute goal for some reason")
 
 if __name__ == '__main__':
     rospy.init_node('harlie_goal_planner')
