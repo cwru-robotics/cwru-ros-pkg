@@ -25,6 +25,7 @@ class GoalReader:
 	for x,y in self.raw_goals.iteritems():
 	    self.move_base_goals[x] = GoalReader.create_move_base_goal_from_yaml(y)
 
+    @staticmethod
     def create_move_base_goal_from_yaml(yaml_goal):
 	"""Creates a MoveBaseGoal from a goal loaded up from the yaml file"""
 	goal = MoveBaseGoal()
@@ -34,7 +35,7 @@ class GoalReader:
 	goal.target_pose.pose.position.x = yaml_goal['x']
 	goal.target_pose.pose.position.y = yaml_goal['y']
 	quaternion = tf.transformations.quaternion_about_axis(yaml_goal['theta'], (0,0,1))
-	goal.target_pose.orientation = Quaternion(*quaternion)
+	goal.target_pose.pose.orientation = Quaternion(*quaternion)
 
 	return goal
 
@@ -57,4 +58,4 @@ def main(filename):
 
 if __name__ == '__main__':
     rospy.init_node('harlie_goal_planner')
-    main('2nd_floor_goals.yaml')
+    main(rospy.get_param('~filename'))
