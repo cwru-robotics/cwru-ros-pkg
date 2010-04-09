@@ -11,5 +11,6 @@
         <remap from="scan" to="base_laser1_scan" />
     </node>
     <node machine="mainCPU" pkg="harlie_base" type="twist_receiver.py" name="twist_receiver" />
+    <node machine="mainCPU" pkg="sound_play" type="soundplay_node.py" name="sound_play" />
 </group>
 </launch>

@@ -13,4 +13,6 @@
 	<!-- Startup the joystick stuff -->
 	<include file="$(find harlie_teleop)/start_teleop.launch" />
 
+	<node machine="mainCPU" pkg="sound_play" type="soundplay_node.py" name="sound_play" />
+
 </launch>
