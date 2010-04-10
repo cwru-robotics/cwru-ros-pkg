@@ -1,6 +1,7 @@
 <launch>
 <group ns="harlie">
     <node machine="mainCPU" pkg="tf" type="static_transform_publisher" name="base_laser1_broadcaster" args="0.2032 0 0.1524 0 0 0 base_link base_laser1_link 100" />
+    <node machine="mainCPU" pkg="tf" type="static_transform_publisher" name="front_sonar_broadcaster" args="0.2032 0 0.3524 0 0 0 base_link front_sonar 100" />
     <node machine="mainCPU" pkg="harlie_base" type="pose_broadcaster.py" name="pose_broadcaster" />
     <node machine="mainCPU" pkg="harlie_base" type="odom_translator.py" name="odom_translator" >
     </node>
@@ -12,5 +13,9 @@
     </node>
     <node machine="mainCPU" pkg="harlie_base" type="twist_receiver.py" name="twist_receiver" />
     <node machine="mainCPU" pkg="sound_play" type="soundplay_node.py" name="sound_play" />
+    <node machine="mainCPU" pkg="harlie_base" type="sonar_translator.py" name="front_sonar_translator">
+	<remap from="sonar" to="front_sonar" />
+	<remap from="sonar_scan" to="front_sonar_scan" />
+    </node>
 </group>
 </launch>

@@ -9,6 +9,7 @@ import roslib
 roslib.load_manifest('harlie_base')
 import rospy
 from harlie_base.msg import Pose
+from harlie_base.msg import Sonar
 import packets
 
 class FromCRIO:
@@ -23,6 +24,7 @@ class FromCRIO:
 	self.x_vel = 0
 	self.y_vel = 0
 	self.theta_vel = 0
+	self.front_sonar_ping = 0
 	self.has_data = threading.Event()
 
         ## UDP listening socket
@@ -58,7 +60,7 @@ class FromCRIO:
             if type == 1:
                 self.status = packets.read_diagnostics_packet(data)[0]
             elif type == 0:
-                x, y, heading, self.x_var, self.y_var, self.heading_var = packets.read_pose_packet(data)
+                x, y, heading, self.x_var, self.y_var, self.heading_var, self.front_sonar_ping = packets.read_pose_packet(data)
 		duration = ((self.current_time - self.last_time).to_sec())
 		self.x_vel = (x - self.x) / duration
 		self.y_vel = (y - self.y) / duration
@@ -71,10 +73,16 @@ class FromCRIO:
 
 def pose_broadcaster(fromCRIO):
     pose_pub = rospy.Publisher('pose', Pose)
+    sonar_pub = rospy.Publisher('front_sonar', Sonar)
     while not rospy.is_shutdown():
         p = Pose(x = fromCRIO.x, y = fromCRIO.y, theta = fromCRIO.heading, x_var = fromCRIO.x_var, y_var = fromCRIO.y_var, theta_var = fromCRIO.heading_var, x_vel = fromCRIO.x_vel, y_vel = fromCRIO.y_vel, theta_vel = fromCRIO.theta_vel)
+	ping = Sonar()
+	ping.header.frame_id = 'front_sonar'
+	ping.header.stamp = fromCRIO.current_time
+	ping.dist = fromCRIO.front_sonar_ping
         rospy.logdebug(p)
 	pose_pub.publish(p)
+	sonar_pub.publish(ping)
 	fromCRIO.has_data.wait(10)
     fromCRIO.cleanup()
 

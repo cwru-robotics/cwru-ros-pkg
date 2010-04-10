@@ -3,5 +3,6 @@
         roslisp-msg-protocol)
   (:export
    "<POSE>"
+   "<SONAR>"
   ))
 
