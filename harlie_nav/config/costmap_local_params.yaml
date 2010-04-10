@@ -8,3 +8,10 @@ local_costmap:
   width: 6.0
   height: 6.0
   resolution: 0.05
+
+observation_sources: base_laser1 front_sonar
+
+base_laser1: {sensor_frame: base_laser1_link, data_type: LaserScan, topic: /harlie/base_laser1_scan, marking: true, clearing: true}
+front_sonar: {sensor_frame: front_sonar, data_type: LaserScan, topic: /harlie/front_sonar_scan, marking: true, clearing: true}
+
+
