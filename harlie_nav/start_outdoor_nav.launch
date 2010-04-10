@@ -9,6 +9,5 @@
     <rosparam file="$(find harlie_nav)/config/costmap_local_params.yaml" command="load" />
     <rosparam file="$(find harlie_nav)/config/costmap_global_params_outdoor.yaml" command="load" />
     <rosparam file="$(find harlie_nav)/config/base_local_planner_params_outdoor.yaml" command="load" />
-    <rosparam file="$(find harlie_nav)/config/move_base_params.yaml" command="load" />
   </node>
 </launch>
