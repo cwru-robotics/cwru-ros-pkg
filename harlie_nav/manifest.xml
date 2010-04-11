@@ -13,6 +13,7 @@
   <depend package="harlie_base"/>
   <depend package="move_base" />
   <depend package="amcl" />
+  <depend package="playsound_recovery" />
 
 </package>
 
