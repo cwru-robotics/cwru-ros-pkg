@@ -10,7 +10,7 @@
   ((header
     :reader header-val
     :initarg :header
-    :type <Header>
+    :type roslib-msg:<Header>
     :initform (make-instance 'roslib-msg:<Header>))
    (dist
     :reader dist-val

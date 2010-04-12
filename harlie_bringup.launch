@@ -8,7 +8,7 @@
 	<include file="$(find harlie_base)/start_base.launch" />
 
 	<!-- Startup the vision subsystem -->
-	<!-- include file="$(find harlie_vision)/start_vision.launch" /-->
+	<include file="$(find harlie_vision)/start_vision.launch" />
 
 	<!-- Startup the joystick stuff -->
 	<include file="$(find harlie_teleop)/start_teleop.launch" />
