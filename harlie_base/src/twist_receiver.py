@@ -9,8 +9,9 @@ import roslib
 roslib.load_manifest('harlie_base')
 import rospy
 from geometry_msgs.msg import Twist
-from std_srvs.srv import Empty
+from std_srvs.srv import Empty, EmptyResponse
 import packets
+
 
 class ToCRIO:
     def __init__(self):
@@ -44,18 +45,19 @@ class ToCRIO:
     def cleanup(self):
 	self.outgoingUDP.close()
 
+to_crio = ToCRIO()
+
 def twist_receiver(msg, toCRIO):
     toCRIO.send_angular_rate_command(-1*msg.angular.z, msg.linear.x)    
 
-def handle_reboot_request(req, toCRIO):
-    toCRIO.send_reboot_command()
+def handle_reboot_request(req):
+    to_crio.send_reboot_command()
     rospy.loginfo("Sent reboot command to cRIO")
     return EmptyResponse()
 
 if __name__ == "__main__":
     rospy.init_node('twist_receiver')
-    s = ToCRIO()
-    rospy.Subscriber('/cmd_vel', Twist, twist_receiver, s)
-    rospy.Service('reboot_crio', Empty, handle_reboot_request, s)
+    rospy.Subscriber('/cmd_vel', Twist, twist_receiver, to_crio)
+    rospy.Service('reboot_crio', Empty, handle_reboot_request)
     rospy.spin()
         
