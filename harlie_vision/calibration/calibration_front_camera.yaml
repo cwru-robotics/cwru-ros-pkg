@@ -4,11 +4,11 @@ camera_name: front_camera
 camera_matrix:
   rows: 3
   cols: 3
-  data: [1024.29, 0, 328.022, 0, 1024.87, 227.757, 0, 0, 1]
+  data: [1027.98, 0, 323.262, 0, 1030.6, 234.199, 0, 0, 1]
 distortion_coefficients:
   rows: 1
   cols: 5
-  data: [-0.164285, -0.00538237, -0.00205885, 0.000368924, 0]
+  data: [-0.166378, 0.0349612, -0.00237188, 0.000801209, 0]
 rectification_matrix:
   rows: 3
   cols: 3
@@ -16,4 +16,4 @@ rectification_matrix:
 projection_matrix:
   rows: 3
   cols: 4
-  data: [1024.29, 0, 328.022, 0, 0, 1024.87, 227.757, 0, 0, 0, 1, 0]
+  data: [1027.98, 0, 323.262, 0, 0, 1030.6, 234.199, 0, 0, 0, 1, 0]
