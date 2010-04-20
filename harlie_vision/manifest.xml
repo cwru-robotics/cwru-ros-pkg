@@ -14,6 +14,11 @@
   <depend package="std_msgs"/>
   <depend package="harlie_base"/>
   <depend package="checkerboard_detector"/>
+  <depend package="opencv2" />
+  <depend package="image_transport" />
+  <depend package="image_geometry" />
+  <depend package="tf" />
+  <depend package="cv_bridge" />
 
 </package>
 

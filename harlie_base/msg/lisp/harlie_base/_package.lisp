@@ -2,7 +2,7 @@
   (:use cl
         roslisp-msg-protocol)
   (:export
-   "<SONAR>"
    "<POSE>"
+   "<SONAR>"
   ))
 

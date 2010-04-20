@@ -10,5 +10,6 @@
 		<param name="camera_info_manager/url" value="file:///opt/igvc_ros/harlie_vision/calibration/calibration_front_camera.yaml" />
 		<param name="frame_id" value="front_camera" />
 	</node>
-	<node pkg="image_proc" type="image_proc" name="proc" ns="front_camera/camera" />
+	<node machine="mainCPU" pkg="image_proc" type="image_proc" name="proc" ns="front_camera/camera" />
+	<node machine="mainCPU" pkg="tf" type="static_transform_publisher" name="front_camera_tf_broadcaster" args="0.2286 0.0635 1.676 -0.0873 -0.608246 0 base_link front_camera 100" />
 </launch>

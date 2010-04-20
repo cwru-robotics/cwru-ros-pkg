@@ -34,10 +34,19 @@ def handle_harlie_pose(msg):
 	odom_msg.pose.pose.position.z = 0.0
 	odom_msg.pose.pose.orientation = Quaternion(*quaternion)
 
+	odom_msg.pose.covariance[0] = pose.x_var
+	odom_msg.pose.covariance[7] = pose.y_var
+	odom_msg.pose.covariance[35] = pose.theta_var
+
 	odom_msg.child_frame_id = 'odom'
 	odom_msg.twist.twist.linear.x = pose.x_vel
 	odom_msg.twist.twist.linear.y = pose.y_vel
 	odom_msg.twist.twist.angular.z = pose.theta_vel
+
+	#TODO Here starts the constant multiplier noise. Needs real variance...
+	odom_msg.twist.covariance[0] = 0.01 * pose.x_vel
+	odom_msg.twist.covariance[7] = 0.01 * pose.y_vel
+	odom_msg.twist.covariance[35] = 0.01 * pose.theta_vel
 
 	odom_pub.publish(odom_msg)
 
