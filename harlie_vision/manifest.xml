@@ -19,6 +19,7 @@
   <depend package="image_geometry" />
   <depend package="tf" />
   <depend package="cv_bridge" />
+  <depend package="geometry_msgs" />
 
 </package>
 

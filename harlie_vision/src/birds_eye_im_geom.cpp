@@ -4,6 +4,7 @@
 #include <cv_bridge/CvBridge.h>
 #include <image_geometry/pinhole_camera_model.h>
 #include <tf/transform_listener.h>
+#include <geometry_msgs/PointStamped.h>
 #include <boost/foreach.hpp>
 #include <iostream>
 
@@ -43,34 +44,39 @@ class BirdsEye
 
 		cam_model_.fromCameraInfo(info_msg);
 
-		BOOST_FOREACH(const std::string& frame_id, frame_ids_) {
-			tf::StampedTransform transform;
-			try {
-				ros::Time acquisition_time = info_msg->header.stamp;
-				ros::Duration timeout(1.0 / 30);
-				tf_listener_.waitForTransform(cam_model_.tfFrame(), frame_id, acquisition_time, timeout);
-				tf_listener_.lookupTransform(cam_model_.tfFrame(), frame_id, acquisition_time, transform);
-			}
-			catch (tf::TransformException& ex) {
-				ROS_WARN("[birds_eye] TF exception:\n%s", ex.what());
-				return;
-			}
+		ros::Time acquisition_time = info_msg->header.stamp;
+		
+		geometry_msgs::PointStamped p;
+		p.point.x = 2.0;
+		p.header.stamp = acquisition_time;
+		p.header.frame_id = "base_link";
+		std::string frame_id = "base_link";
 
-			tf::Point pt = transform.getOrigin();
-			std::cout << pt << std::endl;
-			cv::Point3d pt_cv(pt.x(), pt.y(), pt.z());
-			cv::Point2d uv;
-			cam_model_.project3dToPixel(pt_cv, uv);
-
-			static const int RADIUS = 3;
-			cvCircle(image, uv, RADIUS, CV_RGB(255,0,0), -1);
-			CvSize text_size;
-			int baseline;
-			cvGetTextSize(frame_id.c_str(), &font_, &text_size, &baseline);
-			CvPoint origin = cvPoint(uv.x - text_size.width / 2,
-					uv.y - RADIUS - baseline - 3);
-			cvPutText(image, frame_id.c_str(), origin, &font_, CV_RGB(255,0,0));
+		geometry_msgs::PointStamped p_out;
+		tf::StampedTransform transform;
+		try {
+			ros::Duration timeout(1.0 / 30.0);
+			tf_listener_.waitForTransform(cam_model_.tfFrame(), frame_id, acquisition_time, timeout);
+			tf_listener_.transformPoint(cam_model_.tfFrame(), p, p_out);
 		}
+		catch (tf::TransformException& ex) {
+			ROS_WARN("[birds_eye] TF exception:\n%s", ex.what());
+			return;
+		}
+
+		std::cout << p_out.header.frame_id << std::endl;
+		cv::Point3d pt_cv(p_out.point.x, p_out.point.y, p_out.point.z);
+		cv::Point2d uv;
+		cam_model_.project3dToPixel(pt_cv, uv);
+
+		static const int RADIUS = 3;
+		cvCircle(image, uv, RADIUS, CV_RGB(255,0,0), -1);
+		CvSize text_size;
+		int baseline;
+		cvGetTextSize(frame_id.c_str(), &font_, &text_size, &baseline);
+		CvPoint origin = cvPoint(uv.x - text_size.width / 2,
+				uv.y - RADIUS - baseline - 3);
+		cvPutText(image, frame_id.c_str(), origin, &font_, CV_RGB(255,0,0));
 
 		pub_.publish(bridge_.cvToImgMsg(image, "bgr8"));
 	}
