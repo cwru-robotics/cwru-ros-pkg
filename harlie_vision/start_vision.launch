@@ -11,5 +11,5 @@
 		<param name="frame_id" value="front_camera" />
 	</node>
 	<node machine="mainCPU" pkg="image_proc" type="image_proc" name="proc" ns="front_camera/camera" />
-	<node machine="mainCPU" pkg="tf" type="static_transform_publisher" name="front_camera_tf_broadcaster" args="0.2286 0.0635 1.676 -0.0873 0.608246 0 base_link front_camera 100" />
+	<node machine="mainCPU" pkg="tf" type="static_transform_publisher" name="front_camera_base_tf_broadcaster" args="0.2286 0.0635 1.676 0.0125286 0.29919434 -0.03991785 0.95327454 base_link front_camera_base 100" />
 </launch>
