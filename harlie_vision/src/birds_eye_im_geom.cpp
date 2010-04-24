@@ -47,11 +47,11 @@ class BirdsEye
 		ros::Time acquisition_time = info_msg->header.stamp;
 		
 		geometry_msgs::PointStamped p;
-		p.point.x = 2.0;
+		p.point.x = 2.5;
 		p.header.stamp = acquisition_time;
 		p.header.frame_id = "base_link";
 		std::string frame_id = "base_link";
-
+		std::cout << "about to get the transform" << std::endl;
 		geometry_msgs::PointStamped p_out;
 		tf::StampedTransform transform;
 		try {
@@ -65,9 +65,11 @@ class BirdsEye
 		}
 
 		std::cout << p_out.header.frame_id << std::endl;
+		std::cout << p_out.point.x << " " << p_out.point.y << " " << p_out.point.z << std::endl;
 		cv::Point3d pt_cv(p_out.point.x, p_out.point.y, p_out.point.z);
 		cv::Point2d uv;
 		cam_model_.project3dToPixel(pt_cv, uv);
+		std::cout << "u " << uv.x << " v " << uv.y << std::endl;
 
 		static const int RADIUS = 3;
 		cvCircle(image, uv, RADIUS, CV_RGB(255,0,0), -1);
