@@ -7,6 +7,8 @@
 	<!-- Startup the base and sensors -->
 	<include file="$(find harlie_base)/start_base_simple.launch" />
 
+	<!-- include file="$(find harlie_vision)/start_vision.launch" /-->
+
 	<!-- Startup the joystick stuff -->
 	<include file="$(find harlie_teleop)/start_teleop.launch" />
 </launch>
