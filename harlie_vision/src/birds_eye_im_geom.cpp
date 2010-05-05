@@ -48,7 +48,7 @@ class BirdsEye
 		
 		geometry_msgs::PointStamped p;
 		p.point.x = 2.5;
-		p.point.y = 0.5;
+		p.point.y = 0.0;
 		p.header.stamp = acquisition_time;
 		p.header.frame_id = "base_link";
 		std::string frame_id = "base_link";
