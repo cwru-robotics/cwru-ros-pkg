@@ -1,0 +1,5 @@
+<launch>
+	<node name="harlie_goal_planner" pkg="harlie_goal_planner" type="simple_goal_reader.py">
+	    <param name="filename" value="$(find harlie_goal_planner)/2nd_floor_goals.yaml" />
+	</node>
+</launch>
