@@ -69,7 +69,7 @@ def main():
 	client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
 	client.wait_for_server()
 
-	while rospy.is_shutdown():
+	while not rospy.is_shutdown():
 	    print repr(goal_reader.raw_goals)
 	    for g in goal_reader.move_base_goals:
 		if rospy.is_shutdown():
@@ -81,6 +81,7 @@ def main():
 	    	    rospy.loginfo("Goal executed successfully")
 	    	else:
 	    	    rospy.logerr("Could not execute goal for some reason")
+	    break
 
 if __name__ == '__main__':
     rospy.init_node('harlie_goal_planner')
