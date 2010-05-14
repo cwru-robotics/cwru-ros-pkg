@@ -2,7 +2,6 @@
 (in-package :asdf)
 
 (defsystem "harlie_base-msg"
-  :default-component-class roslisp-msg-source-file
   :depends-on (:roslisp-msg-protocol :roslisp-utils :roslib-msg
 )
   :components ((:file "_package")

@@ -80,9 +80,19 @@ struct Pose_ : public ros::Message
 
 private:
   static const char* __s_getDataType_() { return "harlie_base/Pose"; }
+public:
+  ROSCPP_DEPRECATED static const std::string __s_getDataType() { return __s_getDataType_(); }
 
+  ROSCPP_DEPRECATED const std::string __getDataType() const { return __s_getDataType_(); }
+
+private:
   static const char* __s_getMD5Sum_() { return "6912a6eb81006b68b259c9bf26039f96"; }
+public:
+  ROSCPP_DEPRECATED static const std::string __s_getMD5Sum() { return __s_getMD5Sum_(); }
 
+  ROSCPP_DEPRECATED const std::string __getMD5Sum() const { return __s_getMD5Sum_(); }
+
+private:
   static const char* __s_getMessageDefinition_() { return "Header header\n\
 float32 x\n\
 float32 y\n\
@@ -113,14 +123,11 @@ time stamp\n\
 string frame_id\n\
 \n\
 "; }
-
 public:
-  ROSCPP_DEPRECATED static const std::string __s_getDataType() { return __s_getDataType_(); }
-  ROSCPP_DEPRECATED static const std::string __s_getMD5Sum() { return __s_getMD5Sum_(); }
   ROSCPP_DEPRECATED static const std::string __s_getMessageDefinition() { return __s_getMessageDefinition_(); }
-  ROSCPP_DEPRECATED virtual const std::string __getDataType() const { return __s_getDataType_(); }
-  ROSCPP_DEPRECATED virtual const std::string __getMD5Sum() const { return __s_getMD5Sum_(); }
-  ROSCPP_DEPRECATED virtual const std::string __getMessageDefinition() const { return __s_getMessageDefinition_(); }
+
+  ROSCPP_DEPRECATED const std::string __getMessageDefinition() const { return __s_getMessageDefinition_(); }
+
   ROSCPP_DEPRECATED virtual uint8_t *serialize(uint8_t *write_ptr, uint32_t seq) const
   {
     ros::serialization::OStream stream(write_ptr, 1000000000);

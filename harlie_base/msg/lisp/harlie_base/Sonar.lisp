@@ -43,7 +43,7 @@
   "harlie_base/Sonar")
 (defmethod md5sum ((type (eql '<Sonar>)))
   "Returns md5sum for a message object of type '<Sonar>"
-  #x32a7fd24a5630b5643e0d1882893197a)
+  "32a7fd24a5630b5643e0d1882893197a")
 (defmethod message-definition ((type (eql '<Sonar>)))
   "Returns full string definition for message of type '<Sonar>"
   (format nil "Header header~%float32 dist~%~%================================================================================~%MSG: roslib/Header~%# Standard metadata for higher-level stamped data types.~%# This is generally used to communicate timestamped data ~%# in a particular coordinate frame.~%# ~%# sequence ID: consecutively increasing ID ~%uint32 seq~%#Two-integer timestamp that is expressed as:~%# * stamp.secs: seconds (stamp_secs) since epoch~%# * stamp.nsecs: nanoseconds since stamp_secs~%# time-handling sugar is provided by the client library~%time stamp~%#Frame this data is associated with~%# 0: no frame~%# 1: global frame~%string frame_id~%~%~%"))
