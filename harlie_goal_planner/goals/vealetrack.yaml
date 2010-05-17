@@ -14,6 +14,6 @@ goals:
     glennan:
         frame_id: 'odom'
         x: -70.0
-        y: -90.0
+        y: 90.0
         theta: 0.0
 
