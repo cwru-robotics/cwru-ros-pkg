@@ -1,0 +1,19 @@
+loop: true
+
+list:
+    - 'origin'
+    - 'glennan'
+
+goals:
+    origin:
+        frame_id: 'odom'
+        x: -0.5 
+        y: -0.5
+        theta: 0.0
+
+    glennan:
+        frame_id: 'odom'
+        x: -70.0
+        y: -90.0
+        theta: 0.0
+
