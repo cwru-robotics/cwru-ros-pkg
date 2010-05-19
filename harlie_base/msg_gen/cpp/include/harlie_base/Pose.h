@@ -24,12 +24,13 @@ struct Pose_ : public ros::Message
   , x(0.0)
   , y(0.0)
   , theta(0.0)
+  , vel(0.0)
+  , omega(0.0)
   , x_var(0.0)
   , y_var(0.0)
   , theta_var(0.0)
-  , x_vel(0.0)
-  , y_vel(0.0)
-  , theta_vel(0.0)
+  , vel_var(0.0)
+  , omega_var(0.0)
   {
   }
 
@@ -38,12 +39,13 @@ struct Pose_ : public ros::Message
   , x(0.0)
   , y(0.0)
   , theta(0.0)
+  , vel(0.0)
+  , omega(0.0)
   , x_var(0.0)
   , y_var(0.0)
   , theta_var(0.0)
-  , x_vel(0.0)
-  , y_vel(0.0)
-  , theta_vel(0.0)
+  , vel_var(0.0)
+  , omega_var(0.0)
   {
   }
 
@@ -59,6 +61,12 @@ struct Pose_ : public ros::Message
   typedef float _theta_type;
   float theta;
 
+  typedef float _vel_type;
+  float vel;
+
+  typedef float _omega_type;
+  float omega;
+
   typedef float _x_var_type;
   float x_var;
 
@@ -68,31 +76,39 @@ struct Pose_ : public ros::Message
   typedef float _theta_var_type;
   float theta_var;
 
-  typedef float _x_vel_type;
-  float x_vel;
+  typedef float _vel_var_type;
+  float vel_var;
 
-  typedef float _y_vel_type;
-  float y_vel;
-
-  typedef float _theta_vel_type;
-  float theta_vel;
+  typedef float _omega_var_type;
+  float omega_var;
 
 
 private:
   static const char* __s_getDataType_() { return "harlie_base/Pose"; }
+public:
+  ROSCPP_DEPRECATED static const std::string __s_getDataType() { return __s_getDataType_(); }
 
-  static const char* __s_getMD5Sum_() { return "6912a6eb81006b68b259c9bf26039f96"; }
+  ROSCPP_DEPRECATED const std::string __getDataType() const { return __s_getDataType_(); }
 
+private:
+  static const char* __s_getMD5Sum_() { return "7ce3d88c4d07be05d54abf722834318f"; }
+public:
+  ROSCPP_DEPRECATED static const std::string __s_getMD5Sum() { return __s_getMD5Sum_(); }
+
+  ROSCPP_DEPRECATED const std::string __getMD5Sum() const { return __s_getMD5Sum_(); }
+
+private:
   static const char* __s_getMessageDefinition_() { return "Header header\n\
 float32 x\n\
 float32 y\n\
 float32 theta\n\
+float32 vel\n\
+float32 omega\n\
 float32 x_var\n\
 float32 y_var\n\
 float32 theta_var\n\
-float32 x_vel\n\
-float32 y_vel\n\
-float32 theta_vel\n\
+float32 vel_var\n\
+float32 omega_var\n\
 \n\
 ================================================================================\n\
 MSG: roslib/Header\n\
@@ -113,14 +129,11 @@ time stamp\n\
 string frame_id\n\
 \n\
 "; }
-
 public:
-  ROSCPP_DEPRECATED static const std::string __s_getDataType() { return __s_getDataType_(); }
-  ROSCPP_DEPRECATED static const std::string __s_getMD5Sum() { return __s_getMD5Sum_(); }
   ROSCPP_DEPRECATED static const std::string __s_getMessageDefinition() { return __s_getMessageDefinition_(); }
-  ROSCPP_DEPRECATED virtual const std::string __getDataType() const { return __s_getDataType_(); }
-  ROSCPP_DEPRECATED virtual const std::string __getMD5Sum() const { return __s_getMD5Sum_(); }
-  ROSCPP_DEPRECATED virtual const std::string __getMessageDefinition() const { return __s_getMessageDefinition_(); }
+
+  ROSCPP_DEPRECATED const std::string __getMessageDefinition() const { return __s_getMessageDefinition_(); }
+
   ROSCPP_DEPRECATED virtual uint8_t *serialize(uint8_t *write_ptr, uint32_t seq) const
   {
     ros::serialization::OStream stream(write_ptr, 1000000000);
@@ -128,12 +141,13 @@ public:
     ros::serialization::serialize(stream, x);
     ros::serialization::serialize(stream, y);
     ros::serialization::serialize(stream, theta);
+    ros::serialization::serialize(stream, vel);
+    ros::serialization::serialize(stream, omega);
     ros::serialization::serialize(stream, x_var);
     ros::serialization::serialize(stream, y_var);
     ros::serialization::serialize(stream, theta_var);
-    ros::serialization::serialize(stream, x_vel);
-    ros::serialization::serialize(stream, y_vel);
-    ros::serialization::serialize(stream, theta_vel);
+    ros::serialization::serialize(stream, vel_var);
+    ros::serialization::serialize(stream, omega_var);
     return stream.getData();
   }
 
@@ -144,12 +158,13 @@ public:
     ros::serialization::deserialize(stream, x);
     ros::serialization::deserialize(stream, y);
     ros::serialization::deserialize(stream, theta);
+    ros::serialization::deserialize(stream, vel);
+    ros::serialization::deserialize(stream, omega);
     ros::serialization::deserialize(stream, x_var);
     ros::serialization::deserialize(stream, y_var);
     ros::serialization::deserialize(stream, theta_var);
-    ros::serialization::deserialize(stream, x_vel);
-    ros::serialization::deserialize(stream, y_vel);
-    ros::serialization::deserialize(stream, theta_vel);
+    ros::serialization::deserialize(stream, vel_var);
+    ros::serialization::deserialize(stream, omega_var);
     return stream.getData();
   }
 
@@ -160,12 +175,13 @@ public:
     size += ros::serialization::serializationLength(x);
     size += ros::serialization::serializationLength(y);
     size += ros::serialization::serializationLength(theta);
+    size += ros::serialization::serializationLength(vel);
+    size += ros::serialization::serializationLength(omega);
     size += ros::serialization::serializationLength(x_var);
     size += ros::serialization::serializationLength(y_var);
     size += ros::serialization::serializationLength(theta_var);
-    size += ros::serialization::serializationLength(x_vel);
-    size += ros::serialization::serializationLength(y_vel);
-    size += ros::serialization::serializationLength(theta_vel);
+    size += ros::serialization::serializationLength(vel_var);
+    size += ros::serialization::serializationLength(omega_var);
     return size;
   }
 
@@ -194,12 +210,12 @@ template<class ContainerAllocator>
 struct MD5Sum<harlie_base::Pose_<ContainerAllocator> > {
   static const char* value() 
   {
-    return "6912a6eb81006b68b259c9bf26039f96";
+    return "7ce3d88c4d07be05d54abf722834318f";
   }
 
   static const char* value(const harlie_base::Pose_<ContainerAllocator> &) { return value(); } 
-  static const uint64_t static_value1 = 0x6912a6eb81006b68ULL;
-  static const uint64_t static_value2 = 0xb259c9bf26039f96ULL;
+  static const uint64_t static_value1 = 0x7ce3d88c4d07be05ULL;
+  static const uint64_t static_value2 = 0xd54abf722834318fULL;
 };
 
 template<class ContainerAllocator>
@@ -220,12 +236,13 @@ struct Definition<harlie_base::Pose_<ContainerAllocator> > {
 float32 x\n\
 float32 y\n\
 float32 theta\n\
+float32 vel\n\
+float32 omega\n\
 float32 x_var\n\
 float32 y_var\n\
 float32 theta_var\n\
-float32 x_vel\n\
-float32 y_vel\n\
-float32 theta_vel\n\
+float32 vel_var\n\
+float32 omega_var\n\
 \n\
 ================================================================================\n\
 MSG: roslib/Header\n\
@@ -268,12 +285,13 @@ template<class ContainerAllocator> struct Serializer<harlie_base::Pose_<Containe
     stream.next(m.x);
     stream.next(m.y);
     stream.next(m.theta);
+    stream.next(m.vel);
+    stream.next(m.omega);
     stream.next(m.x_var);
     stream.next(m.y_var);
     stream.next(m.theta_var);
-    stream.next(m.x_vel);
-    stream.next(m.y_vel);
-    stream.next(m.theta_vel);
+    stream.next(m.vel_var);
+    stream.next(m.omega_var);
   }
 
   ROS_DECLARE_ALLINONE_SERIALIZER;
@@ -300,18 +318,20 @@ s << std::endl;
     Printer<float>::stream(s, indent + "  ", v.y);
     s << indent << "theta: ";
     Printer<float>::stream(s, indent + "  ", v.theta);
+    s << indent << "vel: ";
+    Printer<float>::stream(s, indent + "  ", v.vel);
+    s << indent << "omega: ";
+    Printer<float>::stream(s, indent + "  ", v.omega);
     s << indent << "x_var: ";
     Printer<float>::stream(s, indent + "  ", v.x_var);
     s << indent << "y_var: ";
     Printer<float>::stream(s, indent + "  ", v.y_var);
     s << indent << "theta_var: ";
     Printer<float>::stream(s, indent + "  ", v.theta_var);
-    s << indent << "x_vel: ";
-    Printer<float>::stream(s, indent + "  ", v.x_vel);
-    s << indent << "y_vel: ";
-    Printer<float>::stream(s, indent + "  ", v.y_vel);
-    s << indent << "theta_vel: ";
-    Printer<float>::stream(s, indent + "  ", v.theta_vel);
+    s << indent << "vel_var: ";
+    Printer<float>::stream(s, indent + "  ", v.vel_var);
+    s << indent << "omega_var: ";
+    Printer<float>::stream(s, indent + "  ", v.omega_var);
   }
 };
 

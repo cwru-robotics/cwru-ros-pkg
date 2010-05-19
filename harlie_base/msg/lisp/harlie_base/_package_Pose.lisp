@@ -3,10 +3,11 @@
           X-VAL
           Y-VAL
           THETA-VAL
+          VEL-VAL
+          OMEGA-VAL
           X_VAR-VAL
           Y_VAR-VAL
           THETA_VAR-VAL
-          X_VEL-VAL
-          Y_VEL-VAL
-          THETA_VEL-VAL
+          VEL_VAR-VAL
+          OMEGA_VAR-VAL
 ))

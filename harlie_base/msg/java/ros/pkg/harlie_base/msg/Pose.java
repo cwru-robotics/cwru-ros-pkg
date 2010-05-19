@@ -11,12 +11,13 @@ public  class Pose extends ros.communication.Message
   public float x;
   public float y;
   public float theta;
+  public float vel;
+  public float omega;
   public float x_var;
   public float y_var;
   public float theta_var;
-  public float x_vel;
-  public float y_vel;
-  public float theta_vel;
+  public float vel_var;
+  public float omega_var;
 
   public Pose() {
  super();
@@ -24,7 +25,7 @@ public  class Pose extends ros.communication.Message
 
   }
   public static java.lang.String __s_getDataType() { return "harlie_base/Pose"; }
-  public static java.lang.String __s_getMD5Sum() { return "6912a6eb81006b68b259c9bf26039f96"; }
+  public static java.lang.String __s_getMD5Sum() { return "7ce3d88c4d07be05d54abf722834318f"; }
   public static java.lang.String __s_getMessageDefinition()
   {
     return 
@@ -32,12 +33,13 @@ public  class Pose extends ros.communication.Message
     "float32 x\n" + 
     "float32 y\n" + 
     "float32 theta\n" + 
+    "float32 vel\n" + 
+    "float32 omega\n" + 
     "float32 x_var\n" + 
     "float32 y_var\n" + 
     "float32 theta_var\n" + 
-    "float32 x_vel\n" + 
-    "float32 y_vel\n" + 
-    "float32 theta_vel\n" + 
+    "float32 vel_var\n" + 
+    "float32 omega_var\n" + 
     "\n" + 
     "================================================================================\n" + 
     "MSG: roslib/Header\n" + 
@@ -74,12 +76,13 @@ public  class Pose extends ros.communication.Message
      m.put("x", "float");
      m.put("y", "float");
      m.put("theta", "float");
+     m.put("vel", "float");
+     m.put("omega", "float");
      m.put("x_var", "float");
      m.put("y_var", "float");
      m.put("theta_var", "float");
-     m.put("x_vel", "float");
-     m.put("y_vel", "float");
-     m.put("theta_vel", "float");
+     m.put("vel_var", "float");
+     m.put("omega_var", "float");
      return m;
   }
 
@@ -95,12 +98,13 @@ public  class Pose extends ros.communication.Message
     x = __m2.x;
     y = __m2.y;
     theta = __m2.theta;
+    vel = __m2.vel;
+    omega = __m2.omega;
     x_var = __m2.x_var;
     y_var = __m2.y_var;
     theta_var = __m2.theta_var;
-    x_vel = __m2.x_vel;
-    y_vel = __m2.y_vel;
-    theta_vel = __m2.theta_vel;
+    vel_var = __m2.vel_var;
+    omega_var = __m2.omega_var;
     }
 
   public int serializationLength() 
@@ -110,12 +114,13 @@ public  class Pose extends ros.communication.Message
     __l += 4; // x
     __l += 4; // y
     __l += 4; // theta
+    __l += 4; // vel
+    __l += 4; // omega
     __l += 4; // x_var
     __l += 4; // y_var
     __l += 4; // theta_var
-    __l += 4; // x_vel
-    __l += 4; // y_vel
-    __l += 4; // theta_vel
+    __l += 4; // vel_var
+    __l += 4; // omega_var
     return __l;
   }
   public void serialize(ByteBuffer bb, int seq) {
@@ -129,24 +134,26 @@ public  class Pose extends ros.communication.Message
     bb.putFloat(x);
     bb.putFloat(y);
     bb.putFloat(theta);
+    bb.putFloat(vel);
+    bb.putFloat(omega);
     bb.putFloat(x_var);
     bb.putFloat(y_var);
     bb.putFloat(theta_var);
-    bb.putFloat(x_vel);
-    bb.putFloat(y_vel);
-    bb.putFloat(theta_vel);
+    bb.putFloat(vel_var);
+    bb.putFloat(omega_var);
   }
   public void deserialize(ByteBuffer bb)  {
      header.deserialize(bb);
     x = bb.getFloat();
     y = bb.getFloat();
     theta = bb.getFloat();
+    vel = bb.getFloat();
+    omega = bb.getFloat();
     x_var = bb.getFloat();
     y_var = bb.getFloat();
     theta_var = bb.getFloat();
-    x_vel = bb.getFloat();
-    y_vel = bb.getFloat();
-    theta_vel = bb.getFloat();
+    vel_var = bb.getFloat();
+    omega_var = bb.getFloat();
   }
 }
 

@@ -5,19 +5,20 @@ import struct
 import roslib.msg
 
 class Pose(roslib.message.Message):
-  _md5sum = "6912a6eb81006b68b259c9bf26039f96"
+  _md5sum = "7ce3d88c4d07be05d54abf722834318f"
   _type = "harlie_base/Pose"
   _has_header = True #flag to mark the presence of a Header object
   _full_text = """Header header
 float32 x
 float32 y
 float32 theta
+float32 vel
+float32 omega
 float32 x_var
 float32 y_var
 float32 theta_var
-float32 x_vel
-float32 y_vel
-float32 theta_vel
+float32 vel_var
+float32 omega_var
 
 ================================================================================
 MSG: roslib/Header
@@ -38,8 +39,8 @@ time stamp
 string frame_id
 
 """
-  __slots__ = ['header','x','y','theta','x_var','y_var','theta_var','x_vel','y_vel','theta_vel']
-  _slot_types = ['Header','float32','float32','float32','float32','float32','float32','float32','float32','float32']
+  __slots__ = ['header','x','y','theta','vel','omega','x_var','y_var','theta_var','vel_var','omega_var']
+  _slot_types = ['Header','float32','float32','float32','float32','float32','float32','float32','float32','float32','float32']
 
   def __init__(self, *args, **kwds):
     """
@@ -49,7 +50,7 @@ string frame_id
     changes.  You cannot mix in-order arguments and keyword arguments.
     
     The available fields are:
-       header,x,y,theta,x_var,y_var,theta_var,x_vel,y_vel,theta_vel
+       header,x,y,theta,vel,omega,x_var,y_var,theta_var,vel_var,omega_var
     
     @param args: complete set of field values, in .msg order
     @param kwds: use keyword arguments corresponding to message field names
@@ -66,29 +67,32 @@ string frame_id
         self.y = 0.
       if self.theta is None:
         self.theta = 0.
+      if self.vel is None:
+        self.vel = 0.
+      if self.omega is None:
+        self.omega = 0.
       if self.x_var is None:
         self.x_var = 0.
       if self.y_var is None:
         self.y_var = 0.
       if self.theta_var is None:
         self.theta_var = 0.
-      if self.x_vel is None:
-        self.x_vel = 0.
-      if self.y_vel is None:
-        self.y_vel = 0.
-      if self.theta_vel is None:
-        self.theta_vel = 0.
+      if self.vel_var is None:
+        self.vel_var = 0.
+      if self.omega_var is None:
+        self.omega_var = 0.
     else:
       self.header = roslib.msg._Header.Header()
       self.x = 0.
       self.y = 0.
       self.theta = 0.
+      self.vel = 0.
+      self.omega = 0.
       self.x_var = 0.
       self.y_var = 0.
       self.theta_var = 0.
-      self.x_vel = 0.
-      self.y_vel = 0.
-      self.theta_vel = 0.
+      self.vel_var = 0.
+      self.omega_var = 0.
 
   def _get_types(self):
     """
@@ -109,7 +113,7 @@ string frame_id
       length = len(_x)
       buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
-      buff.write(_struct_9f.pack(_x.x, _x.y, _x.theta, _x.x_var, _x.y_var, _x.theta_var, _x.x_vel, _x.y_vel, _x.theta_vel))
+      buff.write(_struct_10f.pack(_x.x, _x.y, _x.theta, _x.vel, _x.omega, _x.x_var, _x.y_var, _x.theta_var, _x.vel_var, _x.omega_var))
     except struct.error, se: self._check_types(se)
     except TypeError, te: self._check_types(te)
 
@@ -135,8 +139,8 @@ string frame_id
       self.header.frame_id = str[start:end]
       _x = self
       start = end
-      end += 36
-      (_x.x, _x.y, _x.theta, _x.x_var, _x.y_var, _x.theta_var, _x.x_vel, _x.y_vel, _x.theta_vel,) = _struct_9f.unpack(str[start:end])
+      end += 40
+      (_x.x, _x.y, _x.theta, _x.vel, _x.omega, _x.x_var, _x.y_var, _x.theta_var, _x.vel_var, _x.omega_var,) = _struct_10f.unpack(str[start:end])
       return self
     except struct.error, e:
       raise roslib.message.DeserializationError(e) #most likely buffer underfill
@@ -157,7 +161,7 @@ string frame_id
       length = len(_x)
       buff.write(struct.pack('<I%ss'%length, length, _x))
       _x = self
-      buff.write(_struct_9f.pack(_x.x, _x.y, _x.theta, _x.x_var, _x.y_var, _x.theta_var, _x.x_vel, _x.y_vel, _x.theta_vel))
+      buff.write(_struct_10f.pack(_x.x, _x.y, _x.theta, _x.vel, _x.omega, _x.x_var, _x.y_var, _x.theta_var, _x.vel_var, _x.omega_var))
     except struct.error, se: self._check_types(se)
     except TypeError, te: self._check_types(te)
 
@@ -185,12 +189,12 @@ string frame_id
       self.header.frame_id = str[start:end]
       _x = self
       start = end
-      end += 36
-      (_x.x, _x.y, _x.theta, _x.x_var, _x.y_var, _x.theta_var, _x.x_vel, _x.y_vel, _x.theta_vel,) = _struct_9f.unpack(str[start:end])
+      end += 40
+      (_x.x, _x.y, _x.theta, _x.vel, _x.omega, _x.x_var, _x.y_var, _x.theta_var, _x.vel_var, _x.omega_var,) = _struct_10f.unpack(str[start:end])
       return self
     except struct.error, e:
       raise roslib.message.DeserializationError(e) #most likely buffer underfill
 
 _struct_I = roslib.message.struct_I
 _struct_3I = struct.Struct("<3I")
-_struct_9f = struct.Struct("<9f")
+_struct_10f = struct.Struct("<10f")

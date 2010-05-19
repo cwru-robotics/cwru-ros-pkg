@@ -7,12 +7,13 @@
 % single x
 % single y
 % single theta
+% single vel
+% single omega
 % single x_var
 % single y_var
 % single theta_var
-% single x_vel
-% single y_vel
-% single theta_vel
+% single vel_var
+% single omega_var
 
 % //! \htmlinclude Pose.msg.html
 function msg = harlie_base_Pose()
@@ -28,12 +29,13 @@ msg.header = roslib_Header();
 msg.x = single(0);
 msg.y = single(0);
 msg.theta = single(0);
+msg.vel = single(0);
+msg.omega = single(0);
 msg.x_var = single(0);
 msg.y_var = single(0);
 msg.theta_var = single(0);
-msg.x_vel = single(0);
-msg.y_vel = single(0);
-msg.theta_vel = single(0);
+msg.vel_var = single(0);
+msg.omega_var = single(0);
 msg.md5sum_ = @harlie_base_Pose___md5sum;
 msg.type_ = @harlie_base_Pose___type;
 msg.serializationLength_ = @harlie_base_Pose___serializationLength;
@@ -42,19 +44,20 @@ msg.deserialize_ = @harlie_base_Pose___deserialize;
 msg.message_definition_ = @harlie_base_Pose___message_definition;
 
 function x = harlie_base_Pose___md5sum()
-x = '6912a6eb81006b68b259c9bf26039f96';
+x = '7ce3d88c4d07be05d54abf722834318f';
 
 function x = harlie_base_Pose___message_definition()
 x = [    'Header header\n' ...
     'float32 x\n' ...
     'float32 y\n' ...
     'float32 theta\n' ...
+    'float32 vel\n' ...
+    'float32 omega\n' ...
     'float32 x_var\n' ...
     'float32 y_var\n' ...
     'float32 theta_var\n' ...
-    'float32 x_vel\n' ...
-    'float32 y_vel\n' ...
-    'float32 theta_vel\n' ...
+    'float32 vel_var\n' ...
+    'float32 omega_var\n' ...
     '\n' ...
     '================================================================================\n' ...
     'MSG: roslib/Header\n' ...
@@ -91,6 +94,7 @@ l__ =  ...
     + 4 ...
     + 4 ...
     + 4 ...
+    + 4 ...
     + 4;
 
 function dat__ = harlie_base_Pose___serialize(msg__, seq__, fid__)
@@ -112,13 +116,14 @@ msg__.header.serialize_(msg__.header, seq__, fid__);
 c__ = c__ + fwrite(fid__, msg__.x, 'single');
 c__ = c__ + fwrite(fid__, msg__.y, 'single');
 c__ = c__ + fwrite(fid__, msg__.theta, 'single');
+c__ = c__ + fwrite(fid__, msg__.vel, 'single');
+c__ = c__ + fwrite(fid__, msg__.omega, 'single');
 c__ = c__ + fwrite(fid__, msg__.x_var, 'single');
 c__ = c__ + fwrite(fid__, msg__.y_var, 'single');
 c__ = c__ + fwrite(fid__, msg__.theta_var, 'single');
-c__ = c__ + fwrite(fid__, msg__.x_vel, 'single');
-c__ = c__ + fwrite(fid__, msg__.y_vel, 'single');
-c__ = c__ + fwrite(fid__, msg__.theta_vel, 'single');
-if( c__ ~= 9 )
+c__ = c__ + fwrite(fid__, msg__.vel_var, 'single');
+c__ = c__ + fwrite(fid__, msg__.omega_var, 'single');
+if( c__ ~= 10 )
     error('some members of msg harlie_base:Pose are initialized incorrectly!');
 end
 if( file_created__ )
@@ -141,12 +146,13 @@ msg__.header = msg__.header.deserialize_(msg__.header, fid__);
 msg__.x = fread(fid__,1,'single');
 msg__.y = fread(fid__,1,'single');
 msg__.theta = fread(fid__,1,'single');
+msg__.vel = fread(fid__,1,'single');
+msg__.omega = fread(fid__,1,'single');
 msg__.x_var = fread(fid__,1,'single');
 msg__.y_var = fread(fid__,1,'single');
 msg__.theta_var = fread(fid__,1,'single');
-msg__.x_vel = fread(fid__,1,'single');
-msg__.y_vel = fread(fid__,1,'single');
-msg__.theta_vel = fread(fid__,1,'single');
+msg__.vel_var = fread(fid__,1,'single');
+msg__.omega_var = fread(fid__,1,'single');
 if( file_created__ )
     fclose(fid__);
 end
