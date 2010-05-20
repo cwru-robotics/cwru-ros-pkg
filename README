@@ -10,3 +10,5 @@ roslaunch harlie_goal_planner/start_goal_planner_outdoors_in_meters.launch
 Edit harlie_goal_planner/goals/vealetrack.yaml to set the goals.
 
 rosbag record -a -o <prefix> to save a bag file for logging.
+
+For full RVIZ use 'rosrun rviz rviz -d `rospack find harlie_nav`/full_info_outdoors.vcg'
