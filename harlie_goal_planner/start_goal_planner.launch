@@ -1,6 +1,6 @@
 <launch>
 	<node name="harlie_goal_planner" pkg="harlie_goal_planner" type="kml_goal_reader.py">
 	    <rosparam file="$(find harlie_goal_planner)/config/gps_constants.yaml" command="load" />
-	    <param name="filename" value="$(find harlie_goal_planner)/goals/Vealepath.kmz" />
+	    <param name="filename" value="$(find harlie_goal_planner)/goals/GPSWaypoints.kmz" />
 	</node>
 </launch>
