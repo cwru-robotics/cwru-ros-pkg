@@ -1,0 +1,7 @@
+<launch>
+    <param name="/use_sim_time" value="true" />
+    <include file="$(find harlie_sim_stage)/move_base.launch" />
+    <node name="map_server" pkg="map_server" type="map_server" args="$(find cwru_maps)/maps/Bens.yaml" />
+    <node pkg="stage" type="stageros" name="stageros" args="$(find cwru_maps)/worlds/Bens.world" respawn="false" /> 
+    <include file="$(find harlie_sim_stage)/nav_view.launch"/>
+</launch>
