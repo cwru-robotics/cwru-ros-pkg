@@ -2,9 +2,10 @@ Header header
 float32 x
 float32 y
 float32 theta
+float32 vel
+float32 omega
 float32 x_var
 float32 y_var
 float32 theta_var
-float32 x_vel
-float32 y_vel
-float32 theta_vel
+float32 vel_var
+float32 omega_var

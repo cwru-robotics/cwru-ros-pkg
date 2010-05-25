@@ -9,6 +9,7 @@
 	<param name="port" type="string" value="/dev/ttyUSB0" />    
 	<param name="baud" type="int" value="500000" />
 	<param name="frame_id" type="string" value="base_laser1_link" />
+	<param name="resolution" type="double" value="1.0" />
         <remap from="scan" to="base_laser1_scan" />
     </node>
     <node machine="mainCPU" pkg="harlie_base" type="twist_receiver.py" name="twist_receiver" />

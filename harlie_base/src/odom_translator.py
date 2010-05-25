@@ -13,7 +13,7 @@ odom_pub = rospy.Publisher('odom', Odometry)
 tf_br = tf.TransformBroadcaster()
 
 def changePoseCoordFrame(pose):
-	p = Pose(x = pose.x, y = -1*pose.y, theta = -1*pose.theta, x_var = pose.x_var, y_var = pose.y_var, theta_var = pose.theta_var, x_vel = pose.x_vel, y_vel = -1*pose.y_vel, theta_vel = -1*pose.theta_vel)
+	p = Pose(x = pose.x, y = -1*pose.y, theta = -1*pose.theta, x_var = pose.x_var, y_var = pose.y_var, theta_var = pose.theta_var, vel = pose.vel, omega = -1*pose.omega, vel_var = pose.vel_var, omega_var = pose.omega_var)
 	return p
 
 def handle_harlie_pose(msg):
@@ -38,15 +38,13 @@ def handle_harlie_pose(msg):
 	odom_msg.pose.covariance[7] = pose.y_var
 	odom_msg.pose.covariance[35] = pose.theta_var
 
-	odom_msg.child_frame_id = 'odom'
-	odom_msg.twist.twist.linear.x = pose.x_vel
-	odom_msg.twist.twist.linear.y = pose.y_vel
-	odom_msg.twist.twist.angular.z = pose.theta_vel
+	odom_msg.child_frame_id = 'base_link'
+	odom_msg.twist.twist.linear.x = pose.vel
+	odom_msg.twist.twist.angular.z = pose.omega
 
 	#TODO Here starts the constant multiplier noise. Needs real variance...
-	odom_msg.twist.covariance[0] = 0.01 * pose.x_vel
-	odom_msg.twist.covariance[7] = 0.01 * pose.y_vel
-	odom_msg.twist.covariance[35] = 0.01 * pose.theta_vel
+	odom_msg.twist.covariance[0] = pose.vel_var
+	odom_msg.twist.covariance[35] = pose.omega_var
 
 	odom_pub.publish(odom_msg)
 
