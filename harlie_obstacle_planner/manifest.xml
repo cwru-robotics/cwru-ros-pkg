@@ -1,0 +1,21 @@
+<package>
+  <description brief="harlie_obstacle_planner">
+
+     harlie_obstacle_planner
+
+  </description>
+  <author>Ben Ballard</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/harlie_obstacle_planner</url>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="roslib"/>
+  <depend package="std_msgs"/>
+  <depend package="harlie_nav"/>
+  <depend package="harlie_base"/>
+  <depend package="harlie_goal_planner"/>
+
+</package>
+
+
