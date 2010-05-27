@@ -22,6 +22,8 @@
 
 #define OPENLIST_EXPAND 20
 
+#define SEARCH_BOUND 240
+
 
 using namespace std;
 
@@ -36,8 +38,6 @@ float wallExpand[WALL_EXPANSION][WALL_EXPANSION];
 nav_msgs::Odometry odom;
 bool isOdomNew;
 bool isInit = false;
-
-list<CostNode> nodes(0);
 
 
 CostNode FindHighestNeighbor(int x, int y)
@@ -89,7 +89,57 @@ CostNode FindHighestNeighbor(int x, int y)
     return out;
 }
 
+
+//non functional
 void FixGradCost(int x, int y)
+{
+    int currentCost = 0;
+    int currentX = 0;
+    int currentY = 0;
+    if(x-1>0)
+    {
+        if(gradCosts[x-1][y]>currentCost)
+        {
+            currentCost=gradCosts[x-1][y];
+            currentX = x-1;
+            currentY = y;
+        }
+    }
+    if(x+1<MAP_SIZE)
+    {
+        if(gradCosts[x+1][y]>currentCost)
+        {
+            currentCost=gradCosts[x+1][y];
+            currentX = x+1;
+            currentY = y;
+        }
+    }
+    if(y-1>0)
+    {
+        if(gradCosts[x][y-1]>currentCost)
+        {
+            currentCost=gradCosts[x][y-1];
+            currentX = x;
+            currentY = y-1;
+        }
+    }
+
+    if(y+1<MAP_SIZE)
+    {
+        if(gradCosts[x][y+11]>currentCost)
+        {
+            currentCost=gradCosts[x][y+1];
+            currentX = x;
+            currentY = y+1;
+        }
+    }
+    CostNode out;
+    out.x = currentX;
+    out.y = currentY;
+    out.cost = currentCost;
+    return out;
+
+}
 
 
 
@@ -204,6 +254,15 @@ void map_Callback(const nav_msgs::GridCells& msg)
 
     int roboX = ConvertFromOdomToArray(odom.pose.pose.position.x);
     int roboY = ConvertFromOdomToArray(odom.pose.pose.position.y);
+
+
+    //Find edges
+
+
+
+
+
+
 
 
     int numToPullOffList = OPENLIST_EXPAND;
