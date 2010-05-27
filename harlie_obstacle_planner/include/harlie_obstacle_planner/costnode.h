@@ -44,24 +44,16 @@ class CostNode
 {
 public:
         CostNode();
-        CostNode(float x);
+        int x;
+        int y;
+        float cost;
+        bool operator() (const CostNode& lhs, const CostNode& lhs) const ;
+        bool operator < (const CostNode& lhs, const CostNode& rhs) const ;
 
-        void setGradCost(float x);
-        float getGradCost();
-
-        void setWallCost(float x);
-        float getWallCost();
-
-        void setIsWall(bool iswall);
-
-        float getCost();
 private:
-    float gradiantCost;
-    float wallCost;
-    bool isWall;
-    bool hasBeenInflated;
-    float cost;
 
 };
+
+
 
 #endif

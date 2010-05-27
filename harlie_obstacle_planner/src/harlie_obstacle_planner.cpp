@@ -11,42 +11,153 @@
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Point.h>
 #include <list>
+#include <harlie_obstacle_planner/costnode.h>
+
+//Odd numbers ONLY
+#define WALL_EXPANSION 21
+#define WALL_FACTOR 1
+
+#define MAP_SIZE 4000
+#define RESOLUTION .05
+
+#define OPENLIST_EXPAND 20
+
 
 using namespace std;
 
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> Client;
 
 //CostNode nodes[4000][4000];
-bool isWall[4000][4000];
-float wallCosts[4000][4000];
-float gradCosts[4000][4000];
+bool isWall[MAP_SIZE][MAP_SIZE];
+float wallCosts[MAP_SIZE][MAP_SIZE];
+float gradCosts[MAP_SIZE][MAP_SIZE];
+float wallExpand[WALL_EXPANSION][WALL_EXPANSION];
+
 nav_msgs::Odometry odom;
 bool isOdomNew;
 bool isInit = false;
 
-vector<int> XOpen;
-vector<int> YOpen;
+list<CostNode> nodes(0);
+
+
+CostNode FindHighestNeighbor(int x, int y)
+{
+    int currentCost = 0;
+    int currentX = 0;
+    int currentY = 0;
+    if(x-1>0)
+    {
+        if(gradCosts[x-1][y]>currentCost)
+        {
+            currentCost=gradCosts[x-1][y];
+            currentX = x-1;
+            currentY = y;
+        }
+    }
+    if(x+1<MAP_SIZE)
+    {
+        if(gradCosts[x+1][y]>currentCost)
+        {
+            currentCost=gradCosts[x+1][y];
+            currentX = x+1;
+            currentY = y;
+        }
+    }
+    if(y-1>0)
+    {
+        if(gradCosts[x][y-1]>currentCost)
+        {
+            currentCost=gradCosts[x][y-1];
+            currentX = x;
+            currentY = y-1;
+        }
+    }
+
+    if(y+1<MAP_SIZE)
+    {
+        if(gradCosts[x][y+11]>currentCost)
+        {
+            currentCost=gradCosts[x][y+1];
+            currentX = x;
+            currentY = y+1;
+        }
+    }
+    CostNode out;
+    out.x = currentX;
+    out.y = currentY;
+    out.cost = currentCost;
+    return out;
+}
+
+void FixGradCost(int x, int y)
+
+
+
 
 void _init()
 {
-    for(int x = 0; x < 4000 ; x++)
+    //clear maps
+    for(int x = 0; x < MAP_SIZE ; x++)
     {
-        for(int y = 0 ; y < 4000 ; y++)
+        for(int y = 0 ; y < MAP_SIZE ; y++)
         {
             isWall[x][y]=false;
             wallCosts[x][y]=0;
             gradCosts[x][y]=-1;
         }
     }
+    //Generate the wall overlay
+
+    int high = ( WALL_EXPANSION - 1 ) / 2;
+    int low = -1 * high;
+
+    for(int x = low; x < high; x++)
+    {
+        for(int y = low; y < high; y++)
+        {
+           wallExpand[x+( WALL_EXPANSION - 1 ) ][y+( WALL_EXPANSION - 1 )]=1/(abs(x)+abs(y)+1)*WALL_FACTOR;
+        }
+    }
+
     //Make a line behind the robot with infinity cost.........
     //Make all the points one pixel infront of the line in the open list
     //These new one forward pixels should have teh correct costs!!!!!!!
     tf::getYaw(odom.pose.pose.orientation);
 }
 
-void AddToWallCost(int x, int y)
+void AddToWallCost(int xR, int yR)
 {
+    int high = ( WALL_EXPANSION - 1 ) / 2;
+    int low = -1 * high;
+    for(int x = low; x < high; x++)
+    {
 
+        for(int y = low; y < high; y++)
+        {
+            //This could be condesned.  Basicly make sure we are in the bounds of the map otherwise disregard
+           if(xR+x>=0)
+           {
+               if(xR+x<MAP_SIZE)
+               {
+                   if(yR+y>=0)
+                   {
+                        if(yR+y<MAP_SIZE)
+                       {
+                            wallCosts[xR+x][yR+y] = wallCosts[xR+x][yR+y] + wallExpand[x+( WALL_EXPANSION - 1 ) ][y+( WALL_EXPANSION - 1 )];
+                        }
+                    }
+               }
+           }
+        }
+    }
+
+    isWall[xR][yR]=true;
+
+}
+
+int ConvertFromOdomToArray(float meter)
+{
+    return ((int)(meter/RESOLUTION - (meter%RESOLUTION)/RESOLUTION))+(int)MAP_SIZE/2;
 }
 
 void map_Callback(const nav_msgs::GridCells& msg)
@@ -65,12 +176,12 @@ void map_Callback(const nav_msgs::GridCells& msg)
     //If we get here then the code has been initalized and the main loop can run.  The initalization makes the starting map.
 
     //Generate the wall cost map
-    bzero(&wallCosts,sizeof(bool)*4000*4000);
+    bzero(&wallCosts,sizeof(float)*MAP_SIZE*MAP_SIZE);
+    bzero(&isWall,sizeof(bool)*MAP_SIZE*MAP_SIZE);
     for(unsigned int i=0; i<msg.cells.size();i++)
     {
-        int wallX = (int)(((geometry_msgs::Point)msg.cells[i]).x-.025)/.05;
-        int wallY = (int)(((geometry_msgs::Point)msg.cells[i]).y-.025)/.05;
-
+        int wallX = ConvertFromOdomToArray(((geometry_msgs::Point)msg.cells[i]).x);
+        int wallY = ConvertFromOdomToArray(((geometry_msgs::Point)msg.cells[i]).y);
         AddToWallCost(wallX,wallY);
         /* POSSIBLE UPGRADE
          Requires some type of hash
@@ -88,11 +199,25 @@ void map_Callback(const nav_msgs::GridCells& msg)
     }
 
 
-    ROS_INFO("Wallmap made");
+    ROS_INFO("Wallmap made starting to plan");
 
-    //Check valid openStates are states
-    //If state = was non wall has become wall
-    //As in do we hit walls if we back travers these paths to the robot.
+
+    int roboX = ConvertFromOdomToArray(odom.pose.pose.position.x);
+    int roboY = ConvertFromOdomToArray(odom.pose.pose.position.y);
+
+
+    int numToPullOffList = OPENLIST_EXPAND;
+    if(nodes.size()<OPENLIST_EXPAND)
+    {
+        numToPullOffList = nodes.size();
+    }
+    for(int popping = 0; popping<numToPullOffList;popping++)
+    {
+        CostNode temp = nodes.front();
+        nodes.pop_front();
+        temp.cost =
+    }
+
 
 
 
