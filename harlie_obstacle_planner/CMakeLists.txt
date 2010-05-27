@@ -28,4 +28,11 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_link_boost(${PROJECT_NAME} thread)
 #rosbuild_add_executable(example examples/example.cpp)
 #target_link_libraries(example ${PROJECT_NAME})
-rosbuild_add_executable(${PROJECT_NAME} src/harlie_obstacle_planner.cpp)
+#include(include/harlie_obstacle_planner/*.h)
+#robbuild_add_library(${PROJECT_NAME} src/costmap.cpp)
+rosbuild_add_executable(${PROJECT_NAME} src/harlie_obstacle_planner.cpp
+                                        src/costmap.cpp
+                                        src/costnode.cpp
+                                        include/harlie_obstacle_planner/costmap.h
+                                        include/harlie_obstacle_planner/costnode.h
+                                        )

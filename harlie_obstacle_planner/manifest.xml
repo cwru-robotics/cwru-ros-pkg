@@ -15,7 +15,7 @@
   <depend package="harlie_nav"/>
   <depend package="harlie_base"/>
   <depend package="harlie_goal_planner"/>
-
+  <depend package="actionlib_msgs"/>
 </package>
 
 
