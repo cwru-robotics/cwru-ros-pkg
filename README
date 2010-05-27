@@ -1,6 +1,7 @@
 So, to run this on the HARLIE:
 
 roscd harlie
+sudo chown -R harlie:harlie /dev/*1394*
 
 In 3 terminals:
 roslaunch harlie_bringup.launch
