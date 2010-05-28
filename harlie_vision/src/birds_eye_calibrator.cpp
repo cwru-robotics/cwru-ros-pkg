@@ -16,7 +16,7 @@ class BirdsEyeCalibrator {
 		int32_t board_width;
 		int32_t board_height;
 		double m_per_output_pixel;
-		double grid_width;
+		double square_width;
 
 		ros::NodeHandle nh_;
 		image_transport::ImageTransport it_;
