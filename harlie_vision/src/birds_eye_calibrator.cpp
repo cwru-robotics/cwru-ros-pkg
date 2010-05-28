@@ -61,9 +61,9 @@ void BirdsEyeCalibrator::image_callback(const sensor_msgs::ImageConstPtr& msg) {
 	std::vector<cv::Point2f> objPts;
 	std::vector<cv::Point2f> imgPts;
 	objPts.push_back(cv::Point2f(0, 0));
-	objPts.push_back(cv::Point2f(this->grid_width*(this->board_width-1), 0));
-	objPts.push_back(cv::Point2f(0, this->grid_width*(this->board_height-1)));
-	objPts.push_back(cv::Point2f(this->grid_width*(this->board_width-1), this->grid_width*(this->board_height-1)));
+	//objPts.push_back(cv::Point2f(this->grid_width*(this->board_width-1), 0));
+	//objPts.push_back(cv::Point2f(0, this->grid_width*(this->board_height-1)));
+	//objPts.push_back(cv::Point2f(this->grid_width*(this->board_width-1), this->grid_width*(this->board_height-1)));
 	imgPts.push_back(corners[0]);
 	imgPts.push_back(corners[(this->board_width-1)]);
 	imgPts.push_back(corners[(this->board_height-1)*this->board_width]);
