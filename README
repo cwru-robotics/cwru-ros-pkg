@@ -10,6 +10,8 @@ roslaunch harlie_goal_planner/start_goal_planner_outdoors_in_meters.launch
 
 Edit harlie_goal_planner/goals/navigation.yaml to set the goals.
 
-rosbag record -a -o <prefix> to save a bag file for logging.
+rosbag record -a -o <prefix> to save a bag file for full logging.
+
+rosbag record -o <prefix> /harlie/odom /cmd_vel /front_camera/camera/image_raw /front_camera/camera/camera_info
 
 For full RVIZ use 'rosrun rviz rviz -d `rospack find harlie_nav`/full_info_outdoors.vcg'
