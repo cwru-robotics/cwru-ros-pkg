@@ -5,13 +5,19 @@ CostNode::CostNode()
 
 }
 
-CostNode::CostNode(float x)
+bool CostNode::operator < (const CostNode& lhs, const CostNode& rhs) const
 {
-    this->cost = x;
+     return (lhs.cost<rhs.cost);
 }
 
-float CostNode::getCost()
+bool CostNode::operator() (const CostNode& lhs, const CostNode& rhs) const
 {
-    return this->cost;
+    if(lhs.x == rhs.x)
+    {
+        if(lhs.y == rhs.y)
+        {
+            return true;
+        }
+    }
+    return false;
 }
-
