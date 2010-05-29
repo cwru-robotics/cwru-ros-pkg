@@ -19,5 +19,5 @@
     <param name="publishing_rate" value="20" />
   </node>
 
-  <node pkg="tf" type="static_transform_publisher" name="bounding_box_transform_publisher" args="-29.0 1.5 1.0 -0.541 0.0 0.0 odom bounding_box 100" />
+  <node pkg="tf" type="static_transform_publisher" name="bounding_box_transform_publisher" args="-29.0 1.5 1.9 -0.541 0.0 0.0 odom bounding_box 100" />
 </launch>
