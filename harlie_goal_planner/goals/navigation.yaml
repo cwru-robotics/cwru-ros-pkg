@@ -16,7 +16,7 @@ goals:
     one:
         frame_id: 'odom' 
         x: -12.4753
-        y: -2.1698
+        y: 2.1698
         theta: 0.0
 
     two:
@@ -28,48 +28,48 @@ goals:
     three:
         frame_id: 'odom'
         x: -0.3625
-        y: 15.4197
+        y: -15.4197
         theta: 0.0
 
     four:
         frame_id: 'odom'
         x: 6.6808
-        y: 19.1051
+        y: -19.1051
         theta: 0.0
 
     five:
         frame_id: 'odom'
         x: 15.4572
-        y: 16.6992
+        y: -16.6992
         theta: 0.0
 
     six:
         frame_id: 'odom'
         x: 17.8069
-        y: 4.3866
+        y: -4.3866
         theta: 0.0
 
     seven:
         frame_id: 'odom'
         x: 9.8105
-        y: -3.7017
+        y: 3.7017
         theta: 0.0
 
     eight:
         frame_id: 'odom'
         x: 9.8448
-        y: -19.0203
+        y: 19.0203
         theta: 0.0
 
     nine:
         frame_id: 'odom'
         x: -2.1290
-        y: -21.3689
+        y: 21.3689
         theta: 0.0
 
     ten:
         frame_id: 'odom'
         x: -14.2727
-        y: -18.8391
+        y: 18.8391
         theta: 0.0
 
