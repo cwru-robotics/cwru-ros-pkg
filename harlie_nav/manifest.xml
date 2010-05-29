@@ -14,6 +14,8 @@
   <depend package="move_base" />
   <depend package="amcl" />
   <depend package="playsound_recovery" />
+  <depend package="tf" />
+  <depend package="tf_conversions" />
 
 </package>
 
