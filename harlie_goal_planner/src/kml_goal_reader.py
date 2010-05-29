@@ -55,7 +55,7 @@ class KMLGoalReader:
 	goal.target_pose.header.stamp = rospy.Time.now()
 
 	x = (float(waypoint[1]) - self.offset_lat) * self.lat_conversion_to_m
-	y = (float(waypoint[0]) - self.offset_long) * self.long_conversion_to_m
+	y = -1 * (float(waypoint[0]) - self.offset_long) * self.long_conversion_to_m
 	
 	goal.target_pose.pose.position.x = x
 	goal.target_pose.pose.position.y = y
