@@ -5,8 +5,6 @@
 		<param name="video_mode" value="640x480_mono" />
 		<param name="encoding" value="bayer_gbrg8" />
 		<param name="fps" value="30" />
-		<param name="whitebalance" value="100" />
-		<param name="shutter" value="150" />
 		<param name="camera_info_url" value="file:///opt/igvc_ros/harlie_vision/calibration/calibration_front_camera.yaml" />
 		<remap from="camera" to="front_camera" />
 		<param name="frame_id" value="front_camera" />
