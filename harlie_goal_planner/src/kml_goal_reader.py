@@ -12,11 +12,12 @@ from geometry_msgs.msg import Quaternion
 from move_base_msgs.msg import MoveBaseAction
 from move_base_msgs.msg import MoveBaseGoal
 from actionlib_msgs.msg import GoalStatus
+from nav_msgs.msg import Odometry
 
 import yaml
 
 class KMLGoalReader:
-    def __init__(self):
+    def __init__(self, start_odom):
 	self.offset_lat = rospy.get_param("~offset_lat")
 	rospy.logdebug("offset_lat: %f",self.offset_lat)
 	self.offset_long = rospy.get_param("~offset_long")
@@ -48,6 +49,15 @@ class KMLGoalReader:
 	    self.move_base_goals.append(self.create_move_base_goal_from_gps_waypoint(x))
 	rospy.loginfo("GPS waypoints in move base goals: %s", self.move_base_goals)
 
+	goal = MoveBaseGoal()
+	goal.target_pose.header.frame_id = start_odom.header.frame_id
+	goal.target_pose.header.stamp = rospy.Time.now()
+	goal.target_pose.pose = start_odom.pose.pose
+
+	rospy.loginfo("Appending start location to move base goals: %s", goal)
+	self.move_base_goals.append(goal)
+	rospy.loginfo("Final move base goals: %s", self.move_base_goals)
+
     def create_move_base_goal_from_gps_waypoint(self,waypoint):
 	"""Creates a MoveBaseGoal from a goal loaded up from the yaml file"""
 	goal = MoveBaseGoal()
@@ -64,8 +74,8 @@ class KMLGoalReader:
 
 	return goal
 
-def main():
-	goal_reader = KMLGoalReader()
+def main(odom):
+	goal_reader = KMLGoalReader(odom)
 	client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
 	client.wait_for_server()
 
@@ -85,4 +95,5 @@ def main():
 
 if __name__ == '__main__':
     rospy.init_node('harlie_goal_planner')
-    main()
+    sub = rospy.Subscriber("odom", Odometry, main)
+    rospy.spin()
