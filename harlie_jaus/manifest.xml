@@ -1,0 +1,18 @@
+<package>
+  <description brief="jaus">
+
+     harlie_jaus
+
+  </description>
+  <author>Eric Perko</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/jaus</url>
+  <depend package="harlie_base"/>
+  <depend package="roscpp"/>
+  <depend package="nav_msgs"/>
+  <depend package="std_msgs"/>
+
+</package>
+
+
