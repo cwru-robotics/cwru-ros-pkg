@@ -21,7 +21,7 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #uncomment if you have defined services
 #rosbuild_gensrv()
 
-set(IGVC_SVN /home/eric/code/igvc-svn/jaus)
+set(IGVC_SVN $ENV{HOME}/code/igvc-svn/jaus)
 
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
