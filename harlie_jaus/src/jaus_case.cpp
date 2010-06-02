@@ -38,7 +38,7 @@ double gomega;
 double govel;
 
 void callback(const harlie_base::PoseConstPtr& pose) {
-	//cRIO pose... we use this because it is already in the ROS frame and doesn't need coordinate system munging to function
+	//cRIO pose... we use this because it is already in the JAUS frame and doesn't need coordinate system munging to function
 //	JAUS::GlobalPose globalPose;
 //	JAUS::VelocityState velocityState;
 	
