@@ -31,26 +31,38 @@ double offset_lat;
 double offset_long;
 double lat_conversion_to_m;
 double long_conversion_to_m;
+double glolat;
+double glolong;
+double glotheta;
+double gomega;
+double govel;
 
 void callback(const harlie_base::PoseConstPtr& pose) {
 	//cRIO pose... we use this because it is already in the ROS frame and doesn't need coordinate system munging to function
-	JAUS::GlobalPose globalPose;
-	JAUS::VelocityState velocityState;
+//	JAUS::GlobalPose globalPose;
+//	JAUS::VelocityState velocityState;
+	
+//	globalPose.SetLatitude((pose->x/lat_conversion_to_m) + offset_lat);
+//	globalPose.SetLongitude((pose->y/long_conversion_to_m) + offset_long);
+//	globalPose.SetYaw(pose->theta);
+//	globalPose.SetTimeStamp(JAUS::Time::GetUtcTime());
+	
+	glolat = (pose->x/lat_conversion_to_m) + offset_lat;
+	glolong = (pose->y/long_conversion_to_m) + offset_long;
+	glotheta = pose->theta;
 
-	globalPose.SetLatitude((pose->x/lat_conversion_to_m) + offset_lat);
-	globalPose.SetLongitude((pose->y/long_conversion_to_m) + offset_long);
-	globalPose.SetYaw(pose->theta);
-	globalPose.SetTimeStamp(JAUS::Time::GetUtcTime());
+	gomega = pose->omega;
+	govel = pose->vel;
 
-        velocityState.SetYawRate(pose->omega);        
-        velocityState.SetVelocityX(pose->vel);
-        velocityState.SetTimeStamp(JAUS::Time::GetUtcTime());
+//        velocityState.SetYawRate(pose->omega);        
+//        velocityState.SetVelocityX(pose->vel);
+//        velocityState.SetTimeStamp(JAUS::Time::GetUtcTime());
 
         // Save the values.
-	globalPoseSensor->SetGlobalPose(globalPose);
-        bool res = localPoseSensor->SetLocalPose(globalPose);
-	std::cout << "Local Pose Res " << res << std::endl;
-        velocityStateSensor->SetVelocityState(velocityState);
+//	globalPoseSensor->SetGlobalPose(globalPose);
+      //  bool res = localPoseSensor->SetLocalPose(globalPose);
+	//std::cout << "Local Pose Res " << res << std::endl;
+//        velocityStateSensor->SetVelocityState(velocityState);
 
 }
 
@@ -146,7 +158,21 @@ int main(int argc, char* argv[])
 		
 		}
 
-        
+	globalPose.SetLatitude(glolat);
+	globalPose.SetLongitude(glolong);
+	globalPose.SetYaw(glotheta);
+	globalPose.SetTimeStamp(JAUS::Time::GetUtcTime());
+
+        velocityState.SetYawRate(gomega);        
+        velocityState.SetVelocityX(govel);
+        velocityState.SetTimeStamp(JAUS::Time::GetUtcTime());
+
+        // Save the values.
+	globalPoseSensor->SetGlobalPose(globalPose);
+        localPoseSensor->SetLocalPose(globalPose);
+        velocityStateSensor->SetVelocityState(velocityState); 	
+
+      
         if(JAUS::Time::GetUtcTimeMs() - printTimeMs > 500)
         {
             // Print status of services.
