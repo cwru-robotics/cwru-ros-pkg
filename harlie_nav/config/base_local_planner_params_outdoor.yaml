@@ -6,7 +6,7 @@ TrajectoryPlannerROS:
   backup_vel: 0.3
 
   acc_lim_th: 0.6
-  acc_lim_x: 0.5
+  acc_lim_x: 1.0
   acc_lim_y: 0
 
   holonomic_robot: false
