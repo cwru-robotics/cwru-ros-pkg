@@ -74,6 +74,18 @@ class KMLGoalReader:
 
 	return goal
 
+class GoalReader:
+	def __init__(self):
+		self.odom = None
+		rospy.Subscriber("odom", Odometry, self.callback)
+		while not self.odom:
+			pass
+		rospy.loginfo("Received odom, about to start the goal planner")
+		main(self.odom)
+	
+	def callback(self,data):
+		self.odom = data
+
 def main(odom):
 	goal_reader = KMLGoalReader(odom)
 	client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -95,5 +107,5 @@ def main(odom):
 
 if __name__ == '__main__':
     rospy.init_node('harlie_goal_planner')
-    sub = rospy.Subscriber("odom", Odometry, main)
+    goalReader = GoalReader()
     rospy.spin()
