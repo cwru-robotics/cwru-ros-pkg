@@ -13,3 +13,8 @@ TrajectoryPlannerROS:
 
   yaw_goal_tolerance: 6.28
   xy_goal_tolerance: 0.5
+
+  path_distance_bias: 0.6
+  goal_distance_bias: 0.8
+  occdist_scale: 0.01
+  heading_lookahead: 0.325
