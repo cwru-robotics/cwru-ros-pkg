@@ -17,7 +17,7 @@ class ToCRIO:
     def __init__(self):
         """Documentation"""
         self.outgoingUDP = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        self.address = ("192.168.1.100", 50001)
+        self.address = ("192.168.0.100", 50001)
 
     def send_vector_command(self, heading, speed):
         self.outgoingUDP.sendto(packets.make_vector_driver_packet(heading, speed), self.address)
