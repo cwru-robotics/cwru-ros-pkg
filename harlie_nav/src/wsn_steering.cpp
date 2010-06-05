@@ -78,7 +78,7 @@ WSNSteering::WSNSteering() {
 void WSNSteering::computeVelocities(double x, double y, double psi, double &v, double &omega) {
     //Wyatt put your code here. We will figure out the interface to Beom's GPS points later
     v = 0.0;
-    omega = 1.0;
+    omega = k*1.0;
 }	
 
 void WSNSteering::odomCallback(const nav_msgs::Odometry::ConstPtr& odom) {
