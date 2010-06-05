@@ -84,7 +84,7 @@ void BirdsEyeCalibrator::image_callback(const sensor_msgs::ImageConstPtr& msg) {
 		cv::waitKey();
 	} */
     //	cv::circle(image, imgPts[0], 9, CV_RGB(0,0,255), 3);
-	cv::Mat H = cv::getPerspectiveTransform(objPts, imgPts, H);
+//	cv::Mat H = cv::getPerspectiveTransform(objPts, imgPts, H);
 	cv::imshow("view", image);
 }
 
