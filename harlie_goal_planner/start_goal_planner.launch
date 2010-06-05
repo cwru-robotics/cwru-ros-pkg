@@ -1,6 +1,7 @@
 <launch>
 	<node name="harlie_goal_planner" pkg="harlie_goal_planner" type="kml_goal_reader.py">
 	    <rosparam file="$(find harlie_goal_planner)/config/gps_constants.yaml" command="load" />
-	    <param name="filename" value="$(find harlie_goal_planner)/goals/navigation.kml" />
+	    <param name="filename" value="$(find harlie_goal_planner)/goals/igvc_practice.kml" />
+	    <remap from="odom" to="/harlie/odom" />
 	</node>
 </launch>

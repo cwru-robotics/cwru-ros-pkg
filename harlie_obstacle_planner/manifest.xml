@@ -8,14 +8,17 @@
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/harlie_obstacle_planner</url>
-  <depend package="roscpp"/>
-  <depend package="rospy"/>
-  <depend package="roslib"/>
+  <depend package="actionlib"/>
+  <depend package="geometry_msgs"/>
+  <depend package="nav_msgs"/>
   <depend package="std_msgs"/>
-  <depend package="harlie_nav"/>
-  <depend package="harlie_base"/>
-  <depend package="harlie_goal_planner"/>
-  <depend package="actionlib_msgs"/>
+  <depend package="rosmsg"/>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+  <depend package="tf"/>
+  <depend package="move_base_msgs"/>
+  <depend package="move_base"/>
+
 </package>
 
 

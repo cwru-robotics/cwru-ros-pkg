@@ -91,6 +91,7 @@ CostNode FindHighestNeighbor(int x, int y)
 
 
 //non functional
+/*
 void FixGradCost(int x, int y)
 {
     int currentCost = 0;
@@ -141,7 +142,7 @@ void FixGradCost(int x, int y)
 
 }
 
-
+*/
 
 
 void _init()
@@ -207,7 +208,7 @@ void AddToWallCost(int xR, int yR)
 
 int ConvertFromOdomToArray(float meter)
 {
-    return ((int)(meter/RESOLUTION - (meter%RESOLUTION)/RESOLUTION))+(int)MAP_SIZE/2;
+    return ((int)(meter/RESOLUTION - (fmod(meter,RESOLUTION))/RESOLUTION))+(int)MAP_SIZE/2;
 }
 
 void map_Callback(const nav_msgs::GridCells& msg)

@@ -21,11 +21,13 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #uncomment if you have defined services
 #rosbuild_gensrv()
 
+set(IGVC_SVN $ENV{HOME}/code/igvc-svn/jaus)
+
 #common commands for building c++ executables and libraries
 #rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
-#target_link_libraries(${PROJECT_NAME} another_library)
 #rosbuild_add_boost_directories()
 #rosbuild_link_boost(${PROJECT_NAME} thread)
-#rosbuild_add_executable(example examples/example.cpp)
-#target_link_libraries(example ${PROJECT_NAME})
-rosbuild_add_executable(${PROJECT_NAME} src/harlie_obstacle_planner.cpp src/costnode.cpp)
+include_directories(${IGVC_SVN}/lib/cxutils/2.0/include ${IGVC_SVN}/lib/tinyxml/2.5.3/include ${IGVC_SVN}/lib/jaus++/2.0/include)
+link_directories(/usr/local/lib/active)
+rosbuild_add_executable(harlie_jaus src/jaus_case.cpp)
+target_link_libraries(harlie_jaus jauscore jausmobility cxutils tinyxml)

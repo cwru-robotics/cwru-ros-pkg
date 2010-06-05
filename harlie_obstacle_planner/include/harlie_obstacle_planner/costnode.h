@@ -47,10 +47,9 @@ public:
         int x;
         int y;
         float cost;
-        bool operator() (const CostNode& lhs, const CostNode& lhs) const ;
-        bool operator < (const CostNode& lhs, const CostNode& rhs) const ;
+    //    bool operator() (const CostNode& lhs, const CostNode& lhs) const ;
+    //    bool operator < (const CostNode& lhs, const CostNode& rhs) const ;
 
-private:
 
 };
 

@@ -1,0 +1,6 @@
+<launch>
+	<node pkg="harlie_jaus" type="harlie_jaus" name="harlie_jaus_node" output="screen">
+	    <remap from="harlie_pose" to="/harlie/pose" />		
+	    <rosparam file="$(find harlie_goal_planner)/config/gps_constants.yaml" command="load" />
+	</node>	
+</launch>

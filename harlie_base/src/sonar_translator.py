@@ -10,15 +10,15 @@ def handle_sonar(msg, scan_pub):
 	scan = LaserScan()
 	scan.header.frame_id = msg.header.frame_id
 	scan.header.stamp = msg.header.stamp
-	scan.angle_min = -0.130899694
-	scan.angle_max = 0.130899694
-	scan.angle_increment = 0.00872664626
+	scan.angle_min = -0.19
+	scan.angle_max = 0.19
+	scan.angle_increment = 0.01266666667
 
 	scan.time_increment = 0.0
 	scan.scan_time = 0.05
 
-	scan.range_min = 0.152
-	scan.range_max = 6.096
+	scan.range_min = 0.10
+	scan.range_max = 4.0
 
 	scan.ranges = [msg.dist for i in range(0,30)]
 	scan_pub.publish(scan)
