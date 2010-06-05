@@ -3,10 +3,11 @@ map_type: voxel
 obstacle_range: 5.0
 raytrace_range: 6.0 
 footprint: [[0.3048, 0.3048], [0.3048, -0.3048], [-0.6096, -0.3048], [-0.6096, 0.3048]]
-inflation_radius: 0.7
+footprint_padding: 0.25
+inflation_radius: 1.5
 
 #Scale the exponential decay so that it is basically a step function that drops to 0 at the inflation radius
-cost_scaling_factor: 0.0000001
+#cost_scaling_factor: 0.0000001
 
 observation_sources: base_laser1 bounding_box
 
