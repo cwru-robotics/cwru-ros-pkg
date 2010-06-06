@@ -12,13 +12,13 @@
   </node>
 
   <node pkg="harlie_nav" type="bounding_box_generator.py" name="bounding_box_generator">
-    <param name="box_height" value="55.0" />
-    <param name="box_width" value="40.0" />
+    <param name="box_height" value="65.0" />
+    <param name="box_width" value="55.0" />
     <param name="step_size" value="0.1" />
     <param name="frame_id" value="bounding_box" />
     <param name="publishing_rate" value="20" />
   </node>
 
 
-  <node pkg="tf" type="static_transform_publisher" name="bounding_box_transform_publisher" args="-31.0 -0.5 1.9 -0.541 0.0 0.0 odom bounding_box 100" />
+  <node pkg="tf" type="static_transform_publisher" name="bounding_box_transform_publisher" args="123.42 -25.62 1.9 0.0 0.0 0.0 odom bounding_box 100" />
 </launch>
