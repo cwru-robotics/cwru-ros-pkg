@@ -56,9 +56,10 @@ window
 floorplan
 (
     name "BensWorld"
-    bitmap "../maps/BensWorld_stage3.pgm"
-    size [200 200 10.0]
+    bitmap "../maps/BensWorld_stage4.pgm"
+    size [100 100 10.0]
     pose [ 0.0 0.0 0 0.0 ]
 )
 
-harlie( pose [ 0.0 -87.0 0 0.0 ] name "harlie" color "blue")
+#harlie( pose [ 0.0 -87.0 0 0.0 ] name "harlie" color "blue")
+harlie( pose [ 0.0 0.0 0 0.0 ] name "harlie" color "blue")
