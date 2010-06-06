@@ -12,14 +12,14 @@ from move_base_msgs.msg import MoveBaseGoal
 from actionlib_msgs.msg import GoalStatus
 from nav_msgs.msg import Odometry
 from geometry_msgs.msg import Point
-
+from nav_msgs.msg import GridCells
 
 from numpy import *
 from enthought.mayavi import mlab
 from sys import maxint
 from collections import deque
 import time
-from scipy import weave 
+#from scipy import weave 
 
 
 #import gc
@@ -106,6 +106,7 @@ def constrainValue(val):
 	return val
 
 def fullCost(x,y):
+	global FullCost
 	#return gradCost[x,y] - wallCost[x,y] - reduceCost[x,y]
 	return FullCost[x,y]
 
@@ -215,25 +216,25 @@ def makeGradient(gradList,robot,walls,gradCost):
 
 def convertFromOdom(value):
 	resolution = .05
-	return (value/resolution - meter%resolution)/resolution + MAP_SIZE/2;
+	return (value/resolution) - (value%resolution)/resolution + MAP_SIZE/2
 
 def convertToOdom(value):
  	resolution = .05
-	return value*resolution+MAP_SIZE/2
+	return (value-MAP_SIZE/2)*resolution
 
 def sendGoal(goalcell):
 	client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
 	client.wait_for_server()
 
 	goal = MoveBaseGoal()
-	goal.target_pose.header.frame_id = 'odom;
+	goal.target_pose.header.frame_id = '/odom'
 	goal.target_pose.header.stamp = rospy.Time.now()
-	
+	print "MOVING TO ", 	 convertToOdom(goalcell.x), convertToOdom(goalcell.y)
 	goal.target_pose.pose.position.x = convertToOdom(goalcell.x)
-	goal.target_pose.pose.position.y = convertToOdom(goalcell.y)
+	goal.target_pose.pose.position.y = -1*convertToOdom(goalcell.y)
 	#Fix Theta
 	quaternion = tf.transformations.quaternion_about_axis(0, (0,0,1))
-	goal.target_pose.pose.orientation = Quaternion(*quaternion)c
+	goal.target_pose.pose.orientation = Quaternion(*quaternion)
 
 	client.send_goal(goal)
 	#Do we wait for a resulut
@@ -243,81 +244,93 @@ def sendGoal(goalcell):
     	#else:
     	#   	rospy.logerr("Could not execute goal for some reason")
 
+
+global gradList
+global robot
+global gradCost
+global reduceCost
+global initalized
+global FullCost
 initalized = False
 hasOdom = False
-def init():
-	#INITALIZE STUFF
-	wallGrid = normalDistributionArray(WALL_SIZE,6,500)
-	#reduceGrid = normalDistributionArray(REDUCE_SIZE,30,4000) + normalDistributionArray(REDUCE_SIZE,3,120)
-	reduceGrid = normalDistributionArray(REDUCE_SIZE,13,4000)
-	#walls = loadtxt("image.csv.gz",delimiter=',')
-	walls = load("image.npy")
-	wallCost = zeros((MAP_SIZE,MAP_SIZE),float)
-	gradCost = zeros((MAP_SIZE,MAP_SIZE),float)
-	reduceCost = zeros((MAP_SIZE,MAP_SIZE),float)
-	FullCost = zeros((MAP_SIZE,MAP_SIZE),float)
-	expandMask = zeros((MAP_SIZE,MAP_SIZE),int)
-	gradList = deque()
-	#robot = Cell(3488,2000)
-	#robot = Cell(3500,2600)
-	robot = Cell(3500,2400)
-	gradCost[robot.x,robot.y]=1
-	gradList.append(robot)
+robot = Cell(23,23)
+#INITALIZE STUFF
+wallGrid = normalDistributionArray(WALL_SIZE,6,500)
+#reduceGrid = normalDistributionArray(REDUCE_SIZE,30,4000) + normalDistributionArray(REDUCE_SIZE,3,120)
+reduceGrid = normalDistributionArray(REDUCE_SIZE,15,4000)
+wallCost = zeros((MAP_SIZE,MAP_SIZE),float)
+isWall = zeros((MAP_SIZE,MAP_SIZE),int)
+gradCost = zeros((MAP_SIZE,MAP_SIZE),float)
+reduceCost = zeros((MAP_SIZE,MAP_SIZE),float)
+FullCost = zeros((MAP_SIZE,MAP_SIZE),float)
+expandMask = zeros((MAP_SIZE,MAP_SIZE),int)
+gradList = deque()
+#robot = Cell(3488,2000)
+#robot = Cell(3500,2600)
+robot = Cell(3500,2400)
+gradCost[robot.x,robot.y]=1
+gradList.append(robot)
 
 def setObstacles(walls):
-	if initalized == False:
-		if hasOdom == True:
-			init()
-
-	print "Robot x = ", robot.x , " y = ",
-	print robot.y
-	start = time.time()
-	Xmin = constrainValue(robot.x - BOX-WALL_SIZE/2)
-	Xmax = constrainValue(robot.x + BOX+WALL_SIZE/2)
-	Ymin = constrainValue(robot.y - BOX-WALL_SIZE/2)
-	Ymax = constrainValue(robot.y + BOX+WALL_SIZE/2)	
-	m = wallCost[Xmin:Xmax,Ymin:Ymax]
-	m = zeros(m.shape,float)
-	for wallNum in xrange(walls.cells.size()):
-		point = walls.cell[wallNum]
-		wallX = convertFromOdom(point.x)
-		wallY = convertFromOdom(point.y)
-		if wallX < Xmax and wallX > Xmin and wallY>Ymin and wallY<Ymax:
-			CopyMaskSum(wallCost,wallGrid,wallx,wally)
+	global robot
+	global gradList
+	global initalized
+	global gradCost
+	global reduceCost
+	global FullCost
+	if hasOdom == True:
+		initalized = True
+	if initalized != False:
+			
+		print "Robot x = ", robot.x , " y = ", robot.y
+		start = time.time()
+		Xmin = constrainValue(robot.x - BOX-WALL_SIZE/2)
+		Xmax = constrainValue(robot.x + BOX+WALL_SIZE/2)
+		Ymin = constrainValue(robot.y - BOX-WALL_SIZE/2)
+		Ymax = constrainValue(robot.y + BOX+WALL_SIZE/2)	
+		m = wallCost[Xmin:Xmax,Ymin:Ymax]
+		m = zeros(m.shape,float)
+		isWall[Xmin:Xmax,Ymin:Ymax]=zeros(m.shape,int)
+		for point in walls.cells:
+			wallX = convertFromOdom(point.x)
+			wallY = convertFromOdom(point.y)
+			if wallX < Xmax and wallX > Xmin and wallY>Ymin and wallY<Ymax:
+				CopyMaskSum(wallCost,wallGrid,wallX,wallY)
+				isWall[wallX,wallY]=1
 
 	
-	print "Wall Cost " ,  time.time() - start
-	wallTime = time.time() - start
+		print "Wall Cost " ,  time.time() - start
+		wallTime = time.time() - start
 
-	start = time.time()
-	gradList = makeGradient(gradList,robot,walls,gradCost)
-	print "Gradient " ,  time.time() - start
-	gradTime = time.time()-start
-	FUL = BOX+EXTRA
-	#l = mlab.surf(split(gradCost,robot.x-BOX,robot.y-BOX,robot.x+BOX,robot.y+BOX))
+		start = time.time()
+		gradList = makeGradient(gradList,robot,isWall,gradCost)
+		print "Gradient " ,  time.time() - start
+		gradTime = time.time()-start
+		FUL = BOX+EXTRA
+		#l = mlab.surf(split(gradCost,robot.x-BOX,robot.y-BOX,robot.x+BOX,robot.y+BOX))
 
-	CopyMaskSum(reduceCost,reduceGrid,robot.x,robot.y)
-	data=split(gradCost,robot.x-FUL,robot.y-FUL,robot.x+FUL,robot.y+FUL)-split(wallCost,robot.x-FUL,robot.y-FUL,robot.x+FUL,robot.y+FUL)-split(reduceCost,robot.x-FUL,robot.y-FUL,robot.x+FUL,robot.y+FUL)
-	print data.shape
-	start = time.time()
+		CopyMaskSum(reduceCost,reduceGrid,robot.x,robot.y)
+		start = time.time()
 
 
-	Xmin = robot.x - BOX
-	Xmax = robot.x + BOX
-	Ymin = robot.y - BOX
-	Ymax = robot.y + BOX
-	start = time.time()	
-	FullCost[Xmin:Xmax,Ymin:Ymax] =  gradCost[Xmin:Xmax,Ymin:Ymax] - wallCost[Xmin:Xmax,Ymin:Ymax] - reduceCost[Xmin:Xmax,Ymin:Ymax]
-	robot = robotAccendFull(expandMask,robot,gradCost)
-	print "Accending " ,  time.time() - start
-	accendTime = time.time()-start
+		Xmin = robot.x - BOX
+		Xmax = robot.x + BOX
+		Ymin = robot.y - BOX
+		Ymax = robot.y + BOX
+		start = time.time()	
+		FullCost[Xmin:Xmax,Ymin:Ymax] =  gradCost[Xmin:Xmax,Ymin:Ymax] - wallCost[Xmin:Xmax,Ymin:Ymax] - reduceCost[Xmin:Xmax,Ymin:Ymax]
+		robot = robotAccendFull(expandMask,robot,gradCost)
+		print "Accending " ,  time.time() - start
+		accendTime = time.time()-start
+		sendGoal(robot)
+		print "Total time = ",wallTime+gradTime+accendTime
 
-	print "Total time = ",wallTime+gradTime+accendTime
-
-	print "Robot X,Y"
-	print robot.x , robot.y
-	l = mlab.surf(data)
-	mlab.show()
+		print "Robot X,Y"
+		print robot.x , robot.y
+		data=split(FullCost,robot.x-FUL,robot.y-FUL,robot.x+FUL,robot.y+FUL)
+		print data.shape
+		l = mlab.surf(data)
+		mlab.show()
 
 
 
@@ -329,15 +342,21 @@ def setObstacles(walls):
 
 
 def setRobotPose(Odom):
-	robot.y = convertFromOdom(odom.pose.pose.position.y)	
-	robot.x = convertFromOdom(odom.pose.pose.position.x)
+	global hasOdom
+	robot.y = convertFromOdom(Odom.pose.pose.position.y)	
+	robot.x = convertFromOdom(Odom.pose.pose.position.x)
+	hasOdom=True
 
 
+#def main():
+#	rospy.Subscriber("/odom", Odometry, setRobotPose)
+#	rospy.Subscriber("/move_base/global_costmap/inflated_obstacles", GridCells, setObstacles)		
+#	rospy.spin()
 
-def main():
-	rospy.Subscriber("/odom", Odometry, setRobotPose)
-	rospy.Subscriber("/move_base/global_costmap/inflated_obstacles", GridCells, setRobotPose)		
-	rospy.spin()
+rospy.init_node('harlie_obstacle_planner')
+rospy.Subscriber("/odom", Odometry, setRobotPose)
+rospy.Subscriber("/move_base/global_costmap/inflated_obstacles", GridCells, setObstacles)		
+rospy.spin()
 
 
 
