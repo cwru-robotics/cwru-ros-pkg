@@ -1,16 +1,3 @@
-#include <jaus/mobility/sensors/globalposesensor.h>
-#include <jaus/mobility/sensors/localposesensor.h>
-#include <jaus/mobility/sensors/velocitystatesensor.h>
-//#include <jaus/mobility/sensors/accelerationstatesensor.h>
-#include <jaus/mobility/drivers/localwaypointlistdriver.h>
-#include <jaus/core/transport/judp.h>
-#include <jaus/core/component.h>
-#include <cxutils/keyboard.h>
-#include <cxutils/math/cxmath.h>
-#include <iostream>
-#include <cstring>
-#include <cstdio>
-#include <cmath>
 
 
 
@@ -27,10 +14,28 @@
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Point.h>
 #include <list>
-#include <harlie_obstacle_planner/costnode.h>
 
 
 
+
+
+
+
+
+
+#include <jaus/mobility/sensors/globalposesensor.h>
+#include <jaus/mobility/sensors/localposesensor.h>
+#include <jaus/mobility/sensors/velocitystatesensor.h>
+//#include <jaus/mobility/sensors/accelerationstatesensor.h>
+#include <jaus/mobility/drivers/localwaypointlistdriver.h>
+#include <jaus/core/transport/judp.h>
+#include <jaus/core/component.h>
+#include <cxutils/keyboard.h>
+#include <cxutils/math/cxmath.h>
+#include <iostream>
+#include <cstring>
+#include <cstdio>
+#include <cmath>
 
 
 
@@ -44,6 +49,8 @@
 //#include <vld.h>
 #endif
 #endif
+
+using namespace std;
 
 //For GPS goal point
 typedef actionlib::SimpleActionClient<move_base_msgs::MoveBaseAction> Client;
@@ -147,7 +154,7 @@ void giveROSwaypoint(int serialn,double gpsLat, double gpsLong, double speedlimi
 	Client client("move_base",true);
 	client.waitForServer();
 	move_base_msgs::MoveBaseGoal goal;
-	longGoal=(gpaLong+83.1952306)*-1*81968;
+	longGoal=(gpsLong+83.1952306)*-1*81968;
 	latGoal=(gpsLat-42.6778389)*111090;
 	goal.target_pose.pose.position.x=latGoal;
 	goal.target_pose.pose.position.y=longGoal;
