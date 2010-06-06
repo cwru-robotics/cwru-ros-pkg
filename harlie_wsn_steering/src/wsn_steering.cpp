@@ -8,7 +8,7 @@ class WSNSteering {
         WSNSteering();
     private:
 	//callback to put odometry information into the class 
-	void odomCallback(const nav_msgs::Odometry::ConstPtr& odom);	
+	void odomCallback(const nav_msgs::Odometry& odom);	
 
 	/*The Wyatt Newman JAUSy Steering algorithm
 	 * x,y in meters in ROS frame
@@ -36,11 +36,11 @@ class WSNSteering {
 
 WSNSteering::WSNSteering() {
     //Read parameters from the ROS parameter server, defaulting to value if the parameter is not there
-   nh_.param("k", k, 0.0); 
+   nh_.param("k", k, 1.0); 
    nh_.param("loop_rate", loop_rate, 20.0);
 
    //Subscribe to Odometry Topic
-   odom_sub_ = nh_.subscribe<nav_msgs::Odometry>("odometry", 10, &WSNSteering::odomCallback, this); 
+   odom_sub_ = nh_.subscribe("odometry", 10, &WSNSteering::odomCallback, this); 
    
    //Setup velocity publisher
    twist_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1); 
@@ -59,7 +59,7 @@ WSNSteering::WSNSteering() {
 	computeVelocities(current_odom.pose.pose.position.x,
 	     current_odom.pose.pose.position.y,
 	     tf::getYaw(current_odom.pose.pose.orientation), v, omega);	     
-	
+	printf("Post V =  %lf\nPost Omega=%lf\n",v,omega);	
 	//Put values into twist message
 	twist.linear.x = v;
 	twist.angular.z = omega;
@@ -75,15 +75,18 @@ WSNSteering::WSNSteering() {
    }
 }
 
-void WSNSteering::computeVelocities(double x, double y, double psi, double &v, double &omega) {
+void WSNSteering::computeVelocities(double x, double y, double psi, double& v, double& omega) {
     //Wyatt put your code here. We will figure out the interface to Beom's GPS points later
+    printf("x = %lf , y = %lf, psi = %lf , v = %lf, omeag = %lf\n",x,y,psi,v,omega);
     v = 0.0;
 	// this line should make Harlie always try to point North
     omega = -k*psi; // estimate: if one radian off, spin at 1 rad/sec; i.e., set k about unity
+    printf("Pre V =  %lf\nPre Omega=%lf\n",v,omega);	
 }	
 
-void WSNSteering::odomCallback(const nav_msgs::Odometry::ConstPtr& odom) {
-    current_odom = *odom;
+void WSNSteering::odomCallback(const nav_msgs::Odometry& odom) {
+    current_odom = odom;
+    printf("SHIT %lf\n",odom.pose.pose.position.y);
 }
 
 int main(int argc, char *argv[]) {
