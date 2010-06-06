@@ -3,6 +3,7 @@
 import roslib
 roslib.load_manifest("harlie_vision")
 import rospy
+import struct
 
 from sensor_msgs.msg import Image
 from sensor_msgs.msg import PointCloud
@@ -16,8 +17,10 @@ def image_callback(img, pub):
 	for i in range(0, img.height):
 		point.y = -300*0.05
 		for j in range(0, img.width):
-			if(img.data[img.step*i + j] > 0):
-				cloud.points.append(point)
+			data = img.data[img.step*i+j]
+			val = struct.unpack("B", data)[0]
+			if(val/255.0 > 0.1):
+				cloud.points.append(Point32(point.x, point.y, point.z))
 			point.y += 0.05
 		point.x -= 0.05
 	pub.publish(cloud)	
