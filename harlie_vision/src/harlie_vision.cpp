@@ -39,7 +39,7 @@ HarlieVision::HarlieVision() : it_(nh_), priv_nh_("~") {
 	image_subscriber = it_.subscribe("image_rect_color", 1, &HarlieVision::image_callback, this);
 	image_publisher = it_.advertise("plan_view", 1);
 
-	H = (cv::Mat_<double>(3,3) << -2.05132604, -1.09442568, 968.34979248, -2.18138890e-03, -2.11626363, 604.70727539, 1.61322518e-04, -3.26651102e-03, 1.0); 
+	H = (cv::Mat_<double>(3,3) << -1.71965361, -0.99958014, 830.78930664, -0.07028566, -1.45535958, 426.53823853, -8.04191513e-05, -3.11367703e-03, 1.0); 
 
 	priv_nh_.param("s_k", s_k, 4.0);
 	priv_nh_.param("s_c", s_c, 150.0);
