@@ -21,8 +21,8 @@ from sys import maxint
 from collections import deque
 import time
 
-#import gc
-#gc.disable()
+import gc
+gc.enable()
 
 #Todo:
 #EXPAND the location where we add walls in so that we dont go outside the walls
@@ -33,10 +33,10 @@ import time
 
 
 
-MAP_SIZE = 4000
+MAP_SIZE = 8000
 #WALL_SIZE = 41
 WALL_SIZE = 31
-BOX = 61
+BOX = 161
 REDUCE_SIZE=81
 EXTRA = 100
 
@@ -133,7 +133,7 @@ def sendGoal(goalcell):
 	goal.target_pose.header.stamp = rospy.Time.now()
 	print "MOVING TO ", 	 convertToOdom(goalcell.x), convertToOdom(goalcell.y)
 	goal.target_pose.pose.position.x = convertToOdom(goalcell.x)
-	goal.target_pose.pose.position.y = -1*convertToOdom(goalcell.y)
+	goal.target_pose.pose.position.y = convertToOdom(goalcell.y)
 	#Fix Theta
 	quaternion = tf.transformations.quaternion_about_axis(0, (0,0,1))
 	goal.target_pose.pose.orientation = Quaternion(*quaternion)
@@ -146,7 +146,8 @@ class Planner:
 		#wallGrid = normalDistributionArray(WALL_SIZE,15,100)
 		#reduceGrid = normalDistributionArray(REDUCE_SIZE,10,10000)
 		self.wallGrid = normalDistributionArray(WALL_SIZE,6,500)
-		self.walls=list()
+		self.walllist=list()
+		self.walls = zeros((MAP_SIZE,MAP_SIZE),int)
 		#reduceGrid = normalDistributionArray(REDUCE_SIZE,30,4000) + normalDistributionArray(REDUCE_SIZE,3,120)
 		self.reduceGrid = normalDistributionArray(REDUCE_SIZE,13,4000)
 		self.wallCost = zeros((MAP_SIZE,MAP_SIZE),float)
@@ -160,7 +161,7 @@ class Planner:
 		#robot = Cell(3500,2600)
 
 	def setRobot(self,robot):
-		self.robot = robot
+		self.nextrobot = robot
 		if self.hasRobot == False:
 			self.hasRobot = True
 			self.gradCost[robot.x,robot.y]=1
@@ -228,20 +229,20 @@ class Planner:
 
 		#Clear expand mask
 		m = self.expandMask[Xmin:Xmax,Ymin:Ymax]
-		m = zeros(m.shape,int)
+		self.expandMask[Xmin:Xmax,Ymin:Ymax] = zeros(m.shape,int)
 	
 		x = self.robot.x
 		y = self.robot.y
 		low  = -maxint
 
 		#Sometimes we get stupid and stuck in a local max this might remove this
-		#neighbors = findNeigbors(x,y)
-		#current = fullCost(x,y);
-		#Xlow = x
-		#Ylow = y
+		neighbors = findNeigbors(x,y)
+		current = self.fullCost(x,y)
+		Xlow = x
+		Ylow = y
 		#for neighbor in neighbors:
-		#	if fullCost(neighbor.x,neighbor.y) < current:
-		#		current = fullCost(neighbor.x,neighbor.y)
+		#	if self.fullCost(neighbor.x,neighbor.y) < current:
+		#		current = self.fullCost(neighbor.x,neighbor.y)
 		#		Xlow = neighbor.x
 		#		Ylow = neighbor.y
 
@@ -266,12 +267,12 @@ class Planner:
 		Ymin = constrainValue(self.robot.y - BOX)
 		Ymax = constrainValue(self.robot.y + BOX)
 		m = self.wallCost[Xmin:Xmax,Ymin:Ymax]
-		m = zeros(m.shape,int)
+		self.wallCost[Xmin:Xmax,Ymin:Ymax] = zeros(m.shape,int)
 		wallMid = (WALL_SIZE-1)/2
-		for wall in walls:
+		for wall in self.walllist:
 			if wall.x>Xmin and wall.x < Xmax and wall.y >Ymin and wall.y < Ymax:
 				CopyMaskSum(self.wallCost,self.wallGrid,wall.x,wall.y)
-
+				self.walls[wall.x,wall.y] = 1
 	def expandGradient(self,cell):
 		neighbors = findNeigbors(cell.x, cell.y)
 		for neighbor in neighbors:
@@ -297,7 +298,8 @@ class Planner:
 
 
 	def runUpdatePlanner(self):
-		if self.hasRobot == True:
+		if self.hasRobot == True and self.walllist:
+			self.robot = self.nextrobot
 			start = time.time()
 			self.makeWallCost()
 			print "Wall Cost " ,  time.time() - start
@@ -328,30 +330,31 @@ def setObstacles(walls,planner):
 		wallX = convertFromOdom(point.x)
 		wallY = convertFromOdom(point.y)
 		cells.append(Cell(wallX,wallY))
-	planner.walls=cells
+	planner.walllist=cells
 
 
 def setRobotPose(Odom,planner):
 	robot = Cell(0,0)
 	robot.y = convertFromOdom(Odom.pose.pose.position.y)	
 	robot.x = convertFromOdom(Odom.pose.pose.position.x)
-	planner.SetRobot(robot)
+	planner.setRobot(robot)
 
 def main():
 	planner = Planner()
 	rospy.init_node('harlie_obstacle_planner')
 	rospy.Subscriber("/odom", Odometry, setRobotPose,planner)
 	rospy.Subscriber("/move_base/global_costmap/inflated_obstacles", GridCells, setObstacles,planner)		
-	rate = rospy.client.Rate(.5)
+	rate = rospy.client.Rate(.1)
 	while not rospy.is_shutdown():
 		print time.time()
 		goal = planner.runUpdatePlanner()	
 		if goal:
 			sendGoal(goal)
 			#Show some data
+			FUL=120
 			data=split(planner.FullCost,planner.robot.x-FUL,planner.robot.y-FUL,planner.robot.x+FUL,planner.robot.y+FUL)
 			l = mlab.surf(data)
-			mlab.show()
+			#mlab.show()
 		rate.sleep()
 if __name__ == '__main__':
     rospy.init_node('harlie_obstacle_planner')
