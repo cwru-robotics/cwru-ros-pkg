@@ -12,12 +12,27 @@
 #include <cstdio>
 #include <cmath>
 
-#include <tf/tf.h>
+
+
+#include <ros/ros.h>
+#include <std_msgs/String.h>
+#include <nav_msgs/GridCells.h>
 #include <move_base_msgs/MoveBaseGoal.h>
 #include <move_base_msgs/MoveBaseAction.h>
-#include <actoinlib/client/simpe_action_client.h>
+#include <actionlib/client/simple_action_client.h>
 #include <move_base/move_base.h>
 #include <move_base_msgs/MoveBaseActionGoal.h>
+#include <tf/transform_datatypes.h>
+#include <tf/tf.h>
+#include <nav_msgs/Odometry.h>
+#include <geometry_msgs/Point.h>
+#include <list>
+#include <harlie_obstacle_planner/costnode.h>
+
+
+
+
+
 
 
 //ROS includes
