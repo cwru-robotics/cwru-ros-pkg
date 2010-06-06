@@ -12,6 +12,14 @@
 #include <cstdio>
 #include <cmath>
 
+#include <tf/tf.h>
+#include <move_base_msgs/MoveBaseGoal.h>
+#include <move_base_msgs/MoveBaseAction.h>
+#include <actoinlib/client/simpe_action_client.h>
+#include <move_base/move_base.h>
+#include <move_base_msgs/MoveBaseActionGoal.h>
+
+
 //ROS includes
 #include <ros/ros.h>
 #include <harlie_base/Pose.h>
