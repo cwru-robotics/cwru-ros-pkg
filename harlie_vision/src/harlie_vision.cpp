@@ -66,7 +66,7 @@ void HarlieVision::image_callback(const sensor_msgs::ImageConstPtr& msg) {
 	try {
 		find_lines(image, lines); 
 		cv::warpPerspective(lines, output, H, cv::Size(600,600), CV_INTER_LINEAR | CV_WARP_INVERSE_MAP | CV_WARP_FILL_OUTLIERS);
-		cv::imshow("view", output);
+//		cv::imshow("view", output);
 		IplImage temp = output;
 		image_publisher.publish(bridge.cvToImgMsg(&temp, "mono8"));
 	}
@@ -101,10 +101,10 @@ void HarlieVision::find_lines(const cv::Mat& input, cv::Mat& output) {
 
 int main(int argc, char *argv[]) {
 	ros::init(argc, argv, "harlie_vision");
-	cvNamedWindow("view");
-	cvStartWindowThread();
+//	cvNamedWindow("view");
+//	cvStartWindowThread();
 	HarlieVision visionator;
 	ros::spin();
-	cvDestroyWindow("view");
+//	cvDestroyWindow("view");
 	return 0;
 }
