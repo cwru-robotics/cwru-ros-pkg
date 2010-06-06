@@ -4,7 +4,7 @@
      harlie_jaus
 
   </description>
-  <author>Eric Perko</author>
+  <author>Eric Perko  tornados</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/jaus</url>
@@ -12,6 +12,9 @@
   <depend package="roscpp"/>
   <depend package="nav_msgs"/>
   <depend package="std_msgs"/>
+  <depend package="geometry_msg"/>
+  <depend package="actionlib"/>
+  <depend package="tf"/>
 
 </package>
 
