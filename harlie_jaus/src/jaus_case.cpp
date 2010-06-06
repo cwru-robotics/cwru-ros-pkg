@@ -1,28 +1,3 @@
-
-
-
-#include <ros/ros.h>
-#include <std_msgs/String.h>
-#include <nav_msgs/GridCells.h>
-#include <move_base_msgs/MoveBaseGoal.h>
-#include <move_base_msgs/MoveBaseAction.h>
-#include <actionlib/client/simple_action_client.h>
-#include <move_base/move_base.h>
-#include <move_base_msgs/MoveBaseActionGoal.h>
-#include <tf/transform_datatypes.h>
-#include <tf/tf.h>
-#include <nav_msgs/Odometry.h>
-#include <geometry_msgs/Point.h>
-#include <list>
-
-
-
-
-
-
-
-
-
 #include <jaus/mobility/sensors/globalposesensor.h>
 #include <jaus/mobility/sensors/localposesensor.h>
 #include <jaus/mobility/sensors/velocitystatesensor.h>
@@ -43,6 +18,19 @@
 //ROS includes
 #include <ros/ros.h>
 #include <harlie_base/Pose.h>
+#include <std_msgs/String.h>
+#include <nav_msgs/GridCells.h>
+#include <move_base_msgs/MoveBaseGoal.h>
+#include <move_base_msgs/MoveBaseAction.h>
+#include <actionlib/client/simple_action_client.h>
+#include <move_base/move_base.h>
+#include <move_base_msgs/MoveBaseActionGoal.h>
+#include <tf/transform_datatypes.h>
+#include <tf/tf.h>
+#include <nav_msgs/Odometry.h>
+#include <geometry_msgs/Point.h>
+#include <list>
+
 
 #ifdef WIN32
 #ifndef WIN64
@@ -151,6 +139,10 @@ double convertLocaltoGPSLong(double dstLocalY, double oriGPSLongi){
 // PUT ROS WAYPOINT HERE!!!!!!!!!!!!!!!!!!!!
 void giveROSwaypoint(int serialn,double gpsLat, double gpsLong, double speedlimit){
 
+	std::cout << "Giving ROS Waypoint........."; 
+	std::cout << gpsLat;
+	std::cout << gpsLong;
+	std::cout << "..........................END";
 	Client client("move_base",true);
 	client.waitForServer();
 	move_base_msgs::MoveBaseGoal goal;
@@ -206,7 +198,7 @@ int main(int argc, char* argv[])
 	component.AddService(localWaypointListDriver);
 
 		// Try load settings files.
-	if(component.LoadSettings("settings/services.xml") == false)
+	if(component.LoadSettings("/home/harlie/jaus_case/settings/services.xml") == false)
 	{
 		std::cout << "Failed to Load services.xml file! Loading default settings....\n";
 
