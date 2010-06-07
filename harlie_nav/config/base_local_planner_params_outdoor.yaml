@@ -5,16 +5,16 @@ TrajectoryPlannerROS:
   min_in_place_rotational_vel: 0.5
   backup_vel: 0.3
 
-  acc_lim_th: 1.0
+  acc_lim_th: 0.5
   acc_lim_x: 1.0
   acc_lim_y: 0
 
   holonomic_robot: false
 
   yaw_goal_tolerance: 6.28
-  xy_goal_tolerance: 0.5
+  xy_goal_tolerance: 0.75
 
   path_distance_bias: 0.6
   goal_distance_bias: 0.8
-  occdist_scale: 0.01
+  occdist_scale: 0.5
   heading_lookahead: 0.325
