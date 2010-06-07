@@ -59,9 +59,9 @@ WSNSteering::WSNSteering() {
    double x_Des,y_Des,psi_Des,rho_Des; // need to get these values from trajectory generator;
    double x_PSO,y_PSO,psi_PSO;
 
-   x_Des = 52.846;
-   y_Des = -9.899;
-   psi_Des = -0.7106; // 
+   x_Des = 46.14;//52.846;
+   y_Des = -11.07;//-9.899;
+   psi_Des = 0.0;//-0.7106; // 
    rho_Des=0; // zero curvature
 
 
@@ -91,7 +91,7 @@ WSNSteering::WSNSteering() {
 
 void WSNSteering::computeVelocities(double x_PSO, double y_PSO, double psi_PSO, double x_des, double y_des, double psi_des, double rho_des, double &v, double &omega) {
     //Wyatt put your code here. We will figure out the interface to Beom's GPS points later
-	double tanVec[2],nVec[2],dx_vec[2],d;
+	double tanVec[2],nVec[2],dxVec[2],nVec[2],d;
 	double deltaPsi;
 	double pi=3.1415926536;
 
