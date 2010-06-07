@@ -39,8 +39,8 @@ class WSNSteering {
 
 WSNSteering::WSNSteering() {
     //Read parameters from the ROS parameter server, defaulting to value if the parameter is not there
-   nh_.param("k_psi", k_psi, 4.0); 
-   nh_.param("k_offset", k_offset, 0.0); 
+   nh_.param("k_psi", k_psi, 3.0); 
+   nh_.param("k_offset", k_offset, 2.0); 
    nh_.param("loop_rate", loop_rate, 20.0);
 
    //Subscribe to Odometry Topic

@@ -69,7 +69,9 @@ double govel;
 //--- END
 
 
-void callback(const harlie_base::PoseConstPtr& pose) {
+
+
+void callback(const harlie_base::Pose pose) {
 	//cRIO pose... we use this because it is already in the JAUS frame and doesn't need coordinate system munging to function
 //	JAUS::GlobalPose globalPose;
 //	JAUS::VelocityState velocityState;
@@ -78,13 +80,21 @@ void callback(const harlie_base::PoseConstPtr& pose) {
 //	globalPose.SetLongitude((pose->y/long_conversion_to_m) + offset_long);
 //	globalPose.SetYaw(pose->theta);
 //	globalPose.SetTimeStamp(JAUS::Time::GetUtcTime());
+	//cout<<"WOOT CALL BACK\n";
+	glolat = (pose.x/lat_conversion_to_m) + offset_lat;
+	glolong = (pose.y/long_conversion_to_m) + offset_long;
+	glotheta = pose.theta;
+	
+	while(glotheta>3.14159265){
+glotheta -= 6.2831853;
+}
 
-	glolat = (pose->x/lat_conversion_to_m) + offset_lat;
-	glolong = (pose->y/long_conversion_to_m) + offset_long;
-	glotheta = pose->theta;
-
-	gomega = pose->omega;
-	govel = pose->vel;
+while(glotheta<-3.14159265){
+glotheta += 6.2831853;
+}
+//	cout<<glolat<<" " << glolong<< " "<<glotheta<<"\n";
+	gomega = pose.omega;
+	govel = pose.vel;
 	if(issentmsgtoHarlie)
 	{
 		if (abs(glolat - latGoal) < 0.5)
@@ -139,10 +149,10 @@ double convertLocaltoGPSLong(double dstLocalY, double oriGPSLongi){
 // PUT ROS WAYPOINT HERE!!!!!!!!!!!!!!!!!!!!
 void giveROSwaypoint(int serialn,double gpsLat, double gpsLong, double speedlimit){
 
-	std::cout << "Giving ROS Waypoint........."; 
+	std::cout << "Giving ROS Waypoint.........\n"; 
 	std::cout << gpsLat;
 	std::cout << gpsLong;
-	std::cout << "..........................END";
+	std::cout << "..........................END\n";
 	Client client("move_base",true);
 	client.waitForServer();
 	move_base_msgs::MoveBaseGoal goal;
@@ -154,10 +164,10 @@ void giveROSwaypoint(int serialn,double gpsLat, double gpsLong, double speedlimi
 	geometry_msgs::Quaternion quad;
 	quad = tf::createQuaternionMsgFromYaw(0.0);
 	goal.target_pose.header.frame_id = "/odom";
-	ROS_INFO("Harlie Obstacle Planner is spinning");
 	goal.target_pose.pose.orientation = quad;
+	std::cout<<"Sending Goal\n";
 	client.sendGoal(goal);
-	ROS_INFO("Harlie Obstacle Planner is spinning");
+	std::cout<<"SentGoal\n";
 }
 
 
@@ -226,7 +236,7 @@ int main(int argc, char* argv[])
 		globalPose.SetPositionRMS(0.0);
 		globalPose.SetRoll(0.0);
 		globalPose.SetPitch(0.0);
-		globalPose.SetYaw(CxUtils::CxToRadians(45));
+		globalPose.SetYaw(0);
 		globalPose.SetAttitudeRMS(0.0);
 		globalPose.SetTimeStamp(JAUS::Time::GetUtcTime());
 
@@ -250,6 +260,7 @@ int main(int argc, char* argv[])
 
 	std::vector<CxUtils::Wgs> gWaypoints;
 
+/*
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	// FAKE SET OF WAYPOINTS
@@ -301,7 +312,7 @@ int main(int argc, char* argv[])
 
 	////////////////////////////////////////////////////////////////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////////////////////////
-
+*/
 	ros::Subscriber pose_sub = n.subscribe("harlie_pose", 100, callback);
 
 	 while(ros::ok())
@@ -323,12 +334,12 @@ int main(int argc, char* argv[])
 	 globalPose.SetLatitude(glolat);
 	globalPose.SetLongitude(glolong);
 	globalPose.SetYaw(glotheta);
+	std::cout<<glotheta;
 	globalPose.SetTimeStamp(JAUS::Time::GetUtcTime());
 
 		velocityState.SetYawRate(gomega);
 		velocityState.SetVelocityX(govel);
 		velocityState.SetTimeStamp(JAUS::Time::GetUtcTime());
-
 
 		// Save the values.
 		globalPoseSensor->SetGlobalPose(globalPose);
