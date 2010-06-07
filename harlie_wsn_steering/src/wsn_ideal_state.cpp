@@ -28,7 +28,7 @@ class WSNIdealState {
 WSNIdealState::WSNIdealState() {
 	//Setup the ideal state pub
 	ideal_state_pub_= nh_.advertise<harlie_wsn_steering::DesiredState>("idealState",1);   
-	nh_.param("loop_rate",loop_rate,20.0);
+	nh_.param("loop_rate",loop_rate,20.0); // default 20Hz
 	
 	//Setup the rate limiter
 	ros::Rate rate(loop_rate);
@@ -64,10 +64,10 @@ WSNIdealState::WSNIdealState() {
 void WSNIdealState::computeState(float& x, float& y, float& theta, float& rho)
 {
 	//Wyatt put your code here. We will figure out the interface to Beom's GPS points later
-	x = 3;
-	y = 4;
-	theta = 5;
-	rho = 6;
+	x = 46.14;//52.846;;
+	y = -11.07;//-9.899;
+	theta = 0.0;//-0.7106; //
+	rho = 0;
 }
 
 int main(int argc, char *argv[]) {
