@@ -95,8 +95,9 @@ void WSNSteering::computeVelocities(double x_PSO, double y_PSO, double psi_PSO, 
 	double deltaPsi;
 	double pi=3.1415926536;
 
-	tanVec[0]=-sin(psi_des); // vector tangent to desired lineseg
-	tanVec[1]=cos(psi_des); 
+	tanVec[0]= cos(psi_des); //-sin(psi_des); // vector tangent to desired lineseg
+	tanVec[1]= sin(psi_des); //cos(psi_des); 
+
 	nVec[0]= -tanVec[1];  // normal vector of desired (directed) lineseg--points "left" of heading
     nVec[1]=  tanVec[0];
 	dx_vec[0] = x_des-x_PSO;
