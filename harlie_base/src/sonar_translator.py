@@ -18,7 +18,7 @@ def handle_sonar(msg, scan_pub):
 	scan.scan_time = 0.05
 
 	scan.range_min = 0.10
-	scan.range_max = 4.0
+	scan.range_max = 2.0
 
 	scan.ranges = [msg.dist for i in range(0,30)]
 	scan_pub.publish(scan)

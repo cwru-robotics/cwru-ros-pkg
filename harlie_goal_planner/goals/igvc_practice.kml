@@ -10,7 +10,7 @@
         <tessellate>1</tessellate>
         <altitudeMode>relativeToGround</altitudeMode>
 	<coordinates>
--83.19545,42.67665,0 
+-83.1950309,42.6769113,0 -83.1952196,42.6769184,0 
 	</coordinates>
       </LineString>
     </Placemark>
