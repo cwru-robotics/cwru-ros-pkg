@@ -150,7 +150,6 @@ void WSNSteering::odomCallback(const nav_msgs::Odometry::ConstPtr& odom) {
 void WSNSteering::desStateCallback(const harlie_wsn_steering::DesiredState::ConstPtr& desState)
 {
 	curDesState= *desState;
-
 }
 
 int main(int argc, char *argv[]) {
