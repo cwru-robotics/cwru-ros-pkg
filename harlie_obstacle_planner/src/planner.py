@@ -33,10 +33,12 @@ gc.enable()
 
 
 
-MAP_SIZE = 8000
+MAP_SIZE = 4000
 #WALL_SIZE = 41
-WALL_SIZE = 31
-BOX = 161
+#WALL_SIZE = 31
+WALL_SIZE = 11
+#BOX=61
+BOX = 81
 REDUCE_SIZE=81
 EXTRA = 100
 
@@ -149,6 +151,7 @@ class Planner:
 		self.walllist=list()
 		self.walls = zeros((MAP_SIZE,MAP_SIZE),int)
 		#reduceGrid = normalDistributionArray(REDUCE_SIZE,30,4000) + normalDistributionArray(REDUCE_SIZE,3,120)
+		#self.reduceGrid = normalDistributionArray(REDUCE_SIZE,13,4000)
 		self.reduceGrid = normalDistributionArray(REDUCE_SIZE,13,4000)
 		self.wallCost = zeros((MAP_SIZE,MAP_SIZE),float)
 		self.gradCost = zeros((MAP_SIZE,MAP_SIZE),float)
