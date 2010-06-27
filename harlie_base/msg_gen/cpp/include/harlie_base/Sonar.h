@@ -31,8 +31,8 @@ struct Sonar_ : public ros::Message
   {
   }
 
-  typedef roslib::Header_<ContainerAllocator>  _header_type;
-  roslib::Header_<ContainerAllocator>  header;
+  typedef  ::roslib::Header_<ContainerAllocator>  _header_type;
+   ::roslib::Header_<ContainerAllocator>  header;
 
   typedef float _dist_type;
   float dist;
@@ -104,19 +104,19 @@ public:
     return size;
   }
 
-  typedef boost::shared_ptr<harlie_base::Sonar_<ContainerAllocator> > Ptr;
-  typedef boost::shared_ptr<harlie_base::Sonar_<ContainerAllocator>  const> ConstPtr;
+  typedef boost::shared_ptr< ::harlie_base::Sonar_<ContainerAllocator> > Ptr;
+  typedef boost::shared_ptr< ::harlie_base::Sonar_<ContainerAllocator>  const> ConstPtr;
 }; // struct Sonar
-typedef harlie_base::Sonar_<std::allocator<void> > Sonar;
+typedef  ::harlie_base::Sonar_<std::allocator<void> > Sonar;
 
-typedef boost::shared_ptr<harlie_base::Sonar> SonarPtr;
-typedef boost::shared_ptr<harlie_base::Sonar const> SonarConstPtr;
+typedef boost::shared_ptr< ::harlie_base::Sonar> SonarPtr;
+typedef boost::shared_ptr< ::harlie_base::Sonar const> SonarConstPtr;
 
 
 template<typename ContainerAllocator>
-std::ostream& operator<<(std::ostream& s, const harlie_base::Sonar_<ContainerAllocator> & v)
+std::ostream& operator<<(std::ostream& s, const  ::harlie_base::Sonar_<ContainerAllocator> & v)
 {
-  ros::message_operations::Printer<harlie_base::Sonar_<ContainerAllocator> >::stream(s, "", v);
+  ros::message_operations::Printer< ::harlie_base::Sonar_<ContainerAllocator> >::stream(s, "", v);
   return s;}
 
 } // namespace harlie_base
@@ -126,29 +126,29 @@ namespace ros
 namespace message_traits
 {
 template<class ContainerAllocator>
-struct MD5Sum<harlie_base::Sonar_<ContainerAllocator> > {
+struct MD5Sum< ::harlie_base::Sonar_<ContainerAllocator> > {
   static const char* value() 
   {
     return "32a7fd24a5630b5643e0d1882893197a";
   }
 
-  static const char* value(const harlie_base::Sonar_<ContainerAllocator> &) { return value(); } 
+  static const char* value(const  ::harlie_base::Sonar_<ContainerAllocator> &) { return value(); } 
   static const uint64_t static_value1 = 0x32a7fd24a5630b56ULL;
   static const uint64_t static_value2 = 0x43e0d1882893197aULL;
 };
 
 template<class ContainerAllocator>
-struct DataType<harlie_base::Sonar_<ContainerAllocator> > {
+struct DataType< ::harlie_base::Sonar_<ContainerAllocator> > {
   static const char* value() 
   {
     return "harlie_base/Sonar";
   }
 
-  static const char* value(const harlie_base::Sonar_<ContainerAllocator> &) { return value(); } 
+  static const char* value(const  ::harlie_base::Sonar_<ContainerAllocator> &) { return value(); } 
 };
 
 template<class ContainerAllocator>
-struct Definition<harlie_base::Sonar_<ContainerAllocator> > {
+struct Definition< ::harlie_base::Sonar_<ContainerAllocator> > {
   static const char* value() 
   {
     return "Header header\n\
@@ -175,10 +175,10 @@ string frame_id\n\
 ";
   }
 
-  static const char* value(const harlie_base::Sonar_<ContainerAllocator> &) { return value(); } 
+  static const char* value(const  ::harlie_base::Sonar_<ContainerAllocator> &) { return value(); } 
 };
 
-template<class ContainerAllocator> struct HasHeader<harlie_base::Sonar_<ContainerAllocator> > : public TrueType {};
+template<class ContainerAllocator> struct HasHeader< ::harlie_base::Sonar_<ContainerAllocator> > : public TrueType {};
 } // namespace message_traits
 } // namespace ros
 
@@ -187,7 +187,7 @@ namespace ros
 namespace serialization
 {
 
-template<class ContainerAllocator> struct Serializer<harlie_base::Sonar_<ContainerAllocator> >
+template<class ContainerAllocator> struct Serializer< ::harlie_base::Sonar_<ContainerAllocator> >
 {
   template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
   {
@@ -206,13 +206,13 @@ namespace message_operations
 {
 
 template<class ContainerAllocator>
-struct Printer<harlie_base::Sonar_<ContainerAllocator> >
+struct Printer< ::harlie_base::Sonar_<ContainerAllocator> >
 {
-  template<typename Stream> static void stream(Stream& s, const std::string& indent, const harlie_base::Sonar_<ContainerAllocator> & v) 
+  template<typename Stream> static void stream(Stream& s, const std::string& indent, const  ::harlie_base::Sonar_<ContainerAllocator> & v) 
   {
     s << indent << "header: ";
 s << std::endl;
-    Printer<roslib::Header_<ContainerAllocator> >::stream(s, indent + "  ", v.header);
+    Printer< ::roslib::Header_<ContainerAllocator> >::stream(s, indent + "  ", v.header);
     s << indent << "dist: ";
     Printer<float>::stream(s, indent + "  ", v.dist);
   }

@@ -6,4 +6,6 @@
 <param name="convergence_rate" value="1.0" />
 </node>
 
+<node name="harlie_wsn_ideal_state" pkg="harlie_wsn_steering" type="harlie_wsn_ideal_state" />
+
 </launch>

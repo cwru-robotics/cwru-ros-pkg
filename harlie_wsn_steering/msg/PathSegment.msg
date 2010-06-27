@@ -1,0 +1,8 @@
+int32 segType
+float32 xRef
+float32 yRef
+float32 tangentAng
+float32 rho
+float32 length
+float32 vDes
+float32 accel

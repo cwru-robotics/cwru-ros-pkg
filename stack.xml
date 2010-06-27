@@ -4,14 +4,18 @@
   <license>BSD</license>  
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/cwru_ros</url>
-  <depend stack="camera_drivers_experimental" /> <!-- camera1394 -->
-  <depend stack="common_msgs" /> <!-- nav_msgs, geometry_msgs -->
-  <depend stack="geometry" /> <!-- tf -->
+  <depend stack="camera_drivers" /> <!-- camera1394 -->
+  <depend stack="common" /> <!-- actionlib, pluginlib -->
+  <depend stack="common_msgs" /> <!-- nav_msgs, actionlib_msgs, geometry_msgs -->
+  <depend stack="geometry" /> <!-- tf, tf_conversions -->
+  <depend stack="image_common" /> <!-- image_transport -->
+  <depend stack="image_pipeline" /> <!-- image_proc, camera_calibration -->
   <depend stack="joystick_drivers" /> <!-- joy -->
   <depend stack="laser_drivers" /> <!-- sicktoolbox_wrapper -->
-  <depend stack="navigation" /> <!-- move_base, map_server, amcl, nav_view -->
-  <depend stack="ros" /> <!-- std_msgs, rospy, roscpp -->
+  <depend stack="navigation" /> <!-- move_base, map_server, costmap_2d, nav_view, amcl, nav_core -->
+  <depend stack="ros" /> <!-- std_srvs, std_msgs, roscpp, rospy -->
   <depend stack="simulator_stage" /> <!-- stage -->
-  <depend stack="visual_feature_detectors" /> <!-- checkerboard_detector -->
+  <depend stack="sound_drivers" /> <!-- sound_play -->
+  <depend stack="vision_opencv" /> <!-- opencv2, image_geometry, cv_bridge -->
 
 </stack>

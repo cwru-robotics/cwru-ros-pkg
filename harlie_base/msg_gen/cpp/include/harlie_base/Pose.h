@@ -49,8 +49,8 @@ struct Pose_ : public ros::Message
   {
   }
 
-  typedef roslib::Header_<ContainerAllocator>  _header_type;
-  roslib::Header_<ContainerAllocator>  header;
+  typedef  ::roslib::Header_<ContainerAllocator>  _header_type;
+   ::roslib::Header_<ContainerAllocator>  header;
 
   typedef float _x_type;
   float x;
@@ -185,19 +185,19 @@ public:
     return size;
   }
 
-  typedef boost::shared_ptr<harlie_base::Pose_<ContainerAllocator> > Ptr;
-  typedef boost::shared_ptr<harlie_base::Pose_<ContainerAllocator>  const> ConstPtr;
+  typedef boost::shared_ptr< ::harlie_base::Pose_<ContainerAllocator> > Ptr;
+  typedef boost::shared_ptr< ::harlie_base::Pose_<ContainerAllocator>  const> ConstPtr;
 }; // struct Pose
-typedef harlie_base::Pose_<std::allocator<void> > Pose;
+typedef  ::harlie_base::Pose_<std::allocator<void> > Pose;
 
-typedef boost::shared_ptr<harlie_base::Pose> PosePtr;
-typedef boost::shared_ptr<harlie_base::Pose const> PoseConstPtr;
+typedef boost::shared_ptr< ::harlie_base::Pose> PosePtr;
+typedef boost::shared_ptr< ::harlie_base::Pose const> PoseConstPtr;
 
 
 template<typename ContainerAllocator>
-std::ostream& operator<<(std::ostream& s, const harlie_base::Pose_<ContainerAllocator> & v)
+std::ostream& operator<<(std::ostream& s, const  ::harlie_base::Pose_<ContainerAllocator> & v)
 {
-  ros::message_operations::Printer<harlie_base::Pose_<ContainerAllocator> >::stream(s, "", v);
+  ros::message_operations::Printer< ::harlie_base::Pose_<ContainerAllocator> >::stream(s, "", v);
   return s;}
 
 } // namespace harlie_base
@@ -207,29 +207,29 @@ namespace ros
 namespace message_traits
 {
 template<class ContainerAllocator>
-struct MD5Sum<harlie_base::Pose_<ContainerAllocator> > {
+struct MD5Sum< ::harlie_base::Pose_<ContainerAllocator> > {
   static const char* value() 
   {
     return "7ce3d88c4d07be05d54abf722834318f";
   }
 
-  static const char* value(const harlie_base::Pose_<ContainerAllocator> &) { return value(); } 
+  static const char* value(const  ::harlie_base::Pose_<ContainerAllocator> &) { return value(); } 
   static const uint64_t static_value1 = 0x7ce3d88c4d07be05ULL;
   static const uint64_t static_value2 = 0xd54abf722834318fULL;
 };
 
 template<class ContainerAllocator>
-struct DataType<harlie_base::Pose_<ContainerAllocator> > {
+struct DataType< ::harlie_base::Pose_<ContainerAllocator> > {
   static const char* value() 
   {
     return "harlie_base/Pose";
   }
 
-  static const char* value(const harlie_base::Pose_<ContainerAllocator> &) { return value(); } 
+  static const char* value(const  ::harlie_base::Pose_<ContainerAllocator> &) { return value(); } 
 };
 
 template<class ContainerAllocator>
-struct Definition<harlie_base::Pose_<ContainerAllocator> > {
+struct Definition< ::harlie_base::Pose_<ContainerAllocator> > {
   static const char* value() 
   {
     return "Header header\n\
@@ -265,10 +265,10 @@ string frame_id\n\
 ";
   }
 
-  static const char* value(const harlie_base::Pose_<ContainerAllocator> &) { return value(); } 
+  static const char* value(const  ::harlie_base::Pose_<ContainerAllocator> &) { return value(); } 
 };
 
-template<class ContainerAllocator> struct HasHeader<harlie_base::Pose_<ContainerAllocator> > : public TrueType {};
+template<class ContainerAllocator> struct HasHeader< ::harlie_base::Pose_<ContainerAllocator> > : public TrueType {};
 } // namespace message_traits
 } // namespace ros
 
@@ -277,7 +277,7 @@ namespace ros
 namespace serialization
 {
 
-template<class ContainerAllocator> struct Serializer<harlie_base::Pose_<ContainerAllocator> >
+template<class ContainerAllocator> struct Serializer< ::harlie_base::Pose_<ContainerAllocator> >
 {
   template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
   {
@@ -305,13 +305,13 @@ namespace message_operations
 {
 
 template<class ContainerAllocator>
-struct Printer<harlie_base::Pose_<ContainerAllocator> >
+struct Printer< ::harlie_base::Pose_<ContainerAllocator> >
 {
-  template<typename Stream> static void stream(Stream& s, const std::string& indent, const harlie_base::Pose_<ContainerAllocator> & v) 
+  template<typename Stream> static void stream(Stream& s, const std::string& indent, const  ::harlie_base::Pose_<ContainerAllocator> & v) 
   {
     s << indent << "header: ";
 s << std::endl;
-    Printer<roslib::Header_<ContainerAllocator> >::stream(s, indent + "  ", v.header);
+    Printer< ::roslib::Header_<ContainerAllocator> >::stream(s, indent + "  ", v.header);
     s << indent << "x: ";
     Printer<float>::stream(s, indent + "  ", v.x);
     s << indent << "y: ";
