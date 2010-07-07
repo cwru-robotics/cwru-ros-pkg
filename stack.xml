@@ -1,9 +1,9 @@
 <stack>
-  <description brief="cwru_ros">cwru_ros</description>
+  <description brief="cwru-ros-pkg">cwru-ros-pkg</description>
   <author>Maintained by Eric Perko</author>
   <license>BSD</license>  
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/cwru_ros</url>
+  <url>http://ros.org/wiki/cwru-ros-pkg</url>
   <depend stack="camera_drivers" /> <!-- camera1394 -->
   <depend stack="common" /> <!-- actionlib, pluginlib -->
   <depend stack="common_msgs" /> <!-- nav_msgs, actionlib_msgs, geometry_msgs -->
@@ -12,8 +12,8 @@
   <depend stack="image_pipeline" /> <!-- image_proc, camera_calibration -->
   <depend stack="joystick_drivers" /> <!-- joy -->
   <depend stack="laser_drivers" /> <!-- sicktoolbox_wrapper -->
-  <depend stack="navigation" /> <!-- move_base, map_server, costmap_2d, nav_view, amcl, nav_core -->
-  <depend stack="ros" /> <!-- std_srvs, std_msgs, roscpp, rospy -->
+  <depend stack="navigation" /> <!-- move_base, map_server, costmap_2d, nav_view, amcl, move_base_msgs, nav_core -->
+  <depend stack="ros" /> <!-- std_srvs, rosmsg, std_msgs, roscpp, rospy -->
   <depend stack="simulator_stage" /> <!-- stage -->
   <depend stack="sound_drivers" /> <!-- sound_play -->
   <depend stack="vision_opencv" /> <!-- opencv2, image_geometry, cv_bridge -->

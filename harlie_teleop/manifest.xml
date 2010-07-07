@@ -8,7 +8,7 @@
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/harlie_teleop</url>
-  <depend package="harlie_base"/>
+  <depend package="cwru_base"/>
   <depend package="joy"/>
   <depend package="roscpp"/>
   <depend package="rospy"/>

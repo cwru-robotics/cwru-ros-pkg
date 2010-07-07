@@ -13,7 +13,7 @@
   <depend package="rospy"/>
   <depend package="roscpp"/>
   <depend package="std_msgs"/>
-  <depend package="harlie_base"/>
+  <depend package="cwru_base"/>
   <depend package="opencv2" />
   <depend package="image_transport" />
   <depend package="image_geometry" />
