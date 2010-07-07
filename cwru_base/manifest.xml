@@ -1,5 +1,5 @@
 <package>
-  <description brief="harlie_base">
+  <description brief="cwru_base">
 
      This package is the interface between ROS and the CWRU specific robot stuff. Specifically, this package handles translating inputs to the cRIO and outputs from the cRIO into things that are more friendly to ROS.
 
@@ -7,7 +7,7 @@
   <author>Eric Perko</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/harlie_base</url>
+  <url>http://ros.org/wiki/cwru_base</url>
   <depend package="std_msgs"/>
   <depend package="std_srvs"/>
   <depend package="rospy"/>
