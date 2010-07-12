@@ -9,7 +9,6 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/cwru_vision</url>
   <depend package="camera1394"/>
-  <depend package="camera_calibration" />
   <depend package="rospy"/>
   <depend package="roscpp"/>
   <depend package="std_msgs"/>
