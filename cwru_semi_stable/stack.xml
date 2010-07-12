@@ -7,7 +7,6 @@
   <depend stack="common" /> <!-- pluginlib -->
   <depend stack="common_msgs" /> <!-- nav_msgs, geometry_msgs -->
   <depend stack="geometry" /> <!-- tf, tf_conversions -->
-  <depend stack="igvc_ros" /> <!-- harlie_nav -->
   <depend stack="joystick_drivers" /> <!-- joy -->
   <depend stack="laser_drivers" /> <!-- sicktoolbox_wrapper -->
   <depend stack="navigation" /> <!-- move_base, map_server, costmap_2d, nav_view, amcl, nav_core -->
