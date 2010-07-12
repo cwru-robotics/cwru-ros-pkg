@@ -1,0 +1,12 @@
+<stack>
+  <description brief="cwru-semi-stable">cwru-semi-stable</description>
+  <author>Maintained by Eric Perko</author>
+  <license>BSD</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/cwru-semi-stable</url>
+  <depend stack="common_msgs" /> <!-- nav_msgs, geometry_msgs -->
+  <depend stack="geometry" /> <!-- tf -->
+  <depend stack="laser_drivers" /> <!-- sicktoolbox_wrapper -->
+  <depend stack="ros" /> <!-- std_srvs, std_msgs, roscpp, rospy -->
+
+</stack>
