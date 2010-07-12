@@ -4,14 +4,15 @@
   <license>LGPL</license>  
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/cwru_semi_stable</url>
+  <depend stack="common" /> <!-- pluginlib -->
   <depend stack="common_msgs" /> <!-- nav_msgs, geometry_msgs -->
-  <depend stack="cwru_experimental" /> <!-- playsound_recovery -->
   <depend stack="geometry" /> <!-- tf, tf_conversions -->
   <depend stack="igvc_ros" /> <!-- harlie_nav -->
   <depend stack="joystick_drivers" /> <!-- joy -->
   <depend stack="laser_drivers" /> <!-- sicktoolbox_wrapper -->
-  <depend stack="navigation" /> <!-- move_base, map_server, amcl, nav_view -->
+  <depend stack="navigation" /> <!-- move_base, map_server, costmap_2d, nav_view, amcl, nav_core -->
   <depend stack="ros" /> <!-- std_srvs, std_msgs, roscpp, rospy -->
   <depend stack="simulator_stage" /> <!-- stage -->
+  <depend stack="sound_drivers" /> <!-- sound_play -->
 
 </stack>
