@@ -1,0 +1,19 @@
+<stack>
+  <description brief="cwru_experimental">cwru_experimental</description>
+  <author>Maintained by Eric Perko</author>
+  <license>LGPL</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/cwru_experimental</url>
+  <depend stack="camera_drivers" /> <!-- camera1394 -->
+  <depend stack="common" /> <!-- actionlib, pluginlib -->
+  <depend stack="common_msgs" /> <!-- nav_msgs, actionlib_msgs, geometry_msgs -->
+  <depend stack="cwru_semi_stable" /> <!-- cwru_goal_planner, cwru_base, cwru_nav -->
+  <depend stack="geometry" /> <!-- tf -->
+  <depend stack="image_common" /> <!-- image_transport -->
+  <depend stack="image_pipeline" /> <!-- image_proc, camera_calibration -->
+  <depend stack="navigation" /> <!-- move_base_msgs, move_base, nav_core, costmap_2d -->
+  <depend stack="ros" /> <!-- rospy, std_msgs, roscpp, rosmsg -->
+  <depend stack="sound_drivers" /> <!-- sound_play -->
+  <depend stack="vision_opencv" /> <!-- opencv2, image_geometry, cv_bridge -->
+
+</stack>

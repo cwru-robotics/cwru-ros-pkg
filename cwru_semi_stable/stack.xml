@@ -1,0 +1,17 @@
+<stack>
+  <description brief="cwru_semi_stable">cwru_semi_stable</description>
+  <author>Maintained by Eric Perko</author>
+  <license>LGPL</license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/cwru_semi_stable</url>
+  <depend stack="common_msgs" /> <!-- nav_msgs, geometry_msgs -->
+  <depend stack="cwru_experimental" /> <!-- playsound_recovery -->
+  <depend stack="geometry" /> <!-- tf, tf_conversions -->
+  <depend stack="igvc_ros" /> <!-- harlie_nav -->
+  <depend stack="joystick_drivers" /> <!-- joy -->
+  <depend stack="laser_drivers" /> <!-- sicktoolbox_wrapper -->
+  <depend stack="navigation" /> <!-- move_base, map_server, amcl, nav_view -->
+  <depend stack="ros" /> <!-- std_srvs, std_msgs, roscpp, rospy -->
+  <depend stack="simulator_stage" /> <!-- stage -->
+
+</stack>

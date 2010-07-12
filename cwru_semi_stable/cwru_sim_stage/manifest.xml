@@ -1,0 +1,19 @@
+<package>
+  <description brief="cwru_sim_stage">
+
+     cwru_sim_stage
+
+  </description>
+  <author>Eric Perko</author>
+  <license>LGPL</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/cwru_sim_stage</url>
+  <depend package="stage"/>
+  <depend package="harlie_nav"/>
+  <depend package="map_server" />
+  <depend package="cwru_maps" />
+  <depend package="nav_view" />
+
+</package>
+
+

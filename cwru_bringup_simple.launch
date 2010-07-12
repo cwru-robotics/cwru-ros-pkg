@@ -7,8 +7,6 @@
 	<!-- Startup the base and sensors -->
 	<include file="$(find cwru_base)/start_base_simple.launch" />
 
-	<!-- include file="$(find harlie_vision)/start_vision.launch" /-->
-
 	<!-- Startup the joystick stuff -->
-	<include file="$(find harlie_teleop)/start_teleop.launch" />
+	<include file="$(find cwru_teleop)/start_teleop.launch" />
 </launch>

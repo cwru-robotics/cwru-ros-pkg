@@ -1,0 +1,22 @@
+<package>
+  <description brief="cwru_nav">
+
+     cwru_nav
+
+  </description>
+  <author>Eric Perko</author>
+  <license>LGPL</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/cwru_nav</url>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+  <depend package="cwru_base"/>
+  <depend package="move_base" />
+  <depend package="amcl" />
+  <depend package="playsound_recovery" />
+  <depend package="tf" />
+  <depend package="tf_conversions" />
+
+</package>
+
+

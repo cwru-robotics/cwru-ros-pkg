@@ -1,6 +1,0 @@
-- svn:
-    uri: http://ua-ros-pkg.googlecode.com/svn/trunk/
-    local-name: ua-ros-pkg
-- svn:
-    uri: https://code.ros.org/svn/ros-pkg/stacks/camera_drivers/trunk/
-    local-name: camera_drivers
