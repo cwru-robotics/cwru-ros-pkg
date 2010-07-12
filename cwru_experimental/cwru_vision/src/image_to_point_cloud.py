@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 
 import roslib
-roslib.load_manifest("harlie_vision")
+roslib.load_manifest("cwru_vision")
 import rospy
 import struct
 

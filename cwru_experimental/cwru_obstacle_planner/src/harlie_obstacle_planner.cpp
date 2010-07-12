@@ -11,7 +11,7 @@
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Point.h>
 #include <list>
-#include <harlie_obstacle_planner/costnode.h>
+#include <cwru_obstacle_planner/costnode.h>
 
 //Odd numbers ONLY
 #define WALL_EXPANSION 21

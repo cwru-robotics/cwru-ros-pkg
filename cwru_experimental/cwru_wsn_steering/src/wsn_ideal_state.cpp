@@ -2,8 +2,8 @@
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Twist.h>
 #include <tf/transform_datatypes.h>
-#include <harlie_wsn_steering/DesiredState.h>
-#include <harlie_wsn_steering/PathSegment.h>
+#include <cwru_wsn_steering/DesiredState.h>
+#include <cwru_wsn_steering/PathSegment.h>
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -30,7 +30,7 @@ class WSNIdealState {
 		uint32_t iSeg;
 
 		//Current path to be working on
-		std::vector<harlie_wsn_steering::PathSegment> path;
+		std::vector<cwru_wsn_steering::PathSegment> path;
 
 		//ROS communcators
 		ros::NodeHandle nh_;
@@ -42,7 +42,7 @@ const double pi = acos(-1.0);
 
 WSNIdealState::WSNIdealState() {
 	//Setup the ideal state pub
-	ideal_state_pub_= nh_.advertise<harlie_wsn_steering::DesiredState>("idealState",1);   
+	ideal_state_pub_= nh_.advertise<cwru_wsn_steering::DesiredState>("idealState",1);   
 	nh_.param("loop_rate",loop_rate,20.0); // default 20Hz
 	dt = 1.0/loop_rate;
 
@@ -57,7 +57,7 @@ WSNIdealState::WSNIdealState() {
 	segDistDone = 0.0;
 	halt = true;
 
-	harlie_wsn_steering::DesiredState halt_state;
+	cwru_wsn_steering::DesiredState halt_state;
 	halt_state.v = 0.0;
 
 	//temps
@@ -73,7 +73,7 @@ WSNIdealState::WSNIdealState() {
 		computeState(x,y,theta,v,rho);
 
 		//Put the temp vars into the desiredState
-		harlie_wsn_steering::DesiredState desiredState;
+		cwru_wsn_steering::DesiredState desiredState;
 		if(halt) {
 		    desiredState = halt_state;
 		}
@@ -118,7 +118,7 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 	return;
     }
 
-    harlie_wsn_steering::PathSegment currentSeg = path.at(iSeg);
+    cwru_wsn_steering::PathSegment currentSeg = path.at(iSeg);
 
     double vNext;
     v = currentSeg.vDes;
@@ -181,7 +181,7 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 }
 
 void WSNIdealState::initializeDummyPath() {
-    harlie_wsn_steering::PathSegment p;
+    cwru_wsn_steering::PathSegment p;
     p.segType =1;
     p.xRef = 0.0;
     p.yRef = 0.0;

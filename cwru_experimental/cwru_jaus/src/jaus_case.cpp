@@ -17,7 +17,7 @@
 
 //ROS includes
 #include <ros/ros.h>
-#include <harlie_base/Pose.h>
+#include <cwru_base/Pose.h>
 #include <std_msgs/String.h>
 #include <nav_msgs/GridCells.h>
 #include <move_base_msgs/MoveBaseGoal.h>
@@ -70,7 +70,7 @@ double govel;
 
 int counter =0;
 
-void callback(const harlie_base::Pose pose) {
+void callback(const cwru_base::Pose pose) {
 	
 	glolat = (pose.x/lat_conversion_to_m) + offset_lat;
 	glolong = (pose.y/long_conversion_to_m) + offset_long;

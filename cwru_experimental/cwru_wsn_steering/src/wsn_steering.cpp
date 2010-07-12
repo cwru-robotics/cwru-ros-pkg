@@ -3,7 +3,7 @@
 #include <geometry_msgs/Twist.h>
 #include <tf/transform_datatypes.h>
 #include <cmath>
-#include <harlie_wsn_steering/DesiredState.h>
+#include <cwru_wsn_steering/DesiredState.h>
 
 class WSNSteering {
 	public:
@@ -11,7 +11,7 @@ class WSNSteering {
 	private:
 		//callback to put odometry information into the class 
 		void odomCallback(const nav_msgs::Odometry::ConstPtr& odom);	
-		void desStateCallback(const harlie_wsn_steering::DesiredState::ConstPtr& desState);
+		void desStateCallback(const cwru_wsn_steering::DesiredState::ConstPtr& desState);
 		/*The Wyatt Newman JAUSy Steering algorithm
 		 * x,y in meters in ROS frame
 		 * psi in rads in ROS frame, 0 points to true north
@@ -22,7 +22,7 @@ class WSNSteering {
 
 		//last updated Odometry information
 		nav_msgs::Odometry current_odom;
-		harlie_wsn_steering::DesiredState curDesState;
+		cwru_wsn_steering::DesiredState curDesState;
 
 		//Loop rate in Hz
 		double loop_rate;
@@ -59,7 +59,7 @@ WSNSteering::WSNSteering() : priv_nh_("~") {
 	firstCall=true;
 	//Subscribe to Odometry Topic
 	odom_sub_ = nh_.subscribe<nav_msgs::Odometry>("odometry", 10, &WSNSteering::odomCallback, this); 
-	desState_sub_ = nh_.subscribe<harlie_wsn_steering::DesiredState>("idealState", 10, &WSNSteering::desStateCallback, this);
+	desState_sub_ = nh_.subscribe<cwru_wsn_steering::DesiredState>("idealState", 10, &WSNSteering::desStateCallback, this);
 
 	//Setup velocity publisher
 	twist_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1); 
@@ -147,7 +147,7 @@ void WSNSteering::odomCallback(const nav_msgs::Odometry::ConstPtr& odom) {
 	}
 }
 
-void WSNSteering::desStateCallback(const harlie_wsn_steering::DesiredState::ConstPtr& desState)
+void WSNSteering::desStateCallback(const cwru_wsn_steering::DesiredState::ConstPtr& desState)
 {
 	curDesState= *desState;
 }
