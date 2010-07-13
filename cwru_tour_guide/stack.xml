@@ -1,0 +1,9 @@
+<stack>
+  <description brief="cwru_tour_guide">cwru_tour_guide</description>
+  <author>Maintained by Jesse</author>
+  <license></license>  
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/cwru_tour_guide</url>
+  <depend stack="ros" />
+
+</stack>

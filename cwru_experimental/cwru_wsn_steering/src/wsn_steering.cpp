@@ -124,7 +124,8 @@ void WSNSteering::computeVelocities(double x_PSO, double y_PSO, double psi_PSO, 
 	dx_vec[0] = x_des-x_PSO;
 	dx_vec[1] = y_des-y_PSO; //position error
 	double Lfollow = tanVec[0]*dx_vec[0]+tanVec[1]*dx_vec[1];
-	v = v_des + k_v * Lfollow;
+	//scaling the Lfollow term should help keep the velocities closer to the desired velocity
+	v = v_des + v_des * k_v * Lfollow;
 	// d = -n'*dx_vec;
 	d = -nVec[0]*dx_vec[0]-nVec[1]*dx_vec[1];
 	deltaPsi = psi_PSO-psi_des;

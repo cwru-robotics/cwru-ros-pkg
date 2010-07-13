@@ -188,7 +188,7 @@ void WSNIdealState::initializeDummyPath() {
     p.tangentAng = 0.0;
     p.rho = 0.0;
     p.length = 5.0;
-    p.vDes = 2.0;
+    p.vDes = 0.5;
     p.accel = 3.0;
     path.push_back(p);
 
@@ -241,6 +241,7 @@ void WSNIdealState::initializeDummyPath() {
     p.vDes = 1.0;
     p.accel = 1.0;
     path.push_back(p);
+
 }
 
 int main(int argc, char *argv[]) {
