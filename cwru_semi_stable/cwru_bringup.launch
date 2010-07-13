@@ -1,9 +1,5 @@
 <!-- This file should start up all sensors and do anything that might need to load calibration before mapping/planning turn on -->
 <launch>
-	<!-- Get the definitions of the different machines we might run on -->
-	<!-- <include file="$(find cwru_base)/$(env ROBOT).machine" /> -->
-	<include file="$(find cwru_base)/local.machine" />
-	
 	<!-- Startup the base and sensors -->
 	<include file="$(find cwru_base)/start_base.launch" />
 

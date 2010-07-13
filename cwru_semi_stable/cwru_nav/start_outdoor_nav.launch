@@ -3,7 +3,6 @@
   <!-- include file="$(find cwru_nav)/amcl_diff.launch" /-->
 
   <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
-    <remap from="odom" to="/harlie/odom" />
     <rosparam file="$(find cwru_nav)/config/costmap_common_params.yaml" command="load" ns="global_costmap" />
     <rosparam file="$(find cwru_nav)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
     <rosparam file="$(find cwru_nav)/config/costmap_local_params.yaml" command="load" />
