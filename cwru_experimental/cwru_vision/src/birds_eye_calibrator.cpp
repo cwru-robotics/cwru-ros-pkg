@@ -47,12 +47,12 @@ void BirdsEyeCalibrator::image_callback(const sensor_msgs::ImageConstPtr& msg) {
 	cv::Mat output;
 	try
 	{
-		image = cv::Mat(bridge.imgMsgToCv(msg, "bgr8"));
+		image = cv::Mat(bridge.imgMsgToCv(msg, "mono8"));
 
 	}
 	catch (sensor_msgs::CvBridgeException& e)
 	{
-		ROS_ERROR("Could not convert from '%s' to 'bgr8'.", msg->encoding.c_str());
+		ROS_ERROR("Could not convert from '%s' to 'mono8'.", msg->encoding.c_str());
 	}
 
 	double grid_width = square_width/m_per_output_pixel;
