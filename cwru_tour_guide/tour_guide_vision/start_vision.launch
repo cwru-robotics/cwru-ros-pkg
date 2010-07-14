@@ -1,5 +1,5 @@
 <launch>
-	<node name="front_camera" pkg="uvc_cam" type="uvc_cam_node" respawn="true" >
+	<node name="front_camera" pkg="uvc_cam" type="uvc_cam_node" respawn="true" output="screen">
 	<remap from="camera" to="front_camera"/>
 	<param name="camera_name" value="front_camera"/>
 	<param name="device" value="/dev/video0"/>
@@ -8,6 +8,7 @@
 	<param name="frame_rate" value="15"/>
 	<param name="frame_id" value="front_camera"/>
 	<param name="camera_info_url" value="file://$(find tour_guide_vision)/calibration/camera_b.yaml"/>
+	<param name="absolue_exposure" value="8"/>
 	</node>
 	
 	<node pkg="image_proc" type="image_proc" name="proc" ns="front_camera" />
