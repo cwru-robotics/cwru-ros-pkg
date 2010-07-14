@@ -11,8 +11,8 @@ inflation_radius: 1.5
 
 observation_sources: base_laser1 front_sonar bounding_box 
 
-base_laser1: {sensor_frame: base_laser1_link, data_type: LaserScan, topic: /harlie/base_laser1_scan, marking: true, clearing: true, max_obstacle_height: 0.6, min_obstacle_height: 0.4}
-front_sonar: {sensor_frame: front_sonar, data_type: LaserScan, topic: /harlie/front_sonar_scan, marking: true, clearing: true, max_obstacle_height: 0.8, min_obstacle_height: 0.6}
+base_laser1: {sensor_frame: base_laser1_link, data_type: LaserScan, topic: /base_laser1_scan, marking: true, clearing: true, max_obstacle_height: 0.6, min_obstacle_height: 0.4}
+front_sonar: {sensor_frame: front_sonar, data_type: LaserScan, topic: /front_sonar_scan, marking: true, clearing: true, max_obstacle_height: 0.8, min_obstacle_height: 0.6}
 #laser_scan_sensor: {sensor_frame: frame_name, data_type: LaserScan, topic: topic_name, marking: true, clearing: true}
 #
 bounding_box: {sensor_frame: bounding_box, data_type: PointCloud, topic: /bounding_box, marking: true, clearing: false, obstacle_range: 400.0, max_obstacle_height: 2.0, min_obstacle_height: 1.8}
