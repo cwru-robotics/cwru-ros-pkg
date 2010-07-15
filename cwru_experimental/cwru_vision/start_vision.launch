@@ -4,7 +4,7 @@
 		<param name="video_mode" value="640x480_mono8" />
 		<param name="bayer_pattern" value="gbrg" />
 		<param name="fps" value="30.0" />
-		<param name="camera_info_url" value="file:///opt/igvc_ros/cwru_vision/calibration/calibration_front_camera.yaml" />
+		<param name="camera_info_url" value="file://($find cwru_vision)/calibration/calibration_front_camera.yaml" />
 		<remap from="camera" to="front_camera" />
 		<param name="frame_id" value="front_camera" />
 	</node>

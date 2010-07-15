@@ -1,0 +1,15 @@
+<launch>
+	<node name="birds_eye_calibrator" pkg="tour_guide_vision" type="birds_eye_calibrator" respawn="false" >
+	  <param name="image_rect_color" value="/front_camera/image_rect_color"/>
+	  <param name="board_height" value="6"/>
+	  <param name="board_width" value="8"/>
+	  <param name="grid_width" value="0.02858"/>
+	  <param name="grid_height" value="0.02858"/>
+	  <param name="m_in_front_of_bot" value="0.20"/>
+	  <param name="m_offset_lr_of_bot" value="0.0"/>
+	  <param name="m_per_output_pixel" value=" 0.001"/>
+	  <param name="output_image_width" value="600"/>
+	  <param name="output_image_height" value="600"/>
+	  <param name="H_path" value="./H.xml"/>
+	</node>
+</launch>
