@@ -56,7 +56,7 @@ BirdsEyeCalibrator::BirdsEyeCalibrator() : it_(nh_){
 	nh_.param("m_per_output_pixel", m_per_output_pixel, 0.001);
 	nh_.param("output_image_width", output_image_width, 600);
 	nh_.param("output_image_height", output_image_height, 600);
-	nh_.param("H_path", H_path,std::string("./H.xml"));
+	nh_.param("H_path", H_path,std::string("/tmp/H.xml"));
 	
 	image_rect=NULL;
 	calibrated=NULL;
