@@ -187,58 +187,58 @@ void WSNIdealState::initializeDummyPath() {
     p.yRef = 0.0;
     p.tangentAng = 0.0;
     p.rho = 0.0;
-    p.length = 5.0;
+    p.length = 2.0;
     p.vDes = 0.5;
-    p.accel = 3.0;
+    p.accel = 1.0;
     path.push_back(p);
 
     p.segType = 2;
-    p.xRef = 5.0;
+    p.xRef = 2.0;
     p.yRef = 1.0;
     p.tangentAng = 0.0;
     p.rho = 1.0;
     p.length = 3.1416;
-    p.vDes = 2.0;
-    p.accel = 3.0;
+    p.vDes = 0.5;
+    p.accel = 1.0;
     path.push_back(p);
 
     p.segType = 1;
-    p.xRef = 5.0;
+    p.xRef = 2.0;
     p.yRef = 2.0;
     p.tangentAng = 3.1416;
     p.rho = 0.0;
     p.length = 1.0;
-    p.vDes = 4.0;
-    p.accel = 3.0;
+    p.vDes = 0.5;
+    p.accel = 1.0;
     path.push_back(p);
 
     p.segType = 2;
-    p.xRef = 4.0;
+    p.xRef = 1.0;
     p.yRef = 2.01;
     p.tangentAng = 3.1416;
     p.rho = -100.0;
     p.length = 0.0157;
-    p.vDes = 1.0;
-    p.accel = 3.0;
+    p.vDes = 0.5;
+    p.accel = 1.0;
     path.push_back(p);
 
     p.segType = 1;
-    p.xRef = 3.99;
+    p.xRef = 0.99;
     p.yRef = 2.01;
     p.tangentAng = 1.5708;
     p.rho = 0.0;
     p.length = 1.0;
-    p.vDes = 1.0;
-    p.accel = 3.0;
+    p.vDes = 0.5;
+    p.accel = 1.0;
     path.push_back(p);
 
     p.segType = 2;
-    p.xRef = 4.49;
+    p.xRef = 1.49;
     p.yRef = 3.01;
     p.tangentAng = 1.5708;
     p.rho = -2.0;
     p.length = 0.7854;
-    p.vDes = 1.0;
+    p.vDes = 0.5;
     p.accel = 1.0;
     path.push_back(p);
 
