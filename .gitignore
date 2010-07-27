@@ -2,3 +2,4 @@ bin/
 build/
 msg_gen/
 lib/
+.svn/

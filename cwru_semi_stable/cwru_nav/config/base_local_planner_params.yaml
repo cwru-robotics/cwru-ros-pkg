@@ -10,5 +10,14 @@ TrajectoryPlannerROS:
 
   holonomic_robot: false
 
-  #path_distance_bias: 0.8
-  #goal_distance_bias: 0.5
+  heading_scoring: false
+
+  vx_samples: 3
+  vtheta_samples: 20
+
+  dwa: false
+  sim_time: 2.0
+
+  path_distance_bias: 5.0
+  goal_distance_bias: 0.8
+  occdist_scale: 0.05
