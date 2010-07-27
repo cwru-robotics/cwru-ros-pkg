@@ -1,8 +1,8 @@
 #include <playsound_recovery/playsound_recovery.h>
 #include <pluginlib/class_list_macros.h>
 
-//register this class as a RecoveryBehavior plugin
-PLUGINLIB_REGISTER_CLASS(PlaySoundRecovery, playsound_recovery::PlaySoundRecovery, nav_core::RecoveryBehavior)
+//register this planner as a RecoveryBehavior plugin
+PLUGINLIB_DECLARE_CLASS(playsound_recovery, PlaySoundRecovery, playsound_recovery::PlaySoundRecovery, nav_core::RecoveryBehavior)
 
 	namespace playsound_recovery {
 		PlaySoundRecovery::PlaySoundRecovery(): global_costmap_(NULL), local_costmap_(NULL), tf_(NULL), initialized_(false), player_() {}
