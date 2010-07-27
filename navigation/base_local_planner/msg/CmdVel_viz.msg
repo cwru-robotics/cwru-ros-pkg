@@ -1,0 +1,6 @@
+Header header
+
+float32 path_dist_cost
+float32 goal_dist_cost
+float32 obs_dist_cost
+float32 heading_diff_cost
