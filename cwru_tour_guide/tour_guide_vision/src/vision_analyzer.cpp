@@ -80,7 +80,7 @@ void VisionAnalyzer::image_callback(const sensor_msgs::ImageConstPtr& msg) {
     if(output_image==NULL){
       output_image=cvCloneImage(image_rect);
     }
-    cvThreshold(image_rect,output_image,254,255, CV_THRESH_BINARY);
+    cvThreshold(image_rect,output_image,.90*255,255, CV_THRESH_BINARY);
     
     cvShowImage("threshold",output_image);
     

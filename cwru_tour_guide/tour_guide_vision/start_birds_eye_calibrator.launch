@@ -2,7 +2,7 @@
 	<node name="birds_eye_calibrator" pkg="tour_guide_vision" type="birds_eye_calibrator" respawn="false" output="screen" >
 	  <remap from="image_rect_color" to="/front_camera/image_rect_color"/>
 	  <param name="board_height" value="6"/>
-	  <param name="board_width" value="8"/>
+	  <param name="board_width" value="7"/>
 	  <param name="grid_width" value="0.02858"/>
 	  <param name="grid_height" value="0.02858"/>
 	  <param name="m_in_front_of_bot" value="0.0"/>

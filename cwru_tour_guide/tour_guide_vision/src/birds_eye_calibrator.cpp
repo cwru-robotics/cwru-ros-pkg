@@ -48,7 +48,7 @@ BirdsEyeCalibrator::BirdsEyeCalibrator() : it_(nh_){
   
 	ros::NodeHandle nh_;
 	nh_.param("board_height", board_height, 6);
-	nh_.param("board_width", board_width, 8);
+	nh_.param("board_width", board_width, 7);
 	nh_.param("grid_width", grid_width, 0.02858);
 	nh_.param("grid_height", grid_height, 0.02858);
 	nh_.param("m_in_front_of_bot", m_in_front_of_bot, 0.20);
@@ -165,7 +165,8 @@ void BirdsEyeCalibrator::calibrate(){
 	    printf("Couldn't aquire chessboard on image, "
 	      "only found %d of %d corners\n",corner_count,board_n
 	    );
-      calibrated_succesfully=false;
+			printf("looking for %d x %d corners\
+      calibrated_succesfully=false\n",board_width,board_height);
 	    return;
     }
     
