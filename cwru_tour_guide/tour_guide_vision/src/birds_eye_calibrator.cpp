@@ -35,28 +35,38 @@ class BirdsEyeCalibrator {
     IplImage* calibrated;
     
     CvMat *H;
+		
+		int map1;
+		int map2;
+		int map3;
+		int map4;
     
     bool calibrated_succesfully;
   
     sensor_msgs::CvBridge bridge;
 		ros::NodeHandle nh_;
+		ros::NodeHandle priv_nh_;  
 		image_transport::ImageTransport it_;
 		image_transport::Subscriber image_subscriber;
 };
 
-BirdsEyeCalibrator::BirdsEyeCalibrator() : it_(nh_){
+BirdsEyeCalibrator::BirdsEyeCalibrator() : it_(nh_), priv_nh_("~"){
   
-	ros::NodeHandle nh_;
-	nh_.param("board_height", board_height, 6);
-	nh_.param("board_width", board_width, 8);
-	nh_.param("grid_width", grid_width, 0.02858);
-	nh_.param("grid_height", grid_height, 0.02858);
-	nh_.param("m_in_front_of_bot", m_in_front_of_bot, 0.20);
-	nh_.param("m_offset_lr_of_bot", m_offset_lr_of_bot, 0.0);
-	nh_.param("m_per_output_pixel", m_per_output_pixel, 0.001);
-	nh_.param("output_image_width", output_image_width, 600);
-	nh_.param("output_image_height", output_image_height, 600);
-	nh_.param("H_path", H_path,std::string("/tmp/H.xml"));
+	priv_nh_.param("board_height", board_height, 6);
+	priv_nh_.param("board_width", board_width, 7);
+	priv_nh_.param("grid_width", grid_width, 0.02858);
+	priv_nh_.param("grid_height", grid_height, 0.02858);
+	priv_nh_.param("m_in_front_of_bot", m_in_front_of_bot, 0.20);
+	priv_nh_.param("m_offset_lr_of_bot", m_offset_lr_of_bot, 0.0);
+	priv_nh_.param("m_per_output_pixel", m_per_output_pixel, 0.001);
+	priv_nh_.param("output_image_width", output_image_width, 600);
+	priv_nh_.param("output_image_height", output_image_height, 600);
+	priv_nh_.param("map1", map1,1);
+	priv_nh_.param("map2", map2,2);
+	priv_nh_.param("map3", map3,3);
+	priv_nh_.param("map4", map4,4);
+
+	priv_nh_.param("H_path", H_path,std::string("/tmp/H.xml"));
 	
 	image_rect=NULL;
 	calibrated=NULL;
@@ -165,7 +175,8 @@ void BirdsEyeCalibrator::calibrate(){
 	    printf("Couldn't aquire chessboard on image, "
 	      "only found %d of %d corners\n",corner_count,board_n
 	    );
-      calibrated_succesfully=false;
+			printf("looking for %d x %d corners\
+      calibrated_succesfully=false\n",board_width,board_height);
 	    return;
     }
     
@@ -184,10 +195,10 @@ void BirdsEyeCalibrator::calibrate(){
     objPts[2].x = 0+xoffset;          objPts[2].y = grid_width/m_per_output_pixel*(board_height-1)+yoffset;
     objPts[3].x = grid_width/m_per_output_pixel*(board_width-1)+xoffset;  objPts[3].y = grid_width/m_per_output_pixel*(board_height-1)+yoffset;
     
-    imgPts[0]   = corners[0];
-    imgPts[1]   = corners[board_width-1];
-    imgPts[2]   = corners[(board_height-1)*board_width];
-    imgPts[3]   = corners[(board_height-1)*board_width + board_width-1];
+    imgPts[map1-1]   = corners[0];
+    imgPts[map2-1]   = corners[board_width-1];
+    imgPts[map3-1]   = corners[(board_height-1)*board_width];
+    imgPts[map4-1]   = corners[(board_height-1)*board_width + board_width-1];
     
     cvGetPerspectiveTransform( objPts, imgPts, H);
     
