@@ -23,18 +23,28 @@ class VisionAnalyzer {
     IplImage* calibrated;
     
     CvMat *H;
-  
+		double threshold;
+
+		double canny_threshold1;
+		double canny_threshold2;
+		int canny_aperture_size;
+
+  	int test;
     sensor_msgs::CvBridge bridge;
 		ros::NodeHandle nh_;
+		ros::NodeHandle priv_nh_;  
 		image_transport::ImageTransport it_;
 		image_transport::Subscriber image_subscriber;
 };
 
-VisionAnalyzer::VisionAnalyzer() : it_(nh_){
+VisionAnalyzer::VisionAnalyzer() : it_(nh_), priv_nh_("~"){
   
-	ros::NodeHandle nh_;
-//	nh_.param("H_path", H_path,std::string("./H.xml"));
-	
+	priv_nh_.param("H_path", H_path,std::string("/tmp/H.xml"));
+	priv_nh_.param("threshold",threshold, 255*.9);
+	priv_nh_.param("canny_threshold1",canny_threshold1, 10.);
+	priv_nh_.param("canny_threshold2",canny_threshold2, 50.);
+	priv_nh_.param("canny_aperture_size",canny_aperture_size, 3);
+
 	image_rect=NULL;
 	calibrated=NULL;
 	output_image =NULL;
@@ -80,11 +90,11 @@ void VisionAnalyzer::image_callback(const sensor_msgs::ImageConstPtr& msg) {
     if(output_image==NULL){
       output_image=cvCloneImage(image_rect);
     }
-    cvThreshold(image_rect,output_image,.90*255,255, CV_THRESH_BINARY);
+    cvThreshold(image_rect,output_image,threshold,255, CV_THRESH_BINARY);
     
     cvShowImage("threshold",output_image);
     
-    cvCanny(output_image,output_image,10,50,3);
+    cvCanny(output_image,output_image,canny_threshold1,canny_threshold2,canny_aperture_size);
     
     
     cvShowImage("edges",output_image);

@@ -1,7 +1,13 @@
 <launch>
-<node pkg="image_proc" type="image_proc" name="proc" ns="front_camera" />
-	<node pkg="image_proc" type="image_proc" name="proc" ns="rear_camera" />
+	<node pkg="image_proc" type="image_proc" name="proc_front" ns="front_camera" />
+	<node pkg="image_proc" type="image_proc" name="proc_rear" ns="rear_camera" />
+
 	<node name="vision_analyzer" pkg="tour_guide_vision" type="vision_analyzer" respawn="false" output="screen" >
 	  <remap from="image_rect_color" to="/front_camera/image_rect_color"/>
+		<param name="H_path" value="~/cwru_robotics/cwru-ros-pkg/cwru_tour_guide/tour_guide_vision/front_H.xml"/>
+		<param name="threshold" value="230.0"/>
+		<param name="canny_threshold1" value="10.0"/>
+		<param name="canny_threshold2" value="50.0"/>
+		<param name="canny_aperture_size" value="3"/>
 	</node>
 </launch>
