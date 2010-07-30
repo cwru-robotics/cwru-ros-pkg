@@ -4,10 +4,13 @@
 
 	<node name="vision_analyzer" pkg="tour_guide_vision" type="vision_analyzer" respawn="false" output="screen" >
 	  <remap from="image_rect_color" to="/front_camera/image_rect_color"/>
-		<param name="H_path" value="~/cwru_robotics/cwru-ros-pkg/cwru_tour_guide/tour_guide_vision/front_H.xml"/>
+	  <!-- change the name from jesse to roberto and back or whatever comp you are on -->
+		<param name="H_path" value="/home/jesse/cwru_robotics/cwru-ros-pkg/cwru_tour_guide/tour_guide_vision/calibration/front_H.xml"/>
 		<param name="threshold" value="230.0"/>
 		<param name="canny_threshold1" value="10.0"/>
 		<param name="canny_threshold2" value="50.0"/>
 		<param name="canny_aperture_size" value="3"/>
+	  <param name="output_image_width" value="600"/>
+	  <param name="output_image_height" value="600"/>
 	</node>
 </launch>

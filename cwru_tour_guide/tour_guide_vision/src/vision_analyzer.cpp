@@ -25,6 +25,9 @@ class VisionAnalyzer {
     CvMat *H;
 		double threshold;
 
+	  int32_t output_image_width;
+	  int32_t output_image_height;
+	  
 		double canny_threshold1;
 		double canny_threshold2;
 		int canny_aperture_size;
@@ -44,23 +47,38 @@ VisionAnalyzer::VisionAnalyzer() : it_(nh_), priv_nh_("~"){
 	priv_nh_.param("canny_threshold1",canny_threshold1, 10.);
 	priv_nh_.param("canny_threshold2",canny_threshold2, 50.);
 	priv_nh_.param("canny_aperture_size",canny_aperture_size, 3);
+	priv_nh_.param("output_image_width", output_image_width, 600);
+	priv_nh_.param("output_image_height", output_image_height, 600);
 
 	image_rect=NULL;
-	calibrated=NULL;
-	output_image =NULL;
 	
-	H = cvCreateMat( 3, 3, CV_32F);
+	calibrated=cvCreateImage( cvSize(output_image_width,output_image_height), 8, 1 );
+	
+	output_image =cvCloneImage(calibrated);
+	
+	try{
+	  H =  (CvMat*)cvLoad(H_path.c_str());
+	}
+	catch(...){
+	  printf("H failed to load\n"); 
+	  H=NULL;
+	}
+	if(H==NULL){
+	  printf("H did not load %s\n",H_path.c_str());
+	}
 	
 	image_subscriber= it_.subscribe("image_rect_color", 1, &VisionAnalyzer::image_callback, this);
 }
 
 void VisionAnalyzer::warp(){
-  cvWarpPerspective(
-  image_rect,
-  calibrated,
-  H,
-  CV_INTER_LINEAR | CV_WARP_INVERSE_MAP | CV_WARP_FILL_OUTLIERS
-  );
+  if(H!=NULL&&image_rect!=NULL){
+    cvWarpPerspective(
+    image_rect,
+    calibrated,
+    H,
+    CV_INTER_LINEAR | CV_WARP_INVERSE_MAP | CV_WARP_FILL_OUTLIERS
+    );
+  }
 }
 
 void VisionAnalyzer::image_callback(const sensor_msgs::ImageConstPtr& msg) {
@@ -75,7 +93,7 @@ void VisionAnalyzer::image_callback(const sensor_msgs::ImageConstPtr& msg) {
 		}
 		else{
 		  cvCopy(bridge.imgMsgToCv(msg, "mono8"),image_rect);
-		//  printf("copied image\n");
+		 // printf("copied image\n");
 		}
 	}
 	catch (sensor_msgs::CvBridgeException& e)
@@ -86,11 +104,10 @@ void VisionAnalyzer::image_callback(const sensor_msgs::ImageConstPtr& msg) {
 	
 	if(image_rect!=NULL) {
     cvShowImage("rectified image",image_rect);
+    warp();
+    cvShowImage("calib image",calibrated);
     
-    if(output_image==NULL){
-      output_image=cvCloneImage(image_rect);
-    }
-    cvThreshold(image_rect,output_image,threshold,255, CV_THRESH_BINARY);
+    cvThreshold(calibrated,output_image,threshold,255, CV_THRESH_BINARY);
     
     cvShowImage("threshold",output_image);
     
@@ -104,9 +121,6 @@ void VisionAnalyzer::image_callback(const sensor_msgs::ImageConstPtr& msg) {
   }else{
    // printf("null image_rect\n");
   }
-  
-  
-	
 }
 
 
@@ -116,11 +130,12 @@ int main(int argc, char *argv[]){
 	VisionAnalyzer calibrator;
 	cvStartWindowThread();
   cvNamedWindow("rectified image");
+  cvNamedWindow("calib image");
   cvNamedWindow("threshold");
   cvNamedWindow("edges");
-	//cvStartWindowThread(); //comment this out since we are using keyboard inputs as commands
   ros::spin();
 	cvDestroyWindow("rectified image");
+	cvDestroyWindow("calib image");
   cvDestroyWindow("threshold");
   cvDestroyWindow("edges");
   return 0;

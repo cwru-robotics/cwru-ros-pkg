@@ -1,5 +1,5 @@
 <launch>
-	<node name="birds_eye_calibrator" pkg="tour_guide_vision" type="birds_eye_calibrator" respawn="false" output="screen" >
+	<node name="rear_birds_eye_calibrator" pkg="tour_guide_vision" type="birds_eye_calibrator" respawn="false" output="screen" >
 	  <remap from="image_rect_color" to="/rear_camera/image_rect_color"/>
 	  <param name="board_height" value="7"/>
 	  <param name="board_width" value="6"/>
