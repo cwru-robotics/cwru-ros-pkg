@@ -75,8 +75,6 @@ VisionAnalyzer::VisionAnalyzer() : it_(nh_), priv_nh_("~"){
 	
 	analyzed_pub_= it_.advertise("thresholded_image", 1);
 	calib_pub_= it_.advertise("calibrated_image", 1);
-
-	
 }
 
 void VisionAnalyzer::warp(){
