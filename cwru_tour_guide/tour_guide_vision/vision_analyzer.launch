@@ -4,6 +4,8 @@
 
 	<node name="vision_analyzer" pkg="tour_guide_vision" type="vision_analyzer" respawn="false" output="screen" >
 	  <remap from="image_rect_color" to="/front_camera/image_rect_color"/>
+	  <remap from="thresholded_image" to="front_thresholded_image"/>
+	  <remap from="calibrated_image" to="front_calibrated_image"/>
 	  <!-- change the name from jesse to roberto and back or whatever comp you are on -->
 		<param name="H_path" value="/home/jesse/cwru_robotics/cwru-ros-pkg/cwru_tour_guide/tour_guide_vision/calibration/front_H.xml"/>
 		<param name="threshold" value="230.0"/>
