@@ -14,6 +14,6 @@
 	  <param name="map2" value="4"/>
 	  <param name="map3" value="1"/>
 	  <param name="map4" value="2"/>
-	  <param name="H_path" value="/home/roberto/cwru_robotics/cwru-ros-pkg/cwru_tour_guide/tour_guide_vision/rear_H.xml"/>
+	  <param name="H_path" value="$(find tour_guide_vision)/calibration/rear_H.xml"/>
 	</node>
 </launch>
