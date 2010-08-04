@@ -3,7 +3,5 @@ recovery_behaviors:
       type: clear_costmap_recovery/ClearCostmapRecovery
     - name: playsound_recovery
       type: playsound_recovery/PlaySoundRecovery  
-    - name: rotate_recovery
-      type: rotate_recovery/RotateRecovery
     - name: aggressive_reset
       type: clear_costmap_recovery/ClearCostmapRecovery
