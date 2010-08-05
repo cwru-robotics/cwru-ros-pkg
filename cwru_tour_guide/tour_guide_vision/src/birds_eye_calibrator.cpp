@@ -107,6 +107,7 @@ void BirdsEyeCalibrator::mainLoop(){
    // printf("%d\n",key);
     if(32== (255&key)){ 
       //space was hit and calibrate
+			//cvSaveImage("/tmp/output.jpg",image_rect);
       calibrate();
     }else if(115== (255&key)){
       //s was hit and save the calibration
