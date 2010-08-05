@@ -5,3 +5,5 @@ recovery_behaviors:
       type: playsound_recovery/PlaySoundRecovery  
     - name: aggressive_reset
       type: clear_costmap_recovery/ClearCostmapRecovery
+
+#base_local_planner: pose_follower/PoseFollower
