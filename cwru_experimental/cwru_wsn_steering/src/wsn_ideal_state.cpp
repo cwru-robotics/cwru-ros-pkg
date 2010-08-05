@@ -189,7 +189,7 @@ void WSNIdealState::initializeDummyPath() {
     p.rho = 0.0;
     p.length = 2.0;
     p.vDes = 0.5;
-    p.accel = 1.0;
+    p.accel = 0.1;
     path.push_back(p);
 
     p.segType = 2;
@@ -199,7 +199,7 @@ void WSNIdealState::initializeDummyPath() {
     p.rho = 1.0;
     p.length = 3.1416;
     p.vDes = 0.5;
-    p.accel = 1.0;
+    p.accel = 0.1;
     path.push_back(p);
 
     p.segType = 1;
@@ -209,7 +209,7 @@ void WSNIdealState::initializeDummyPath() {
     p.rho = 0.0;
     p.length = 1.0;
     p.vDes = 0.5;
-    p.accel = 1.0;
+    p.accel = 0.1;
     path.push_back(p);
 
     p.segType = 2;
@@ -218,8 +218,8 @@ void WSNIdealState::initializeDummyPath() {
     p.tangentAng = 3.1416;
     p.rho = -100.0;
     p.length = 0.0157;
-    p.vDes = 0.5;
-    p.accel = 1.0;
+    p.vDes = 0.01;
+    p.accel = 0.1;
     path.push_back(p);
 
     p.segType = 1;
@@ -229,7 +229,7 @@ void WSNIdealState::initializeDummyPath() {
     p.rho = 0.0;
     p.length = 1.0;
     p.vDes = 0.5;
-    p.accel = 1.0;
+    p.accel = 0.1;
     path.push_back(p);
 
     p.segType = 2;
@@ -239,7 +239,7 @@ void WSNIdealState::initializeDummyPath() {
     p.rho = -2.0;
     p.length = 0.7854;
     p.vDes = 0.5;
-    p.accel = 1.0;
+    p.accel = 0.1;
     path.push_back(p);
 
 }
