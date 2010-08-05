@@ -56,9 +56,9 @@ window
 floorplan
 (
     name "2nd_floor_one_door"
-    bitmap "../maps/2nd_floor_one_door.pgm"
-    size [100 100 10.0]
-    pose [ 56. 85. 0.0 0.0]
+    bitmap "../maps/2nd_floor_one_door_stage.pgm"
+    size [79.45 90.45 10.0]
+    pose [ 0. 0. 0.0 0.0]
 )
 
-harlie( pose [ 0.0 0.0 0.0 0.0 ] name "harlie" color "blue")
+harlie( pose [ -22.53 -37.80 0.0 0.0 ] name "harlie" color "blue")
