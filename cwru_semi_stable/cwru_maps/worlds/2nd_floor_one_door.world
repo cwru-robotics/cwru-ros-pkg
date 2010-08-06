@@ -16,8 +16,8 @@ define sick_lms291 laser
 
 define harlie position
 (
-    size [0.9144 0.6096 1.8288]
-    origin [0.0 0.0 0.0 0.0]
+    size [0.9158 0.6096 1.8288]
+    origin [-0.1539 0.0 0.0 0.0]
     gui_nose 1
     drive "diff"
     sick_lms291(pose [ 0.2032 0.0 0 0.1524 ])
