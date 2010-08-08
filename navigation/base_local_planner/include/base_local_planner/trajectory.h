@@ -60,10 +60,6 @@ namespace base_local_planner {
       double xv_, yv_, thetav_; ///< @brief The x, y, and theta velocities of the trajectory
 
       double cost_; ///< @brief The cost/score of the trajectory
-      double path_cost;
-      double goal_cost;
-      double occ_dist_cost;
-      double heading_cost;
 
       /**
        * @brief  Get a point within the trajectory

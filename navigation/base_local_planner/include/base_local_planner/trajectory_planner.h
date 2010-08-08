@@ -63,6 +63,10 @@
 //for some datatypes
 #include <tf/transform_datatypes.h>
 
+#include <sensor_msgs/PointCloud.h>
+#include <sensor_msgs/ChannelFloat32.h>
+
+
 namespace base_local_planner {
   /**
    * @class TrajectoryPlanner
@@ -168,6 +172,11 @@ namespace base_local_planner {
        */
       bool checkTrajectory(double x, double y, double theta, double vx, double vy, 
           double vtheta, double vx_samp, double vy_samp, double vtheta_samp);
+
+      //Yes... I'm a terrible person and made these public...
+      sensor_msgs::PointCloud cost_points_;
+      sensor_msgs::ChannelFloat32 heading_costs_, occ_dist_costs_, path_dist_costs_, goal_dist_costs_, scaled_costs_, x_speeds_, omega_speeds_;
+
 
     private:
       /**

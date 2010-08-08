@@ -85,11 +85,12 @@ namespace base_local_planner {
 
       g_plan_pub_ = private_nh.advertise<nav_msgs::Path>("global_plan", 1);
       l_plan_pub_ = private_nh.advertise<nav_msgs::Path>("local_plan", 1);
-      cost_pub_ = private_nh.advertise<base_local_planner::CmdVel_viz>("cost_viz", 1);
+      cost_pub_ = private_nh.advertise<sensor_msgs::PointCloud>("cost_viz", 1);
 
       global_frame_ = costmap_ros_->getGlobalFrameID();
       robot_base_frame_ = costmap_ros_->getBaseFrameID();
       private_nh.param("prune_plan", prune_plan_, true);
+
 
       private_nh.param("yaw_goal_tolerance", yaw_goal_tolerance_, 0.05);
       private_nh.param("xy_goal_tolerance", xy_goal_tolerance_, 0.10);
@@ -168,6 +169,8 @@ namespace base_local_planner {
           gdist_scale, occdist_scale, heading_lookahead, oscillation_reset_dist, escape_reset_dist, escape_reset_theta, holonomic_robot,
           max_vel_x, min_vel_x, max_vel_th_, min_vel_th_, min_in_place_vel_th_, backup_vel,
           dwa, heading_scoring, heading_scoring_timestep, simple_attractor, y_vels, stop_time_buffer);
+
+      tc_->cost_points_.header.frame_id = global_frame_;
 
       initialized_ = true;
     }
@@ -370,6 +373,7 @@ namespace base_local_planner {
 
     double goal_th = yaw;
 
+    
     //check to see if we've reached the goal position
     if(goalPositionReached(global_pose, goal_x, goal_y, xy_goal_tolerance_)){
       //check to see if the goal orientation has been reached
@@ -419,13 +423,6 @@ namespace base_local_planner {
 
     //compute what trajectory to drive along
     Trajectory path = tc_->findBestPath(global_pose, robot_vel, drive_cmds);
-    CmdVel_viz c;
-    c.header.stamp = ros::Time::now();
-    c.path_dist_cost = path.path_cost;
-    c.goal_dist_cost = path.goal_cost;
-    c.obs_dist_cost = path.occ_dist_cost;
-    c.heading_diff_cost = path.heading_cost;
-    cost_pub_.publish(c); 
 
     /* For timing uncomment
     gettimeofday(&end, NULL);

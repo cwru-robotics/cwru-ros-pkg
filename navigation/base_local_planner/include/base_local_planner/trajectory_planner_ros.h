@@ -66,7 +66,8 @@
 
 #include <nav_core/base_local_planner.h>
 
-#include <base_local_planner/CmdVel_viz.h>
+#include <sensor_msgs/PointCloud.h>
+#include <sensor_msgs/ChannelFloat32.h>
 
 namespace base_local_planner {
   /**
@@ -102,7 +103,6 @@ namespace base_local_planner {
        * @brief  Destructor for the wrapper
        */
       ~TrajectoryPlannerROS();
-      
       /**
        * @brief  Given the current position, orientation, and velocity of the robot, compute velocity commands to send to the base
        * @param cmd_vel Will be filled with the velocity command to be passed to the robot base
@@ -175,7 +175,7 @@ namespace base_local_planner {
       std::string robot_base_frame_; ///< @brief Used as the base frame id of the robot
       double rot_stopped_velocity_, trans_stopped_velocity_;
       double xy_goal_tolerance_, yaw_goal_tolerance_, min_in_place_vel_th_;
-      double inscribed_radius_, circumscribed_radius_, inflation_radius_; 
+      double inscribed_radius_, circumscribed_radius_, inflation_radius_;
       std::vector<geometry_msgs::PoseStamped> global_plan_;
       bool prune_plan_;
       ros::Publisher g_plan_pub_, l_plan_pub_, cost_pub_;
@@ -185,6 +185,9 @@ namespace base_local_planner {
       double max_vel_th_, min_vel_th_;
       double acc_lim_x_, acc_lim_y_, acc_lim_theta_;
       bool rotating_to_goal_;
+      sensor_msgs::PointCloud cost_points_;
+      sensor_msgs::ChannelFloat32 heading_costs_, occ_dist_costs_, path_dist_costs_, goal_dist_costs_, scaled_costs_, x_speeds_, omega_speeds_;
+
   };
 
 };

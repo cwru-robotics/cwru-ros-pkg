@@ -85,6 +85,14 @@ namespace base_local_planner{
 
     escaping_ = false;
 
+    heading_costs_.name = std::string("heading_costs");
+    occ_dist_costs_.name = std::string("occ_dist_costs");
+    goal_dist_costs_.name = std::string("goal_dist_costs");
+    path_dist_costs_.name = std::string("path_dist_costs");
+    scaled_costs_.name = std::string("scaled_costs");
+    x_speeds_.name = std::string("x_speeds");
+    omega_speeds_.name = std::string("omega_speeds");
+
   }
 
   TrajectoryPlanner::~TrajectoryPlanner(){}
@@ -777,6 +785,17 @@ namespace base_local_planner{
     double vx = global_vel.getOrigin().getX();
     double vy = global_vel.getOrigin().getY();
     double vtheta = vel_yaw;
+    
+    cost_points_.points.clear();
+    cost_points_.channels.clear();
+    heading_costs_.values.clear();
+    occ_dist_costs_.values.clear();
+    path_dist_costs_.values.clear();
+    goal_dist_costs_.values.clear();
+    scaled_costs_.values.clear();
+    x_speeds_.values.clear();
+    omega_speeds_.values.clear();
+
 
     //reset the map for new operations
     map_.resetPathDist();
