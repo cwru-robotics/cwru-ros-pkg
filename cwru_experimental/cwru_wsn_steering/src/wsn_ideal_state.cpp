@@ -1,7 +1,9 @@
 #include <ros/ros.h>
 #include <nav_msgs/Odometry.h>
 #include <geometry_msgs/Twist.h>
+#include <geometry_msgs/PoseStamped.h>
 #include <tf/transform_datatypes.h>
+#include <tf/transform_listener.h>
 #include <cwru_wsn_steering/DesiredState.h>
 #include <cwru_wsn_steering/PathSegment.h>
 #include <vector>
@@ -35,7 +37,8 @@ class WSNIdealState {
 		//ROS communcators
 		ros::NodeHandle nh_;
 		ros::Publisher ideal_state_pub_;
-
+	 	tf::TransformListener tf_listener_;	
+		geometry_msgs::PoseStamped temp_pose_in_, temp_pose_out_;
 };
 
 const double pi = acos(-1.0);
@@ -67,6 +70,7 @@ WSNIdealState::WSNIdealState() {
 	float v = 0.0;
 	float rho = 0.0;
 
+	tf_listener_.waitForTransform("odom", path.at(iSeg).frame_id, ros::Time::now(), ros::Duration(10));
 	//Don't shutdown till the node shuts down
 	while(ros::ok()) {
 		//Orientation is a quaternion, so need to get yaw angle in rads.. unless you want a quaternion
@@ -148,19 +152,30 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 
     //done figuring out our velocity commands
 
+    //Convert into the odometry frame from whatever frame the path segments are in
+    temp_pose_in_.header.frame_id = currentSeg.frame_id;
+    temp_pose_in_.pose.position.x = currentSeg.xRef;
+    temp_pose_in_.pose.position.y = currentSeg.yRef;
+    temp_pose_in_.pose.orientation = tf::createQuaternionMsgFromYaw(currentSeg.tangentAng);
+    ros::Time current_transform = ros::Time::now();
+    tf_listener_.getLatestCommonTime(temp_pose_in_.header.frame_id, "odom", current_transform, NULL);
+    temp_pose_in_.header.stamp = current_transform;
+    tf_listener_.transformPose("odom", temp_pose_in_, temp_pose_out_);
+
+    double tanAngle = tf::getYaw(temp_pose_out_.pose.orientation);
     double radius, tangentAngStart, arcAngStart, dAng, arcAng;
     switch(currentSeg.segType){
 	case 1:
-	    theta = currentSeg.tangentAng;
+	    theta = tanAngle;
 	    rho = currentSeg.rho;
-	    x = currentSeg.xRef + segDistDone*cos(theta);
-	    y = currentSeg.yRef + segDistDone*sin(theta);
+	    x = temp_pose_out_.pose.position.x + segDistDone*cos(theta);
+	    y = temp_pose_out_.pose.position.y + segDistDone*sin(theta);
 	    halt = false;
 	    break;
 	case 2:
 	    rho = currentSeg.rho;
 	    radius = 1.0/abs(rho);
-	    tangentAngStart = currentSeg.tangentAng;
+	    tangentAngStart = tanAngle;
 	    arcAngStart = 0.0;
 	    if(rho >= 0.0) {
 		arcAngStart = tangentAngStart - pi / 2.0;	
@@ -169,8 +184,8 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 	    }
 	    dAng = segDistDone*rho;
 	    arcAng = arcAngStart + dAng;
-	    x = currentSeg.xRef + radius * cos(arcAng);
-	    y = currentSeg.yRef + radius * sin(arcAng);
+	    x = temp_pose_out_.pose.position.x + radius * cos(arcAng);
+	    y = temp_pose_out_.pose.position.y  + radius * sin(arcAng);
 	    theta = currentSeg.tangentAng + dAng;
 	    halt = false;
 	    break;
@@ -182,7 +197,7 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 
 void WSNIdealState::initializeDummyPath() {
     cwru_wsn_steering::PathSegment p;
-    p.segType =1;
+   /* p.segType =1;
     p.xRef = 0.0;
     p.yRef = 0.0;
     p.tangentAng = 0.0;
@@ -241,7 +256,39 @@ void WSNIdealState::initializeDummyPath() {
     p.vDes = 0.5;
     p.accel = 0.1;
     path.push_back(p);
+    */
+    p.frame_id = "map";
+    p.segType = 1;
+    p.xRef = 0.0436;
+    p.yRef = 2.18822;
+    p.tangentAng = 2.42426;
+    p.rho = 0.0;
+    p.length = 2.3202;
+    p.vDes = 0.5;
+    p.accel = 0.1;
+    path.push_back(p);
 
+    p.frame_id = "map";
+    p.segType = 2;
+    p.xRef = -1.6972;
+    p.yRef = 3.70692;
+    p.tangentAng = 2.42426;
+    p.rho = -100.0;
+    p.length = 0.0157;
+    p.vDes = 0.005;
+    p.accel = 0.05;
+    path.push_back(p);
+
+    p.frame_id = "map";
+    p.segType = 1;
+    p.xRef = -1.7532;
+    p.yRef = 3.847;
+    p.tangentAng = 0.8272;
+    p.rho = 0.0;
+    p.length = 13.0;
+    p.vDes = 0.5;
+    p.accel = 0.1;
+    path.push_back(p);
 }
 
 int main(int argc, char *argv[]) {

@@ -3,9 +3,9 @@
 <node name="cwru_wsn_steering" pkg="cwru_wsn_steering" type="cwru_wsn_steering">
 <remap from="odometry" to="/odom" />
 <param name="k_v" value="1.0" />
-<param name="convergence_rate" value="1.0" />
+<param name="convergence_rate" value="0.8" />
 </node>
 
-<node name="cwru_wsn_ideal_state" pkg="cwru_wsn_steering" type="wsn_ideal_state" />
+<node name="cwru_wsn_ideal_state" pkg="cwru_wsn_steering" type="wsn_ideal_state" output="screen"/>
 
 </launch>
