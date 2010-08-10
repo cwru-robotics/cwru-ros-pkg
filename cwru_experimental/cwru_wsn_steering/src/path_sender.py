@@ -22,8 +22,10 @@ def makeDummyPaths():
 	p.accel = 0.1
 	p1.segs.append(p)
 
+	p = PathSegment()
 	p.frame_id = "map"
 	p.segType = 2
+	p.xRef = -1.6972
 	p.yRef = 3.70692
 	p.tangentAng = 2.42426
 	p.rho = -100.0
@@ -32,6 +34,7 @@ def makeDummyPaths():
 	p.accel = 0.05
 	p1.segs.append(p)
 
+	p = PathSegment()
 	p.frame_id = "map"
 	p.segType = 1
 	p.xRef = -1.7532
@@ -45,6 +48,7 @@ def makeDummyPaths():
 	paths['hallway'] = p1
 
 	p2 = Path()
+	p = PathSegment()
 	p.frame_id = "map"
 	p.segType = 1
 	p.xRef = 7.0274
@@ -56,6 +60,7 @@ def makeDummyPaths():
 	p.accel = 0.1
 	p2.segs.append(p)
 
+	p = PathSegment()
 	p.frame_id = "map"
 	p.segType = 2
 	p.xRef = 8.02
