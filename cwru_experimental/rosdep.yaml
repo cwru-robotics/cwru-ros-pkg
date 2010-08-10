@@ -1,4 +1,4 @@
 gstreamer_pocketsphinx:
  ubuntu: gstreamer0.10-pocketsphinx
-festival:
+festival-voice:
  ubuntu: festival
