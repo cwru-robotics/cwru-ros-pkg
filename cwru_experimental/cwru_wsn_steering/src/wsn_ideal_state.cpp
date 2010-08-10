@@ -6,6 +6,7 @@
 #include <tf/transform_listener.h>
 #include <cwru_wsn_steering/DesiredState.h>
 #include <cwru_wsn_steering/PathSegment.h>
+#include <cwru_wsn_steering/Path.h>
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -21,6 +22,7 @@ class WSNIdealState {
 		 * omega in rads/sec
 		 */
 		void computeState(float& x, float& y, float& theta, float& v, float& rho);
+		void pathCallback(const cwru_wsn_steering::Path::ConstPtr& p);
 		void initializeDummyPath();
 
 		//Loop rate in Hz
@@ -37,6 +39,7 @@ class WSNIdealState {
 		//ROS communcators
 		ros::NodeHandle nh_;
 		ros::Publisher ideal_state_pub_;
+		ros::Subscriber path_sub_;
 		tf::TransformListener tf_listener_;	
 		geometry_msgs::PoseStamped temp_pose_in_, temp_pose_out_;
 };
@@ -46,6 +49,7 @@ const double pi = acos(-1.0);
 WSNIdealState::WSNIdealState() {
 	//Setup the ideal state pub
 	ideal_state_pub_= nh_.advertise<cwru_wsn_steering::DesiredState>("idealState",1);   
+	path_sub_ = nh_.subscribe<cwru_wsn_steering::Path>("desired_path", 1, &WSNIdealState::pathCallback, this);
 	nh_.param("loop_rate",loop_rate,20.0); // default 20Hz
 	dt = 1.0/loop_rate;
 
@@ -53,7 +57,7 @@ WSNIdealState::WSNIdealState() {
 	ros::Rate rate(loop_rate);
 
 	//Sets up a dummy path until we get something smarter to send it down and set it
-	initializeDummyPath();
+	//initializeDummyPath();
 
 	//Initialze private class variables
 	iSeg = 0;
@@ -70,7 +74,7 @@ WSNIdealState::WSNIdealState() {
 	float v = 0.0;
 	float rho = 0.0;
 
-	tf_listener_.waitForTransform("odom", path.at(iSeg).frame_id, ros::Time::now(), ros::Duration(10));
+	tf_listener_.waitForTransform("odom", "map", ros::Time::now(), ros::Duration(10));
 	//Don't shutdown till the node shuts down
 	while(ros::ok()) {
 		//Orientation is a quaternion, so need to get yaw angle in rads.. unless you want a quaternion
@@ -98,6 +102,7 @@ WSNIdealState::WSNIdealState() {
 		rate.sleep();
 	}
 }
+
 void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, float& rho)
 {
 	double dL = v * dt;
@@ -198,6 +203,14 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 			halt = true;
 			v = 0.0;
 	}
+}
+
+void WSNIdealState::pathCallback(const cwru_wsn_steering::Path::ConstPtr& p) {
+	//Reset initial state cause the path is about to change
+	iSeg = 0;
+	segDistDone = 0.0;
+	halt = true;   
+       	path = p->segs;
 }
 
 void WSNIdealState::initializeDummyPath() {
