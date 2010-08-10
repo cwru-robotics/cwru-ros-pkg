@@ -43,7 +43,6 @@ class WSNSteering {
 
 };
 
-const double pi(acos(-1.0));
 
 WSNSteering::WSNSteering() : priv_nh_("~") {
 	//Read parameters from the ROS parameter server, defaulting to value if the parameter is not there
@@ -113,6 +112,7 @@ WSNSteering::WSNSteering() : priv_nh_("~") {
 
 void WSNSteering::computeVelocities(double x_PSO, double y_PSO, double psi_PSO, double x_des, double y_des, double v_des, double psi_des, double rho_des, double &v, double &omega) {
 	//Wyatt put your code here. We will figure out the interface to Beom's GPS points later
+	const double pi = 3.1415926;
 	double tanVec[2],nVec[2],dx_vec[2],d;
 	double deltaPsi;
 
@@ -129,12 +129,15 @@ void WSNSteering::computeVelocities(double x_PSO, double y_PSO, double psi_PSO, 
 	// d = -n'*dx_vec;
 	d = -nVec[0]*dx_vec[0]-nVec[1]*dx_vec[1];
 	deltaPsi = psi_PSO-psi_des;
+	//std::cout << "psi_PSO " << psi_PSO << " " << "psi_des " << psi_des << std::endl;
 	while (deltaPsi>pi)
 		deltaPsi-=2*pi;
 	while (deltaPsi< -pi)
 		deltaPsi+=2*pi;
 	double rho_cmd = -k_d*d -k_psi*deltaPsi + rho_des;
+	//std::cout << "dPsi = " << deltaPsi  << " " << "d = " << d << std::endl;
 	omega = v*rho_cmd;
+	//std::cout << "omega = " << omega << std::endl;
 }	
 
 void WSNSteering::odomCallback(const nav_msgs::Odometry::ConstPtr& odom) {
