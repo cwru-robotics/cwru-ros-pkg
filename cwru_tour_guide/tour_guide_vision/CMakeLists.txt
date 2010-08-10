@@ -30,3 +30,5 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #target_link_libraries(example ${PROJECT_NAME})
 
 rosbuild_add_executable(birds_eye_calibrator src/birds_eye_calibrator.cpp)
+rosbuild_add_executable(vision_analyzer src/vision_analyzer.cpp)
+rosbuild_add_executable(map_maker src/map_maker.cpp)

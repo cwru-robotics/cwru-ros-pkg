@@ -1,0 +1,19 @@
+<launch>
+	<node name="rear_birds_eye_calibrator" pkg="tour_guide_vision" type="birds_eye_calibrator" respawn="false" output="screen" >
+	  <remap from="image_rect_color" to="/rear_camera/image_rect_color"/>
+	  <param name="board_height" value="7"/>
+	  <param name="board_width" value="6"/>
+	  <param name="grid_width" value="0.0047"/>
+	  <param name="grid_height" value="0.0047"/>
+	  <param name="m_in_front_of_bot" value="-0.122"/>
+	  <param name="m_offset_lr_of_bot" value="0.1982"/>
+	  <param name="m_per_output_pixel" value=" 0.0025"/>
+	  <param name="output_image_width" value="600"/>
+	  <param name="output_image_height" value="600"/>
+	  <param name="map1" value="3"/>
+	  <param name="map2" value="4"/>
+	  <param name="map3" value="1"/>
+	  <param name="map4" value="2"/>
+	  <param name="H_path" value="$(find tour_guide_vision)/calibration/rear_H.xml"/>
+	</node>
+</launch>
