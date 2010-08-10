@@ -37,7 +37,7 @@ class WSNIdealState {
 		//ROS communcators
 		ros::NodeHandle nh_;
 		ros::Publisher ideal_state_pub_;
-	 	tf::TransformListener tf_listener_;	
+		tf::TransformListener tf_listener_;	
 		geometry_msgs::PoseStamped temp_pose_in_, temp_pose_out_;
 };
 
@@ -79,14 +79,14 @@ WSNIdealState::WSNIdealState() {
 		//Put the temp vars into the desiredState
 		cwru_wsn_steering::DesiredState desiredState;
 		if(halt) {
-		    desiredState = halt_state;
+			desiredState = halt_state;
 		}
 		else {
-		    desiredState.x = x;
-		    desiredState.y = y;
-		    desiredState.theta = theta;
-		    desiredState.v = v;
-		    desiredState.rho = rho;
+			desiredState.x = x;
+			desiredState.y = y;
+			desiredState.theta = theta;
+			desiredState.v = v;
+			desiredState.rho = rho;
 		}
 		//Publish twist message
 		ideal_state_pub_.publish(desiredState);
@@ -100,195 +100,223 @@ WSNIdealState::WSNIdealState() {
 }
 void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, float& rho)
 {
-    double dL = v * dt;
-    if(iSeg >= path.size()) {
-	//Out of bounds
-	halt = true;
-	v = 0.0;
-	return;
-    }
-    
-    segDistDone = segDistDone + dL;
-    double lengthSeg = path.at(iSeg).length;
-    if(segDistDone > lengthSeg) {
-	segDistDone = segDistDone - lengthSeg;
-	iSeg++;
-    }
+	double dL = v * dt;
+	if(iSeg >= path.size()) {
+		//Out of bounds
+		halt = true;
+		v = 0.0;
+		return;
+	}
 
-    if(iSeg >= path.size()) {
-	//Out of bounds
-	halt = true;
-	v = 0.0;
-	return;
-    }
+	segDistDone = segDistDone + dL;
+	double lengthSeg = path.at(iSeg).length;
+	if(segDistDone > lengthSeg) {
+		segDistDone = segDistDone - lengthSeg;
+		iSeg++;
+	}
 
-    cwru_wsn_steering::PathSegment currentSeg = path.at(iSeg);
+	if(iSeg >= path.size()) {
+		//Out of bounds
+		halt = true;
+		v = 0.0;
+		return;
+	}
 
-    double vNext;
-    v = currentSeg.vDes;
-    if (iSeg < path.size()-1) {
-	vNext = path.at(iSeg+1).vDes;
-    } 
-    else {
-	vNext = 0.0;	
-    }
+	cwru_wsn_steering::PathSegment currentSeg = path.at(iSeg);
 
-    double tDecel = (v - vNext)/currentSeg.accel;
-    double vMean = (v + vNext)/2.0;
-    double distDecel = vMean*tDecel;
+	double vNext;
+	v = currentSeg.vDes;
+	if (iSeg < path.size()-1) {
+		vNext = path.at(iSeg+1).vDes;
+	} 
+	else {
+		vNext = 0.0;	
+	}
 
-    double lengthRemaining = currentSeg.length - segDistDone;
-    if(lengthRemaining < 0.0) {
-	lengthRemaining = 0.0;
-    }
-    else if (lengthRemaining < distDecel) {
-	v = sqrt(2*lengthRemaining*currentSeg.accel + pow(vNext, 2));
-    }
-    else {
-	v = v + currentSeg.accel*dt;
-    }
+	double tDecel = (v - vNext)/currentSeg.accel;
+	double vMean = (v + vNext)/2.0;
+	double distDecel = vMean*tDecel;
 
-    v = std::min(v, currentSeg.vDes); //gonna fail for negative v commands along the path
+	double lengthRemaining = currentSeg.length - segDistDone;
+	if(lengthRemaining < 0.0) {
+		lengthRemaining = 0.0;
+	}
+	else if (lengthRemaining < distDecel) {
+		v = sqrt(2*lengthRemaining*currentSeg.accel + pow(vNext, 2));
+	}
+	else {
+		v = v + currentSeg.accel*dt;
+	}
 
-    //done figuring out our velocity commands
+	v = std::min(v, currentSeg.vDes); //gonna fail for negative v commands along the path
 
-    //Convert into the odometry frame from whatever frame the path segments are in
-    temp_pose_in_.header.frame_id = currentSeg.frame_id;
-    temp_pose_in_.pose.position.x = currentSeg.xRef;
-    temp_pose_in_.pose.position.y = currentSeg.yRef;
-    temp_pose_in_.pose.orientation = tf::createQuaternionMsgFromYaw(currentSeg.tangentAng);
-    ros::Time current_transform = ros::Time::now();
-    tf_listener_.getLatestCommonTime(temp_pose_in_.header.frame_id, "odom", current_transform, NULL);
-    temp_pose_in_.header.stamp = current_transform;
-    tf_listener_.transformPose("odom", temp_pose_in_, temp_pose_out_);
+	//done figuring out our velocity commands
 
-    double tanAngle = tf::getYaw(temp_pose_out_.pose.orientation);
-    double radius, tangentAngStart, arcAngStart, dAng, arcAng;
-    switch(currentSeg.segType){
-	case 1:
-	    theta = tanAngle;
-	    rho = currentSeg.rho;
-	    x = temp_pose_out_.pose.position.x + segDistDone*cos(theta);
-	    y = temp_pose_out_.pose.position.y + segDistDone*sin(theta);
-	    halt = false;
-	    break;
-	case 2:
-	    rho = currentSeg.rho;
-	    radius = 1.0/abs(rho);
-	    tangentAngStart = tanAngle;
-	    arcAngStart = 0.0;
-	    if(rho >= 0.0) {
-		arcAngStart = tangentAngStart - pi / 2.0;	
-	    } else {
-		arcAngStart = tangentAngStart + pi / 2.0;
-	    }
-	    dAng = segDistDone*rho;
-	    arcAng = arcAngStart + dAng;
-	    x = temp_pose_out_.pose.position.x + radius * cos(arcAng);
-	    y = temp_pose_out_.pose.position.y  + radius * sin(arcAng);
-	    theta = currentSeg.tangentAng + dAng;
-	    halt = false;
-	    break;
-	default:
-	    halt = true;
-	    v = 0.0;
-    }
+	//Convert into the odometry frame from whatever frame the path segments are in
+	temp_pose_in_.header.frame_id = currentSeg.frame_id;
+	temp_pose_in_.pose.position.x = currentSeg.xRef;
+	temp_pose_in_.pose.position.y = currentSeg.yRef;
+	temp_pose_in_.pose.orientation = tf::createQuaternionMsgFromYaw(currentSeg.tangentAng);
+	ros::Time current_transform = ros::Time::now();
+	tf_listener_.getLatestCommonTime(temp_pose_in_.header.frame_id, "odom", current_transform, NULL);
+	temp_pose_in_.header.stamp = current_transform;
+	tf_listener_.transformPose("odom", temp_pose_in_, temp_pose_out_);
+
+	double tanAngle = tf::getYaw(temp_pose_out_.pose.orientation);
+	double radius, tangentAngStart, arcAngStart, dAng, arcAng;
+	switch(currentSeg.segType){
+		case 1:
+			theta = tanAngle;
+			rho = currentSeg.rho;
+			x = temp_pose_out_.pose.position.x + segDistDone*cos(theta);
+			y = temp_pose_out_.pose.position.y + segDistDone*sin(theta);
+			halt = false;
+			break;
+		case 2:
+			rho = currentSeg.rho;
+			radius = 1.0/abs(rho);
+			tangentAngStart = tanAngle;
+			arcAngStart = 0.0;
+			if(rho >= 0.0) {
+				arcAngStart = tangentAngStart - pi / 2.0;	
+			} else {
+				arcAngStart = tangentAngStart + pi / 2.0;
+			}
+			dAng = segDistDone*rho;
+			arcAng = arcAngStart + dAng;
+			x = temp_pose_out_.pose.position.x + radius * cos(arcAng);
+			y = temp_pose_out_.pose.position.y  + radius * sin(arcAng);
+			theta = currentSeg.tangentAng + dAng;
+			halt = false;
+			break;
+		default:
+			halt = true;
+			v = 0.0;
+	}
 }
 
 void WSNIdealState::initializeDummyPath() {
-    cwru_wsn_steering::PathSegment p;
-   /* p.segType =1;
-    p.xRef = 0.0;
-    p.yRef = 0.0;
-    p.tangentAng = 0.0;
-    p.rho = 0.0;
-    p.length = 2.0;
-    p.vDes = 0.5;
-    p.accel = 0.1;
-    path.push_back(p);
+	cwru_wsn_steering::PathSegment p;
+	/* p.segType =1;
+	   p.xRef = 0.0;
+	   p.yRef = 0.0;
+	   p.tangentAng = 0.0;
+	   p.rho = 0.0;
+	   p.length = 2.0;
+	   p.vDes = 0.5;
+	   p.accel = 0.1;
+	   path.push_back(p);
 
-    p.segType = 2;
-    p.xRef = 2.0;
-    p.yRef = 1.0;
-    p.tangentAng = 0.0;
-    p.rho = 1.0;
-    p.length = 3.1416;
-    p.vDes = 0.5;
-    p.accel = 0.1;
-    path.push_back(p);
+	   p.segType = 2;
+	   p.xRef = 2.0;
+	   p.yRef = 1.0;
+	   p.tangentAng = 0.0;
+	   p.rho = 1.0;
+	   p.length = 3.1416;
+	   p.vDes = 0.5;
+	   p.accel = 0.1;
+	   path.push_back(p);
 
-    p.segType = 1;
-    p.xRef = 2.0;
-    p.yRef = 2.0;
-    p.tangentAng = 3.1416;
-    p.rho = 0.0;
-    p.length = 1.0;
-    p.vDes = 0.5;
-    p.accel = 0.1;
-    path.push_back(p);
+	   p.segType = 1;
+	   p.xRef = 2.0;
+	   p.yRef = 2.0;
+	   p.tangentAng = 3.1416;
+	   p.rho = 0.0;
+	   p.length = 1.0;
+	   p.vDes = 0.5;
+	   p.accel = 0.1;
+	   path.push_back(p);
 
-    p.segType = 2;
-    p.xRef = 1.0;
-    p.yRef = 2.01;
-    p.tangentAng = 3.1416;
-    p.rho = -100.0;
-    p.length = 0.0157;
-    p.vDes = 0.01;
-    p.accel = 0.1;
-    path.push_back(p);
+	   p.segType = 2;
+	   p.xRef = 1.0;
+	   p.yRef = 2.01;
+	   p.tangentAng = 3.1416;
+	   p.rho = -100.0;
+	   p.length = 0.0157;
+	   p.vDes = 0.01;
+	   p.accel = 0.1;
+	   path.push_back(p);
 
-    p.segType = 1;
-    p.xRef = 0.99;
-    p.yRef = 2.01;
-    p.tangentAng = 1.5708;
-    p.rho = 0.0;
-    p.length = 1.0;
-    p.vDes = 0.5;
-    p.accel = 0.1;
-    path.push_back(p);
+	   p.segType = 1;
+	   p.xRef = 0.99;
+	   p.yRef = 2.01;
+	   p.tangentAng = 1.5708;
+	   p.rho = 0.0;
+	   p.length = 1.0;
+	   p.vDes = 0.5;
+	   p.accel = 0.1;
+	   path.push_back(p);
 
-    p.segType = 2;
-    p.xRef = 1.49;
-    p.yRef = 3.01;
-    p.tangentAng = 1.5708;
-    p.rho = -2.0;
-    p.length = 0.7854;
-    p.vDes = 0.5;
-    p.accel = 0.1;
-    path.push_back(p);
-    */
-    p.frame_id = "map";
-    p.segType = 1;
-    p.xRef = 0.0436;
-    p.yRef = 2.18822;
-    p.tangentAng = 2.42426;
-    p.rho = 0.0;
-    p.length = 2.3202;
-    p.vDes = 0.5;
-    p.accel = 0.1;
-    path.push_back(p);
+	   p.segType = 2;
+	   p.xRef = 1.49;
+	   p.yRef = 3.01;
+	   p.tangentAng = 1.5708;
+	   p.rho = -2.0;
+	   p.length = 0.7854;
+	   p.vDes = 0.5;
+	   p.accel = 0.1;
+	   path.push_back(p);
+	   */
+	p.frame_id = "map";
+	p.segType = 1;
+	p.xRef = 0.0436;
+	p.yRef = 2.18822;
+	p.tangentAng = 2.42426;
+	p.rho = 0.0;
+	p.length = 2.3202;
+	p.vDes = 0.5;
+	p.accel = 0.1;
+	path.push_back(p);
 
-    p.frame_id = "map";
-    p.segType = 2;
-    p.xRef = -1.6972;
-    p.yRef = 3.70692;
-    p.tangentAng = 2.42426;
-    p.rho = -100.0;
-    p.length = 0.0157;
-    p.vDes = 0.005;
-    p.accel = 0.05;
-    path.push_back(p);
+	p.frame_id = "map";
+	p.segType = 2;
+	p.xRef = -1.6972;
+	p.yRef = 3.70692;
+	p.tangentAng = 2.42426;
+	p.rho = -100.0;
+	p.length = 0.0157;
+	p.vDes = 0.005;
+	p.accel = 0.05;
+	path.push_back(p);
 
-    p.frame_id = "map";
-    p.segType = 1;
-    p.xRef = -1.7532;
-    p.yRef = 3.847;
-    p.tangentAng = 0.8272;
-    p.rho = 0.0;
-    p.length = 13.0;
-    p.vDes = 0.5;
-    p.accel = 0.1;
-    path.push_back(p);
+	p.frame_id = "map";
+	p.segType = 1;
+	p.xRef = -1.7532;
+	p.yRef = 3.847;
+	p.tangentAng = 0.8272;
+	p.rho = 0.0;
+	p.length = 13.0;
+	p.vDes = 0.5;
+	p.accel = 0.1;
+	path.push_back(p);
+
+	p.frame_id = "map";
+	p.segType = 1;
+	p.xRef = 7.0274;  // start from conclusion of go-thru lab door
+	p.yRef = 13.4659;
+	p.tangentAng = 0.7121; //should come through door at 0.8272; recorded -0.862; vec from p1 to p2 is ang 0.7121  
+	p.rho = 0.0;  // is a lineseg
+	p.length = 2.1659; // lineseg length
+	p.vDes = 0.5;
+	p.accel = 0.1;
+	path.push_back(p);
+
+	// should end at 8.667,14.8812, 0.7121
+	//      // facing elevator pose is: 8.49, 16.27, 2.375  ; should be about 90deg pos rotation
+	//           // for 90-deg rotation, dist btwn pts = r*sqrt(2)
+	//                // dist btwn pt 2 and pt3 = 1.40m; ==> r23 = 0.990 m; call it 1m
+	//                     // rCenter is 1m to left of vector v12, from p2
+	//
+	p.frame_id = "map";
+	p.segType = 2;
+	p.xRef = 8.02;
+	p.yRef = 15.63;
+	p.tangentAng = 0.7121; // should agree w/ previous lineseg angle
+	p.rho = 1.0; // pos rotation, CCW, w/ 1m turning radius
+	p.length = 1.57; // r=1 * dtheta = pi/2 ==> pi/2
+	p.vDes = 0.005;
+	p.accel = 0.05;
+	path.push_back(p);
 }
 
 int main(int argc, char *argv[]) {
