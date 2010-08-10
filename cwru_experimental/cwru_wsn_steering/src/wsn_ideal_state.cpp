@@ -164,6 +164,7 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 
 	double tanAngle = tf::getYaw(temp_pose_out_.pose.orientation);
 	double radius, tangentAngStart, arcAngStart, dAng, arcAng;
+	//std::cout << iSeg << std::endl;
 	switch(currentSeg.segType){
 		case 1:
 			theta = tanAngle;
@@ -197,7 +198,8 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 
 void WSNIdealState::initializeDummyPath() {
 	cwru_wsn_steering::PathSegment p;
-	/* p.segType =1;
+/*	p.frame_id = "odom";
+	 p.segType =1;
 	   p.xRef = 0.0;
 	   p.yRef = 0.0;
 	   p.tangentAng = 0.0;
@@ -207,6 +209,7 @@ void WSNIdealState::initializeDummyPath() {
 	   p.accel = 0.1;
 	   path.push_back(p);
 
+	p.frame_id = "odom";
 	   p.segType = 2;
 	   p.xRef = 2.0;
 	   p.yRef = 1.0;
@@ -217,6 +220,7 @@ void WSNIdealState::initializeDummyPath() {
 	   p.accel = 0.1;
 	   path.push_back(p);
 
+	p.frame_id = "odom";
 	   p.segType = 1;
 	   p.xRef = 2.0;
 	   p.yRef = 2.0;
@@ -227,6 +231,7 @@ void WSNIdealState::initializeDummyPath() {
 	   p.accel = 0.1;
 	   path.push_back(p);
 
+	p.frame_id = "odom";
 	   p.segType = 2;
 	   p.xRef = 1.0;
 	   p.yRef = 2.01;
@@ -237,6 +242,7 @@ void WSNIdealState::initializeDummyPath() {
 	   p.accel = 0.1;
 	   path.push_back(p);
 
+	p.frame_id = "odom";
 	   p.segType = 1;
 	   p.xRef = 0.99;
 	   p.yRef = 2.01;
@@ -247,6 +253,7 @@ void WSNIdealState::initializeDummyPath() {
 	   p.accel = 0.1;
 	   path.push_back(p);
 
+	p.frame_id = "odom";
 	   p.segType = 2;
 	   p.xRef = 1.49;
 	   p.yRef = 3.01;
@@ -256,8 +263,8 @@ void WSNIdealState::initializeDummyPath() {
 	   p.vDes = 0.5;
 	   p.accel = 0.1;
 	   path.push_back(p);
-	   */
-	p.frame_id = "map";
+	*/	   
+/*	p.frame_id = "map";
 	p.segType = 1;
 	p.xRef = 0.0436;
 	p.yRef = 2.18822;
@@ -289,7 +296,7 @@ void WSNIdealState::initializeDummyPath() {
 	p.vDes = 0.5;
 	p.accel = 0.1;
 	path.push_back(p);
-
+*/
 	p.frame_id = "map";
 	p.segType = 1;
 	p.xRef = 7.0274;  // start from conclusion of go-thru lab door
@@ -314,9 +321,10 @@ void WSNIdealState::initializeDummyPath() {
 	p.tangentAng = 0.7121; // should agree w/ previous lineseg angle
 	p.rho = 1.0; // pos rotation, CCW, w/ 1m turning radius
 	p.length = 1.57; // r=1 * dtheta = pi/2 ==> pi/2
-	p.vDes = 0.005;
+	p.vDes = 0.1;
 	p.accel = 0.05;
 	path.push_back(p);
+	
 }
 
 int main(int argc, char *argv[]) {
