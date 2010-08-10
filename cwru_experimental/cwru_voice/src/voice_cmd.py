@@ -58,7 +58,9 @@ class DemoApp(object):
         bus.connect('message::application', self.application_message)
         self.pipeline.set_state(gst.STATE_PAUSED)
 	self.msg = String()
-        self.pub = rospy.Publisher('chatter',String)
+	self.msg2 = String()        
+	self.pub = rospy.Publisher('chatter',String)
+	self.pub2 = rospy.Publisher('speak',String)
 	rospy.init_node('voice_cmd')
 	
 
@@ -101,12 +103,16 @@ class DemoApp(object):
 	print "Partial: " + hyp
 	hyp = hyp.lower()        
 	if "stop" in hyp:
-		print "STOP!"
+		str = "STOP!"
+		print str		
 		self.msg.data = "stop"
 		rospy.loginfo(self.msg.data)
 	        self.pub.publish(self.msg.data)
 		
-
+		self.msg2.data = str		
+		rospy.loginfo(self.msg2.data)
+	        self.pub2.publish(self.msg2.data)
+		
     def final_result(self, hyp, uttid):
         """Insert the final result."""
         # All this stuff appears as one single action
@@ -118,37 +124,44 @@ class DemoApp(object):
 	hyp = hyp.lower()
 
 	if "go to" and "bathroom" in hyp:
-		print "Going to the bathroom. \n"
+		str = "Going to the bathroom. \n"
 		self.msg.data = "bathroom"
 	elif "go to" and "hallway" in hyp:
-		print "Going to the hallway \n"
+		str = "Going to the hallway \n"
 		self.msg.data = "hallway"
 	elif "go to" and  "lab" in hyp:
-		print "Going to the lab \n"
+		str = "Going to the lab \n"
 		self.msg.data = "lab"
 	elif "go to" and "elevator" in hyp:
-		print "Going to the elevator \n"	
+		str = "Going to the elevator \n"	
 		self.msg.data = "elevator"
 	elif "go to" and "vending machine" in hyp:
-		print "Going to the vending machine \n"	
+		str = "Going to the vending machine \n"	
 		self.msg.data = "vending"
 	elif "open the door" in hyp:
-	        print "Opening door. \n"
+	        str = "Opening door. \n"
 		self.msg.data = "open"
 	elif "close the door" in hyp:
-		print "Closing door. \n"
+		str = "Closing door. \n"
 		self.msg.data = "close"
 	elif "enter the lab" in hyp:
-		print "Entering the lab. \n"
+		str = "Entering the lab. \n"
 		self.msg.data = "lab"
 	elif "stop" in hyp:
-		print "STOP!"
+		str = "STOP!"
 		self.msg.data = "stop"
 	else:
-		print "Please say a destination \n"
+		print "I didn't understand. Please say a command. \n"
 		self.msg.data = ""
+		str = ""
+	print str
 	rospy.loginfo(self.msg.data)
         self.pub.publish(self.msg.data)
+
+	self.msg2.data = str		
+	rospy.loginfo(self.msg2.data)
+        self.pub2.publish(self.msg2.data)
+
 
 
     def button_clicked(self, button):
