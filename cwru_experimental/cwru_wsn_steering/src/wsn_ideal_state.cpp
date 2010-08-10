@@ -111,7 +111,7 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 	segDistDone = segDistDone + dL;
 	double lengthSeg = path.at(iSeg).length;
 	if(segDistDone > lengthSeg) {
-		segDistDone = segDistDone - lengthSeg;
+		segDistDone = 0.0;
 		iSeg++;
 	}
 
@@ -163,6 +163,9 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 	tf_listener_.transformPose("odom", temp_pose_in_, temp_pose_out_);
 
 	double tanAngle = tf::getYaw(temp_pose_out_.pose.orientation);
+	//std::cout << "iSeg " << iSeg << std::endl;
+	//std::cout << "segDistDone " << segDistDone << std::endl;
+	//std::cout << "tan angle " << tanAngle << std::endl;
 	double radius, tangentAngStart, arcAngStart, dAng, arcAng;
 	//std::cout << iSeg << std::endl;
 	switch(currentSeg.segType){
@@ -184,10 +187,11 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 				arcAngStart = tangentAngStart + pi / 2.0;
 			}
 			dAng = segDistDone*rho;
+			//std::cout << "dAng " << dAng << std::endl;
 			arcAng = arcAngStart + dAng;
 			x = temp_pose_out_.pose.position.x + radius * cos(arcAng);
 			y = temp_pose_out_.pose.position.y  + radius * sin(arcAng);
-			theta = currentSeg.tangentAng + dAng;
+			theta = tanAngle + dAng;
 			halt = false;
 			break;
 		default:
@@ -264,7 +268,7 @@ void WSNIdealState::initializeDummyPath() {
 	   p.accel = 0.1;
 	   path.push_back(p);
 	*/	   
-/*	p.frame_id = "map";
+	p.frame_id = "map";
 	p.segType = 1;
 	p.xRef = 0.0436;
 	p.yRef = 2.18822;
@@ -296,7 +300,7 @@ void WSNIdealState::initializeDummyPath() {
 	p.vDes = 0.5;
 	p.accel = 0.1;
 	path.push_back(p);
-*/
+
 	p.frame_id = "map";
 	p.segType = 1;
 	p.xRef = 7.0274;  // start from conclusion of go-thru lab door
