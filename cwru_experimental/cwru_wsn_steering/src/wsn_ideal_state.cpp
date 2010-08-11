@@ -183,7 +183,9 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 			break;
 		case 2:
 			rho = currentSeg.rho;
-			radius = 1.0/abs(rho);
+			//std::cout << "rho " << rho << std::endl;
+			radius = 1.0/fabs(rho);
+			//std::cout << "radius = " << radius << std::endl;
 			tangentAngStart = tanAngle;
 			arcAngStart = 0.0;
 			if(rho >= 0.0) {
