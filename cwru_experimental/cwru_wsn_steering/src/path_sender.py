@@ -59,7 +59,7 @@ def makeDummyPaths():
 	p.rho = 0.0
 	p.length = 1.7752
 	p.vDes = 0.5
-	p.accel = 0.1
+	p.accel = 0.2
 	p2.segs.append(p)
 
 	p = PathSegment()
@@ -70,8 +70,8 @@ def makeDummyPaths():
 	p.tangentAng = 0.7121
 	p.rho = 0.8576
 	p.length = 1.8316
-	p.vDes = 0.3
-	p.accel = 0.1
+	p.vDes = 0.4
+	p.accel = 0.2
 	p2.segs.append(p)
 	paths['elevator'] = p2
 
@@ -85,8 +85,8 @@ def makeDummyPaths():
 	p.tangentAng =  2.2829
 	p.rho = 100.0
 	p.length = 0.0157 
-	p.vDes = 0.003
-	p.accel = 0.01
+	p.vDes = 0.008
+	p.accel = 0.02
 	p3.segs.append(p)
 
 	p = PathSegment()
@@ -109,8 +109,8 @@ def makeDummyPaths():
 	p.tangentAng = -2.2326
 	p.rho =  -1.5628
 	p.length = 1.0865
-	p.vDes = 0.4
-	p.accel = 0.1
+	p.vDes = 0.3
+	p.accel = 0.2
 	p3.segs.append(p)
 
 
@@ -123,7 +123,7 @@ def makeDummyPaths():
 	p.rho = 0.0
 	p.length = 5.6957
 	p.vDes = 0.5
-	p.accel = 0.1
+	p.accel = 0.2
 	p3.segs.append(p)
 
 	p = PathSegment()
@@ -134,8 +134,8 @@ def makeDummyPaths():
 	p.tangentAng = 2.3526
 	p.rho = -100.0
 	p.length = 0.0157
-	p.vDes = 0.004
-	p.accel = 0.01
+	p.vDes = 0.008
+	p.accel = 0.02
 	p3.segs.append(p)
 	paths['bathroom'] = p3
 	
