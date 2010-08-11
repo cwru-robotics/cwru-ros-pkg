@@ -190,6 +190,74 @@ def makeDummyPaths():
 	p4.segs.append(p)
 	paths['vending'] = p4
 
+#start return from vending to lab door
+#spin from pt 12 to pt13
+	p5 = Path()
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 2
+	p.xRef =  -0.6364
+	p.yRef = 23.1246
+	p.tangentAng =  0.7864
+	p.rho = -100.0
+	p.length =  0.0314
+	p.vDes = 0.003
+	p.accel = 0.01
+	p5.segs.append(p)
+#seg from p13 to p14
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 1
+	p.xRef =  -0.6293
+	p.yRef = 23.1175
+	p.tangentAng = -2.3222
+	p.rho = 0.0
+	p.length = 2.9072
+	p.vDes = 0.5
+	p.accel = 0.1
+	p5.segs.append(p)
+
+#turn from p14 to p15
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 2
+	p.xRef = -1.8012
+	p.yRef = 20.2338
+	p.tangentAng = -2.3222
+	p.rho =  0.8990
+	p.length = 1.5431
+	p.vDes = 0.4
+	p.accel = 0.1
+	p5.segs.append(p)
+
+#lineseg from p15 to p16
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 1
+	p.xRef =  -2.5908
+	p.yRef = 19.4503
+	p.tangentAng =  -0.7892
+	p.rho = 0.0
+	p.length = 11.4321
+	p.vDes = 0.5
+	p.accel = 0.1
+	p5.segs.append(p)
+
+
+#spin in place to face door
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 2
+	p.xRef =  -2.5908
+	p.yRef = 19.4503
+	p.tangentAng = -0.7892
+	p.rho =  -100.0
+	p.length = 0.0157
+	p.vDes = 0.004
+	p.accel = 0.01
+	p5.segs.append(p)
+	paths['lab'] = p5
+
 	return paths
 
 class PathSender:
