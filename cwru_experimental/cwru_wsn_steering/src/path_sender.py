@@ -248,8 +248,8 @@ def makeDummyPaths():
 	p = PathSegment()
 	p.frame_id = "map"
 	p.segType = 2
-	p.xRef =  -2.5908
-	p.yRef = 19.4503
+	p.xRef =  5.46
+	p.yRef = 11.34
 	p.tangentAng = -0.7892
 	p.rho =  -100.0
 	p.length = 0.0157
