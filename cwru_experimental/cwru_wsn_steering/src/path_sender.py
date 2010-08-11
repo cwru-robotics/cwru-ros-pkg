@@ -138,7 +138,58 @@ def makeDummyPaths():
 	p.accel = 0.02
 	p3.segs.append(p)
 	paths['bathroom'] = p3
-	
+
+	# start path from bathroom to vending machines
+	p4 = Path()
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 2
+	p.xRef =  0.8042
+	p.yRef = 16.8174
+	p.tangentAng =  0.7818
+	p.rho = 100.0
+	p.length = 0.0157 
+	p.vDes = 0.003
+	p.accel = 0.01
+	p4.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 1
+	p.xRef =  0.8113
+	p.yRef = 16.8244
+	p.tangentAng = 2.3606
+	p.rho = 0.0
+	p.length = 4.7258
+	p.vDes = 0.5
+	p.accel = 0.1
+	p4.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 2
+	p.xRef = -2.0264
+	p.yRef = 20.6746
+	p.tangentAng = 2.3606
+	p.rho =  -1.3571
+	p.length = 1.1600
+	p.vDes = 0.4
+	p.accel = 0.1
+	p4.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 1
+	p.xRef =  -2.5480
+	p.yRef = 21.1951
+	p.tangentAng =  0.7864
+	p.rho = 0.0
+	p.length = 2.7161
+	p.vDes = 0.5
+	p.accel = 0.1
+	p4.segs.append(p)
+	paths['vending'] = p4
+
 	return paths
 
 class PathSender:
