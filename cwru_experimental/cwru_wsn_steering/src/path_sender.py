@@ -242,20 +242,6 @@ def makeDummyPaths():
 	p.vDes = 0.5
 	p.accel = 0.1
 	p5.segs.append(p)
-
-
-#spin in place to face door
-	p = PathSegment()
-	p.frame_id = "map"
-	p.segType = 2
-	p.xRef =  5.46
-	p.yRef = 11.34
-	p.tangentAng = -0.7892
-	p.rho =  -100.0
-	p.length = 0.0157
-	p.vDes = 0.004
-	p.accel = 0.01
-	p5.segs.append(p)
 	paths['lab'] = p5
 
 	return paths
