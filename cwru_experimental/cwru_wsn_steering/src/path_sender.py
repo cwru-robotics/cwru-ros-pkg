@@ -48,15 +48,16 @@ def makeDummyPaths():
 	p1.segs.append(p)
 	paths['hallway'] = p1
 
+	# start path to elevator
 	p2 = Path()
 	p = PathSegment()
 	p.frame_id = "map"
 	p.segType = 1
 	p.xRef = 7.0274
-	p.yRef = 13.4659;
+	p.yRef = 13.4659
 	p.tangentAng = 0.7121
 	p.rho = 0.0
-	p.length = 2.1659
+	p.length = 1.7752
 	p.vDes = 0.5
 	p.accel = 0.1
 	p2.segs.append(p)
@@ -64,37 +65,38 @@ def makeDummyPaths():
 	p = PathSegment()
 	p.frame_id = "map"
 	p.segType = 2
-	p.xRef = 8.02
-	p.yRef = 15.63
+	p.xRef = 7.6093
+	p.yRef = 15.5085
 	p.tangentAng = 0.7121
-	p.rho = 1.0
-	p.length = 1.57
+	p.rho = 0.8576
+	p.length = 1.8316
 	p.vDes = 0.3
-	p.accel = 0.05
+	p.accel = 0.1
 	p2.segs.append(p)
 	paths['elevator'] = p2
 
+	# start go to bathroom
 	p3 = Path()
 	p = PathSegment()
 	p.frame_id = "map"
 	p.segType = 2
-	p.xRef = 8.7
-	p.yRef = 16.3
-	p.tangentAng = 2.283
+	p.xRef = 8.4844
+	p.yRef = 16.2639
+	p.tangentAng =  2.2829
 	p.rho = 100.0
 	p.length = 0.0157 
 	p.vDes = 0.003
-	p.accel = 0.1
+	p.accel = 0.01
 	p3.segs.append(p)
 
 	p = PathSegment()
 	p.frame_id = "map"
 	p.segType = 1
-	p.xRef = 8.74
-	p.yRef = 16.31
-	p.tangentAng = -2.2740
+	p.xRef = 8.4778
+	p.yRef = 16.2715
+	p.tangentAng = -2.2326
 	p.rho = 0.0
-	p.length = 4.40
+	p.length = 4.3851
 	p.vDes = 0.5
 	p.accel = 0.1
 	p3.segs.append(p)
@@ -102,11 +104,11 @@ def makeDummyPaths():
 	p = PathSegment()
 	p.frame_id = "map"
 	p.segType = 2
-	p.xRef =5.31
-	p.yRef = 13.46
-	p.tangentAng = -2.274
-	p.rho = -1.30
-	p.length = 1.21
+	p.xRef = 5.2784
+	p.yRef = 13.2053
+	p.tangentAng = -2.2326
+	p.rho =  -1.5628
+	p.length = 1.0865
 	p.vDes = 0.4
 	p.accel = 0.1
 	p3.segs.append(p)
@@ -115,11 +117,11 @@ def makeDummyPaths():
 	p = PathSegment()
 	p.frame_id = "map"
 	p.segType = 1
-	p.xRef = 4.82
-	p.yRef = 12.75
-	p.tangentAng = 2.35
+	p.xRef =  4.8243
+	p.yRef = 12.7544
+	p.tangentAng = 2.3526
 	p.rho = 0.0
-	p.length = 5.70
+	p.length = 5.6957
 	p.vDes = 0.5
 	p.accel = 0.1
 	p3.segs.append(p)
@@ -127,13 +129,13 @@ def makeDummyPaths():
 	p = PathSegment()
 	p.frame_id = "map"
 	p.segType = 2
-	p.xRef = 0.81
-	p.yRef = 16.80
-	p.tangentAng = 2.350
+	p.xRef = 0.8112
+	p.yRef = 16.7962
+	p.tangentAng = 2.3526
 	p.rho = -100.0
 	p.length = 0.0157
 	p.vDes = 0.004
-	p.accel = 0.1
+	p.accel = 0.01
 	p3.segs.append(p)
 	paths['bathroom'] = p3
 	
