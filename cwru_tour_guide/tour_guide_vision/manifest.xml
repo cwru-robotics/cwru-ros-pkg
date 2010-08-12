@@ -14,6 +14,7 @@
   <depend package="image_transport" />
   <depend package="cv_bridge" />
   <depend package="tf" />
+  <depend package="camera_info_manager"/>
   <depend package="geometry_msgs" />
 
 </package>

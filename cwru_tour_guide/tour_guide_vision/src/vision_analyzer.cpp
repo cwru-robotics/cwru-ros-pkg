@@ -14,9 +14,8 @@ class VisionAnalyzer {
 		
     void warp();
     
-// I need some way of mapping the H matricies with the images, via params
     std::string H_path;
-
+    
 		IplImage * image_rect;
 		
 		IplImage * output_image;
@@ -33,7 +32,6 @@ class VisionAnalyzer {
 		double canny_threshold2;
 		int canny_aperture_size;
 
-  	int test;
     sensor_msgs::CvBridge bridge;
 		ros::NodeHandle nh_;
 		ros::NodeHandle priv_nh_;  
@@ -146,7 +144,7 @@ void VisionAnalyzer::image_callback(const sensor_msgs::ImageConstPtr& msg) {
 int main(int argc, char *argv[]){
   
  	ros::init(argc, argv, "vision_analyzer");
-	VisionAnalyzer calibrator;
+	VisionAnalyzer analyzer;
 	cvStartWindowThread();
 /*  cvNamedWindow("rectified image");
   cvNamedWindow("calib image");
