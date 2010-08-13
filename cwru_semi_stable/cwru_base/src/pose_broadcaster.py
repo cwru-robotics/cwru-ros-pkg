@@ -68,15 +68,20 @@ class FromCRIO:
 
 def pose_broadcaster(fromCRIO):
     pose_pub = rospy.Publisher('pose', Pose)
+    converted_pose_pub = rospy.Publisher('flipped_pose', Pose)
     sonar_pub = rospy.Publisher('front_sonar', Sonar)
     while not rospy.is_shutdown():
         p = Pose(x = fromCRIO.x, y = fromCRIO.y, theta = fromCRIO.heading, x_var = fromCRIO.x_var, y_var = fromCRIO.y_var, theta_var = fromCRIO.heading_var, vel = fromCRIO.vel, omega = fromCRIO.omega, vel_var = fromCRIO.vel_var, omega_var = fromCRIO.omega_var)
+	p2 = Pose(x = fromCRIO.x, y = -fromCRIO.y, theta = -fromCRIO.heading, x_var = fromCRIO.x_var, y_var = fromCRIO.y_var, theta_var = fromCRIO.heading_var, vel = fromCRIO.vel, omega = -fromCRIO.omega, vel_var = fromCRIO.vel_var, omega_var = fromCRIO.omega_var)
+	p.header.stamp = rospy.Time.now()
+	p2.header.stamp = p.header.stamp
 	ping = Sonar()
 	ping.header.frame_id = 'front_sonar'
 	ping.header.stamp = fromCRIO.current_time
 	ping.dist = fromCRIO.front_sonar_ping
         rospy.logdebug(p)
 	pose_pub.publish(p)
+	converted_pose_pub.publish(p2)
 	sonar_pub.publish(ping)
 	fromCRIO.has_data.wait(10)
     fromCRIO.cleanup()
