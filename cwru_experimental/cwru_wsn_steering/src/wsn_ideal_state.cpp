@@ -82,6 +82,7 @@ WSNIdealState::WSNIdealState() {
 
 		//Put the temp vars into the desiredState
 		cwru_wsn_steering::DesiredState desiredState;
+		desiredState.header.stamp = ros::Time::now();
 		if(halt) {
 			desiredState = halt_state;
 		}
