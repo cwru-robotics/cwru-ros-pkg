@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 import roslib
-roslib.load_manifest('harlie_goal_planner')
+roslib.load_manifest('cwru_goal_planner')
 import rospy
 
 import tf
