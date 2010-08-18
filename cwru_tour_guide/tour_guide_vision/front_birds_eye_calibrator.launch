@@ -6,14 +6,11 @@
 	  <param name="grid_width" value="0.0047"/>
 	  <param name="grid_height" value="0.0047"/>
 	  <param name="m_in_front_of_bot" value="0.172"/>
-	  <param name="m_offset_lr_of_bot" value="-0.1982"/>
-	  <param name="m_per_output_pixel" value=" 0.0025"/>
+	  <param name="m_offset_lr_of_bot" value="0.1982"/>
+	  <param name="m_per_output_pixel" value="0.005"/>
 	  <param name="output_image_width" value="600"/>
 	  <param name="output_image_height" value="600"/>
-	  <param name="map1" value="2"/>
-	  <param name="map2" value="1"/>
-	  <param name="map3" value="4"/>
-	  <param name="map4" value="3"/>
+	  <param name="flip" value="true"/>
 	  <param name="H_path" value="$(find tour_guide_vision)/calibration/front_H.xml"/>
 	</node>
 </launch>

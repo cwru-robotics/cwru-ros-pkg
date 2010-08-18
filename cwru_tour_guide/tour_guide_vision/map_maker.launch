@@ -5,8 +5,8 @@
 	  <remap from="map_input_image" to="front_calibrated_image"/>
 	  <param name="map_image_width" value="3000"/>
 	  <param name="map_image_height" value="3000"/>
-	  <param name="map_zero_x" value="0"/>
-	  <param name="map_zero_y" value="1000"/>
-	  <param name="map_meters_per_pixel" value="0.025"/>
+	  <param name="map_zero_x" value="800"/>
+	  <param name="map_zero_y" value="1500"/>
+	  <param name="map_meters_per_pixel" value="0.005"/>
 	</node>
 </launch>

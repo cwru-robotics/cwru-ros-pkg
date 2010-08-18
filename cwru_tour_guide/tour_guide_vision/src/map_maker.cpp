@@ -24,6 +24,8 @@ class MapMaker {
 	  
 	  int32_t map_zero_x;
 	  int32_t map_zero_y;
+	  int32_t init_zero_x;
+	  int32_t init_zero_y;
 	  double map_meters_per_pixel;
 
     sensor_msgs::CvBridge bridge;
@@ -40,12 +42,16 @@ MapMaker::MapMaker() : it_(nh_), priv_nh_("~"){
 	priv_nh_.param("map_image_height", map_image_height, 1000);
 	priv_nh_.param("map_zero_x", map_zero_x, 500);
 	priv_nh_.param("map_zero_y", map_zero_y, 500);
-	priv_nh_.param("map_meters_per_pixel", map_meters_per_pixel, 0.0025);
+	priv_nh_.param("map_meters_per_pixel", map_meters_per_pixel, 0.005);
 	
   input_image=NULL;
   rotationImage=NULL;
 	map=cvCreateImage( cvSize(map_image_width,map_image_height), 8, 1 );
 	image_subscriber= it_.subscribe("map_input_image", 1, &MapMaker::image_callback, this);
+	
+	init_zero_x=0;
+	init_zero_y=0;
+
 
   printf("object made\n");
 }
@@ -97,7 +103,7 @@ void MapMaker::image_callback(const sensor_msgs::ImageConstPtr& msg) {
       cvInitMatHeader(&translation,2,3,CV_64F,tranlation_arr);
       
       cvSetZero(&translation);
-      cv2DRotationMatrix(center, tf::getYaw(mapPose.pose.orientation)*180/3.14159,1.0,&translation);
+      cv2DRotationMatrix(center, (tf::getYaw(mapPose.pose.orientation)*180/3.14159) -90,1.0,&translation);
       cvSetZero(rotationImage);
       cvWarpAffine(input_image,rotationImage,&translation,CV_INTER_LINEAR+CV_WARP_FILL_OUTLIERS,cvScalarAll(0));
       
@@ -105,10 +111,16 @@ void MapMaker::image_callback(const sensor_msgs::ImageConstPtr& msg) {
       CvRect roi;
       roi.width=rotationImage->width;
       roi.height=rotationImage->height;
-      roi.x=(int)(mapPose.pose.position.x*(1.0/map_meters_per_pixel))+map_zero_x-roi.width/2;
-      roi.y=(int)(mapPose.pose.position.y*(1.0/map_meters_per_pixel))+map_zero_y-roi.height/2;
       
-      printf("x %d, y %d\n",roi.x,roi.y);
+      if(init_zero_x==0){
+        init_zero_x=(int)(mapPose.pose.position.x*(1.0/map_meters_per_pixel));
+        init_zero_y=(int)(mapPose.pose.position.y*(-1.0/map_meters_per_pixel));
+      }
+      
+      roi.x=(int)(mapPose.pose.position.x*(1.0/map_meters_per_pixel))-init_zero_x+map_zero_x-roi.width/2;
+      roi.y=(int)(mapPose.pose.position.y*(-1.0/map_meters_per_pixel))-init_zero_y+map_zero_y-roi.height/2;
+      
+      printf("x %d, y %d, rot %f\n",roi.x,roi.y, (tf::getYaw(mapPose.pose.orientation)*180/3.14159) -90);
       
       cvSetImageROI(map,roi);
       
