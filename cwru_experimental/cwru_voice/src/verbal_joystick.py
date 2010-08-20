@@ -21,6 +21,7 @@ class VerbalJoystick:
 			self.joy_msg.axes[0] = self.joy_msg.axes[0] + 0.2
 		elif 'forward' in msg.data:
 			self.joy_msg.axes[0] = 0.0
+			self.joy_msg.axes[1] = 0.4
 		elif 'up' in msg.data:
 			self.joy_msg.axes[1] = self.joy_msg.axes[1] + 0.2
 		elif 'down' in msg.data:
@@ -30,6 +31,7 @@ class VerbalJoystick:
 			self.joy_msg.axes[1] = 0.0
 		else:
 			pass
+		self.joy_pub.publish(self.joy_msg)
 
 
 

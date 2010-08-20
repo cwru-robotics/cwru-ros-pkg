@@ -46,8 +46,8 @@ class DemoApp(object):
         asr.set_property('configured', True)
 	asr.set_property('dsratio', 1)
 	#MOTORIC
-	asr.set_property('lm', '/home/tony/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/6305.lm')
-        asr.set_property('dict', '/home/tony/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/6305.dic')
+	asr.set_property('lm', '/home/eric/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/6305.lm')
+        asr.set_property('dict', '/home/eric/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/6305.dic')
         bus = self.pipeline.get_bus()
         bus.add_signal_watch()
         bus.connect('message::application', self.application_message)
