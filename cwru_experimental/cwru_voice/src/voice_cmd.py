@@ -144,6 +144,12 @@ class DemoApp(object):
 	elif "close the door" in hyp:
 		str = "Closing door. \n"
 		self.msg.data = "close"
+	elif "open door" in hyp:
+		str = "Opening door. \n"
+		self.msg.data = "open"
+	elif "close door" in hyp: 
+		str = "Closing door. \n"
+		self.msg.data = "close"
 	elif "enter the lab" in hyp:
 		str = "Entering the lab. \n"
 		self.msg.data = "lab"
