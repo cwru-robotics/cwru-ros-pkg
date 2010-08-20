@@ -46,8 +46,8 @@ class DemoApp(object):
         asr.set_property('configured', True)
 	asr.set_property('dsratio', 1)
 	#MOTORIC
-	asr.set_property('lm', '/home/harlie/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/4045.lm')
-        asr.set_property('dict', '/home/harlie/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/4045.dic')
+	asr.set_property('lm', '/home/tony/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/6305.lm')
+        asr.set_property('dict', '/home/tony/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/6305.dic')
         bus = self.pipeline.get_bus()
         bus.add_signal_watch()
         bus.connect('message::application', self.application_message)
@@ -114,14 +114,19 @@ class DemoApp(object):
 		self.msg.data = "stop"
 	elif "left" in hyp:
 		self.msg.data = "left"
-	elif "straight" in hyp:
-		self.msg.data = "straight"
-	elif "slower" in hyp:
-		self.msg.data = "slower"
-	elif "faster" in hyp:
-		self.msg.data = "faster"
+	elif "forward" in hyp:
+		self.msg.data = "forward"
+	elif "speed up" in hyp:
+		self.msg.data = "up"		
+	elif "speed" in hyp:
+		self.msg.data = "up"
+	elif "slow down" in hyp:
+		self.msg.data = "down"
+	elif "slow" in hyp:
+		self.msg.data = "down"
 	else:
 		print "I didn't understand. Please say a command. \n"
+		self.msg.data = "stop"
 	
 	if not self.isstop:
 		rospy.loginfo(self.msg.data)
