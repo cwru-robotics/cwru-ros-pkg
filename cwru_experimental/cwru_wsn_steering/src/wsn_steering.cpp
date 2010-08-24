@@ -4,10 +4,14 @@
 #include <tf/transform_datatypes.h>
 #include <cmath>
 #include <cwru_wsn_steering/DesiredState.h>
+#include <tf/transform_listener.h>
+#include <costmap_2d/costmap_2d_ros.h>
+#include <base_local_planner/trajectory_planner_ros.h>
 
 class WSNSteering {
 	public:
 		WSNSteering();
+		virtual ~WSNSteering();
 	private:
 		//callback to put odometry information into the class 
 		void odomCallback(const nav_msgs::Odometry::ConstPtr& odom);	
@@ -23,6 +27,9 @@ class WSNSteering {
 		//last updated Odometry information
 		nav_msgs::Odometry current_odom;
 		cwru_wsn_steering::DesiredState curDesState;
+		tf::TransformListener tf_;
+		costmap_2d::Costmap2DROS *local_costmap_;
+		base_local_planner::TrajectoryPlannerROS planner_;
 
 		//Loop rate in Hz
 		double loop_rate;
@@ -50,6 +57,11 @@ WSNSteering::WSNSteering() : priv_nh_("~") {
 	priv_nh_.param("convergence_rate", convergence_rate, 2.0); 
 	priv_nh_.param("k_v", k_v, 1.0);
 	priv_nh_.param("loop_rate", loop_rate, 20.0);
+
+	//Setup the costmap
+	local_costmap_ = new costmap_2d::Costmap2DROS("wsn_local_costmap", tf_);	
+	//Initialize the trajectory planner we will use for collision checking
+	planner_.initialize("planner", &tf_, local_costmap_);
 
 	//Computing gains based on convergence_rate parameter
 	k_d = 1.0/pow(convergence_rate, 2.0);
@@ -94,6 +106,15 @@ WSNSteering::WSNSteering() : priv_nh_("~") {
 			psi_PSO = tf::getYaw(current_odom.pose.pose.orientation);
 			// spoof these: starting point from pit:
 			computeVelocities(x_PSO,y_PSO,psi_PSO,x_Des,y_Des,v_Des,psi_Des,rho_Des,v,omega);   
+
+			//check the computed velocities for safety
+			if(planner_.checkTrajectory(v, 0.0, omega, true)) {
+				//Legal trajectory, so we can use those values as is
+			} else {
+				//Trajectory is unsafe... halt
+				v = 0.0;
+				omega = 0.0;
+			}
 
 			//Put values into twist message
 			twist.linear.x = v;
@@ -154,6 +175,12 @@ void WSNSteering::odomCallback(const nav_msgs::Odometry::ConstPtr& odom) {
 void WSNSteering::desStateCallback(const cwru_wsn_steering::DesiredState::ConstPtr& desState)
 {
 	curDesState= *desState;
+}
+
+WSNSteering::~WSNSteering() {
+	if(local_costmap_ != NULL) {
+		delete local_costmap_;
+	}
 }
 
 int main(int argc, char *argv[]) {
