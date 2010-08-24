@@ -23,6 +23,7 @@ class WSNIdealState {
 		 */
 		void computeState(float& x, float& y, float& theta, float& v, float& rho);
 		void pathCallback(const cwru_wsn_steering::Path::ConstPtr& p);
+		void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel);
 		void initializeDummyPath();
 
 		//Loop rate in Hz
@@ -35,11 +36,14 @@ class WSNIdealState {
 
 		//Current path to be working on
 		std::vector<cwru_wsn_steering::PathSegment> path;
+		//Last cmd_vel
+		geometry_msgs::Twist last_cmd_;
 
 		//ROS communcators
 		ros::NodeHandle nh_;
 		ros::Publisher ideal_state_pub_;
 		ros::Subscriber path_sub_;
+		ros::Subscriber cmd_vel_sub_;
 		tf::TransformListener tf_listener_;	
 		geometry_msgs::PoseStamped temp_pose_in_, temp_pose_out_;
 };
@@ -50,6 +54,7 @@ WSNIdealState::WSNIdealState() {
 	//Setup the ideal state pub
 	ideal_state_pub_= nh_.advertise<cwru_wsn_steering::DesiredState>("idealState",1);   
 	path_sub_ = nh_.subscribe<cwru_wsn_steering::Path>("desired_path", 1, &WSNIdealState::pathCallback, this);
+	cmd_vel_sub_ = nh_.subscribe<geometry_msgs::Twist>("cmd_vel", 1, &WSNIdealState::cmdVelCallback, this);
 	nh_.param("loop_rate",loop_rate,20.0); // default 20Hz
 	dt = 1.0/loop_rate;
 
@@ -78,6 +83,7 @@ WSNIdealState::WSNIdealState() {
 	//Don't shutdown till the node shuts down
 	while(ros::ok()) {
 		//Orientation is a quaternion, so need to get yaw angle in rads.. unless you want a quaternion
+		v = last_cmd_.linear.x;
 		computeState(x,y,theta,v,rho);
 
 		//Put the temp vars into the desiredState
@@ -214,6 +220,10 @@ void WSNIdealState::pathCallback(const cwru_wsn_steering::Path::ConstPtr& p) {
 	segDistDone = 0.0;
 	halt = true;   
        	path = p->segs;
+}
+
+void WSNIdealState::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel) {
+	last_cmd_ = *cmd_vel;
 }
 
 void WSNIdealState::initializeDummyPath() {
