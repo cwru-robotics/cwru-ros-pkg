@@ -104,16 +104,18 @@ WSNSteering::WSNSteering() : priv_nh_("~") {
 			x_PSO = current_odom.pose.pose.position.x;
 			y_PSO = current_odom.pose.pose.position.y;
 			psi_PSO = tf::getYaw(current_odom.pose.pose.orientation);
-			// spoof these: starting point from pit:
+
 			computeVelocities(x_PSO,y_PSO,psi_PSO,x_Des,y_Des,v_Des,psi_Des,rho_Des,v,omega);   
 
 			//check the computed velocities for safety
 			if(planner_.checkTrajectory(v, 0.0, omega, true)) {
 				//Legal trajectory, so we can use those values as is
+				ROS_DEBUG("Legal trajectory computed... allowing v = %f, omega = %f", v, omega);
 			} else {
 				//Trajectory is unsafe... halt
-				v = 0.0;
-				omega = 0.0;
+				ROS_WARN("Unsafe speeds computed... this would have caused a collision: v = %f, omega = %f", v, omega);
+				//v = 0.0;
+				//omega = 0.0;
 			}
 
 			//Put values into twist message
@@ -148,11 +150,13 @@ void WSNSteering::computeVelocities(double x_PSO, double y_PSO, double psi_PSO, 
 
 	//Check if the desired speed is 0
 	//If so we will just set it there and be done with velocity computation
-	if (abs(v_des) < 1e-7) {
+	if (fabs(v_des) < 1e-7) {
+		ROS_DEBUG("v_des was %f, abs was %f, so setting it to 0", v_des, fabs(v_des));
 		v = 0.0;
 	} else {	
 		v = v_des + k_v * Lfollow;
 	}
+	ROS_DEBUG("V_des was %f, v was %f, k_v was %f, Lfollow was %f", v_des, v, k_v, Lfollow);
 	// d = -n'*dx_vec;
 	d = -nVec[0]*dx_vec[0]-nVec[1]*dx_vec[1];
 	deltaPsi = psi_PSO-psi_des;

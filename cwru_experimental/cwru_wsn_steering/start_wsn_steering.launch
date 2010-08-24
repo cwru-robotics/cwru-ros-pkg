@@ -2,7 +2,7 @@
 
 <node name="cwru_wsn_steering" pkg="cwru_wsn_steering" type="cwru_wsn_steering" output="screen">
 	<remap from="odometry" to="/odom" />
-	<param name="k_v" value="1.0" />
+	<param name="k_v" value="0.0" />
 	<param name="convergence_rate" value="0.8" />
 	<rosparam file="$(find cwru_nav)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
     	<rosparam file="$(find cwru_nav)/config/costmap_local_params.yaml" command="load" />
