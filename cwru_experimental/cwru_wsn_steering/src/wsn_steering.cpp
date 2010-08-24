@@ -59,9 +59,9 @@ WSNSteering::WSNSteering() : priv_nh_("~") {
 	priv_nh_.param("loop_rate", loop_rate, 20.0);
 
 	//Setup the costmap
-	local_costmap_ = new costmap_2d::Costmap2DROS("wsn_local_costmap", tf_);	
+	local_costmap_ = new costmap_2d::Costmap2DROS("local_costmap", tf_);	
 	//Initialize the trajectory planner we will use for collision checking
-	planner_.initialize("planner", &tf_, local_costmap_);
+	planner_.initialize("TrajectoryPlannerROS", &tf_, local_costmap_);
 
 	//Computing gains based on convergence_rate parameter
 	k_d = 1.0/pow(convergence_rate, 2.0);
