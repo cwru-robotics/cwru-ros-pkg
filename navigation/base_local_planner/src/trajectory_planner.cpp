@@ -229,17 +229,17 @@ namespace base_local_planner{
     //ROS_INFO("OccCost: %f, vx: %.2f, vy: %.2f, vtheta: %.2f", occ_cost, vx_samp, vy_samp, vtheta_samp);
     double cost = -1.0;
     if(!heading_scoring_) {
-      traj.path_cost = pdist_scale_*path_dist;
+      /*traj.path_cost = pdist_scale_*path_dist;
       traj.goal_cost = goal_dist * gdist_scale_;
       traj.occ_dist_cost = occdist_scale_ * occ_cost;
-      traj.heading_cost = 0.0;
+      traj.heading_cost = 0.0; */
       cost = pdist_scale_ * path_dist + goal_dist * gdist_scale_ + occdist_scale_ * occ_cost;
     }
     else {
-      traj.path_cost = pdist_scale_*path_dist;
+      /*traj.path_cost = pdist_scale_*path_dist;
       traj.goal_cost = goal_dist * gdist_scale_;
       traj.occ_dist_cost = occdist_scale_ * occ_cost;
-      traj.heading_cost = heading_diff * 0.3;
+      traj.heading_cost = heading_diff * 0.3; */
       cost = occdist_scale_ * occ_cost + pdist_scale_ * path_dist + 0.3 * heading_diff + goal_dist * gdist_scale_;
     }
 
