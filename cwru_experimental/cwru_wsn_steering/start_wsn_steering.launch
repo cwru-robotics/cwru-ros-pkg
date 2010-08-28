@@ -7,6 +7,10 @@
 	<rosparam file="$(find cwru_nav)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
     	<rosparam file="$(find cwru_nav)/config/costmap_local_params.yaml" command="load" />
     	<rosparam file="$(find cwru_nav)/config/base_local_planner_params.yaml" command="load" />
+	<!-- override the sim length parameter... -->
+	<param name="TrajectoryPlannerROS/sim_time" value="0.1" />
+	<!-- make sure we can stop in one loop period -->
+	<param name="TrajectoryPlannerROS/stop_time_buffer" value="0.05" />
 </node>
 
 <node name="cwru_wsn_ideal_state" pkg="cwru_wsn_steering" type="wsn_ideal_state" output="screen"/>
