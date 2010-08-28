@@ -61,11 +61,12 @@ WSNSteering::WSNSteering() : priv_nh_("~") {
 	priv_nh_.param("use_collision_avoidance", use_collision_avoidance, true);
 
 	if(use_collision_avoidance) {
-		ROS_WARN("Collision avoidance behaviors currently disabled. The steering may issue unsafe commands");
 		//Setup the costmap
 		local_costmap_ = new costmap_2d::Costmap2DROS("local_costmap", tf_);	
 		//Initialize the trajectory planner we will use for collision checking
 		planner_.initialize("TrajectoryPlannerROS", &tf_, local_costmap_);
+	} else {
+		ROS_WARN("Collision avoidance behaviors currently disabled. The steering may issue unsafe commands");
 	}
 
 	//Computing gains based on convergence_rate parameter
