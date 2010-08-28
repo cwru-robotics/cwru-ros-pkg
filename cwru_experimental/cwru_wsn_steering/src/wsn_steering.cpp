@@ -54,14 +54,19 @@ class WSNSteering {
 WSNSteering::WSNSteering() : priv_nh_("~") {
 	//Read parameters from the ROS parameter server, defaulting to value if the parameter is not there
 	double convergence_rate; //convergence rate in meters
+	bool use_collision_avoidance;
 	priv_nh_.param("convergence_rate", convergence_rate, 2.0); 
 	priv_nh_.param("k_v", k_v, 1.0);
 	priv_nh_.param("loop_rate", loop_rate, 20.0);
+	priv_nh_.param("use_collision_avoidance", use_collision_avoidance, true);
 
-	//Setup the costmap
-	local_costmap_ = new costmap_2d::Costmap2DROS("local_costmap", tf_);	
-	//Initialize the trajectory planner we will use for collision checking
-	planner_.initialize("TrajectoryPlannerROS", &tf_, local_costmap_);
+	if(use_collision_avoidance) {
+		ROS_WARN("Collision avoidance behaviors currently disabled. The steering may issue unsafe commands");
+		//Setup the costmap
+		local_costmap_ = new costmap_2d::Costmap2DROS("local_costmap", tf_);	
+		//Initialize the trajectory planner we will use for collision checking
+		planner_.initialize("TrajectoryPlannerROS", &tf_, local_costmap_);
+	}
 
 	//Computing gains based on convergence_rate parameter
 	k_d = 1.0/pow(convergence_rate, 2.0);
@@ -107,15 +112,20 @@ WSNSteering::WSNSteering() : priv_nh_("~") {
 
 			computeVelocities(x_PSO,y_PSO,psi_PSO,x_Des,y_Des,v_Des,psi_Des,rho_Des,v,omega);   
 
-			//check the computed velocities for safety
-			if(planner_.checkTrajectory(v, 0.0, omega, true)) {
-				//Legal trajectory, so we can use those values as is
-				ROS_DEBUG("Legal trajectory computed... allowing v = %f, omega = %f", v, omega);
+			if(use_collision_avoidance) {
+				ROS_DEBUG("Using collsion avoidance behaviors");
+				//check the computed velocities for safety
+				if(planner_.checkTrajectory(v, 0.0, omega, true)) {
+					//Legal trajectory, so we can use those values as is
+					ROS_DEBUG("Legal trajectory computed... allowing v = %f, omega = %f", v, omega);
+				} else {
+					//Trajectory is unsafe... halt
+					ROS_WARN("Unsafe speeds computed... this would have caused a collision: v = %f, omega = %f", v, omega);
+					v = 0.0;
+					omega = 0.0;
+				}
 			} else {
-				//Trajectory is unsafe... halt
-				ROS_WARN("Unsafe speeds computed... this would have caused a collision: v = %f, omega = %f", v, omega);
-				//v = 0.0;
-				//omega = 0.0;
+				ROS_DEBUG("Not using collision avoidance behaviors");
 			}
 
 			//Put values into twist message

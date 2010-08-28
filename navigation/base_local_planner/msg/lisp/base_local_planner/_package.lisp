@@ -2,7 +2,7 @@
   (:use cl
         roslisp-msg-protocol)
   (:export
-   "<CMDVEL_VIZ>"
    "<POSITION2DINT>"
+   "<CMDVEL_VIZ>"
   ))
 
