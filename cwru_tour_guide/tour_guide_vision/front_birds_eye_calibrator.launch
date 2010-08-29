@@ -10,7 +10,9 @@
 	  <param name="m_per_output_pixel" value="0.005"/>
 	  <param name="output_image_width" value="600"/>
 	  <param name="output_image_height" value="600"/>
+	  <param name="m_dist_to_projection_from_board_z" value="1.2"/>
 	  <param name="flip" value="true"/>
 	  <param name="H_path" value="$(find tour_guide_vision)/calibration/front_H.xml"/>
+	  <param name="project" value="true"/>
 	</node>
 </launch>

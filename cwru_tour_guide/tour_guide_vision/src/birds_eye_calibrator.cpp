@@ -17,6 +17,7 @@ class BirdsEyeCalibrator {
 
     std::string H_path;
 
+    bool project;
 		int32_t board_width;
 		int32_t board_height;
 		int32_t v_board_width;
@@ -52,7 +53,6 @@ class BirdsEyeCalibrator {
 		
 		CvMat *R;
 		
-		
 		CvMat *point1;
 		CvMat *point2;
 		CvMat *real_2_virtual_board;
@@ -87,6 +87,7 @@ BirdsEyeCalibrator::BirdsEyeCalibrator() : it_(nh_), priv_nh_("~"){
 	priv_nh_.param("output_image_height", output_image_height, 600);
 	priv_nh_.param("flip", flip,false);
 	priv_nh_.param("m_dist_to_projection_from_board_z", dist_to_project_from_board_z, 1.0);
+	priv_nh_.param("project", project,false);
 
 	priv_nh_.param("H_path", H_path,std::string("/tmp/H.xml"));
 	
@@ -243,7 +244,6 @@ void BirdsEyeCalibrator::calibrate(){
     realObjPts[2].x = 0;          realObjPts[2].y = grid_height*(board_height-1);
     realObjPts[3].x = grid_width*(board_width-1);  realObjPts[3].y = grid_height*(board_height-1);
     
-    
     imgPts[0]   = corners[0];
     imgPts[1]   = corners[board_width-1];
     imgPts[2]   = corners[(board_height-1)*board_width];
@@ -351,10 +351,21 @@ void BirdsEyeCalibrator::calibrate(){
     yoffset-=(y_add + m_in_front_of_bot)/m_per_output_pixel;
     
     //Change the object points here
-    objPts[0].x = 0+xoffset;          objPts[0].y = 0+yoffset;
-    objPts[1].x = grid_width/m_per_output_pixel*(board_width-1)+xoffset;  objPts[1].y = 0+yoffset;
-    objPts[2].x = 0+xoffset;          objPts[2].y = grid_height/m_per_output_pixel*(board_height-1)+yoffset;
-    objPts[3].x = grid_width/m_per_output_pixel*(board_width-1)+xoffset;  objPts[3].y = grid_height/m_per_output_pixel*(board_height-1)+yoffset;
+    
+    if(project){
+      objPts[0].x = 0+xoffset;          objPts[0].y = 0+yoffset;
+      objPts[1].x = grid_width/m_per_output_pixel*(board_width-1)+xoffset;  objPts[1].y = 0+yoffset;
+      objPts[2].x = 0+xoffset;          objPts[2].y = grid_height/m_per_output_pixel*(board_height-1)+yoffset;
+      objPts[3].x = grid_width/m_per_output_pixel*(board_width-1)+xoffset;  objPts[3].y = grid_height/m_per_output_pixel*(board_height-1)+yoffset;
+    }
+    else{
+      xoffset=output_image_width/2.;
+      yoffset=output_image_height/2.;
+      objPts[0].x = 0+xoffset;          objPts[0].y = 0+yoffset;
+      objPts[1].x = grid_width/m_per_output_pixel*(board_width-1)+xoffset;  objPts[1].y = 0+yoffset;
+      objPts[2].x = 0+xoffset;          objPts[2].y = grid_height/m_per_output_pixel*(board_height-1)+yoffset;
+      objPts[3].x = grid_width/m_per_output_pixel*(board_width-1)+xoffset;  objPts[3].y = grid_height/m_per_output_pixel*(board_height-1)+yoffset;
+    }
     
     cvGetPerspectiveTransform( objPts, imgPts, H);
     //dist_of_real_board=CV_MAT_ELEM(*H,float,2,2);

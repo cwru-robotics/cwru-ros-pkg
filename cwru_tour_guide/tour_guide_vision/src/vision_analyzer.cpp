@@ -84,9 +84,9 @@ void VisionAnalyzer::warp(){
     CV_INTER_LINEAR | CV_WARP_INVERSE_MAP | CV_WARP_FILL_OUTLIERS
     );
   }
- // cvLine(calibrated, cvPoint(300,300),cvPoint(300,100),cvScalar(255));
+  cvLine(calibrated, cvPoint(300,300),cvPoint(300,100),cvScalar(255));
   
- // cvLine(calibrated, cvPoint(310,300),cvPoint(290,300),cvScalar(255));
+  cvLine(calibrated, cvPoint(310,300),cvPoint(290,300),cvScalar(255));
   
   
 }

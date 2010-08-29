@@ -28,6 +28,7 @@ class MapMaker {
 	  int32_t init_zero_y;
 	  double map_meters_per_pixel;
 
+    int pic_number;
     sensor_msgs::CvBridge bridge;
 		ros::NodeHandle nh_;
 		ros::NodeHandle priv_nh_;  
@@ -51,7 +52,7 @@ MapMaker::MapMaker() : it_(nh_), priv_nh_("~"){
 	
 	init_zero_x=0;
 	init_zero_y=0;
-
+  pic_number=0;
 
   printf("object made\n");
 }
@@ -92,8 +93,16 @@ void MapMaker::image_callback(const sensor_msgs::ImageConstPtr& msg) {
        
       tf_listener_.transformPose("/map", acquisition_time,basePose,"/base_link",mapPose);
 	    
-	    printf("pose %f %f %f\n",mapPose.pose.position.x, mapPose.pose.position.y, tf::getYaw(mapPose.pose.orientation));
+	    printf("pose #%d %f %f %f\n",pic_number,mapPose.pose.position.x, mapPose.pose.position.y, tf::getYaw(mapPose.pose.orientation));
 	    
+	    
+	    /*
+	    char buffer [50];
+	    sprintf (buffer, "/tmp/test%02d.jpg", pic_number);
+			if(!cvSaveImage(buffer,input_image,0)) printf("Could not save: %s\n",buffer);
+			else printf("picture taken!!!\n");
+	    pic_number++;
+	    */
 	    
 	    cv::Point_<double> center;
       center.x=input_image->width/2;
