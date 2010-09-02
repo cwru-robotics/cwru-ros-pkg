@@ -9,6 +9,7 @@ class TeleopHarlie {
 		void joyCallback(const joy::Joy::ConstPtr& joy);
 
 		ros::NodeHandle nh_;
+		ros::NodeHandle priv_nh_;
 
 		int linear_axis_, angular_axis_;
 		double linear_, angular_;
@@ -17,15 +18,16 @@ class TeleopHarlie {
 };
 
 TeleopHarlie::TeleopHarlie(): 
+	priv_nh_("~"),
 	linear_(1.2), 
 	angular_(2), 
 	linear_axis_(1), 
 	angular_axis_(0)
 {
-    nh_.param("linear_axis", linear_axis_, linear_axis_);
-    nh_.param("angular_axis", angular_axis_, angular_axis_);
-    nh_.param("linear_", linear_, linear_);
-    nh_.param("angular_", angular_, angular_);
+    priv_nh_.param("linear_axis", linear_axis_, linear_axis_);
+    priv_nh_.param("angular_axis", angular_axis_, angular_axis_);
+    priv_nh_.param("linear_", linear_, linear_);
+    priv_nh_.param("angular_", angular_, angular_);
 
     vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
     joy_sub_ = nh_.subscribe<joy::Joy>("joy", 10, &TeleopHarlie::joyCallback, this);
