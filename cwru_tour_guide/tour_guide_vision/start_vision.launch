@@ -11,7 +11,7 @@
 	<param name="exposure" value="1"/>
 	<param name="absolue_exposure" value="8"/>
 	</node>
-	<node pkg="image_proc" type="image_proc" name="proc" ns="front_camera" />
+	<node pkg="image_proc" type="image_proc" name="proc_front" ns="front_camera" />
 
 	<node name="rear_camera" pkg="uvc_cam" type="uvc_cam_node" respawn="true" output="screen">
 	<remap from="camera" to="rear_camera"/>
@@ -25,5 +25,5 @@
 	<param name="exposure" value="1"/>
 	<param name="absolue_exposure" value="8"/>
 	</node>
-	<node pkg="image_proc" type="image_proc" name="proc" ns="rear_camera" />
+	<node pkg="image_proc" type="image_proc" name="proc_rear" ns="rear_camera" />
 </launch>

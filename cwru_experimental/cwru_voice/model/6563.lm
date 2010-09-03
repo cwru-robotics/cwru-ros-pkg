@@ -1,0 +1,65 @@
+Language model created by QuickLM on Fri Sep  3 00:09:29 EDT 2010
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 7 sentences and 13 words
+
+\data\
+ngram 1=13
+ngram 2=18
+ngram 3=15
+
+\1-grams:
+-1.0241 </s> -0.3010
+-1.0241 <s> -0.2579
+-1.8692 BATHROOM -0.2579
+-1.8692 ELEVATOR -0.2579
+-1.1703 GO -0.2706
+-1.8692 HALLWAY -0.2579
+-1.8692 LAB -0.2579
+-1.8692 MACHINE -0.2579
+-1.8692 STOP -0.2579
+-1.1703 THE -0.2706
+-1.1703 TO -0.2706
+-1.8692 VENDING -0.2951
+
+\2-grams:
+-0.4472 <s> GO 0.0000
+-1.1461 <s> STOP 0.0000
+-0.3010 BATHROOM </s> -0.3010
+-0.3010 ELEVATOR </s> -0.3010
+-0.3010 GO TO 0.0000
+-0.3010 HALLWAY </s> -0.3010
+-0.3010 LAB </s> -0.3010
+-0.3010 MACHINE </s> -0.3010
+-0.3010 STOP </s> -0.3010
+-1.0000 THE BATHROOM 0.0000
+-1.0000 THE ELEVATOR 0.0000
+-1.0000 THE HALLWAY 0.0000
+-1.0000 THE LAB 0.0000
+-1.0000 THE VENDING 0.0000
+-0.3010 TO THE 0.0000
+-0.3010 VENDING MACHINE 0.0000
+
+\3-grams:
+-0.3010 <s> GO TO
+-0.3010 <s> STOP </s>
+-0.3010 GO TO THE
+-0.3010 THE BATHROOM </s>
+-0.3010 THE ELEVATOR </s>
+-0.3010 THE HALLWAY </s>
+-0.3010 THE LAB </s>
+-0.3010 THE VENDING MACHINE
+-1.0000 TO THE BATHROOM
+-1.0000 TO THE ELEVATOR
+-1.0000 TO THE HALLWAY
+-1.0000 TO THE LAB
+-1.0000 TO THE VENDING
+-0.3010 VENDING MACHINE </s>
+
+\end\
