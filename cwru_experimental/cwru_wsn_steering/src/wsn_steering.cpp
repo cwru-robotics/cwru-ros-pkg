@@ -4,10 +4,14 @@
 #include <tf/transform_datatypes.h>
 #include <cmath>
 #include <cwru_wsn_steering/DesiredState.h>
+#include <tf/transform_listener.h>
+#include <costmap_2d/costmap_2d_ros.h>
+#include <base_local_planner/trajectory_planner_ros.h>
 
 class WSNSteering {
 	public:
 		WSNSteering();
+		virtual ~WSNSteering();
 	private:
 		//callback to put odometry information into the class 
 		void odomCallback(const nav_msgs::Odometry::ConstPtr& odom);	
@@ -23,6 +27,9 @@ class WSNSteering {
 		//last updated Odometry information
 		nav_msgs::Odometry current_odom;
 		cwru_wsn_steering::DesiredState curDesState;
+		tf::TransformListener tf_;
+		costmap_2d::Costmap2DROS *local_costmap_;
+		base_local_planner::TrajectoryPlannerROS planner_;
 
 		//Loop rate in Hz
 		double loop_rate;
@@ -43,14 +50,24 @@ class WSNSteering {
 
 };
 
-const double pi(acos(-1.0));
 
 WSNSteering::WSNSteering() : priv_nh_("~") {
 	//Read parameters from the ROS parameter server, defaulting to value if the parameter is not there
 	double convergence_rate; //convergence rate in meters
+	bool use_collision_avoidance;
 	priv_nh_.param("convergence_rate", convergence_rate, 2.0); 
 	priv_nh_.param("k_v", k_v, 1.0);
 	priv_nh_.param("loop_rate", loop_rate, 20.0);
+	priv_nh_.param("use_collision_avoidance", use_collision_avoidance, true);
+
+	if(use_collision_avoidance) {
+		//Setup the costmap
+		local_costmap_ = new costmap_2d::Costmap2DROS("local_costmap", tf_);	
+		//Initialize the trajectory planner we will use for collision checking
+		planner_.initialize("TrajectoryPlannerROS", &tf_, local_costmap_);
+	} else {
+		ROS_WARN("Collision avoidance behaviors currently disabled. The steering may issue unsafe commands");
+	}
 
 	//Computing gains based on convergence_rate parameter
 	k_d = 1.0/pow(convergence_rate, 2.0);
@@ -93,8 +110,24 @@ WSNSteering::WSNSteering() : priv_nh_("~") {
 			x_PSO = current_odom.pose.pose.position.x;
 			y_PSO = current_odom.pose.pose.position.y;
 			psi_PSO = tf::getYaw(current_odom.pose.pose.orientation);
-			// spoof these: starting point from pit:
+
 			computeVelocities(x_PSO,y_PSO,psi_PSO,x_Des,y_Des,v_Des,psi_Des,rho_Des,v,omega);   
+
+			if(use_collision_avoidance) {
+				ROS_DEBUG("Using collsion avoidance behaviors");
+				//check the computed velocities for safety
+				if(planner_.checkTrajectory(v, 0.0, omega, true)) {
+					//Legal trajectory, so we can use those values as is
+					ROS_DEBUG("Legal trajectory computed... allowing v = %f, omega = %f", v, omega);
+				} else {
+					//Trajectory is unsafe... halt
+					ROS_WARN("Unsafe speeds computed... this would have caused a collision: v = %f, omega = %f", v, omega);
+					v = 0.0;
+					omega = 0.0;
+				}
+			} else {
+				ROS_DEBUG("Not using collision avoidance behaviors");
+			}
 
 			//Put values into twist message
 			twist.linear.x = v;
@@ -113,6 +146,7 @@ WSNSteering::WSNSteering() : priv_nh_("~") {
 
 void WSNSteering::computeVelocities(double x_PSO, double y_PSO, double psi_PSO, double x_des, double y_des, double v_des, double psi_des, double rho_des, double &v, double &omega) {
 	//Wyatt put your code here. We will figure out the interface to Beom's GPS points later
+	const double pi = 3.1415926;
 	double tanVec[2],nVec[2],dx_vec[2],d;
 	double deltaPsi;
 
@@ -124,17 +158,28 @@ void WSNSteering::computeVelocities(double x_PSO, double y_PSO, double psi_PSO, 
 	dx_vec[0] = x_des-x_PSO;
 	dx_vec[1] = y_des-y_PSO; //position error
 	double Lfollow = tanVec[0]*dx_vec[0]+tanVec[1]*dx_vec[1];
-	//scaling the Lfollow term should help keep the velocities closer to the desired velocity
-	v = v_des + v_des * k_v * Lfollow;
+
+	//Check if the desired speed is 0
+	//If so we will just set it there and be done with velocity computation
+	if (fabs(v_des) < 1e-7) {
+		ROS_DEBUG("v_des was %f, abs was %f, so setting it to 0", v_des, fabs(v_des));
+		v = 0.0;
+	} else {	
+		v = v_des + k_v * Lfollow;
+	}
+	ROS_DEBUG("V_des was %f, v was %f, k_v was %f, Lfollow was %f", v_des, v, k_v, Lfollow);
 	// d = -n'*dx_vec;
 	d = -nVec[0]*dx_vec[0]-nVec[1]*dx_vec[1];
 	deltaPsi = psi_PSO-psi_des;
+	//std::cout << "psi_PSO " << psi_PSO << " " << "psi_des " << psi_des << std::endl;
 	while (deltaPsi>pi)
 		deltaPsi-=2*pi;
 	while (deltaPsi< -pi)
 		deltaPsi+=2*pi;
 	double rho_cmd = -k_d*d -k_psi*deltaPsi + rho_des;
+	//std::cout << "dPsi = " << deltaPsi  << " " << "d = " << d << std::endl;
 	omega = v*rho_cmd;
+	//std::cout << "omega = " << omega << std::endl;
 }	
 
 void WSNSteering::odomCallback(const nav_msgs::Odometry::ConstPtr& odom) {
@@ -151,6 +196,12 @@ void WSNSteering::odomCallback(const nav_msgs::Odometry::ConstPtr& odom) {
 void WSNSteering::desStateCallback(const cwru_wsn_steering::DesiredState::ConstPtr& desState)
 {
 	curDesState= *desState;
+}
+
+WSNSteering::~WSNSteering() {
+	if(local_costmap_ != NULL) {
+		delete local_costmap_;
+	}
 }
 
 int main(int argc, char *argv[]) {

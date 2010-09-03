@@ -1,7 +1,7 @@
 recovery_behaviors:
     - name: conservative_reset 
-      type: ClearCostmapRecovery
-    - name: rotate_recovery
-      type: RotateRecovery
+      type: clear_costmap_recovery/ClearCostmapRecovery
+    - name: playsound_recovery
+      type: playsound_recovery/PlaySoundRecovery  
     - name: aggressive_reset
-      type: ClearCostmapRecovery
+      type: clear_costmap_recovery/ClearCostmapRecovery
