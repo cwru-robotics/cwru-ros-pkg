@@ -1,12 +1,12 @@
 <launch>
-  <param name="/use_sim_time" value="True" />
+  <param name="/use_sim_time" value="False" />
 
 	<node name="map_maker" pkg="tour_guide_vision" type="map_maker" respawn="false" output="screen" >
 	  <remap from="map_input_image" to="front_calibrated_image"/>
-	  <param name="map_image_width" value="5000"/>
-	  <param name="map_image_height" value="3000"/>
-	  <param name="map_zero_x" value="800"/>
-	  <param name="map_zero_y" value="2000"/>
+	  <param name="map_image_width" value="2000"/>
+	  <param name="map_image_height" value="2000"/>
+	  <param name="map_zero_x" value="500"/>
+	  <param name="map_zero_y" value="1000"/>
 	  <param name="map_meters_per_pixel" value="0.005"/>
 	</node>
 </launch>
