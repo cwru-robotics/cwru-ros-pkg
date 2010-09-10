@@ -19,6 +19,7 @@ class DemoApp(object):
         """Initialize a DemoApp object"""
         self.init_gui()
         self.init_gst()
+	self.islistening = False
 
     def init_gui(self):
         """Initialize the GUI components"""
@@ -31,9 +32,6 @@ class DemoApp(object):
         self.text = gtk.TextView(self.textbuf)
         self.text.set_wrap_mode(gtk.WRAP_WORD)
         vbox.pack_start(self.text)
-        self.button = gtk.ToggleButton("Speak")
-        self.button.connect('clicked', self.button_clicked)
-        vbox.pack_start(self.button, False, False, 5)
         self.window.add(vbox)
         self.window.show_all()
 
@@ -41,29 +39,22 @@ class DemoApp(object):
         """Initialize the speech components"""
         self.pipeline = gst.parse_launch('gconfaudiosrc ! audioconvert ! audioresample '
                                          + '! vader name=vad auto-threshold=true '
-                                         + '! pocketsphinx name=asr ! fakesink')
+                                         + '! pocketsphinx name=asr ! fakesink')	
         asr = self.pipeline.get_by_name('asr')
         asr.connect('partial_result', self.asr_partial_result)
         asr.connect('result', self.asr_result)
         asr.set_property('configured', True)
 	asr.set_property('dsratio', 1)
-	#AUTONOMOUS DICT	
+	#MOTORIC
 	asr.set_property('lm', '/home/tony/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/1495.lm')
         asr.set_property('dict', '/home/tony/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/1495.dic')
-	#MOTORIC
-	#asr.set_property('lm', '/home/tony/Desktop/test/MOTORIC/5803.lm')
-        #asr.set_property('dict', '/home/tony/Desktop/test/MOTORIC/5803.dic')
         bus = self.pipeline.get_bus()
         bus.add_signal_watch()
         bus.connect('message::application', self.application_message)
-        self.pipeline.set_state(gst.STATE_PAUSED)
+        self.pipeline.set_state(gst.STATE_PLAYING)
 	self.msg = String()
-	self.msg2 = String()        
 	self.pub = rospy.Publisher('chatter',String)
-	self.pub2 = rospy.Publisher('speak',String)
 	rospy.init_node('voice_cmd')
-	
-
 
     def asr_partial_result(self, asr, text, uttid):
         """Forward partial result signals on the bus to the main thread."""
@@ -86,8 +77,6 @@ class DemoApp(object):
             self.partial_result(msg.structure['hyp'], msg.structure['uttid'])
         elif msgtype == 'result':
             self.final_result(msg.structure['hyp'], msg.structure['uttid'])
-            self.pipeline.set_state(gst.STATE_PAUSED)
-            self.button.set_active(False)
 
     def partial_result(self, hyp, uttid):
         """Delete any previous selection, insert text and select it."""
@@ -122,8 +111,10 @@ class DemoApp(object):
         self.textbuf.end_user_action()
 	print "Final: " + hyp
 	hyp = hyp.lower()
-
-	if "go to" and "bathroom" in hyp:
+	if "harlie" in hyp:
+		print "Yes, Tony."
+		self.islistening = True
+	elif "go to" and "bathroom" in hyp:
 		str = "Going to the bathroom. \n"
 		self.msg.data = "bathroom"
 	elif "go to" and "hallway" in hyp:
@@ -135,7 +126,7 @@ class DemoApp(object):
 	elif "go to" and "elevator" in hyp:
 		str = "Going to the elevator \n"	
 		self.msg.data = "elevator"
-	elif "go to" and "vending machine" in hyp:
+	elif "go to" and "vending" in hyp:
 		str = "Going to the vending machine \n"	
 		self.msg.data = "vending"
 	elif "open the door" in hyp:
@@ -158,27 +149,29 @@ class DemoApp(object):
 		self.msg.data = "stop"
 	else:
 		print "I didn't understand. Please say a command. \n"
-		self.msg.data = ""
-		str = ""
-	print str
-	rospy.loginfo(self.msg.data)
-        self.pub.publish(self.msg.data)
+		self.msg.data = "stop"
+	
+	if self.islistening:
+		print str
+		rospy.loginfo(self.msg.data)
+        	self.pub.publish(self.msg.data)
 
-	self.msg2.data = str		
-	rospy.loginfo(self.msg2.data)
-        self.pub2.publish(self.msg2.data)
-
-
+		self.msg2.data = str		
+		rospy.loginfo(self.msg2.data)
+	        self.pub2.publish(self.msg2.data)
+		self.islistening == False
 
     def button_clicked(self, button):
         """Handle button presses."""
         if button.get_active():
-            button.set_label("Stop")
+            button.set_label("MUTE")
             self.pipeline.set_state(gst.STATE_PLAYING)
+	    
         else:
-            button.set_label("Speak")
-            vader = self.pipeline.get_by_name('vad')
-            vader.set_property('silent', True)
+		vader = self.pipeline.get_by_name('vad')
+                vader.set_property('silent', True)            
+		button.set_label("UN-MUTE")
+            
 
 app = DemoApp()
 gtk.main()
