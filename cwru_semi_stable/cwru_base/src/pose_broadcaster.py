@@ -25,7 +25,11 @@ class FromCRIO:
 	self.omega = 0
 	self.vel_var = 0
 	self.omega_var = 0
-	self.front_sonar_ping = 0
+	self.sonar_ping_1 = 0
+	self.sonar_ping_2 = 0
+	self.sonar_ping_3 = 0
+	self.sonar_ping_4 = 0
+	self.sonar_ping_5 = 0
 	self.has_data = threading.Event()
 
         ## UDP listening socket
@@ -61,7 +65,7 @@ class FromCRIO:
             if type == 1:
                 self.status = packets.read_diagnostics_packet(data)[0]
             elif type == 0:
-                self.x, self.y, self.heading, self.vel, self.omega, self.x_var, self.y_var, self.heading_var, self.vel_var, self.omega_var, self.front_sonar_ping = packets.read_pose_packet(data)
+                self.x, self.y, self.heading, self.vel, self.omega, self.x_var, self.y_var, self.heading_var, self.vel_var, self.omega_var, self.sonar_ping_1, self.sonar_ping_2, self.sonar_ping_3, self.sonar_ping_4, self.sonar_ping_5 = packets.read_pose_packet(data)
 		duration = ((self.current_time - self.last_time).to_sec())
 		self.has_data.set()
 	    self.last_time = self.current_time
@@ -69,22 +73,44 @@ class FromCRIO:
 def pose_broadcaster(fromCRIO):
     pose_pub = rospy.Publisher('pose', Pose)
     converted_pose_pub = rospy.Publisher('flipped_pose', Pose)
-    sonar_pub = rospy.Publisher('front_sonar', Sonar)
+
+    sonar_pub1 = rospy.Publisher('sonar1', Sonar)
+    sonar_pub2 = rospy.Publisher('sonar2', Sonar)
+    sonar_pub3 = rospy.Publisher('sonar3', Sonar)
+    sonar_pub4 = rospy.Publisher('sonar4', Sonar)
+    sonar_pub5 = rospy.Publisher('sonar5', Sonar)
+    
     while not rospy.is_shutdown():
         p = Pose(x = fromCRIO.x, y = fromCRIO.y, theta = fromCRIO.heading, x_var = fromCRIO.x_var, y_var = fromCRIO.y_var, theta_var = fromCRIO.heading_var, vel = fromCRIO.vel, omega = fromCRIO.omega, vel_var = fromCRIO.vel_var, omega_var = fromCRIO.omega_var)
 	p2 = Pose(x = fromCRIO.x, y = -fromCRIO.y, theta = -fromCRIO.heading, x_var = fromCRIO.x_var, y_var = fromCRIO.y_var, theta_var = fromCRIO.heading_var, vel = fromCRIO.vel, omega = -fromCRIO.omega, vel_var = fromCRIO.vel_var, omega_var = fromCRIO.omega_var)
+	
+	
 	p.header.stamp = rospy.Time.now()
 	p2.header.stamp = p.header.stamp
-	ping = Sonar()
-	ping.header.frame_id = 'front_sonar'
+	
+	
+  ping = Sonar()
 	ping.header.stamp = fromCRIO.current_time
-	ping.dist = fromCRIO.front_sonar_ping
+  handlePing(ping, 'sonar1',fromCRIO.sonar_ping_1)
+  handlePing(ping, 'sonar2',fromCRIO.sonar_ping_2)
+  handlePing(ping, 'sonar3',fromCRIO.sonar_ping_3)
+  handlePing(ping, 'sonar4',fromCRIO.sonar_ping_4)
+  handlePing(ping, 'sonar5',fromCRIO.sonar_ping_5)
+  
+  
         rospy.logdebug(p)
 	pose_pub.publish(p)
 	converted_pose_pub.publish(p2)
-	sonar_pub.publish(ping)
+	
 	fromCRIO.has_data.wait(10)
     fromCRIO.cleanup()
+    
+    
+def handlePing(ping, frame_id, pingValue)
+	ping.header.frame_id = frame_id
+	ping.dist = pingValue
+	#if the ping is >0 then it has a bad value
+  sonar_pub.publish(ping)
 
 if __name__ == "__main__":
     rospy.init_node('pose_broadcaster')
