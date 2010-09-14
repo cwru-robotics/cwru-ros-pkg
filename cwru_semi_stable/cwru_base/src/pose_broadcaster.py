@@ -74,11 +74,11 @@ def pose_broadcaster(fromCRIO):
     pose_pub = rospy.Publisher('pose', Pose)
     converted_pose_pub = rospy.Publisher('flipped_pose', Pose)
 
-    sonar_pub1 = rospy.Publisher('sonar1', Sonar)
-    sonar_pub2 = rospy.Publisher('sonar2', Sonar)
-    sonar_pub3 = rospy.Publisher('sonar3', Sonar)
-    sonar_pub4 = rospy.Publisher('sonar4', Sonar)
-    sonar_pub5 = rospy.Publisher('sonar5', Sonar)
+    sonar_pub_1 = rospy.Publisher('sonar_1', Sonar)
+    sonar_pub_2 = rospy.Publisher('sonar_2', Sonar)
+    sonar_pub_3 = rospy.Publisher('sonar_3', Sonar)
+    sonar_pub_4 = rospy.Publisher('sonar_4', Sonar)
+    sonar_pub_5 = rospy.Publisher('sonar_5', Sonar)
     
     while not rospy.is_shutdown():
         p = Pose(x = fromCRIO.x, y = fromCRIO.y, theta = fromCRIO.heading, x_var = fromCRIO.x_var, y_var = fromCRIO.y_var, theta_var = fromCRIO.heading_var, vel = fromCRIO.vel, omega = fromCRIO.omega, vel_var = fromCRIO.vel_var, omega_var = fromCRIO.omega_var)
@@ -91,11 +91,11 @@ def pose_broadcaster(fromCRIO):
 	
   ping = Sonar()
 	ping.header.stamp = fromCRIO.current_time
-  handlePing(ping, 'sonar1',fromCRIO.sonar_ping_1)
-  handlePing(ping, 'sonar2',fromCRIO.sonar_ping_2)
-  handlePing(ping, 'sonar3',fromCRIO.sonar_ping_3)
-  handlePing(ping, 'sonar4',fromCRIO.sonar_ping_4)
-  handlePing(ping, 'sonar5',fromCRIO.sonar_ping_5)
+  handlePing(ping, 'sonar_1',fromCRIO.sonar_ping_1,sonar_pub_1)
+  handlePing(ping, 'sonar_2',fromCRIO.sonar_ping_2,sonar_pub_2)
+  handlePing(ping, 'sonar_3',fromCRIO.sonar_ping_3,sonar_pub_3)
+  handlePing(ping, 'sonar_4',fromCRIO.sonar_ping_4,sonar_pub_4)
+  handlePing(ping, 'sonar_5',fromCRIO.sonar_ping_5,sonar_pub_5)
   
   
         rospy.logdebug(p)
@@ -106,11 +106,11 @@ def pose_broadcaster(fromCRIO):
     fromCRIO.cleanup()
     
     
-def handlePing(ping, frame_id, pingValue)
+def handlePing(ping, frame_id, pingValue, sonar_pubsonar_pub)
 	ping.header.frame_id = frame_id
 	ping.dist = pingValue
 	#if the ping is >0 then it has a bad value
-  sonar_pub.publish(ping)
+  sonar_pubsonar_pub.publish(ping)
 
 if __name__ == "__main__":
     rospy.init_node('pose_broadcaster')

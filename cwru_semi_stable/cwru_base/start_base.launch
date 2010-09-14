@@ -15,8 +15,8 @@
     <node pkg="sound_play" type="soundplay_node.py" name="sound_play" />
 
 
-    <node pkg="cwru_base" type="sonar_translator.py" name="front_sonar_translator">
-		<remap from="sonar" to="front_sonar" />
-		<remap from="sonar_scan" to="front_sonar_scan" />
+    <node pkg="cwru_base" type="sonar_translator.py" name="sonar_1_translator">
+		<remap from="sonar" to="sonar_1" />
+		<remap from="sonar_scan" to="sonar_scan_1" />
     </node>
 </launch>
