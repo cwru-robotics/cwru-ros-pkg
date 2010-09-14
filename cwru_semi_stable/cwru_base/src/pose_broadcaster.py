@@ -90,7 +90,7 @@ def pose_broadcaster(fromCRIO):
 	
 	
   ping = Sonar()
-	ping.header.stamp = fromCRIO.current_time
+  ping.header.stamp = fromCRIO.current_time
   handlePing(ping, 'sonar_1',fromCRIO.sonar_ping_1,sonar_pub_1)
   handlePing(ping, 'sonar_2',fromCRIO.sonar_ping_2,sonar_pub_2)
   handlePing(ping, 'sonar_3',fromCRIO.sonar_ping_3,sonar_pub_3)
@@ -99,18 +99,18 @@ def pose_broadcaster(fromCRIO):
   
   
         rospy.logdebug(p)
-	pose_pub.publish(p)
-	converted_pose_pub.publish(p2)
+  pose_pub.publish(p)
+  converted_pose_pub.publish(p2)
 	
-	fromCRIO.has_data.wait(10)
-    fromCRIO.cleanup()
+  fromCRIO.has_data.wait(10)
+  fromCRIO.cleanup()
     
     
-def handlePing(ping, frame_id, pingValue, sonar_pubsonar_pub)
+def handlePing(ping, frame_id, pingValue, sonar_pub)
 	ping.header.frame_id = frame_id
 	ping.dist = pingValue
 	#if the ping is >0 then it has a bad value
-  sonar_pubsonar_pub.publish(ping)
+  sonar_pub.publish(ping)
 
 if __name__ == "__main__":
     rospy.init_node('pose_broadcaster')
