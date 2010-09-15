@@ -24,7 +24,7 @@ def handle_sonar(msg, scan_pub):
 	scan_pub.publish(scan)
 
 if __name__ == '__main__':
-	rospy.init_node('harlie_sonar_translator')
+	rospy.init_node('sonar_translator')
 	scan_pub = rospy.Publisher('sonar_scan', LaserScan)
 	rospy.Subscriber('sonar', Sonar, handle_sonar, scan_pub)
 	rospy.spin()
