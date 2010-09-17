@@ -2,8 +2,6 @@ bin/
 build/
 msg_gen/
 srv_gen/
-msg/lisp/
-srv/lisp/
 lib/
 .svn/
 *.swp
