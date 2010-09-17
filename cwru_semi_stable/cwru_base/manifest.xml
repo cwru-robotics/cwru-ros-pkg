@@ -4,7 +4,7 @@
      This package is the interface between ROS and the CWRU specific robot stuff. Specifically, this package handles translating inputs to the cRIO and outputs from the cRIO into things that are more friendly to ROS.
 
   </description>
-  <author>Eric Perko</author>
+  <author>Eric Perko, Jesse Fish</author>
   <license>LGPL</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/cwru_base</url>
