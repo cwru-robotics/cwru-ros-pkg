@@ -1,10 +1,12 @@
 BATHROOM - Main 
+CLOSE - Main 
+DOOR - Main 
 ELEVATOR - Main 
 GO - Main 
 HALLWAY - Main 
-pronounce: verbosity is 1
 LAB - Main 
 MACHINE - Main 
+OPEN - Main 
 STOP - Main 
 THE - Main 
 TO - Main 

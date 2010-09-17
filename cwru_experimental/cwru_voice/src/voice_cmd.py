@@ -48,8 +48,8 @@ class DemoApp(object):
         asr.set_property('configured', True)
 	asr.set_property('dsratio', 1)
 	#AUTONOMOUS DICT	
-	asr.set_property('lm', '/home/harlie/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/6563.lm')
-        asr.set_property('dict', '/home/harlie/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/6563.dic')
+	asr.set_property('lm', '/home/tony/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/1495.lm')
+        asr.set_property('dict', '/home/tony/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/1495.dic')
 	#MOTORIC
 	#asr.set_property('lm', '/home/tony/Desktop/test/MOTORIC/5803.lm')
         #asr.set_property('dict', '/home/tony/Desktop/test/MOTORIC/5803.dic')

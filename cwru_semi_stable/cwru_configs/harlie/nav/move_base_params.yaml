@@ -1,0 +1,9 @@
+recovery_behaviors:
+    - name: conservative_reset 
+      type: clear_costmap_recovery/ClearCostmapRecovery
+    - name: playsound_recovery
+      type: playsound_recovery/PlaySoundRecovery  
+    - name: aggressive_reset
+      type: clear_costmap_recovery/ClearCostmapRecovery
+
+#base_local_planner: pose_follower/PoseFollower
