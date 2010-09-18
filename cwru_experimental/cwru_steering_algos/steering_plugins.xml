@@ -1,0 +1,5 @@
+<library path="lib/libsecond_order_steering">
+	<class name="cwru_steering_algos/SecondOrderSteering" type="second_order_steering::SecondOrderSteering" base_class_type="cwru_wsn_steering::SteeringBase">
+		<description>Second Order Steering</description>
+	</class>
+</library>

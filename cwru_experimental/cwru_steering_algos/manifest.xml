@@ -1,0 +1,22 @@
+<package>
+  <description brief="cwru_steering_algos">
+
+     cwru_steering_algos
+
+  </description>
+  <author>Eric Perko</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/cwru_steering_algos</url>
+  <depend package="cwru_wsn_steering"/>
+  <depend package="roscpp"/>
+  <depend package="pluginlib" />
+
+  <export>
+	  <cpp cflags="-I${prefix}/include" lflags="-Wl,-rpath,${prefix}/lib -L${prefix}/lib -lsecond_order_steering" />
+	  <cwru_wsn_steering plugin="${prefix}/steering_plugins.xml" />
+  </export>
+
+</package>
+
+
