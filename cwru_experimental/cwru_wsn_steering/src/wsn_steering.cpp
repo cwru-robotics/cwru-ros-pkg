@@ -9,6 +9,7 @@
 #include <base_local_planner/trajectory_planner_ros.h>
 #include <pluginlib/class_loader.h>
 #include <cwru_wsn_steering/steering_base.h>
+#include <string>
 
 class WSNSteering {
 	public:
@@ -48,17 +49,20 @@ WSNSteering::WSNSteering() : priv_nh_("~") {
 	bool use_collision_avoidance;
 	priv_nh_.param("loop_rate", loop_rate, 20.0);
 	priv_nh_.param("use_collision_avoidance", use_collision_avoidance, true);
+	std::string steering_algo_name;
+	priv_nh_.param("steering_algorithm", steering_algo_name, std::string("cwru_steering_algos/SecondOrderSteering"));
 
 	pluginlib::ClassLoader<cwru_wsn_steering::SteeringBase> steering_loader("cwru_wsn_steering", "cwru_wsn_steering::SteeringBase");
 	cwru_wsn_steering::SteeringBase *steering_algo = NULL;
 
 	try {
-		steering_algo = steering_loader.createClassInstance("cwru_steering_algos/SecondOrderSteering");
+		steering_algo = steering_loader.createClassInstance(steering_algo_name);
 		steering_algo->initialize(priv_nh_);
 
 		ROS_INFO("Initialized the steering algorithm");
 	} catch(pluginlib::PluginlibException& ex) {
-		ROS_ERROR("The plugin failed to load for some reason. Error: %s", ex.what());
+		ROS_ERROR("Failed to create the steering algorithm due to a plugin loading error. Error: %s", ex.what());
+		exit(0);
 	}
 
 	if(use_collision_avoidance) {

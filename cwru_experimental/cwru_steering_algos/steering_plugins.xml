@@ -3,3 +3,8 @@
 		<description>Second Order Steering</description>
 	</class>
 </library>
+<library path="lib/libphase_space_steering">
+	<class name="cwru_steering_algos/PhaseSpaceSteering" type="phase_space_steering::PhaseSpaceSteering" base_class_type="cwru_wsn_steering::SteeringBase">
+		<description>Phase Space Steering</description>
+	</class>
+</library>

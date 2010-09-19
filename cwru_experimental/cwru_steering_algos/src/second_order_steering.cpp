@@ -21,7 +21,6 @@ PLUGINLIB_DECLARE_CLASS(cwru_steering_algos, SecondOrderSteering, second_order_s
 		}
 
 		void SecondOrderSteering::computeVelocities(double x_PSO, double y_PSO, double psi_PSO, double x_des, double y_des, double v_des, double psi_des, double rho_des, double &v, double &omega) {
-			//Wyatt put your code here. We will figure out the interface to Beom's GPS points later
 			const double pi = 3.1415926;
 			double tanVec[2],nVec[2],dx_vec[2],d;
 			double deltaPsi;
