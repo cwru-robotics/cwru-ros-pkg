@@ -57,21 +57,25 @@ PLUGINLIB_DECLARE_CLASS(cwru_steering_algos, PhaseSpaceSteering, phase_space_ste
 			ROS_DEBUG("V_des was %f, v was %f, k_v was %f, Lfollow was %f", v_des, v, k_v, Lfollow);
 			// d = -n'*dx_vec;
 			d = -nVec[0]*dx_vec[0]-nVec[1]*dx_vec[1];
+			ROS_DEBUG("d was %f", d);
 			double deltaPsiPSOtoPath = psi_PSO-psi_des;
-			//std::cout << "psi_PSO " << psi_PSO << " " << "psi_des " << psi_des << std::endl;
 			while (deltaPsiPSOtoPath > pi)
 				deltaPsiPSOtoPath -= 2*pi;
 			while (deltaPsiPSOtoPath < -pi)
 				deltaPsiPSOtoPath += 2*pi;
 
+			ROS_DEBUG("deltaPsiPSOtoPath was %f",deltaPsiPSOtoPath);
 			//get the phase space mapping of the desired delta psi
 			//for the current offset d
 			double dPsiMappedToPath = psiOfD(d);
+			ROS_DEBUG("dPsiMappedToPath was %f", dPsiMappedToPath);
 
 			//compute difference between heading error and ideal
 			//heading error
 			deltaPsi = dPsiMappedToPath - deltaPsiPSOtoPath;
+			ROS_DEBUG("deltaPsi was %f", deltaPsi);
 			double omega_cmd = k_psi*deltaPsi + v*rho_des;
+			ROS_DEBUG("omega_cmd was %f", omega_cmd);
 			if(omega_cmd > omega_cmd_sat) {
 				omega = omega_cmd_sat;
 			} else if(omega_cmd < -omega_cmd_sat) {
@@ -79,5 +83,6 @@ PLUGINLIB_DECLARE_CLASS(cwru_steering_algos, PhaseSpaceSteering, phase_space_ste
 			} else {
 				omega = omega_cmd;
 			}
+			ROS_DEBUG("omega was %f", omega);
 		}
 	};
