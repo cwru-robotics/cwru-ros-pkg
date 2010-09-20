@@ -12,7 +12,7 @@ PLUGINLIB_DECLARE_CLASS(cwru_steering_algos, PhaseSpaceSteering, phase_space_ste
 		PhaseSpaceSteering::PhaseSpaceSteering() {}
 
 		void PhaseSpaceSteering::initialize(ros::NodeHandle nh_) {
-			nh_.param("k_psi", k_psi, 20.0); 
+			nh_.param("k_psi", k_psi, 0.0); 
 			nh_.param("k_v", k_v, 1.0);
 			nh_.param("omega_cmd_sat", omega_cmd_sat, 2.0);
 			nh_.param("phase_space_slope",phase_space_slope, -1.0);
