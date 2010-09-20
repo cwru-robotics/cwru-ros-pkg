@@ -25,6 +25,7 @@ class WSNIdealState {
 		void pathCallback(const cwru_wsn_steering::Path::ConstPtr& p);
 		void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel);
 		void initializeDummyPath();
+		cwru_wsn_steering::DesiredState makeHaltState();
 
 		//Loop rate in Hz
 		double loop_rate;
@@ -69,9 +70,6 @@ WSNIdealState::WSNIdealState() {
 	segDistDone = 0.0;
 	halt = true;
 
-	cwru_wsn_steering::DesiredState halt_state;
-	halt_state.v = 0.0;
-
 	//temps
 	float x = 0.0;
 	float y = 0.0;
@@ -90,7 +88,7 @@ WSNIdealState::WSNIdealState() {
 		cwru_wsn_steering::DesiredState desiredState;
 		desiredState.header.stamp = ros::Time::now();
 		if(halt) {
-			desiredState = halt_state;
+			desiredState = makeHaltState();
 		}
 		else {
 			desiredState.x = x;
@@ -108,6 +106,29 @@ WSNIdealState::WSNIdealState() {
 		//Sleep till it's time to go again
 		rate.sleep();
 	}
+}
+
+//We want to take the current location of the base and set that as the desired state with 0 velocity and rho. 
+cwru_wsn_steering::DesiredState WSNIdealState::makeHaltState() {
+	//Convert into the odometry frame from whatever frame the path segments are in
+	temp_pose_in_.header.frame_id = "base_link";
+	temp_pose_in_.pose.position.x = 0.0;
+	temp_pose_in_.pose.position.y = 0.0;
+	temp_pose_in_.pose.orientation = tf::createQuaternionMsgFromYaw(0.0);
+	ros::Time current_transform = ros::Time::now();
+	tf_listener_.getLatestCommonTime(temp_pose_in_.header.frame_id, "odom", current_transform, NULL);
+	temp_pose_in_.header.stamp = current_transform;
+	tf_listener_.transformPose("odom", temp_pose_in_, temp_pose_out_);
+
+	double tanAngle = tf::getYaw(temp_pose_out_.pose.orientation);
+	cwru_wsn_steering::DesiredState halt_state;
+	halt_state.x = temp_pose_out_.pose.position.x;
+	halt_state.y = temp_pose_out_.pose.position.y;
+	halt_state.theta = tanAngle;
+	halt_state.v = 0.0;
+	halt_state.rho = 0.0;
+	return halt_state;
+
 }
 
 void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, float& rho)
@@ -219,7 +240,7 @@ void WSNIdealState::pathCallback(const cwru_wsn_steering::Path::ConstPtr& p) {
 	iSeg = 0;
 	segDistDone = 0.0;
 	halt = true;   
-       	path = p->segs;
+	path = p->segs;
 }
 
 void WSNIdealState::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel) {
@@ -228,72 +249,72 @@ void WSNIdealState::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel
 
 void WSNIdealState::initializeDummyPath() {
 	cwru_wsn_steering::PathSegment p;
-/*	p.frame_id = "odom";
-	 p.segType =1;
-	   p.xRef = 0.0;
-	   p.yRef = 0.0;
-	   p.tangentAng = 0.0;
-	   p.rho = 0.0;
-	   p.length = 2.0;
-	   p.vDes = 0.5;
-	   p.accel = 0.1;
-	   path.push_back(p);
+	/*	p.frame_id = "odom";
+		p.segType =1;
+		p.xRef = 0.0;
+		p.yRef = 0.0;
+		p.tangentAng = 0.0;
+		p.rho = 0.0;
+		p.length = 2.0;
+		p.vDes = 0.5;
+		p.accel = 0.1;
+		path.push_back(p);
 
-	p.frame_id = "odom";
-	   p.segType = 2;
-	   p.xRef = 2.0;
-	   p.yRef = 1.0;
-	   p.tangentAng = 0.0;
-	   p.rho = 1.0;
-	   p.length = 3.1416;
-	   p.vDes = 0.5;
-	   p.accel = 0.1;
-	   path.push_back(p);
+		p.frame_id = "odom";
+		p.segType = 2;
+		p.xRef = 2.0;
+		p.yRef = 1.0;
+		p.tangentAng = 0.0;
+		p.rho = 1.0;
+		p.length = 3.1416;
+		p.vDes = 0.5;
+		p.accel = 0.1;
+		path.push_back(p);
 
-	p.frame_id = "odom";
-	   p.segType = 1;
-	   p.xRef = 2.0;
-	   p.yRef = 2.0;
-	   p.tangentAng = 3.1416;
-	   p.rho = 0.0;
-	   p.length = 1.0;
-	   p.vDes = 0.5;
-	   p.accel = 0.1;
-	   path.push_back(p);
+		p.frame_id = "odom";
+		p.segType = 1;
+		p.xRef = 2.0;
+		p.yRef = 2.0;
+		p.tangentAng = 3.1416;
+		p.rho = 0.0;
+		p.length = 1.0;
+		p.vDes = 0.5;
+		p.accel = 0.1;
+		path.push_back(p);
 
-	p.frame_id = "odom";
-	   p.segType = 2;
-	   p.xRef = 1.0;
-	   p.yRef = 2.01;
-	   p.tangentAng = 3.1416;
-	   p.rho = -100.0;
-	   p.length = 0.0157;
-	   p.vDes = 0.01;
-	   p.accel = 0.1;
-	   path.push_back(p);
+		p.frame_id = "odom";
+		p.segType = 2;
+		p.xRef = 1.0;
+		p.yRef = 2.01;
+		p.tangentAng = 3.1416;
+		p.rho = -100.0;
+		p.length = 0.0157;
+		p.vDes = 0.01;
+		p.accel = 0.1;
+		path.push_back(p);
 
-	p.frame_id = "odom";
-	   p.segType = 1;
-	   p.xRef = 0.99;
-	   p.yRef = 2.01;
-	   p.tangentAng = 1.5708;
-	   p.rho = 0.0;
-	   p.length = 1.0;
-	   p.vDes = 0.5;
-	   p.accel = 0.1;
-	   path.push_back(p);
+		p.frame_id = "odom";
+		p.segType = 1;
+		p.xRef = 0.99;
+		p.yRef = 2.01;
+		p.tangentAng = 1.5708;
+		p.rho = 0.0;
+		p.length = 1.0;
+		p.vDes = 0.5;
+		p.accel = 0.1;
+		path.push_back(p);
 
-	p.frame_id = "odom";
-	   p.segType = 2;
-	   p.xRef = 1.49;
-	   p.yRef = 3.01;
-	   p.tangentAng = 1.5708;
-	   p.rho = -2.0;
-	   p.length = 0.7854;
-	   p.vDes = 0.5;
-	   p.accel = 0.1;
-	   path.push_back(p);
-	*/	   
+		p.frame_id = "odom";
+		p.segType = 2;
+		p.xRef = 1.49;
+		p.yRef = 3.01;
+		p.tangentAng = 1.5708;
+		p.rho = -2.0;
+		p.length = 0.7854;
+		p.vDes = 0.5;
+		p.accel = 0.1;
+		path.push_back(p);
+		*/	   
 	p.frame_id = "map";
 	p.segType = 1;
 	p.xRef = 0.0436;
@@ -354,7 +375,7 @@ void WSNIdealState::initializeDummyPath() {
 	p.vDes = 0.1;
 	p.accel = 0.05;
 	path.push_back(p);
-	
+
 }
 
 int main(int argc, char *argv[]) {
