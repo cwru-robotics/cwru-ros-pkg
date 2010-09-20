@@ -16,6 +16,10 @@
   <depend package="playsound_recovery" />
   <depend package="tf" />
   <depend package="tf_conversions" />
+  <depend package="tf_conversions" />
+  <depend package="sensor_msgs" />
+  <depend package="nav_msgs" />
+  
 
 </package>
 
