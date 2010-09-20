@@ -10,13 +10,17 @@ inflation_radius: 1.0
 #cost_scaling_factor: 0.0
 cost_scaling_factor: 11.8
 
-observation_sources: base_laser1
+observation_sources: base_laser1 obstacle_map_cloud
 # sonar_1 sonar_2 sonar_3 sonar_5
 #sonar_4
 
 base_laser1: {sensor_frame: base_laser1_link, data_type: LaserScan, topic: /base_laser1_scan, marking: true, clearing: true, max_obstacle_height: 0.6, min_obstacle_height: 0.4}
-sonar_1: {sensor_frame: sonar_1_link, data_type: LaserScan, topic: /sonar_scan_1, marking: true, clearing: true, max_obstacle_height: 0.8, min_obstacle_height: 0.6}
 
+
+obstacle_map_cloud: {sensor_frame: map, data_type: PointCloud, topic: /obstacle_map_cloud, marking: true, clearing: true, max_obstacle_height: 0.9, min_obstacle_height: 0.7}
+
+
+sonar_1: {sensor_frame: sonar_1_link, data_type: LaserScan, topic: /sonar_scan_1, marking: true, clearing: true, max_obstacle_height: 0.8, min_obstacle_height: 0.6}
 sonar_2: {sensor_frame: sonar_2_link, data_type: LaserScan, topic: /sonar_scan_2, marking: true, clearing: true, max_obstacle_height: 0.8, min_obstacle_height: 0.6}
 sonar_3: {sensor_frame: sonar_3_link, data_type: LaserScan, topic: /sonar_scan_3, marking: true, clearing: true, max_obstacle_height: 0.8, min_obstacle_height: 0.6}
 sonar_4: {sensor_frame: sonar_4_link, data_type: LaserScan, topic: /sonar_scan_4, marking: true, clearing: true, max_obstacle_height: 0.8, min_obstacle_height: 0.6}

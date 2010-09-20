@@ -1,18 +1,13 @@
 #include <ros/ros.h>
 #include <sensor_msgs/PointCloud.h>
 #include <nav_msgs/OccupancyGrid.h>
+#include <geometry_msgs/Point32.h>
 #include <string>
 #include <list>
 
 
-struct point{
-  float x;
-  float y;
-};
 
-
-
-std::list<point> points;
+std::list<geometry_msgs::Point32> points;
 std::string frame_id;
 bool recieved_map;
 bool updated_map;
@@ -23,7 +18,7 @@ void mapOccupancyGridCallback(const  nav_msgs::OccupancyGrid::ConstPtr& msg)
   recieved_map=true;
   updated_map=true;
   frame_id=msg->header.frame_id;
-  point p;
+  geometry_msgs::Point32 p;
   for(unsigned int m=0;m<msg->info.height;m++){
     for(unsigned int n=0;n<msg->info.width;n++){
     //currently 100 is the only value used for obsticles in the map
@@ -91,7 +86,7 @@ int main(int argc, char *argv[]){
         sensor_points->header.frame_id =frame_id;
         //for everything in list points, set the x and y value to the right stuff, and set intensity to intensity
         int point_number=0;
-        for(std::list<point>::const_iterator iterator = points.begin(), end = points.end(); iterator != end; ++iterator){
+        for(std::list<geometry_msgs::Point32>::const_iterator iterator = points.begin(), end = points.end(); iterator != end; ++iterator){
           sensor_points->points[point_number].x = (*iterator).x;
           sensor_points->points[point_number].y = (*iterator).y;
           sensor_points->points[point_number].z = height;
