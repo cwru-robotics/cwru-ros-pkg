@@ -1,0 +1,11 @@
+<launch>
+  	<node name="map_to_sensor" pkg="cwru_nav" type="map_as_sensor" respawn="false" output="screen" >
+	  <remap from="input_map" to="map"/>
+	  <remap from="map_cloud" to="my_map_cloud"/>
+	  
+		<param name="intensity" value="100.0"/>
+		<param name="sensor_rate" value="1"/>
+		<param name="channel_name" value="intensity"/>
+		<param name="height" value="8.0"/>
+	</node>
+</launch>
