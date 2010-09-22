@@ -75,6 +75,7 @@ int main(int argc, char *argv[]){
 	ros::Rate sleep_rate(1.0);
 	while(ros::ok() && !recieved_map) {
 	   ROS_INFO("Waiting to receive a map before looking up the transform information"); 
+	   ros::spinOnce();
 	   sleep_rate.sleep();
 	}
 	tf::TransformListener listener;
@@ -108,7 +109,9 @@ int main(int argc, char *argv[]){
 				}
 			}
 
-			sensor_points->header.stamp = ros::Time::now();
+			ros::Time latest_transform_time = ros::Time::now();
+			listener.getLatestCommonTime(frame_id, target_frame, latest_transform_time, NULL);
+			sensor_points->header.stamp = latest_transform_time;
 			listener.transformPointCloud(target_frame, *sensor_points, temp_out);
 			cloud_pub.publish(temp_out);
 		}
