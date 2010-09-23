@@ -7,6 +7,7 @@
 </group>
 
   <include file="$(find cwru_nav)/start_map_as_sensor.launch" />
+  <include file="$(find cwru_nav)/sonar_filter.launch" />
 
   <node pkg="map_server" type="map_server" name="obstacle_map_server" args="$(find cwru_maps)/maps/3rd_floor_obstacles/map.yaml" />
 
