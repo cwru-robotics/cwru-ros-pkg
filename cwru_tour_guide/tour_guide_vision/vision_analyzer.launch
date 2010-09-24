@@ -2,7 +2,6 @@
   <param name="/use_sim_time" value="False" />
    
 	<node pkg="image_proc" type="image_proc" name="proc_front" ns="front_camera" />
-	<node pkg="image_proc" type="image_proc" name="proc_rear" ns="rear_camera" />
 
 	<node name="vision_analyzer" pkg="tour_guide_vision" type="vision_analyzer" respawn="false" output="screen" >
 	  <remap from="image_rect_color" to="/front_camera/image_rect_color"/>

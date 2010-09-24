@@ -7,7 +7,7 @@
 	  <param name="grid_height" value="0.0047"/>
 	  <param name="m_in_front_of_bot" value="0.16"/>
 	  <param name="m_offset_lr_of_bot" value="0.20"/>
-	  <param name="m_per_output_pixel" value="0.005"/>
+	  <param name="m_per_output_pixel" value="0.05"/>
 	  <param name="output_image_width" value="600"/>
 	  <param name="output_image_height" value="600"/>
 	  <param name="m_dist_to_projection_from_board_z" value="1.2"/>
