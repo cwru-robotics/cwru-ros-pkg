@@ -24,6 +24,7 @@ class WSNIdealState {
 		void computeState(float& x, float& y, float& theta, float& v, float& rho);
 		void pathCallback(const cwru_wsn_steering::Path::ConstPtr& p);
 		void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel);
+		void odomCallback(const nav_msgs::Odometry::ConstPtr& odom);
 		void initializeDummyPath();
 		cwru_wsn_steering::DesiredState makeHaltState();
 
@@ -39,12 +40,20 @@ class WSNIdealState {
 		std::vector<cwru_wsn_steering::PathSegment> path;
 		//Last cmd_vel
 		geometry_msgs::Twist last_cmd_;
+		//Last odometry
+		nav_msgs::Odometry last_odom_;
+		//Is the odometry ready?
+		bool first_call_;
+		
+		//The last desired state we output	
+		cwru_wsn_steering::DesiredState desiredState_;
 
 		//ROS communcators
 		ros::NodeHandle nh_;
 		ros::Publisher ideal_state_pub_;
 		ros::Subscriber path_sub_;
 		ros::Subscriber cmd_vel_sub_;
+		ros::Subscriber odom_sub_;
 		tf::TransformListener tf_listener_;	
 		geometry_msgs::PoseStamped temp_pose_in_, temp_pose_out_;
 };
@@ -56,8 +65,11 @@ WSNIdealState::WSNIdealState() {
 	ideal_state_pub_= nh_.advertise<cwru_wsn_steering::DesiredState>("idealState",1);   
 	path_sub_ = nh_.subscribe<cwru_wsn_steering::Path>("desired_path", 1, &WSNIdealState::pathCallback, this);
 	cmd_vel_sub_ = nh_.subscribe<geometry_msgs::Twist>("cmd_vel", 1, &WSNIdealState::cmdVelCallback, this);
+	odom_sub_ = nh_.subscribe<nav_msgs::Odometry>("odom", 1, &WSNIdealState::odomCallback, this);
 	nh_.param("loop_rate",loop_rate,20.0); // default 20Hz
 	dt = 1.0/loop_rate;
+
+	first_call_ = true;
 
 	//Setup the rate limiter
 	ros::Rate rate(loop_rate);
@@ -80,28 +92,30 @@ WSNIdealState::WSNIdealState() {
 	tf_listener_.waitForTransform("odom", "map", ros::Time::now(), ros::Duration(10));
 	//Don't shutdown till the node shuts down
 	while(ros::ok()) {
-		//Orientation is a quaternion, so need to get yaw angle in rads.. unless you want a quaternion
-		v = last_cmd_.linear.x;
-		computeState(x,y,theta,v,rho);
+		if(!first_call_) {
+			//Orientation is a quaternion, so need to get yaw angle in rads.. unless you want a quaternion
+			theta = tf::getYaw(last_odom_.pose.pose.orientation);
+			v = last_cmd_.linear.x;
+			computeState(x,y,theta,v,rho);
 
-		//Put the temp vars into the desiredState
-		cwru_wsn_steering::DesiredState desiredState;
-		desiredState.header.stamp = ros::Time::now();
-		if(halt) {
-			desiredState = makeHaltState();
+			//Put the temp vars into the desiredState
+			desiredState_.header.stamp = ros::Time::now();
+			if(halt) {
+				desiredState_ = makeHaltState();
+			}
+			else {
+				desiredState_.x = x;
+				desiredState_.y = y;
+				desiredState_.theta = theta;
+				desiredState_.v = v;
+				desiredState_.rho = rho;
+			}
+			//Publish twist message
+			ideal_state_pub_.publish(desiredState_);
 		}
-		else {
-			desiredState.x = x;
-			desiredState.y = y;
-			desiredState.theta = theta;
-			desiredState.v = v;
-			desiredState.rho = rho;
-		}
-		//Publish twist message
-		ideal_state_pub_.publish(desiredState);
-
 		//Make sure this node's ROS stuff gets to run if we are hogging CPU
 		ros::spinOnce();
+
 
 		//Sleep till it's time to go again
 		rate.sleep();
@@ -141,7 +155,9 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 		return;
 	}
 
-	segDistDone = segDistDone + dL;
+	//Need to only advance by the projection of what we did onto the desired heading	
+	// formula is v * dt * cos(psiDes - psiPSO)
+	segDistDone = segDistDone + dL * cos(desiredState_.theta - theta);
 	double lengthSeg = path.at(iSeg).length;
 	if(segDistDone > lengthSeg) {
 		segDistDone = 0.0;
@@ -245,6 +261,11 @@ void WSNIdealState::pathCallback(const cwru_wsn_steering::Path::ConstPtr& p) {
 
 void WSNIdealState::cmdVelCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel) {
 	last_cmd_ = *cmd_vel;
+}
+
+void WSNIdealState::odomCallback(const nav_msgs::Odometry::ConstPtr& odom) {
+	first_call_ = false;
+	last_odom_ = *odom;
 }
 
 void WSNIdealState::initializeDummyPath() {
