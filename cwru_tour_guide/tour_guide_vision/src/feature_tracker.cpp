@@ -91,16 +91,43 @@ void FeatureTracker::image_callback(const sensor_msgs::ImageConstPtr& msg) {
     
     cvCopy(image_rect,output_image);
     int feature_count=num_features;
-    //find good features
+    
+    
+    //check if there were features from the last image to keep tracking
+    
+    //if there were call cvCalcOpticalFlowPyrLK();
+    
+    //find new features and subpixel them
+    
+    //find all good features
     cvGoodFeaturesToTrack(image_rect, eigImage, tempImage, features, &feature_count, quality_level, min_distance, NULL, block_size);
     
     //subpixel good features
+    /*
+    need pose data for each picture, need to publish a camera pose
+      geometry_msgs::PoseStamped basePose;
+    geometry_msgs::PoseStamped mapPose;
+    basePose.pose.orientation.w=1.0;
+    ros::Duration timeout(3);
+    basePose.header.frame_id="/base_link";
+    mapPose.header.frame_id="/map";
+    try {
+      tf_listener_.waitForTransform("/camera_1_link", "/map", acquisition_time, timeout);
+       
+      tf_listener_.transformPose("/map", acquisition_time,basePose,"/camera_1_link",mapPose);
+	    
+	    printf("pose #%d %f %f %f\n",pic_number,mapPose.pose.position.x, mapPose.pose.position.y, tf::getYaw(mapPose.pose.orientation));
+	    
+	    */
     
     //draw dots on image where features are
     for(int i=0;i<feature_count;i++){
       CvPoint center=cvPoint((int)features[i].x,(int)features[i].y);;
       cvCircle(output_image,center,10,cvScalar(150),2);
     }
+    
+    
+    
     try{
       sensor_msgs::Image output_image_cvim =*bridge.cvToImgMsg(output_image, "mono8");
       output_image_cvim.header.stamp=msg->header.stamp;
