@@ -7,9 +7,9 @@
 	  <remap from="image_rect_color" to="/front_camera/image_rect_color"/>
 	  <remap from="feature_image" to="/front_feature_image"/>
 		<param name="num_features" value="15"/>
-	  <param name="min_distance" value="10.0"/>
+	  <param name="min_distance" value="25.0"/>
 	  <param name="quality_level" value="0.1"/>
-	  <param name="block_size" value="7"/>
+	  <param name="block_size" value="11"/>
 	  
 	</node>
 </launch>
