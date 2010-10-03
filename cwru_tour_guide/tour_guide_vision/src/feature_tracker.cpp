@@ -3,15 +3,43 @@
 #include <sensor_msgs/Image.h>
 #include <opencv/cv.h>
 #include <opencv/highgui.h>
+#include <tf/transform_listener.h>
+#include <image_geometry/pinhole_camera_model.h>
 #include <cv_bridge/CvBridge.h>
 #include <string>
+#include <vector>
+
+class RawFeature{
+  public:
+    RawFeature();
+    RawFeature(double x, double y, double theta, double image_x, double image_y);
+    ~RawFeature();
+    //void calcRay(cv::Mat camera2robot_axis,cv::Mat camera_extrinsics_wrtrobot,cv::Mat camera_frame_offset); //calculates the ray given
+    cv::Point3d ray;
+  private:
+    double x;
+    double y;
+    double theta;
+    double image_x;
+    double image_y;
+};
+
+class FeatureManager{
+  public:
+    FeatureManager();
+    ~FeatureManager();
+    cv::Point3d calcMean();
+  private:
+    std::vector<RawFeature> features;
+};
+
 
 class FeatureTracker {
 	public:
 		FeatureTracker();
 		~FeatureTracker();
 	private:
-		void image_callback(const sensor_msgs::ImageConstPtr& msg);
+		void image_callback(const sensor_msgs::ImageConstPtr& msg, const sensor_msgs::CameraInfoConstPtr& info_msg);
 		
 		IplImage * image_rect;
 		
@@ -30,8 +58,13 @@ class FeatureTracker {
 		ros::NodeHandle nh_;
 		ros::NodeHandle priv_nh_;  
 		image_transport::ImageTransport it_;
-		image_transport::Subscriber image_subscriber;
+		image_transport::CameraSubscriber cam_subscriber;
 		image_transport::Publisher analyzed_pub_;
+		
+    image_geometry::PinholeCameraModel cam_model;
+		
+		tf::TransformListener tf_listener_;
+		int pic_number;
 };
 
 FeatureTracker::FeatureTracker() : it_(nh_), priv_nh_("~"){
@@ -40,6 +73,7 @@ FeatureTracker::FeatureTracker() : it_(nh_), priv_nh_("~"){
 	priv_nh_.param("quality_level", quality_level, 0.1);
 	priv_nh_.param("block_size", block_size, 7);
   
+  pic_number=0;
 	image_rect=NULL;
 	
 	output_image=NULL;
@@ -49,7 +83,7 @@ FeatureTracker::FeatureTracker() : it_(nh_), priv_nh_("~"){
 	
 	features=new CvPoint2D32f[num_features];
 	
-	image_subscriber= it_.subscribe("image_rect_color", 1, &FeatureTracker::image_callback, this);
+	cam_subscriber= it_.subscribeCamera("image_rect_color", 1, &FeatureTracker::image_callback, this);
 	
 	analyzed_pub_= it_.advertise("feature_image", 1);
 }
@@ -58,7 +92,7 @@ FeatureTracker::~FeatureTracker(){
   delete(features);
 }
 
-void FeatureTracker::image_callback(const sensor_msgs::ImageConstPtr& msg) {
+void FeatureTracker::image_callback(const sensor_msgs::ImageConstPtr& msg, const sensor_msgs::CameraInfoConstPtr& info_msg) {
  // printf("callback called\n");
   try
 	{
@@ -92,7 +126,6 @@ void FeatureTracker::image_callback(const sensor_msgs::ImageConstPtr& msg) {
     cvCopy(image_rect,output_image);
     int feature_count=num_features;
     
-    
     //check if there were features from the last image to keep tracking
     
     //if there were call cvCalcOpticalFlowPyrLK();
@@ -103,27 +136,41 @@ void FeatureTracker::image_callback(const sensor_msgs::ImageConstPtr& msg) {
     cvGoodFeaturesToTrack(image_rect, eigImage, tempImage, features, &feature_count, quality_level, min_distance, NULL, block_size);
     
     //subpixel good features
-    /*
-    need pose data for each picture, need to publish a camera pose
-      geometry_msgs::PoseStamped basePose;
+    
+    //need pose data for each picture, need to publish a camera pose
+    
+    ros::Time acquisition_time = msg->header.stamp;
+    geometry_msgs::PoseStamped basePose;
     geometry_msgs::PoseStamped mapPose;
     basePose.pose.orientation.w=1.0;
     ros::Duration timeout(3);
     basePose.header.frame_id="/base_link";
     mapPose.header.frame_id="/map";
+    
     try {
       tf_listener_.waitForTransform("/camera_1_link", "/map", acquisition_time, timeout);
-       
       tf_listener_.transformPose("/map", acquisition_time,basePose,"/camera_1_link",mapPose);
-	    
-	    printf("pose #%d %f %f %f\n",pic_number,mapPose.pose.position.x, mapPose.pose.position.y, tf::getYaw(mapPose.pose.orientation));
-	    
-	    */
+	    printf("pose #%d %f %f %f\n",pic_number++,mapPose.pose.position.x, mapPose.pose.position.y, tf::getYaw(mapPose.pose.orientation));
+	  }
+	  catch (tf::TransformException& ex) {
+      ROS_WARN("[map_maker] TF exception:\n%s", ex.what());
+      printf("[map_maker] TF exception:\n%s", ex.what());
+      return;
+    }
+    cam_model.fromCameraInfo(info_msg);
+    
+    
+    
     
     //draw dots on image where features are
     for(int i=0;i<feature_count;i++){
-      CvPoint center=cvPoint((int)features[i].x,(int)features[i].y);;
+      CvPoint center=cvPoint((int)features[i].x,(int)features[i].y);
       cvCircle(output_image,center,10,cvScalar(150),2);
+        
+      cv::Point3d tempRay;
+      cv::Point2d tempPoint=cv::Point2d(features[i]);
+      cam_model.projectPixelTo3dRay(tempPoint,tempRay);
+      printf("%f x  %f y  %f z\n",tempRay.x,tempRay.y,tempRay.z);
     }
     
     
@@ -133,8 +180,7 @@ void FeatureTracker::image_callback(const sensor_msgs::ImageConstPtr& msg) {
       output_image_cvim.header.stamp=msg->header.stamp;
       analyzed_pub_.publish(output_image_cvim);
 	  }
-	  catch (sensor_msgs::CvBridgeException& e)
-	  {
+	  catch (sensor_msgs::CvBridgeException& e){
 		  ROS_ERROR("Could not convert from '%s' to 'mono8'.", msg->encoding.c_str());
 		  return;
 	  }
