@@ -1,0 +1,16 @@
+<package>
+  <description brief="cwru_wsn_steering_msgs">
+
+     cwru_wsn_steering_msgs
+
+  </description>
+  <author>Eric Perko</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/cwru_wsn_steering_msgs</url>
+  <depend package="actionlib_msgs"/>
+  <depend package="std_msgs"/>
+
+</package>
+
+

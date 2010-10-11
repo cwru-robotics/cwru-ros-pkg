@@ -3,7 +3,7 @@
 #include <geometry_msgs/Twist.h>
 #include <tf/transform_datatypes.h>
 #include <cmath>
-#include <cwru_wsn_steering/DesiredState.h>
+#include <cwru_wsn_steering_msgs/DesiredState.h>
 #include <tf/transform_listener.h>
 #include <costmap_2d/costmap_2d_ros.h>
 #include <base_local_planner/trajectory_planner_ros.h>
@@ -18,11 +18,11 @@ class WSNSteering {
 	private:
 		//callback to put odometry information into the class 
 		void odomCallback(const nav_msgs::Odometry::ConstPtr& odom);	
-		void desStateCallback(const cwru_wsn_steering::DesiredState::ConstPtr& desState);
+		void desStateCallback(const cwru_wsn_steering_msgs::DesiredState::ConstPtr& desState);
 
 		//last updated Odometry information
 		nav_msgs::Odometry current_odom;
-		cwru_wsn_steering::DesiredState curDesState;
+		cwru_wsn_steering_msgs::DesiredState curDesState;
 		tf::TransformListener tf_;
 		costmap_2d::Costmap2DROS *local_costmap_;
 		base_local_planner::TrajectoryPlannerROS planner_;
@@ -77,7 +77,7 @@ WSNSteering::WSNSteering() : priv_nh_("~") {
 	firstCall=true;
 	//Subscribe to Odometry Topic
 	odom_sub_ = nh_.subscribe<nav_msgs::Odometry>("odometry", 10, &WSNSteering::odomCallback, this); 
-	desState_sub_ = nh_.subscribe<cwru_wsn_steering::DesiredState>("idealState", 10, &WSNSteering::desStateCallback, this);
+	desState_sub_ = nh_.subscribe<cwru_wsn_steering_msgs::DesiredState>("idealState", 10, &WSNSteering::desStateCallback, this);
 
 	//Setup velocity publisher
 	twist_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1); 
@@ -159,7 +159,7 @@ void WSNSteering::odomCallback(const nav_msgs::Odometry::ConstPtr& odom) {
 	}
 }
 
-void WSNSteering::desStateCallback(const cwru_wsn_steering::DesiredState::ConstPtr& desState)
+void WSNSteering::desStateCallback(const cwru_wsn_steering_msgs::DesiredState::ConstPtr& desState)
 {
 	curDesState= *desState;
 }

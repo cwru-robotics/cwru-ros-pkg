@@ -4,9 +4,9 @@
 #include <geometry_msgs/PoseStamped.h>
 #include <tf/transform_datatypes.h>
 #include <tf/transform_listener.h>
-#include <cwru_wsn_steering/DesiredState.h>
-#include <cwru_wsn_steering/PathSegment.h>
-#include <cwru_wsn_steering/Path.h>
+#include <cwru_wsn_steering_msgs/DesiredState.h>
+#include <cwru_wsn_steering_msgs/PathSegment.h>
+#include <cwru_wsn_steering_msgs/Path.h>
 #include <vector>
 #include <cmath>
 #include <algorithm>
@@ -22,11 +22,11 @@ class WSNIdealState {
 		 * omega in rads/sec
 		 */
 		void computeState(float& x, float& y, float& theta, float& v, float& rho);
-		void pathCallback(const cwru_wsn_steering::Path::ConstPtr& p);
+		void pathCallback(const cwru_wsn_steering_msgs::Path::ConstPtr& p);
 		void cmdVelCallback(const geometry_msgs::Twist::ConstPtr& cmd_vel);
 		void odomCallback(const nav_msgs::Odometry::ConstPtr& odom);
 		void initializeDummyPath();
-		cwru_wsn_steering::DesiredState makeHaltState();
+		cwru_wsn_steering_msgs::DesiredState makeHaltState();
 
 		//Loop rate in Hz
 		double loop_rate;
@@ -37,7 +37,7 @@ class WSNIdealState {
 		uint32_t iSeg;
 
 		//Current path to be working on
-		std::vector<cwru_wsn_steering::PathSegment> path;
+		std::vector<cwru_wsn_steering_msgs::PathSegment> path;
 		//Last cmd_vel
 		geometry_msgs::Twist last_cmd_;
 		//Last odometry
@@ -46,7 +46,7 @@ class WSNIdealState {
 		bool first_call_;
 		
 		//The last desired state we output	
-		cwru_wsn_steering::DesiredState desiredState_;
+		cwru_wsn_steering_msgs::DesiredState desiredState_;
 
 		//ROS communcators
 		ros::NodeHandle nh_;
@@ -62,8 +62,8 @@ const double pi = acos(-1.0);
 
 WSNIdealState::WSNIdealState() {
 	//Setup the ideal state pub
-	ideal_state_pub_= nh_.advertise<cwru_wsn_steering::DesiredState>("idealState",1);   
-	path_sub_ = nh_.subscribe<cwru_wsn_steering::Path>("desired_path", 1, &WSNIdealState::pathCallback, this);
+	ideal_state_pub_= nh_.advertise<cwru_wsn_steering_msgs::DesiredState>("idealState",1);   
+	path_sub_ = nh_.subscribe<cwru_wsn_steering_msgs::Path>("desired_path", 1, &WSNIdealState::pathCallback, this);
 	cmd_vel_sub_ = nh_.subscribe<geometry_msgs::Twist>("cmd_vel", 1, &WSNIdealState::cmdVelCallback, this);
 	odom_sub_ = nh_.subscribe<nav_msgs::Odometry>("odom", 1, &WSNIdealState::odomCallback, this);
 	nh_.param("loop_rate",loop_rate,20.0); // default 20Hz
@@ -123,7 +123,7 @@ WSNIdealState::WSNIdealState() {
 }
 
 //We want to take the current location of the base and set that as the desired state with 0 velocity and rho. 
-cwru_wsn_steering::DesiredState WSNIdealState::makeHaltState() {
+cwru_wsn_steering_msgs::DesiredState WSNIdealState::makeHaltState() {
 	//Convert into the odometry frame from whatever frame the path segments are in
 	temp_pose_in_.header.frame_id = "base_link";
 	temp_pose_in_.pose.position.x = 0.0;
@@ -135,7 +135,7 @@ cwru_wsn_steering::DesiredState WSNIdealState::makeHaltState() {
 	tf_listener_.transformPose("odom", temp_pose_in_, temp_pose_out_);
 
 	double tanAngle = tf::getYaw(temp_pose_out_.pose.orientation);
-	cwru_wsn_steering::DesiredState halt_state;
+	cwru_wsn_steering_msgs::DesiredState halt_state;
 	halt_state.x = temp_pose_out_.pose.position.x;
 	halt_state.y = temp_pose_out_.pose.position.y;
 	halt_state.theta = tanAngle;
@@ -171,7 +171,7 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 		return;
 	}
 
-	cwru_wsn_steering::PathSegment currentSeg = path.at(iSeg);
+	cwru_wsn_steering_msgs::PathSegment currentSeg = path.at(iSeg);
 
 	double vNext;
 	v = currentSeg.vDes;
@@ -251,7 +251,7 @@ void WSNIdealState::computeState(float& x, float& y, float& theta, float& v, flo
 	}
 }
 
-void WSNIdealState::pathCallback(const cwru_wsn_steering::Path::ConstPtr& p) {
+void WSNIdealState::pathCallback(const cwru_wsn_steering_msgs::Path::ConstPtr& p) {
 	//Reset initial state cause the path is about to change
 	iSeg = 0;
 	segDistDone = 0.0;
@@ -269,7 +269,7 @@ void WSNIdealState::odomCallback(const nav_msgs::Odometry::ConstPtr& odom) {
 }
 
 void WSNIdealState::initializeDummyPath() {
-	cwru_wsn_steering::PathSegment p;
+	cwru_wsn_steering_msgs::PathSegment p;
 	/*	p.frame_id = "odom";
 		p.segType =1;
 		p.xRef = 0.0;

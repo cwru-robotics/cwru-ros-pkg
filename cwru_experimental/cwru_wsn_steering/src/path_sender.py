@@ -4,8 +4,8 @@ roslib.load_manifest('cwru_wsn_steering')
 import rospy
 
 from std_msgs.msg import String
-from cwru_wsn_steering.msg import Path
-from cwru_wsn_steering.msg import PathSegment
+from cwru_wsn_steering_msgs.msg import Path
+from cwru_wsn_steering_msgs.msg import PathSegment
 
 
 def makeDummyPaths():

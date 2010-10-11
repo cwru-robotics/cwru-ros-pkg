@@ -9,6 +9,7 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/cwru_steering_algos</url>
   <depend package="cwru_wsn_steering"/>
+  <depend package="cwru_wsn_steering_msgs"/>
   <depend package="roscpp"/>
   <depend package="pluginlib" />
 
