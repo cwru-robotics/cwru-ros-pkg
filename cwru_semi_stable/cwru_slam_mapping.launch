@@ -1,5 +1,10 @@
 <launch>
 	<node pkg="gmapping" type="slam_gmapping" name="slam_mapper" >
 		<remap from="scan" to="/base_laser1_scan" />
+                <param name="delta" value="0.01" />
+		<param name="xmin" value="-15.0" />
+		<param name="ymin" value="-30.0" />
+                <param name="xmax" value="20.0" />
+                <param name="ymax" value="10.0" />
 	</node>
 </launch>
