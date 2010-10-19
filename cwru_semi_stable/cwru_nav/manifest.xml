@@ -4,8 +4,8 @@
      cwru_nav
 
   </description>
-  <author>Eric Perko</author>
-  <license>LGPL</license>
+  <author>Eric Perko, Jesse Fish</author>
+  <license>BSD, LGPL</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/cwru_nav</url>
   <depend package="rospy"/>
