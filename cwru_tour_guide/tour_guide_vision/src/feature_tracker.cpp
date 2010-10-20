@@ -7,6 +7,7 @@
 #include <image_geometry/pinhole_camera_model.h>
 #include <cv_bridge/CvBridge.h>
 #include <string>
+#include <stdio.h>
 #include <vector>
 #include "cwru_features.h"
 
@@ -22,6 +23,7 @@ class FeatureTracker {
     void track_features(geometry_msgs::PoseStamped mapPose);
     
     double calc_error(int min_features,double dyaw,double dpitch, double droll);
+    
     
     IplImage * image_rect;
     IplImage * last_image;
@@ -82,6 +84,8 @@ class FeatureTracker {
     int pixel_tracking_margin;
 };
 
+
+
 FeatureTracker::FeatureTracker() : it_(nh_), priv_nh_("~"){
   priv_nh_.param("num_features",num_features, 15);
   priv_nh_.param("min_distance", min_distance, 10.0);
@@ -92,9 +96,9 @@ FeatureTracker::FeatureTracker() : it_(nh_), priv_nh_("~"){
   
   
   
-   yalpha= .1;
-   palpha= .1;
-   ralpha= .1;
+   yalpha= .025/2;
+   palpha= .025/2;
+   ralpha= .025/2;
     
   //this is the matrix to translate from camera to robot frames assuming the camera
   //faces perfectly forward, should be a paramter
@@ -107,12 +111,12 @@ FeatureTracker::FeatureTracker() : it_(nh_), priv_nh_("~"){
   //offset of the camera frame, start at 0,0,0 and teak x and y eventually
   camera_frame_offset=cv::Mat::zeros(3,1,CV_64F);
   
-  
+  camera_frame_offset.at<double>(0,0)=.06;
   //rough estimation of the extrinsic calibration for the camera
   //should be a parameter
-  yaw=0;
-  pitch=-35 * 3.1415/180;
-  roll=0;
+  yaw=0.8 * 3.14159/180;
+  pitch=-34.38 * 3.14159/180;
+  roll=-3.87 * 3.14159/180;
   
   
   feature_number=0;
@@ -146,7 +150,7 @@ FeatureTracker::FeatureTracker() : it_(nh_), priv_nh_("~"){
   
   analyzed_pub_= it_.advertise("feature_image", 1);
   
-  pixel_tracking_margin=3;
+  pixel_tracking_margin=1;
 }
 
 FeatureTracker::~FeatureTracker(){
@@ -164,6 +168,8 @@ FeatureTracker::~FeatureTracker(){
 void FeatureTracker::track_features(geometry_msgs::PoseStamped mapPose){
   //set the initial number of features to the max number we want to find
   int feature_count=num_features;
+  printf("pose %f %f %f\n",mapPose.pose.position.x, mapPose.pose.position.y, tf::getYaw(mapPose.pose.orientation));
+  int edge_pixels=5;
   
   //check if there were features from the last image to keep tracking
   if(last_feature_count>0){
@@ -217,12 +223,14 @@ void FeatureTracker::track_features(geometry_msgs::PoseStamped mapPose){
 	if(sqrt(xdiff*xdiff + ydiff*ydiff)<pixel_tracking_margin){
 	  //if they do set the current id for j to the id of i
 	  current_feature_id[j]=last_feature_id[i];
+	  printf("feature found %d %d",last_feature_id[i],i);
 	}
       }
     }
   }
   
   printf("assigned IDs image\n");
+  
   
   for(int i=0;i<feature_count;i++){
     
@@ -233,30 +241,41 @@ void FeatureTracker::track_features(geometry_msgs::PoseStamped mapPose){
       cv::Point2d tempPoint=cv::Point2d(features[i]);
       cam_model.projectPixelTo3dRay(tempPoint,tempRay);
       
-      featureList[current_feature_id[i]].add(RawFeature(mapPose.pose.position.x, mapPose.pose.position.y, tf::getYaw(mapPose.pose.orientation), tempPoint,tempRay));
+      if(tempPoint.x> edge_pixels && tempPoint.x < last_image->width- edge_pixels &&
+	tempPoint.y> edge_pixels && tempPoint.y<last_image->height- edge_pixels){
+	featureList[current_feature_id[i]].add(RawFeature(mapPose.pose.position.x, mapPose.pose.position.y, tf::getYaw(mapPose.pose.orientation), tempPoint,tempRay));
+      }else{
+	current_feature_id[i]=-1;
+      }
       
     }else{
-      //if we didn't
-      //create a new feature group in the list
-      current_feature_id[i]=feature_number;
-      //add the new feature to the feature list
-      featureList.push_back(FeatureManager());
       
       cv::Point3d tempRay;
       cv::Point2d tempPoint=cv::Point2d(features[i]);
       cam_model.projectPixelTo3dRay(tempPoint,tempRay);
-      
-      featureList[feature_number].add(RawFeature(mapPose.pose.position.x, mapPose.pose.position.y, tf::getYaw(mapPose.pose.orientation), tempPoint,tempRay));
-      feature_number++;
-      
+      if(tempPoint.x> edge_pixels && tempPoint.x < last_image->width- edge_pixels &&
+	tempPoint.y> edge_pixels && tempPoint.y<last_image->height- edge_pixels){
+	//if we didn't
+	//create a new feature group in the list
+	current_feature_id[i]=feature_number;
+	//add the new feature to the feature list
+	featureList.push_back(FeatureManager());
+
+	featureList[feature_number].add(RawFeature(mapPose.pose.position.x, mapPose.pose.position.y, tf::getYaw(mapPose.pose.orientation), tempPoint,tempRay));
+	++feature_number;
+      }
     }
   }
-  
-  printf("features: ");
+   
+//  printf("features: ");
   for(int i=0;i<num_features;i++){
-    last_feature_id[i]=current_feature_id[i];
-    
-    printf(" %d ",current_feature_id[i]);
+    if(i<feature_count){
+     last_feature_id[i]=current_feature_id[i];
+    }
+    else{
+      last_feature_id[i]=-1;
+    }
+ //   printf(" %d ",current_feature_id[i]);
   }
   printf("\n");
   
@@ -269,7 +288,10 @@ double FeatureTracker::calc_error(int min_features, double dyaw,double dpitch, d
   double error_sum=0;
   for(int i=0;i<featureList.size();i++){
     if(min_features<featureList[i].numFeatures()){
-      double error=featureList[i].calc_least_squares_position(camera2robot_axis, yaw+dyaw, pitch+dpitch, roll+droll, camera_frame_offset);
+      printf("\n\n\nfeature %d\n",i);
+      featureList[i].print();
+      double error=1;
+    //  double error=featureList[i].calc_least_squares_position(camera2robot_axis, yaw+dyaw, pitch+dpitch, roll+droll, camera_frame_offset);
       error_sum+=error;
     }
   }
@@ -339,7 +361,6 @@ void FeatureTracker::image_callback(const sensor_msgs::ImageConstPtr& msg, const
     
     printf("got image\n");
     
-    
     track_features(mapPose);
     
     //draw features on the image
@@ -347,28 +368,41 @@ void FeatureTracker::image_callback(const sensor_msgs::ImageConstPtr& msg, const
       CvPoint center=cvPoint((int)features[i].x,(int)features[i].y);
       cvCircle(output_image,center,10,cvScalar(150),2);
       
+      char strbuf [10];
+      
+      int n=sprintf(strbuf,"%d",current_feature_id[ i] );
+      std::string text=std::string(strbuf,n);
+      
+      CvFont font;
+      
+      cvInitFont(&font,CV_FONT_HERSHEY_SIMPLEX,1,1);
+      
+      cvPutText(output_image,text.c_str(),cvPoint(center.x,center.y+20),&font,cvScalar(255));
+      
+      
       cv::Point3d tempRay;
       cv::Point2d tempPoint=cv::Point2d(features[i]);
       cam_model.projectPixelTo3dRay(tempPoint,tempRay);
-      printf("%f x  %f y  %f z\n",tempRay.x,tempRay.y,tempRay.z);
+  //    printf("%f x  %f y  %f z\n",tempRay.x,tempRay.y,tempRay.z);
     }
     
+  //  featureList[0].print();
     
     //determine error gradient
     
-    int min_features=20;
+    int min_features=30;
     
-    printf("ypr %f %f %f\n",yaw,pitch,roll);
+  //  printf("ypr %f %f %f\n",yaw,pitch,roll);
     
     double error_sum=calc_error(min_features,0, 0, 0);
     printf("total error is : %f\n",error_sum);
     
     
-    double error_up= calc_error(min_features,yalpha, 0, 0);
-    printf("total up yaw error is : %f\n",error_up);
-    double error_down= calc_error(min_features,-yalpha, 0, 0);
-    printf("total down yaw error is : %f\n",error_down);
-    
+//    double error_up= calc_error(min_features,yalpha, 0, 0);
+  //  printf("total up yaw error is : %f\n",error_up);
+//    double error_down= calc_error(min_features,-yalpha, 0, 0);
+  //  printf("total down yaw error is : %f\n",error_down);
+  /*  
      
     double yaw_change=0;
     if(error_up<error_sum && error_up<error_down){
@@ -380,9 +414,9 @@ void FeatureTracker::image_callback(const sensor_msgs::ImageConstPtr& msg, const
     }
     
     error_up=   calc_error(min_features,0,palpha, 0);
-    printf("total up pitch error is : %f\n",error_up);
+   // printf("total up pitch error is : %f\n",error_up);
     error_down=   calc_error(min_features,0,-palpha, 0);
-    printf("total down pitch error is : %f\n",error_down);
+   // printf("total down pitch error is : %f\n",error_down);
     
     double pitch_change=0;
     if(error_up<error_sum && error_up<error_down){
@@ -390,14 +424,14 @@ void FeatureTracker::image_callback(const sensor_msgs::ImageConstPtr& msg, const
     }else if(error_down<error_sum && error_down<error_up){
       pitch_change=-palpha;
     }else if(error_down!=error_sum&&error_sum!=error_up){
-      palpha/=2;
+      //palpha/=2;
     }
     
     error_up=  calc_error(min_features,0,0,ralpha);
-    printf("total up roll error is : %f\n",error_up);
+   // printf("total up roll error is : %f\n",error_up);
     
     error_down=   calc_error(min_features,0,0,-ralpha);
-    printf("total down roll error is : %f\n",error_down);
+   // printf("total down roll error is : %f\n",error_down);
     
     double roll_change=0;
     if(error_up<error_sum && error_up<error_down){
@@ -408,10 +442,13 @@ void FeatureTracker::image_callback(const sensor_msgs::ImageConstPtr& msg, const
       ralpha/=2;
     }
     
-    yaw+=yaw_change;
-    pitch+=pitch_change;
-    roll+=roll_change;
-    
+  //  yaw+=yaw_change;
+  
+  //  pitch+=pitch_change;
+ 
+  
+  //   roll+=roll_change;
+    */
     
     try{
       sensor_msgs::Image output_image_cvim =*bridge.cvToImgMsg(output_image, "mono8");

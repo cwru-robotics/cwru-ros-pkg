@@ -13,6 +13,8 @@ class RawFeature{
     
     cv::Point3d lastCalcedRay;
     
+    void print();
+    
     double r_value;
     friend class FeatureManager;
     
@@ -36,7 +38,9 @@ class FeatureManager{
     void add(const RawFeature &add_me);
     void merge(const FeatureManager & merger);
     int numFeatures();
-  private:
+    void print();
+    
     std::vector<RawFeature> raw_features;
+  private:
 };
 #endif
