@@ -34,7 +34,9 @@ rosbuild_add_executable(vision_analyzer src/vision_analyzer.cpp)
 rosbuild_add_executable(feature_tracker src/feature_tracker.cpp)
 rosbuild_add_executable(map_maker src/map_maker.cpp)
 rosbuild_add_executable(image_publisher src/image_publisher.cpp)
+rosbuild_add_executable(test_features src/test_features.cpp)
 rosbuild_add_library(cwru_features src/cwru_features.cpp)
 
 
 target_link_libraries(feature_tracker cwru_features)
+target_link_libraries(test_features cwru_features)

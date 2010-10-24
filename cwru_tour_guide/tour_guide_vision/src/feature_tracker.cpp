@@ -22,7 +22,7 @@ class FeatureTracker {
     
     void track_features(geometry_msgs::PoseStamped mapPose);
     
-    double calc_error(int min_features,double dyaw,double dpitch, double droll);
+    cv::Point3d calc_error(int min_features,double dyaw,double dpitch, double droll);
     
     
     IplImage * image_rect;
@@ -56,7 +56,7 @@ class FeatureTracker {
     
     cv::Mat camera_frame_offset;
     cv::Mat camera_extrinsics_wrtrobot;
-    cv::Mat camera2robot_axis;
+//    cv::Mat camera2robot_axis;
     
     double yaw;
     double pitch;
@@ -99,14 +99,7 @@ FeatureTracker::FeatureTracker() : it_(nh_), priv_nh_("~"){
    yalpha= .025/2;
    palpha= .025/2;
    ralpha= .025/2;
-    
-  //this is the matrix to translate from camera to robot frames assuming the camera
-  //faces perfectly forward, should be a paramter
-  camera2robot_axis=cv::Mat::zeros(3,3,CV_64F);
-  camera2robot_axis.at<double>(0,2)=1;
-  camera2robot_axis.at<double>(1,0)=1;
-  camera2robot_axis.at<double>(2,1)=1;
-  
+   
   
   //offset of the camera frame, start at 0,0,0 and teak x and y eventually
   camera_frame_offset=cv::Mat::zeros(3,1,CV_64F);
@@ -234,7 +227,9 @@ void FeatureTracker::track_features(geometry_msgs::PoseStamped mapPose){
   
   for(int i=0;i<feature_count;i++){
     
+    printf("looping\n");
     if(current_feature_id[i]>=0){
+    printf("prev feature match\n");
       //if we matched a previous feature
       //add our new feature to the previous features list
       cv::Point3d tempRay;
@@ -249,12 +244,14 @@ void FeatureTracker::track_features(geometry_msgs::PoseStamped mapPose){
       }
       
     }else{
+    printf("new feature \n");
       
       cv::Point3d tempRay;
       cv::Point2d tempPoint=cv::Point2d(features[i]);
       cam_model.projectPixelTo3dRay(tempPoint,tempRay);
       if(tempPoint.x> edge_pixels && tempPoint.x < last_image->width- edge_pixels &&
 	tempPoint.y> edge_pixels && tempPoint.y<last_image->height- edge_pixels){
+	printf("new good feature \n");
 	//if we didn't
 	//create a new feature group in the list
 	current_feature_id[i]=feature_number;
@@ -284,15 +281,16 @@ void FeatureTracker::track_features(geometry_msgs::PoseStamped mapPose){
   
 }
 
-double FeatureTracker::calc_error(int min_features, double dyaw,double dpitch, double droll){
-  double error_sum=0;
+cv::Point3d FeatureTracker::calc_error(int min_features, double dyaw,double dpitch, double droll){
+  cv::Point3d error_sum=cv::Point3d(0,0,0);
+  
   for(int i=0;i<featureList.size();i++){
     if(min_features<featureList[i].numFeatures()){
       printf("\n\n\nfeature %d\n",i);
-      featureList[i].print();
-      double error=1;
-    //  double error=featureList[i].calc_least_squares_position(camera2robot_axis, yaw+dyaw, pitch+dpitch, roll+droll, camera_frame_offset);
+//      featureList[i].print();
+      cv::Point3d error=featureList[i].calc_least_squares_position(yaw+dyaw, pitch+dpitch, roll+droll, camera_frame_offset);
       error_sum+=error;
+      
     }
   }
   return error_sum;
@@ -394,8 +392,8 @@ void FeatureTracker::image_callback(const sensor_msgs::ImageConstPtr& msg, const
     
   //  printf("ypr %f %f %f\n",yaw,pitch,roll);
     
-    double error_sum=calc_error(min_features,0, 0, 0);
-    printf("total error is : %f\n",error_sum);
+    cv::Point3d error_sum=calc_error(min_features,0, 0, 0);
+    printf("total error is : %f\n",error_sum.x);
     
     
 //    double error_up= calc_error(min_features,yalpha, 0, 0);
