@@ -1,0 +1,15 @@
+<package>
+  <description brief="cwru_voice_msgs">
+
+     cwru_voice_msgs
+
+  </description>
+  <author>Eric Perko</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/cwru_voice_msgs</url>
+  <depend package="std_msgs"/>
+
+</package>
+
+

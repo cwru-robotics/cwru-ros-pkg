@@ -4,11 +4,11 @@ roslib.load_manifest('cwru_voice')
 import rospy
 
 from joy.msg import Joy
-from std_msgs.msg import String
+from cwru_voice_msgs.msg import StringStamped
 
 class VerbalJoystick:
 	def __init__(self):
-		self.chat_sub = rospy.Subscriber('chatter', String, self.chatter_cb)
+		self.chat_sub = rospy.Subscriber('chatter', StringStamped, self.chatter_cb)
 		self.joy_pub = rospy.Publisher('joy', Joy)
 		self.joy_msg = Joy()
 		self.joy_msg.axes.extend([0.0,0.0,1.0])

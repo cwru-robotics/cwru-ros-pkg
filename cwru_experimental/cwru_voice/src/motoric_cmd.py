@@ -5,7 +5,7 @@ import rospy
 import pygtk
 pygtk.require('2.0')
 import gtk
-from std_msgs.msg import String
+from cwru_voice_msgs.msg import StringStamped
 
 import gobject
 import pygst
@@ -52,8 +52,8 @@ class DemoApp(object):
         bus.add_signal_watch()
         bus.connect('message::application', self.application_message)
         self.pipeline.set_state(gst.STATE_PLAYING)
-	self.msg = String()
-	self.pub = rospy.Publisher('chatter',String)
+	self.msg = StringStamped()
+	self.pub = rospy.Publisher('chatter',StringStamped)
 	rospy.init_node('voice_cmd')
 
     def asr_partial_result(self, asr, text, uttid):
@@ -92,6 +92,7 @@ class DemoApp(object):
 	print "Partial: " + hyp
 	hyp = hyp.lower()        
 	if "stop" in hyp:
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "stop"
 		rospy.loginfo(self.msg.data)
 	        self.pub.publish(self.msg.data)
@@ -109,23 +110,32 @@ class DemoApp(object):
 	print "Final: " + hyp
 	hyp = hyp.lower()
 	if "right" in hyp:
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "right"
 	elif "stop" in hyp:
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "stop"
 	elif "left" in hyp:
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "left"
 	elif "forward" in hyp:
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "forward"
 	elif "speed up" in hyp:
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "up"		
 	elif "speed" in hyp:
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "up"
 	elif "slow down" in hyp:
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "down"
 	elif "slow" in hyp:
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "down"
 	else:
 		print "I didn't understand. Please say a command. \n"
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "stop"
 	
 	if not self.isstop:

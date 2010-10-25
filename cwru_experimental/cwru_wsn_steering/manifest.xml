@@ -12,6 +12,7 @@
   <depend package="nav_msgs"/>
   <depend package="std_msgs"/>
   <depend package="geometry_msgs"/>
+  <depend package="cwru_voice_msgs" />
   <depend package="roscpp"/>
   <depend package="base_local_planner" />
   <depend package="costmap_2d" />

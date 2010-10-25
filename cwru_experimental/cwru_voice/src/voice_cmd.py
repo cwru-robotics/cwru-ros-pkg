@@ -6,6 +6,7 @@ import pygtk
 pygtk.require('2.0')
 import gtk
 from std_msgs.msg import String
+from cwru_voice_msgs.msg import StringStamped
 
 import gobject
 import pygst
@@ -48,8 +49,8 @@ class DemoApp(object):
         asr.set_property('configured', True)
 	asr.set_property('dsratio', 1)
 	#AUTONOMOUS DICT	
-	asr.set_property('lm', '/home/tony/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/1495.lm')
-        asr.set_property('dict', '/home/tony/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/1495.dic')
+	asr.set_property('lm', '/home/eric/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/1495.lm')
+        asr.set_property('dict', '/home/eric/code/dev_stacks/cwru-ros-pkg/cwru_experimental/cwru_voice/model/1495.dic')
 	#MOTORIC
 	#asr.set_property('lm', '/home/tony/Desktop/test/MOTORIC/5803.lm')
         #asr.set_property('dict', '/home/tony/Desktop/test/MOTORIC/5803.dic')
@@ -57,9 +58,9 @@ class DemoApp(object):
         bus.add_signal_watch()
         bus.connect('message::application', self.application_message)
         self.pipeline.set_state(gst.STATE_PAUSED)
-	self.msg = String()
+	self.msg = StringStamped()
 	self.msg2 = String()        
-	self.pub = rospy.Publisher('chatter',String)
+	self.pub = rospy.Publisher('chatter',StringStamped)
 	self.pub2 = rospy.Publisher('speak',String)
 	rospy.init_node('voice_cmd')
 	
@@ -105,6 +106,7 @@ class DemoApp(object):
 	if "stop" in hyp:
 		str = "STOP!"
 		print str		
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "stop"
 		rospy.loginfo(self.msg.data)
 	        self.pub.publish(self.msg.data)
@@ -125,39 +127,51 @@ class DemoApp(object):
 
 	if "go to" and "bathroom" in hyp:
 		str = "Going to the bathroom. \n"
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "bathroom"
 	elif "go to" and "hallway" in hyp:
 		str = "Going to the hallway \n"
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "hallway"
 	elif "go to" and  "lab" in hyp:
 		str = "Going to the lab \n"
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "lab"
 	elif "go to" and "elevator" in hyp:
 		str = "Going to the elevator \n"	
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "elevator"
 	elif "go to" and "vending machine" in hyp:
 		str = "Going to the vending machine \n"	
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "vending"
 	elif "open the door" in hyp:
 	        str = "Opening door. \n"
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "open"
 	elif "close the door" in hyp:
 		str = "Closing door. \n"
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "close"
 	elif "open door" in hyp:
 		str = "Opening door. \n"
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "open"
 	elif "close door" in hyp: 
 		str = "Closing door. \n"
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "close"
 	elif "enter the lab" in hyp:
 		str = "Entering the lab. \n"
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "lab"
 	elif "stop" in hyp:
 		str = "STOP!"
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = "stop"
 	else:
 		print "I didn't understand. Please say a command. \n"
+		self.msg.header.stamp = ros.Time.now()
 		self.msg.data = ""
 		str = ""
 	print str

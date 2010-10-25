@@ -3,9 +3,9 @@ import roslib
 roslib.load_manifest('cwru_wsn_steering')
 import rospy
 
-from std_msgs.msg import String
 from cwru_wsn_steering.msg import Path
 from cwru_wsn_steering.msg import PathSegment
+from cwru_voice_msgs.msg import StringStamped
 
 
 def makeDummyPaths():
@@ -251,7 +251,7 @@ class PathSender:
 		self.paths = makeDummyPaths()
 		self.halt_path = Path()
 		self.path_pub = rospy.Publisher('desired_path', Path)
-		self.command_sub = rospy.Subscriber('chatter', String, self.handle_chatter)
+		self.command_sub = rospy.Subscriber('chatter', StringStamped, self.handle_chatter)
 
 	def handle_chatter(self, msg):
 		if 'open' in msg.data or 'close' in msg.data:
