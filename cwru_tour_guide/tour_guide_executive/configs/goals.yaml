@@ -6,8 +6,32 @@ goals:
       wavs:
           - 'testsound1.wav'
     - goal:
-         x: 5
+         x: 12.26
+         y: .999
+         theta: 1.28
+      wavs:
+         - 'testsound2.wav'
+    - goal:
+         x: 15.093
+         y: 4.045
+         theta: 0.758
+      wavs:
+         - 'testsound3.wav'
+    - goal:
+         x: 21.82
+         y: 5.082
+         theta: 0
+      wavs:
+         - 'testsound4.wav'
+    - goal:
+         x: -4.374
+         y: -7.15
+         theta: 2.087
+      wavs:
+         - 'testsound5.wav'
+    - goal:
+         x: 0
          y: 0
          theta: 0
       wavs:
-         - 'testsound2.wav'
+          - 'testsound6.wav'

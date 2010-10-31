@@ -18,6 +18,19 @@ from actionlib_msgs.msg import GoalStatus
 
 import yaml
 
+def create_move_base_goal_from_yaml(yaml_goal):
+    """Creates a MoveBaseGoal from a goal loaded up from the yaml file"""
+    goal = MoveBaseGoal()
+    goal.target_pose.header.frame_id = '/map'
+    goal.target_pose.header.stamp = rospy.Time.now()
+    
+    goal.target_pose.pose.position.x = yaml_goal['x']
+    goal.target_pose.pose.position.y = yaml_goal['y']
+    quaternion = tf.transformations.quaternion_about_axis(yaml_goal['theta'], (0,0,1))
+    goal.target_pose.pose.orientation = Quaternion(*quaternion)
+    
+    return goal
+
 def main(filename):
   soundpath=rospy.get_param('~soundpath')
   
@@ -28,28 +41,24 @@ def main(filename):
   goallist=data['goals']
   for entry in goallist:
     print entry
-    
+  
   iterator=goallist.__iter__();
-  
-  
-  goal = MoveBaseGoal()
-  goal.target_pose.header.frame_id = '/map'
-  goal.target_pose.header.stamp = rospy.Time.now()
-  goal.target_pose.pose.position.x = 21.8202071179
-  goal.target_pose.pose.position.y = 5.0818858318
-  quaternion = tf.transformations.quaternion_about_axis(0, (0,0,1))
-  goal.target_pose.pose.orientation = Quaternion(*quaternion)
-  
-  client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-  client.wait_for_server()
-
-  client.send_goal(goal)
-  client.wait_for_result()
-  if client.get_state() == GoalStatus.SUCCEEDED:
-      rospy.loginfo("Goal executed successfully")
-  else:
-      rospy.logerr("Could not execute goal for some reason")
+  while(1)
+    try:
+      create_move_base_goal_from_yaml(iterator.next()['goal'])
       
+      client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+      client.wait_for_server()
+
+      client.send_goal(goal)
+      client.wait_for_result()
+      if client.get_state() == GoalStatus.SUCCEEDED:
+	  rospy.loginfo("Goal executed successfully")
+      else:
+	  rospy.logerr("Could not execute goal for some reason")
+    except StopIteration:
+      break;
+  
   #i=vlc.Instance()
   #p=vlc.MediaPlayer('testsound1.wav')
   #p.play()
