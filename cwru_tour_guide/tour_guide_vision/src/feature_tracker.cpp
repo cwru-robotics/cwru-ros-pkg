@@ -388,12 +388,20 @@ void FeatureTracker::image_callback(const sensor_msgs::ImageConstPtr& msg, const
     
     //determine error gradient
     
-    int min_features=30;
+    int min_features=10;
     
   //  printf("ypr %f %f %f\n",yaw,pitch,roll);
     
     cv::Point3d error_sum=calc_error(min_features,0, 0, 0);
     printf("total error is : %f\n",error_sum.x);
+    
+    for(int i=0;i<featureList.size();i++){
+      if(min_features<featureList[i].numFeatures()){
+	printf("\n\n\nfeature %d\n",i);
+	printf("mean: %f %f %f\n",featureList[i].currentMean.x, featureList[i].currentMean.y, featureList[i].currentMean.z);
+	
+      }
+    }
     
     
 //    double error_up= calc_error(min_features,yalpha, 0, 0);

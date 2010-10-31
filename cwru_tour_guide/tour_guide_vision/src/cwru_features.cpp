@@ -259,6 +259,8 @@ cv::Point3d FeatureManager::calc_least_squares_position(double yaw, double pitch
   mean.y/=raw_features.size();
   mean.z/=raw_features.size();
   
+  currentMean=mean;
+  
 //  printf("mean %f %f %f\n",mean.x, mean.y, mean.z);
 //  printf("calculated f positions\n");
   
