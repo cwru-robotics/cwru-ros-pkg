@@ -1,4 +1,6 @@
 <launch>
+<!--- Run AMCL -->
+<include file="$(find cwru_nav)/amcl_diff.launch" />
 
 <node name="cwru_wsn_steering" pkg="cwru_wsn_steering" type="cwru_wsn_steering" output="screen">
 	<remap from="odometry" to="/odom" />
@@ -7,7 +9,7 @@
 	<param name="convergence_rate" value="0.8" />
 	<param name="omega_cmd_sat" value="2.0" />
 	<param name="phase_space_slope" value="-1.0" />
-	<param name="use_collision_avoidance" value="false" />
+	<param name="use_collision_avoidance" value="true" />
 	<param name="steering_algorithm" value="cwru_steering_algos/PhaseSpaceSteering" />
 	<rosparam file="$(find cwru_nav)/config/costmap_common_params.yaml" command="load" ns="local_costmap" />
     	<rosparam file="$(find cwru_nav)/config/costmap_local_params.yaml" command="load" />
