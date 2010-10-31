@@ -139,9 +139,10 @@ WSNSteering::WSNSteering() : priv_nh_("~") {
 		}
 		//Make sure this node's ROS stuff gets to run if we are hogging CPU
 		ros::spinOnce();
-
+		
 		//Sleep till it's time to go again
 		rate.sleep();
+		ROS_DEBUG("Cycle time was %.4f seconds", rate.cycleTime.toSec());
 		if(rate.cycleTime() > ros::Duration(1 / loop_rate)) {
 			ROS_WARN("Steering loop missed its desired rate of %.4fHz... the loop actually took %.4f seconds", loop_rate, rate.cycleTime().toSec());
 		}
