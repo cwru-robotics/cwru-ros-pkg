@@ -1,0 +1,13 @@
+goals:
+    - goal:
+         x: 0
+         y: 0
+         theta: 0
+      wavs:
+          - 'testsound1.wav'
+    - goal:
+         x: 5
+         y: 0
+         theta: 0
+      wavs:
+         - 'testsound2.wav'
