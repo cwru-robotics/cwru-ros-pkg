@@ -1,5 +1,5 @@
-# -*- coding: utf-8 -*-
 #! /usr/bin/env python
+# -*- coding: utf-8 -*-
 
 import roslib
 roslib.load_manifest('tour_guide_executive')
@@ -11,7 +11,8 @@ from geometry_msgs.msg import Quaternion
 from geometry_msgs.msg import PoseWithCovarianceStamped
 
 
-def main():
+
+def main(pub):
   initialPose=PoseWithCovarianceStamped()
   initialPose.header.frame_id='/map'
   initialPose.pose.pose.position.x=0
@@ -22,11 +23,13 @@ def main():
   initialPose.pose.covariance[0]=.25
   initialPose.pose.covariance[7]=.25
   initialPose.pose.covariance[35]=.0685
-  pub = rospy.Publisher('InitialPose', PoseWithCovarianceStamped)
+  #pub = rospy.Publisher('initialpose', PoseWithCovarianceStamped)
 
   pub.publish(initialPose)
+  rospy.sleep(2)
 
 if __name__ == '__main__':
+  pub = rospy.Publisher('initialpose', PoseWithCovarianceStamped)
   rospy.init_node('roberto_intial_pose_seeder')
-  main()
+  main(pub)
   

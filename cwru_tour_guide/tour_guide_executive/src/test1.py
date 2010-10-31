@@ -6,7 +6,7 @@ roslib.load_manifest('tour_guide_executive')
 import rospy
 
 import sys
-import vlc
+#import vlc
 
 import tf
 import actionlib
@@ -35,15 +35,15 @@ def main(filename):
   goal = MoveBaseGoal()
   goal.target_pose.header.frame_id = '/map'
   goal.target_pose.header.stamp = rospy.Time.now()
-  goal.target_pose.pose.position.x = 5
-  goal.target_pose.pose.position.y = 0
+  goal.target_pose.pose.position.x = 21.8202071179
+  goal.target_pose.pose.position.y = 5.0818858318
   quaternion = tf.transformations.quaternion_about_axis(0, (0,0,1))
   goal.target_pose.pose.orientation = Quaternion(*quaternion)
   
   client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
   client.wait_for_server()
 
-  client.send_goal(current_goal)
+  client.send_goal(goal)
   client.wait_for_result()
   if client.get_state() == GoalStatus.SUCCEEDED:
       rospy.loginfo("Goal executed successfully")
