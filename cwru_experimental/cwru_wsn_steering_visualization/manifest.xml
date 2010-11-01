@@ -1,0 +1,19 @@
+<package>
+  <description brief="cwru_wsn_steering_visualization">
+
+     cwru_wsn_steering_visualization
+
+  </description>
+  <author>Eric Perko</author>
+  <license>LGPL</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/cwru_wsn_steering_visualization</url>
+  <depend package="rospy"/>
+  <depend package="cwru_wsn_steering_msgs"/>
+  <depend package="cwru_base" />
+
+  <rosdep name="python-matplotlib" />
+
+</package>
+
+
