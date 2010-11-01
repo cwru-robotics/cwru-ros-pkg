@@ -43,9 +43,9 @@ def main(filename):
     print entry
   
   iterator=goallist.__iter__();
-  while(1)
+  while(1):
     try:
-      create_move_base_goal_from_yaml(iterator.next()['goal'])
+      goal=create_move_base_goal_from_yaml(iterator.next()['goal'])
       
       client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
       client.wait_for_server()
@@ -58,7 +58,8 @@ def main(filename):
 	  rospy.logerr("Could not execute goal for some reason")
     except StopIteration:
       break;
-  
+
+  rospy.sleep(2)
   #i=vlc.Instance()
   #p=vlc.MediaPlayer('testsound1.wav')
   #p.play()
