@@ -1,0 +1,83 @@
+class update_cwru_wsn_steering_Path_e593cd80207262767f20674de2ab34cc(MessageUpdateRule):
+	old_type = "cwru_wsn_steering/Path"
+	old_full_text = """
+Header header
+cwru_wsn_steering/PathSegment[] segs
+
+================================================================================
+MSG: roslib/Header
+# Standard metadata for higher-level stamped data types.
+# This is generally used to communicate timestamped data 
+# in a particular coordinate frame.
+# 
+# sequence ID: consecutively increasing ID 
+uint32 seq
+#Two-integer timestamp that is expressed as:
+# * stamp.secs: seconds (stamp_secs) since epoch
+# * stamp.nsecs: nanoseconds since stamp_secs
+# time-handling sugar is provided by the client library
+time stamp
+#Frame this data is associated with
+# 0: no frame
+# 1: global frame
+string frame_id
+
+================================================================================
+MSG: cwru_wsn_steering/PathSegment
+string frame_id
+int32 segType
+float32 xRef
+float32 yRef
+float32 tangentAng
+float32 rho
+float32 length
+float32 vDes
+float32 accel
+"""
+
+	new_type = "cwru_wsn_steering_msgs/Path"
+	new_full_text = """
+Header header
+cwru_wsn_steering_msgs/PathSegment[] segs
+
+================================================================================
+MSG: roslib/Header
+# Standard metadata for higher-level stamped data types.
+# This is generally used to communicate timestamped data 
+# in a particular coordinate frame.
+# 
+# sequence ID: consecutively increasing ID 
+uint32 seq
+#Two-integer timestamp that is expressed as:
+# * stamp.secs: seconds (stamp_secs) since epoch
+# * stamp.nsecs: nanoseconds since stamp_secs
+# time-handling sugar is provided by the client library
+time stamp
+#Frame this data is associated with
+# 0: no frame
+# 1: global frame
+string frame_id
+
+================================================================================
+MSG: cwru_wsn_steering_msgs/PathSegment
+string frame_id
+int32 segType
+float32 xRef
+float32 yRef
+float32 tangentAng
+float32 rho
+float32 length
+float32 vDes
+float32 accel
+"""
+
+	order = 0
+	migrated_types = [
+		("Header","Header"),
+		("PathSegment","PathSegment"),]
+
+	valid = True
+
+	def update(self, old_msg, new_msg):
+		self.migrate(old_msg.header, new_msg.header)
+		self.migrate_array(old_msg.segs, new_msg.segs, "cwru_wsn_steering_msgs/PathSegment")

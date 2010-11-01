@@ -10,6 +10,12 @@
   <url>http://ros.org/wiki/cwru_wsn_steering_msgs</url>
   <depend package="actionlib_msgs"/>
   <depend package="std_msgs"/>
+  <depend package="rosbagmigration"/>
+  <export>
+	  <rosbagmigration rule_file="migration_rules/path_move.bmr"/>
+	  <rosbagmigration rule_file="migration_rules/path_segment_move.bmr"/>
+	  <rosbagmigration rule_file="migration_rules/desired_state_move.bmr"/>
+  </export>
 
 </package>
 

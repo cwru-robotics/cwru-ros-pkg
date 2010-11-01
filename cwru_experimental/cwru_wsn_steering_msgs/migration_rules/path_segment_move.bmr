@@ -1,0 +1,42 @@
+class update_cwru_wsn_steering_PathSegment_b9cd7babf122a828813f027f988f2d8e(MessageUpdateRule):
+	old_type = "cwru_wsn_steering/PathSegment"
+	old_full_text = """
+string frame_id
+int32 segType
+float32 xRef
+float32 yRef
+float32 tangentAng
+float32 rho
+float32 length
+float32 vDes
+float32 accel
+"""
+
+	new_type = "cwru_wsn_steering_msgs/PathSegment"
+	new_full_text = """
+string frame_id
+int32 segType
+float32 xRef
+float32 yRef
+float32 tangentAng
+float32 rho
+float32 length
+float32 vDes
+float32 accel
+"""
+
+	order = 0
+	migrated_types = []
+
+	valid = True
+
+	def update(self, old_msg, new_msg):
+		new_msg.frame_id = old_msg.frame_id
+		new_msg.segType = old_msg.segType
+		new_msg.xRef = old_msg.xRef
+		new_msg.yRef = old_msg.yRef
+		new_msg.tangentAng = old_msg.tangentAng
+		new_msg.rho = old_msg.rho
+		new_msg.length = old_msg.length
+		new_msg.vDes = old_msg.vDes
+		new_msg.accel = old_msg.accel
