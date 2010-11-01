@@ -136,6 +136,7 @@ cwru_wsn_steering_msgs::DesiredState WSNIdealState::makeHaltState() {
 
 	double tanAngle = tf::getYaw(temp_pose_out_.pose.orientation);
 	cwru_wsn_steering_msgs::DesiredState halt_state;
+	halt_state.header.stamp = ros::Time::now();
 	halt_state.x = temp_pose_out_.pose.position.x;
 	halt_state.y = temp_pose_out_.pose.position.y;
 	halt_state.theta = tanAngle;
