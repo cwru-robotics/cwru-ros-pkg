@@ -3,7 +3,7 @@ import roslib
 roslib.load_manifest('cwru_wsn_steering')
 import rospy
 
-from cwru_wsn_steering.msg import DesiredState
+from cwru_wsn_steering_msgs.msg import DesiredState
 
 def handle_state(msg, f):
     data_string = "%.50f, %.50f\n" % (msg.x, msg.y)
