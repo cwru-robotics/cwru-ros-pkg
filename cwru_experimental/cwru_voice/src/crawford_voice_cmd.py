@@ -127,7 +127,7 @@ class DemoApp(object):
 
 	if "go to" and "bathroom" in hyp:
 		str = "I understood. I am now going to the women's bathroom. \n"
-		self.msg.data = "womens_bathroom"
+		self.msg.data = "womens_room"
 	elif "go to" and "conference room" in hyp:
 		str = "I am going to the conference room. \n"
 		self.msg.data = "conference_room"
