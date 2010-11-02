@@ -7,6 +7,6 @@
 	<!-- include file="$(find cwru_vision)/start_vision.launch" /-->
 
 	<!-- Startup the joystick stuff -->
-	<include file="$(find cwru_teleop)/start_teleop.launch" />
+	<!-- include file="$(find cwru_teleop)/start_teleop.launch" /-->
 
 </launch>

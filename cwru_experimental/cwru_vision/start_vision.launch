@@ -12,6 +12,10 @@
 	<node pkg="cwru_vision" type="harlie_vision" name="harlie_vision_node">
 		<remap from="image_rect_color" to="/front_camera/image_rect_color" />
 	</node>
+	<node pkg="image_rotate" type="image_rotate" name="front_camera_rotate">
+		<remap from="image" to="/front_camera/image_rect_color" />
+		<param name="target_z" value="-1" />
+	</node>
 	<node pkg="cwru_vision" type="image_to_point_cloud.py" name="point_cloud_transmogrifier"/>
 	<node pkg="tf" type="static_transform_publisher" name="front_camera_base_tf_broadcaster" args="0.2286 0.0635 1.676 0.0125286 0.29919434 -0.03991785 0.95327454 base_link front_camera_base 100" />
 	<node pkg="tf" type="static_transform_publisher" name="front_camera_image_tf_broadcaster" args="0.0 0.0 0.0 -1.57 0.0 -1.57 front_camera_base front_camera 100" />

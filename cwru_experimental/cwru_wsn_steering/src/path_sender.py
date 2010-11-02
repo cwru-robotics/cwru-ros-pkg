@@ -244,6 +244,121 @@ def makeDummyPaths():
 	p5.segs.append(p)
 	paths['lab'] = p5
 
+# start path from crawford conference room to women's restroom
+	p6 = Path()
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 1
+	p.xRef =  0.0
+	p.yRef = 0.0
+	p.tangentAng =  0.0
+	p.rho = 0.0
+	p.length = 5.2 
+	p.vDes = 0.5
+	p.accel = 0.1
+	p6.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 2
+	p.xRef =  5.2
+	p.yRef = 0.0
+	p.tangentAng = 0.0
+	p.rho = -100.0
+	p.length = 0.0153
+	p.vDes = 0.005
+	p.accel = 0.05
+	p6.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 1
+	p.xRef =  5.2
+	p.yRef = 0.0
+	p.tangentAng =  -1.53
+	p.rho = 0.0
+	p.length = 11.3 
+	p.vDes = 0.5
+	p.accel = 0.1
+	p6.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 2
+	p.xRef =  5.66
+	p.yRef = -11.291
+	p.tangentAng =  -1.53
+	p.rho = -100.0
+	p.length = 0.0153
+	p.vDes = 0.005
+	p.accel = 0.05
+	p6.segs.append(p)
+	paths['womens_room'] = p6
+
+# start path from crawford women's restroom back to conference room 
+	p7 = Path()
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 2
+	p.xRef =  5.66
+	p.yRef = -11.291
+	p.tangentAng =  -3.06
+	p.rho = -100.0
+	p.length = 0.0157 
+	p.vDes = 0.005
+	p.accel = 0.05
+	p7.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 1
+	p.xRef =  5.66
+	p.yRef = -11.291
+	p.tangentAng = -4.63
+	p.rho = 0.0
+	p.length = 11.4
+	p.vDes = 0.5
+	p.accel = 0.1
+	p7.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 2
+	p.xRef =  4.26
+	p.yRef = 0.07
+	p.tangentAng =  -4.63
+	p.rho = 100.0
+	p.length = 0.0157
+	p.vDes = 0.005
+	p.accel = 0.05
+	p7.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 1
+	p.xRef =  4.26
+	p.yRef = 0.07
+	p.tangentAng =  -3.06
+	p.rho = 0.0
+	p.length = 2.9
+	p.vDes = 0.5
+	p.accel = 0.1
+	p7.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 2
+	p.xRef =  1.3696
+	p.yRef = -0.166
+	p.tangentAng =  -3.06
+	p.rho = -100.0
+	p.length = 0.016
+	p.vDes = 0.005
+	p.accel = 0.05
+	p7.segs.append(p)
+
+	paths['conference_room'] = p7
+
 	return paths
 
 class PathSender:
