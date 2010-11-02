@@ -1,0 +1,52 @@
+Language model created by QuickLM on Tue Nov  2 17:00:21 EDT 2010
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 6 sentences and 9 words
+
+\data\
+ngram 1=9
+ngram 2=13
+ngram 3=7
+
+\1-grams:
+-0.8016 </s> -0.3010
+-0.8016 <s> -0.2264
+-1.5798 BATHROOM -0.2264
+-1.5798 CONFERENCE -0.2894
+-1.5798 GO -0.2264
+-1.5798 ROOM -0.2264
+-1.5798 STOP -0.2264
+-1.5798 THE -0.2264
+-1.5798 TO -0.2264
+
+\2-grams:
+-1.0792 <s> BATHROOM 0.0000
+-1.0792 <s> CONFERENCE 0.0000
+-1.0792 <s> GO 0.0000
+-1.0792 <s> STOP 0.0000
+-1.0792 <s> THE 0.0000
+-1.0792 <s> TO 0.0000
+-0.3010 BATHROOM </s> -0.3010
+-0.3010 CONFERENCE ROOM 0.0000
+-0.3010 GO </s> -0.3010
+-0.3010 ROOM </s> -0.3010
+-0.3010 STOP </s> -0.3010
+-0.3010 THE </s> -0.3010
+-0.3010 TO </s> -0.3010
+
+\3-grams:
+-0.3010 <s> BATHROOM </s>
+-0.3010 <s> CONFERENCE ROOM
+-0.3010 <s> GO </s>
+-0.3010 <s> STOP </s>
+-0.3010 <s> THE </s>
+-0.3010 <s> TO </s>
+-0.3010 CONFERENCE ROOM </s>
+
+\end\
