@@ -10,10 +10,12 @@
   <url>http://ros.org/wiki/cwru_voice</url>
   <depend package="roscpp"/>
   <depend package="rospy"/>
+  <depend package="rosbag"/>
   <depend package="std_msgs"/>
   <depend package="cwru_voice_msgs" />
   <depend package="roslib"/>
   <depend package="joy" />
+  <depend package="tf" />
   <rosdep name="gstreamer_pocketsphinx"/>
 </package>
 
