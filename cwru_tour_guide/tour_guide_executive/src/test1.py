@@ -5,8 +5,10 @@ import roslib
 roslib.load_manifest('tour_guide_executive')
 import rospy
 
+
+import time
 import sys
-#import vlc
+import vlc
 
 import tf
 import actionlib
@@ -17,6 +19,8 @@ from move_base_msgs.msg import MoveBaseGoal
 from actionlib_msgs.msg import GoalStatus
 
 import yaml
+
+sound_prefix=''
 
 def create_move_base_goal_from_yaml(yaml_goal):
     """Creates a MoveBaseGoal from a goal loaded up from the yaml file"""
@@ -42,31 +46,43 @@ def main(filename):
   for entry in goallist:
     print entry
   
+  i=vlc.Instance()
   iterator=goallist.__iter__();
   while(1):
     try:
-      goal=create_move_base_goal_from_yaml(iterator.next()['goal'])
-      
+      nextThing=iterator.next()
+      goal=create_move_base_goal_from_yaml(nextThing['goal'])
+      sound=nextThing['wavs']
       client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-      client.wait_for_server()
+      #client.wait_for_server()
 
-      client.send_goal(goal)
-      client.wait_for_result()
-      if client.get_state() == GoalStatus.SUCCEEDED:
-	  rospy.loginfo("Goal executed successfully")
-      else:
-	  rospy.logerr("Could not execute goal for some reason")
+      #client.send_goal(goal)
+      #client.wait_for_result()
+      #if client.get_state() == GoalStatus.SUCCEEDED:
+	  #rospy.loginfo("Goal executed successfully")
+      #else:
+	  #rospy.logerr("Could not execute goal for some reason")
+      
+      p=vlc.MediaPlayer(sound_prefix + sound[0])
+      p.play()
+      print(p.get_state())
+      
+      while(p.get_state()!=vlc.State.Ended):
+        print(p.get_state())
+	time.sleep(.2)
+      
+	time.sleep(.7)
+	
     except StopIteration:
       break;
 
   rospy.sleep(2)
-  #i=vlc.Instance()
-  #p=vlc.MediaPlayer('testsound1.wav')
-  #p.play()
 
   #time.sleep(5);
 
 if __name__ == '__main__':
   rospy.init_node('roberto_goal_planner')
-  main(rospy.get_param('~filename'))
+  sound_prefix=rospy.get_param('~soundpath')
+  print('woooow'+sound_prefix)
   
+  main(rospy.get_param('~filename'))
