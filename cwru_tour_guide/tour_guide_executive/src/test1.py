@@ -35,6 +35,11 @@ def create_move_base_goal_from_yaml(yaml_goal):
     
     return goal
 
+
+#define an empty stall function for now
+def stall():  
+  return 'testsound1.wav'
+
 def main(filename):
   soundpath=rospy.get_param('~soundpath')
   
@@ -48,31 +53,43 @@ def main(filename):
   
   i=vlc.Instance()
   iterator=goallist.__iter__();
+  client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+  client.wait_for_server()
   while(1):
     try:
+      print 'starting location'
       nextThing=iterator.next()
       goal=create_move_base_goal_from_yaml(nextThing['goal'])
       sound=nextThing['wavs']
-      client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-      #client.wait_for_server()
-
-      #client.send_goal(goal)
+      print 'send location'
+      client.send_goal(goal)
       #client.wait_for_result()
-      #if client.get_state() == GoalStatus.SUCCEEDED:
-	  #rospy.loginfo("Goal executed successfully")
-      #else:
-	  #rospy.logerr("Could not execute goal for some reason")
-      
+      print 'got next file'
       p=vlc.MediaPlayer(sound_prefix + sound[0])
       p.play()
       print(p.get_state())
       
-      while(p.get_state()!=vlc.State.Ended):
-        print(p.get_state())
-	time.sleep(.2)
+      while(1):
+        print 'starting inner loop'
+        while(p.get_state()!=vlc.State.Ended):
+          print(p.get_state())
+          time.sleep(.2)
+
+        time.sleep(.7)
+
+        print 'finished sound'
+        if client.get_state() == GoalStatus.SUCCEEDED :
+          break
+        else:
+          print 'starting stall sound'
+          time.sleep(.7)
+       #   p=vlc.MediaPlayer(sound_prefix + stall())
+       #   p.play()
+        #if client.get_state() == GoalStatus.SUCCEEDED:
+	    #rospy.loginfo("Goal executed successfully")
+	#else:
+	    #rospy.logerr("Could not execute goal for some reason")
       
-	time.sleep(.7)
-	
     except StopIteration:
       break;
 
@@ -86,3 +103,4 @@ if __name__ == '__main__':
   print('woooow'+sound_prefix)
   
   main(rospy.get_param('~filename'))
+  
