@@ -50,7 +50,7 @@ def main(filename):
   goallist=data['goals']
   for entry in goallist:
     print entry
-  
+  p=0
   i=vlc.Instance()
   iterator=goallist.__iter__();
   client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
@@ -65,7 +65,13 @@ def main(filename):
       client.send_goal(goal)
       #client.wait_for_result()
       print 'got next file'
+      if p!=0:
+        p.release()
+
       p=vlc.MediaPlayer(sound_prefix + sound[0])
+      print 'created next file'
+      
+      print 'retained next file'
       p.play()
       print(p.get_state())
       
