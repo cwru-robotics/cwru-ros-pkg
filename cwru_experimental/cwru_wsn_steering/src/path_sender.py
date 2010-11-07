@@ -356,8 +356,82 @@ def makeDummyPaths():
 	p.vDes = 0.005
 	p.accel = 0.05
 	p7.segs.append(p)
-
 	paths['conference_room'] = p7
+
+# a test path for the lab
+	p8 = Path()
+	p = PathSegment()
+	p.frame_id = "odom"
+	p.segType = 1
+	p.xRef =  0.0
+	p.yRef = 0.0
+	p.tangentAng =  0.0
+	p.rho = 0.0
+	p.length = 2.0
+	p.vDes = 0.5
+	p.accel = 0.1
+	p8.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "odom"
+	p.segType = 2
+	p.xRef =  2.0
+	p.yRef = 1.0
+	p.tangentAng = 0.0
+	p.rho = 1.0
+	p.length = 3.1416
+	p.vDes = 0.5
+	p.accel = 0.1
+	p8.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "odom"
+	p.segType = 1
+	p.xRef =  2.0
+	p.yRef = 2.0
+	p.tangentAng =  3.1416
+	p.rho = 0.0
+	p.length = 1.0
+	p.vDes = 0.5
+	p.accel = 0.1
+	p8.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "odom"
+	p.segType = 2
+	p.xRef =  1.0
+	p.yRef = 2.01
+	p.tangentAng =  3.1416
+	p.rho = -100.0
+	p.length = 0.0157
+	p.vDes = 0.01
+	p.accel = 0.1
+	p8.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "odom"
+	p.segType = 1
+	p.xRef =  0.99
+	p.yRef = 2.01
+	p.tangentAng =  1.5708
+	p.rho = 0.0
+	p.length = 1.0
+	p.vDes = 0.5
+	p.accel = 0.1
+	p8.segs.append(p)
+
+    	p = PathSegment()
+	p.frame_id = "odom"
+	p.segType = 2
+	p.xRef =  1.49
+	p.yRef = 3.01
+	p.tangentAng =  1.5708
+	p.rho = -2.0
+	p.length = 0.7854
+	p.vDes = 0.5
+	p.accel = 0.1
+	p8.segs.append(p)
+	paths['lab_test'] = p8
 
 	return paths
 
