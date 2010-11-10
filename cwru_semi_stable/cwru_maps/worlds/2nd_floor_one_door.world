@@ -61,4 +61,4 @@ floorplan
     pose [ 0. 0. 0.0 0.0]
 )
 
-harlie( pose [ -22.53 -37.80 0.0 0.0 ] name "harlie" color "blue")
+harlie( pose [ -21.04 -38.38 0.0 134.54 ] name "harlie" color "blue")

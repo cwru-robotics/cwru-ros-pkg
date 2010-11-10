@@ -22,4 +22,6 @@
 
 <node name="cwru_wsn_ideal_state" pkg="cwru_wsn_steering" type="wsn_ideal_state" output="screen"/>
 
+<node name="cwru_wsn_steering_path_sender" pkg="cwru_wsn_steering" type="path_sender.py" />
+
 </launch>
