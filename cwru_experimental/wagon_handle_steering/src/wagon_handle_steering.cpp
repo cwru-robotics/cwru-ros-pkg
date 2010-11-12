@@ -1,3 +1,4 @@
+#include <math.h>
 #include <wagon_handle_steering/wagon_handle_steering.h>
 #include <pluginlib/class_list_macros.h>
 
@@ -10,6 +11,7 @@ namespace wagon_handle_steering {
     tf_ = tf;
     costmap_ros_ = costmap_ros;
     current_waypoint_ = 0;
+    started_reorienting_ = false;
     goal_reached_time_ = ros::Time::now();
     ros::NodeHandle node_private("~/" + name);
 
@@ -19,6 +21,7 @@ namespace wagon_handle_steering {
     node_private.param("reorient_dist", reorient_dist_, .25);
     node_private.param("rotate_in_place_heading", rotate_in_place_head_, 0.2);
     node_private.param("rotate_in_place_distance", rotate_in_place_dist_, 0.1);
+    node_private.param("desired_speed", desired_speed_, 0.5);
 
     node_private.param("tolerance_trans", tolerance_trans_, 0.02);
     node_private.param("tolerance_rot", tolerance_rot_, 0.04);
@@ -45,7 +48,9 @@ namespace wagon_handle_steering {
   void WagonHandleSteering::odomCallback(const nav_msgs::Odometry::ConstPtr& msg){
     //we assume that the odometry is published in the frame of the base
     boost::mutex::scoped_lock lock(odom_lock_);
-    base_odom_ = *msg;
+    base_odom_.twist.twist.linear.x = msg->twist.twist.linear.x;
+    base_odom_.twist.twist.linear.y = msg->twist.twist.linear.y;
+    base_odom_.twist.twist.angular.z = msg->twist.twist.angular.z;
     ROS_DEBUG("In the odometry callback with velocity values: (%.2f, %.2f, %.2f)",
         base_odom_.twist.twist.linear.x, base_odom_.twist.twist.linear.y, base_odom_.twist.twist.angular.z);
   }
@@ -79,8 +84,21 @@ namespace wagon_handle_steering {
       && fabs(base_odom.twist.twist.linear.y) <= trans_stopped_velocity_;
   }
 
+  double WagonHandleSteering::distance2D(const tf::Pose& p1, const tf::Pose& p2) {
+  	double temp1 = p2.getOrigin().x() - p1.getOrigin().x();
+	double temp2 = p2.getOrigin().y() - p1.getOrigin().y();
+
+	double sq_result = temp1*temp1 + temp2*temp2;
+	double result = sqrt(sq_result);
+
+	return result;
+  }
+
   bool WagonHandleSteering::computeVelocityCommands(geometry_msgs::Twist& cmd_vel){
     //get the current pose of the robot in the fixed frame
+    double heading = 0.0;
+    double speed = 0.0;
+    double x,y;
     tf::Stamped<tf::Pose> robot_pose;
     if(!costmap_ros_->getRobotPose(robot_pose)){
       ROS_ERROR("Can't get robot pose");
@@ -93,13 +111,27 @@ namespace wagon_handle_steering {
     tf::Stamped<tf::Pose> target_pose;
     tf::poseStampedMsgToTF(global_plan_[current_waypoint_], target_pose);
 
-    ROS_DEBUG("PoseFollower: current robot pose %f %f ==> %f", robot_pose.getOrigin().x(), robot_pose.getOrigin().y(), tf::getYaw(robot_pose.getRotation()));
-    ROS_DEBUG("PoseFollower: target robot pose %f %f ==> %f", target_pose.getOrigin().x(), target_pose.getOrigin().y(), tf::getYaw(target_pose.getRotation()));
+    ROS_DEBUG("WagonHandleSteering: current robot pose %f %f ==> %f", robot_pose.getOrigin().x(), robot_pose.getOrigin().y(), tf::getYaw(robot_pose.getRotation()));
+    ROS_DEBUG("WagonHandleSteering: target robot pose %f %f ==> %f", target_pose.getOrigin().x(), target_pose.getOrigin().y(), tf::getYaw(target_pose.getRotation()));
 
-    //get the difference between the two poses
-    geometry_msgs::Twist diff = diff2D(target_pose, robot_pose);
-    ROS_DEBUG("PoseFollower: diff %f %f ==> %f", diff.linear.x, diff.linear.y, diff.angular.z);
+    //get the distance between the two poses
+    double distance = distance2D(target_pose, robot_pose);
 
+    if (distance < handle_length_) {
+    	if ((distance < reorient_dist_) || started_reorienting_) {
+		started_reorienting_ = true;
+		heading = tf::getYaw(target_pose.getRotation());
+		ROS_DEBUG("WagonHandleSteering: Reorienting to the desired heading");
+		speed = 0.0;
+	} else if (!started_reorienting_) {
+		heading = -1.0 * atan2(target_pose.getOrigin().x(), target_pose.getOrigin().y());
+		ROS_DEBUG("WagonHandleSteering: Heading directly towards the goal"); 
+		speed = exp(-1.0 * (handle_length_ / distance)) * desired_speed_;
+	}
+	ROS_DEBUG("WagonHandleSteering: Goal is within the handle length. Heading directly towards the goal on a heading of %f", heading);
+    } else {
+    
+    }
     geometry_msgs::Twist limit_vel = limitTwist(diff);
 
     geometry_msgs::Twist test_vel = limit_vel;

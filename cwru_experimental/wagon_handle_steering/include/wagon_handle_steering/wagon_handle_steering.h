@@ -28,6 +28,7 @@ namespace wagon_handle_steering {
       geometry_msgs::Twist diff2D(const tf::Pose& pose1, const tf::Pose&  pose2);
       geometry_msgs::Twist limitTwist(const geometry_msgs::Twist& twist);
       double headingDiff(double pt_x, double pt_y, double x, double y, double heading);
+      double distance2D(const tf::Pose& p1, const tf::Pose& p2);
 
       bool transformGlobalPlan(const tf::TransformListener& tf, const std::vector<geometry_msgs::PoseStamped>& global_plan, 
           const costmap_2d::Costmap2DROS& costmap, const std::string& global_frame,
@@ -39,7 +40,7 @@ namespace wagon_handle_steering {
       tf::TransformListener* tf_;
       costmap_2d::Costmap2DROS* costmap_ros_;
       ros::Publisher vel_pub_;
-      double handle_length_, reorient_dist_, rotate_in_place_dist_, rotate_in_place_head_;
+      double handle_length_, reorient_dist_, rotate_in_place_dist_, rotate_in_place_head_, desired_speed_;
       double tolerance_timeout_, tolerance_trans_, tolerance_rot_;
       //These are just to make it compile right now
       double K_trans_, K_rot_;
@@ -54,9 +55,10 @@ namespace wagon_handle_steering {
       nav_msgs::Odometry base_odom_;
       double trans_stopped_velocity_, rot_stopped_velocity_;
       ros::Time goal_reached_time_;
-      unsigned int current_waypoint_; 
+      unsigned int current_waypoint_;
       std::vector<geometry_msgs::PoseStamped> global_plan_;
       base_local_planner::TrajectoryPlannerROS collision_planner_;
+      bool started_reorienting_;
   };
 };
 #endif
