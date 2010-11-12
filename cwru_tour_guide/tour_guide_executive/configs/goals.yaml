@@ -4,34 +4,51 @@ goals:
          y: 0
          theta: 0
       wavs:
-          - 'testsound1.wav'
+          - 'intro.wav'
     - goal:
          x: 11.4
          y: .999
          theta: 1.28
       wavs:
-         - 'testsound2.wav'
+         - 'leg1.wav'
     - goal:
          x: 15.093
          y: 4.5
          theta: 0.758
       wavs:
-         - 'testsound3.wav'
+         - 'leg2.wav'
     - goal:
          x: 21.82
          y: 5.6
          theta: 0
       wavs:
-         - 'testsound4.wav'
+         - 'leg3.wav'
+    - goal:
+         x: 21.82
+         y: 5.6
+         theta: 0
+      wavs:
+         - 'midpoint.wav'
+    - goal:
+         x: 15.093
+         y: 4.0
+         theta: 0.758
+      wavs:
+         - 'leg4.wav'
     - goal:
          x: -4.374
          y: -8.15
          theta: 4.71
       wavs:
-         - 'testsound5.wav'
+         - 'leg6.wav'
     - goal:
          x: 0
          y: 0
          theta: 0
       wavs:
-          - 'testsound6.wav'
+          - 'endpoint.wav'
+jokes:
+    - 'joke1.wav'
+    - 'joke2.wav'
+    - 'joke3.wav'
+    - 'joke4.wav'
