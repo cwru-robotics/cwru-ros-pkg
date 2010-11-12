@@ -50,36 +50,48 @@ def main(filename):
   goallist=data['goals']
   for entry in goallist:
     print entry
-  
+  p=0
   i=vlc.Instance()
   iterator=goallist.__iter__();
+  client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
+  client.wait_for_server()
   while(1):
     try:
+      print 'starting location'
       nextThing=iterator.next()
       goal=create_move_base_goal_from_yaml(nextThing['goal'])
       sound=nextThing['wavs']
-      client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-      client.wait_for_server()
-
+      print 'send location'
       client.send_goal(goal)
       #client.wait_for_result()
-      
+      print 'got next file'
+      if p!=0:
+        p.release()
+
       p=vlc.MediaPlayer(sound_prefix + sound[0])
+      print 'created next file'
+      
+      print 'retained next file'
       p.play()
       print(p.get_state())
       
       while(1):
-	while(p.get_state()!=vlc.State.Ended):
-	  print(p.get_state())
-	  time.sleep(.2)
-	  
-	if client.get_state() == GoalStatus.SUCCEEDED :
-	  break
-	else:
-	  time.sleep(.7)
-	  p=vlc.MediaPlayer(sound_prefix + stall())
-	  p.play()
-	#if client.get_state() == GoalStatus.SUCCEEDED:
+        print 'starting inner loop'
+        while(p.get_state()!=vlc.State.Ended):
+          print(p.get_state())
+          time.sleep(.2)
+
+        time.sleep(.7)
+
+        print 'finished sound'
+        if client.get_state() == GoalStatus.SUCCEEDED :
+          break
+        else:
+          print 'starting stall sound'
+          time.sleep(.7)
+       #   p=vlc.MediaPlayer(sound_prefix + stall())
+       #   p.play()
+        #if client.get_state() == GoalStatus.SUCCEEDED:
 	    #rospy.loginfo("Goal executed successfully")
 	#else:
 	    #rospy.logerr("Could not execute goal for some reason")
