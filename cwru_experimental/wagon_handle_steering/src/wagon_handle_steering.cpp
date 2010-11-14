@@ -1,4 +1,6 @@
 #include <math.h>
+#include <angles/angles.h>
+#include <algorithm>
 #include <wagon_handle_steering/wagon_handle_steering.h>
 #include <pluginlib/class_list_macros.h>
 
@@ -55,22 +57,6 @@ namespace wagon_handle_steering {
         base_odom_.twist.twist.linear.x, base_odom_.twist.twist.linear.y, base_odom_.twist.twist.angular.z);
   }
 
-  double WagonHandleSteering::headingDiff(double x, double y, double pt_x, double pt_y, double heading)
-  {
-    double v1_x = x - pt_x;
-    double v1_y = y - pt_y;
-    double v2_x = cos(heading);
-    double v2_y = sin(heading);
-
-    double perp_dot = v1_x * v2_y - v1_y * v2_x;
-    double dot = v1_x * v2_x + v1_y * v2_y;
-
-    //get the signed angle
-    double vector_angle = atan2(perp_dot, dot);
-
-    return -1.0 * vector_angle;
-  }
-
   bool WagonHandleSteering::stopped(){
     //copy over the odometry information
     nav_msgs::Odometry base_odom;
@@ -84,21 +70,67 @@ namespace wagon_handle_steering {
       && fabs(base_odom.twist.twist.linear.y) <= trans_stopped_velocity_;
   }
 
-  double WagonHandleSteering::distance2D(const tf::Pose& p1, const tf::Pose& p2) {
-  	double temp1 = p2.getOrigin().x() - p1.getOrigin().x();
-	double temp2 = p2.getOrigin().y() - p1.getOrigin().y();
 
-	double sq_result = temp1*temp1 + temp2*temp2;
-	double result = sqrt(sq_result);
+  bool WagonHandleSteering::intersectedWithCircle(const tf::Point& start_p, const tf::Point& robot_p, const tf::Vector3& direction, tf::Point& intersectionPoint) {
+	  tf::Vector3 normalized_direction = direction.normalized();
+	  tf::Vector3 v = start_p - robot_p;
+	  double temp2 = v.dot(normalized_direction);
+	  temp2 *= temp2;
+	  double temp3 = v.dot(v) - (handle_length_ * handle_length_);
+	  double discriminant = temp2 - temp3;
+	  if (discriminant < 0.0) {
+	  	return false;
+	  } else {
+	  	temp2 = -1.0 * v.dot(normalized_direction);	
+		temp3 = sqrt(discriminant);
+		double t, t1, t2;
+		t1 = temp2 + temp3;
+		t2 = temp2 - temp3;
+		t = std::max(t1, t2);
 
-	return result;
+		if (t < 0.0) {
+			if((t1 < 0.0) && (t2 < 0.0)) {
+				return false;
+			} else if ((t1 < 0.0) && (t2 >= 0.0)) {
+				t = t2;
+			} else if ((t1 >= 0.0) && (t2 < 0.0)) {
+				t = t1;
+			}
+		}
+		intersectionPoint = start_p + t * normalized_direction;
+		return true;
+	  }
+  }
+
+  bool WagonHandleSteering::shouldRotateInPlace(const tf::Point& start, const tf::Point& end, const tf::Pose& current_loc) {
+ 	tf::Vector3 segment1 = end - start; 
+	tf::Vector3 segment2 = start - current_loc.getOrigin();
+	
+	double term1 = segment1.getX() * segment2.getY();
+	double term2 = segment1.getY() * segment2.getX();
+
+	double denominator = sqrt(pow(segment1.getX(), 2.0) - pow(segment1.getY(), 2.0));
+
+	double numerator = term1 - term2;
+	double distance = fabs(numerator) / denominator;
+	
+	if (distance < rotate_in_place_dist_) {
+		double line_heading = -1.0 * atan2(segment1.getY(), segment1.getX());
+		double min_angle = angles::shortest_angular_distance(tf::getYaw(current_loc.getRotation()), line_heading);
+		if (fabs(min_angle) > rotate_in_place_head_) {
+			return true;
+		} else {
+			return false;
+		}
+	} else {
+		return false;
+	}
   }
 
   bool WagonHandleSteering::computeVelocityCommands(geometry_msgs::Twist& cmd_vel){
     //get the current pose of the robot in the fixed frame
     double heading = 0.0;
     double speed = 0.0;
-    double x,y;
     tf::Stamped<tf::Pose> robot_pose;
     if(!costmap_ros_->getRobotPose(robot_pose)){
       ROS_ERROR("Can't get robot pose");
@@ -108,14 +140,19 @@ namespace wagon_handle_steering {
     }
 
     //we want to compute a velocity command based on our current waypoint
-    tf::Stamped<tf::Pose> target_pose;
+    tf::Stamped<tf::Pose> target_pose, last_target_pose;
     tf::poseStampedMsgToTF(global_plan_[current_waypoint_], target_pose);
+    tf::poseStampedMsgToTF(global_plan_[current_waypoint_ - 1], last_target_pose);
 
     ROS_DEBUG("WagonHandleSteering: current robot pose %f %f ==> %f", robot_pose.getOrigin().x(), robot_pose.getOrigin().y(), tf::getYaw(robot_pose.getRotation()));
     ROS_DEBUG("WagonHandleSteering: target robot pose %f %f ==> %f", target_pose.getOrigin().x(), target_pose.getOrigin().y(), tf::getYaw(target_pose.getRotation()));
 
-    //get the distance between the two poses
-    double distance = distance2D(target_pose, robot_pose);
+    tf::Point robot_p = robot_pose.getOrigin();
+    tf::Point target_p = target_pose.getOrigin();
+    tf::Point last_target_p = last_target_pose.getOrigin();
+
+    //get the distance between the robot and the end point of the path segment
+    double distance = target_p.distance(robot_p);
 
     if (distance < handle_length_) {
     	if ((distance < reorient_dist_) || started_reorienting_) {
@@ -124,36 +161,39 @@ namespace wagon_handle_steering {
 		ROS_DEBUG("WagonHandleSteering: Reorienting to the desired heading");
 		speed = 0.0;
 	} else if (!started_reorienting_) {
-		heading = -1.0 * atan2(target_pose.getOrigin().x(), target_pose.getOrigin().y());
+		tf::Vector3 diff = target_p - robot_p;
+		heading = -1.0 * atan2(diff.getY(), diff.getX());
 		ROS_DEBUG("WagonHandleSteering: Heading directly towards the goal"); 
 		speed = exp(-1.0 * (handle_length_ / distance)) * desired_speed_;
 	}
 	ROS_DEBUG("WagonHandleSteering: Goal is within the handle length. Heading directly towards the goal on a heading of %f", heading);
     } else {
-    
+	tf::Point intersection_p;
+    	started_reorienting_ = false;
+	tf::Vector3 current_segment = target_p - last_target_p;
+	bool intersected = intersectedWithCircle(last_target_p, robot_p, current_segment, intersection_p);	
+	ROS_DEBUG("WagonHandleSteering: Intersection point was x: %f, y: %f", intersection_p.getX(), intersection_p.getY());
+	if(intersected) {
+		tf::Vector3 diff = intersection_p - robot_p;
+		heading =  -1.0 * atan2(diff.getY(), diff.getX());
+		speed = desired_speed_;
+		ROS_DEBUG("Intersected with wagon handle radius");
+	} else {
+		ROS_WARN("No intersection found");
+	       	geometry_msgs::Twist empty_twist;
+      		cmd_vel = empty_twist;
+      		return false;
+	}
     }
-    geometry_msgs::Twist limit_vel = limitTwist(diff);
 
-    geometry_msgs::Twist test_vel = limit_vel;
-    bool legal_traj = collision_planner_.checkTrajectory(test_vel.linear.x, test_vel.linear.y, test_vel.angular.z, true);
-
-    double scaling_factor = 1.0;
-    double ds = scaling_factor / samples_;
-
-    //let's make sure that the velocity command is legal... and if not, scale down
-    if(!legal_traj){
-      for(int i = 0; i < samples_; ++i){
-        test_vel.linear.x = limit_vel.linear.x * scaling_factor;
-        test_vel.linear.y = limit_vel.linear.y * scaling_factor;
-        test_vel.angular.z = limit_vel.angular.z * scaling_factor;
-        test_vel = limitTwist(test_vel);
-        if(collision_planner_.checkTrajectory(test_vel.linear.x, test_vel.linear.y, test_vel.angular.z, false)){
-          legal_traj = true;
-          break;
-        }
-        scaling_factor -= ds;
-      }
+    bool rotate_only = shouldRotateInPlace(last_target_p, target_p, robot_pose);
+    if (rotate_only) {
+	ROS_DEBUG("Rotating in place only");
+    	speed = 0.0;
     }
+    geometry_msgs::Twist limit_vel = limitTwist(heading, speed);
+
+    bool legal_traj = collision_planner_.checkTrajectory(limit_vel.linear.x, limit_vel.linear.y, limit_vel.angular.z, true);
 
     if(!legal_traj){
       ROS_ERROR("Not legal (%.2f, %.2f, %.2f)", limit_vel.linear.x, limit_vel.linear.y, limit_vel.angular.z);
@@ -163,8 +203,9 @@ namespace wagon_handle_steering {
     }
 
     //if it is legal... we'll pass it on
-    cmd_vel = test_vel;
+    cmd_vel = limit_vel;
 
+    /*
     //if we haven't reached our goal... we'll update time
     if (fabs(diff.linear.x) > tolerance_trans_ || fabs(diff.linear.y) > tolerance_trans_ || fabs(diff.angular.z) > tolerance_rot_)
       goal_reached_time_ = ros::Time::now();
@@ -177,7 +218,7 @@ namespace wagon_handle_steering {
     else if(goal_reached_time_ + ros::Duration(tolerance_timeout_) < ros::Time::now()){
       geometry_msgs::Twist empty_twist;
       cmd_vel = empty_twist;
-    }
+    } */
 
     return true;
   }
@@ -199,81 +240,9 @@ namespace wagon_handle_steering {
     return false;
   }
 
-  geometry_msgs::Twist WagonHandleSteering::diff2D(const tf::Pose& pose1, const tf::Pose& pose2)
+  geometry_msgs::Twist WagonHandleSteering::limitTwist(const double desired_heading, const double desired_speed)
   {
-    geometry_msgs::Twist res;
-    tf::Pose diff = pose2.inverse() * pose1;
-    res.linear.x = diff.getOrigin().x();
-    res.linear.y = diff.getOrigin().y();
-    res.angular.z = tf::getYaw(diff.getRotation());
-
-    if(holonomic_ || (fabs(res.linear.x) <= tolerance_trans_ && fabs(res.linear.y) <= tolerance_trans_))
-      return res;
-
-    //in the case that we're not rotating to our goal position and we have a non-holonomic robot
-    //we'll need to command a rotational velocity that will help us reach our desired heading
-    
-    //we want to compute a goal based on the heading difference between our pose and the target
-    double yaw_diff = headingDiff(pose1.getOrigin().x(), pose1.getOrigin().y(), 
-        pose2.getOrigin().x(), pose2.getOrigin().y(), tf::getYaw(pose2.getRotation()));
-
-    //we'll also check if we can move more effectively backwards
-    double neg_yaw_diff = headingDiff(pose1.getOrigin().x(), pose1.getOrigin().y(), 
-        pose2.getOrigin().x(), pose2.getOrigin().y(), M_PI + tf::getYaw(pose2.getRotation()));
-
-    //check if its faster to just back up
-    if(fabs(neg_yaw_diff) < fabs(yaw_diff)){
-      ROS_DEBUG("Negative is better: %.2f", neg_yaw_diff);
-      yaw_diff = neg_yaw_diff;
-    }
-
-    //compute the desired quaterion
-    tf::Quaternion rot_diff = tf::createQuaternionFromYaw(yaw_diff);
-    tf::Quaternion rot = pose2.getRotation() * rot_diff;
-    tf::Pose new_pose = pose1;
-    new_pose.setRotation(rot);
-
-    diff = pose2.inverse() * new_pose;
-    res.linear.x = diff.getOrigin().x();
-    res.linear.y = diff.getOrigin().y();
-    res.angular.z = tf::getYaw(diff.getRotation());
-    return res;
-  }
-
-
-  geometry_msgs::Twist WagonHandleSteering::limitTwist(const geometry_msgs::Twist& twist)
-  {
-    geometry_msgs::Twist res = twist;
-    res.linear.x *= K_trans_;
-    if(!holonomic_)
-      res.linear.y = 0.0;
-    else    
-      res.linear.y *= K_trans_;
-    res.angular.z *= K_rot_;
-
-    //make sure to bound things by our velocity limits
-    double lin_overshoot = sqrt(res.linear.x * res.linear.x + res.linear.y * res.linear.y) / max_vel_lin_;
-    double lin_undershoot = min_vel_lin_ / sqrt(res.linear.x * res.linear.x + res.linear.y * res.linear.y);
-    if (lin_overshoot > 1.0) 
-    {
-      res.linear.x /= lin_overshoot;
-      res.linear.y /= lin_overshoot;
-    }
-
-    if(lin_undershoot > 1.0)
-    {
-      res.linear.x *= lin_undershoot;
-      res.linear.y *= lin_undershoot;
-    }
-
-    if (fabs(res.angular.z) > max_vel_th_) res.angular.z = max_vel_th_ * sign(res.angular.z);
-    if (fabs(res.angular.z) < min_vel_th_) res.angular.z = min_vel_th_ * sign(res.angular.z);
-
-    if(fabs(res.linear.x) < in_place_trans_vel_ && fabs(res.linear.y) < in_place_trans_vel_){
-      if (fabs(res.angular.z) < min_in_place_vel_th_) res.angular.z = min_in_place_vel_th_ * sign(res.angular.z);
-    }
-
-    ROS_DEBUG("Angular command %f", res.angular.z);
+	geometry_msgs::Twist res;
     return res;
   }
 

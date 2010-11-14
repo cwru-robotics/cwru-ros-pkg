@@ -25,10 +25,9 @@ namespace wagon_handle_steering {
         return n < 0.0 ? -1.0 : 1.0;
       }
 
-      geometry_msgs::Twist diff2D(const tf::Pose& pose1, const tf::Pose&  pose2);
-      geometry_msgs::Twist limitTwist(const geometry_msgs::Twist& twist);
-      double headingDiff(double pt_x, double pt_y, double x, double y, double heading);
-      double distance2D(const tf::Pose& p1, const tf::Pose& p2);
+      geometry_msgs::Twist limitTwist(const double desired_heading, const double desired_speed);
+      bool intersectedWithCircle(const tf::Point& start_p, const tf::Point& robot_p, const tf::Vector3& direction, tf::Point& intersectionPoint);
+      bool shouldRotateInPlace(const tf::Point& start, const tf::Point& end, const tf::Pose& current_loc);
 
       bool transformGlobalPlan(const tf::TransformListener& tf, const std::vector<geometry_msgs::PoseStamped>& global_plan, 
           const costmap_2d::Costmap2DROS& costmap, const std::string& global_frame,
