@@ -16,9 +16,11 @@
   <depend package="geometry_msgs" />
   <depend package="nav_msgs" />
   <depend package="sicktoolbox_wrapper" />
+  <depend package="diagnostic_updater" />
 
   <rosdep name="wxwidgets" />
   <rosdep name="wxpython" />
+  <rosdep name="boost" />
 
 </package>
 
