@@ -22,6 +22,7 @@ namespace cwru_base {
 		private:
 			CRIOPosePacket swapPosePacket(CRIOPosePacket& packet);
 			void handleSonarPing(Sonar& ping, const float ping_value, const std::string frame_id, ros::Publisher& sonar_pub);
+			float swap_float(float in);
 			ros::NodeHandle nh_;
 			ros::NodeHandle priv_nh_;
 			ros::Publisher estop_pub_;
@@ -34,7 +35,7 @@ namespace cwru_base {
 			ros::Publisher sonar5_pub_;
 	};
 
-	CrioReceiver::CrioReceiver(): nh_(NULL), priv_nh_("~") {
+	CrioReceiver::CrioReceiver(): priv_nh_("~") {
 		pose_pub_ = nh_.advertise<cwru_base::Pose>("pose",1);
 		flipped_pose_pub_ = nh_.advertise<cwru_base::Pose>("flipped_pose",1);
 		estop_pub_ = nh_.advertise<std_msgs::Bool>("estop_status",1,true);
@@ -58,23 +59,29 @@ namespace cwru_base {
 		}	
 	}
 
+	float CrioReceiver::swap_float(float in) {
+	   uint32_t temp = *((uint32_t *)&in); 
+	   temp = ntohl(temp);
+	   return *((float *) &temp);
+	}
+
 	CRIOPosePacket CrioReceiver::swapPosePacket(CRIOPosePacket& packet) {
 		CRIOPosePacket swapped_packet = packet;
-		swapped_packet.x = ntohl(packet.x);
-		swapped_packet.y = ntohl(packet.y);
-		swapped_packet.theta = ntohl(packet.theta);
-		swapped_packet.vel = ntohl(packet.vel);
-		swapped_packet.omega = ntohl(packet.omega);
-		swapped_packet.x_variance = ntohl(packet.x_variance);
-		swapped_packet.y_variance = ntohl(packet.y_variance);
-		swapped_packet.theta_variance = ntohl(packet.theta_variance);
-		swapped_packet.omega_variance = ntohl(packet.omega_variance);
-		swapped_packet.vel_variance = ntohl(packet.vel_variance);
-		swapped_packet.sonar_ping_1 = ntohl(packet.sonar_ping_1);
-		swapped_packet.sonar_ping_2 = ntohl(packet.sonar_ping_2);
-		swapped_packet.sonar_ping_3 = ntohl(packet.sonar_ping_3);
-		swapped_packet.sonar_ping_4 = ntohl(packet.sonar_ping_4);
-		swapped_packet.sonar_ping_5 = ntohl(packet.sonar_ping_5);
+		swapped_packet.x = swap_float(packet.x);
+		swapped_packet.y = swap_float(packet.y);
+		swapped_packet.theta = swap_float(packet.theta);
+		swapped_packet.vel = swap_float(packet.vel);
+		swapped_packet.omega = swap_float(packet.omega);
+		swapped_packet.x_variance = swap_float(packet.x_variance);
+		swapped_packet.y_variance = swap_float(packet.y_variance);
+		swapped_packet.theta_variance = swap_float(packet.theta_variance);
+		swapped_packet.omega_variance = swap_float(packet.omega_variance);
+		swapped_packet.vel_variance = swap_float(packet.vel_variance);
+		swapped_packet.sonar_ping_1 = swap_float(packet.sonar_ping_1);
+		swapped_packet.sonar_ping_2 = swap_float(packet.sonar_ping_2);
+		swapped_packet.sonar_ping_3 = swap_float(packet.sonar_ping_3);
+		swapped_packet.sonar_ping_4 = swap_float(packet.sonar_ping_4);
+		swapped_packet.sonar_ping_5 = swap_float(packet.sonar_ping_5);
 		return swapped_packet;
 	}
 

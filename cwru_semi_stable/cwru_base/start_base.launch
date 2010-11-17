@@ -1,6 +1,6 @@
 <launch>
 	<include file="$(find cwru_configs)/$(optenv ROBOT sim)/base/static_transform.launch" />
-  <node pkg="cwru_base" type="pose_broadcaster.py" name="pose_broadcaster" />
+  <node pkg="cwru_base" type="crio_receiver" name="crio_receiver" />
   <node pkg="cwru_base" type="odom_translator.py" name="odom_translator" />
   
   <include file="$(find cwru_configs)/$(optenv ROBOT sim)/base/sonar.launch" />
