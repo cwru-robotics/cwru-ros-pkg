@@ -29,16 +29,30 @@ namespace wagon_handle_steering {
     node_private.param("tolerance_rot", tolerance_rot_, 0.04);
     node_private.param("tolerance_timeout", tolerance_timeout_, 0.5);
 
-    node_private.param("max_vel_lin", max_vel_lin_, 0.9);
-    node_private.param("max_vel_th", max_vel_th_, 1.4);
-
-    node_private.param("min_vel_lin", min_vel_lin_, 0.1);
-    node_private.param("min_vel_th", min_vel_th_, 0.0);
-    node_private.param("min_in_place_vel_th", min_in_place_vel_th_, 0.0);
-    node_private.param("in_place_trans_vel", in_place_trans_vel_, 0.0);
-
     node_private.param("trans_stopped_velocity", trans_stopped_velocity_, 1e-4);
-    node_private.param("rot_stopped_velocity", rot_stopped_velocity_, 1e-4);
+
+    node_private.param("forward_waypoint_check_count", forward_waypoint_check_count_, 200);
+    node_private.param("advance_radius",advance_radius_, 1.0);
+
+    node_private.param("update_time",update_time_, 0.05);
+
+    node_private.param("max_vel_x", max_vel_x_, 0.5);
+    node_private.param("max_vel_y", max_vel_y_, 0.0);
+    node_private.param("max_rotational_vel", max_rotational_vel_, 1.0);
+    node_private.param("min_rotational_vel", min_rotational_vel_, 0.7);
+  
+
+    node_private.param("acc_lim_th", acc_lim_th_, 0.3);
+    node_private.param("acc_lim_x", acc_lim_x_, 0.07);
+    node_private.param("acc_lim_y", acc_lim_y_, 0.0);
+    node_private.param("vel_decay", vel_decay_, 0.75);
+    node_private.param("angular_decay", angular_decay_, 0.75);
+
+
+    node_private.param("collision_tries",collision_tries_, 5);
+    node_private.param("min_vel_x", min_vel_x_, 0.1);
+    node_private.param("min_vel_y", min_vel_y_, 0.0);
+    node_private.param("min_in_place_rotational_vel", min_in_place_rotational_vel_, 0.7);
 
     ros::NodeHandle node;
     odom_sub_ = node.subscribe<nav_msgs::Odometry>("odom", 1, boost::bind(&WagonHandleSteering::odomCallback, this, _1));
@@ -126,6 +140,50 @@ namespace wagon_handle_steering {
 		return false;
 	}
   }
+  
+  void WagonHandleSteering::updateWaypoint(tf::Stamped<tf::Pose>& robot_pose){
+    for(int i=0;i<forward_waypoint_check_count_;i++){
+      //we are at the final point
+
+      if(current_waypoint_+1==global_plan_.size()){
+        break;
+      }
+      tf::Stamped<tf::Pose> target_pose;
+      tf::poseStampedMsgToTF(global_plan_[current_waypoint_+1], target_pose);
+
+      tf::Point robot_p = robot_pose.getOrigin();
+      tf::Point target_p = target_pose.getOrigin();
+      double distance = target_p.distance(robot_p);
+
+      if(distance>advance_radius_){
+	 ROS_DEBUG("Distance when stopping waypoint update: %f", distance);
+         break;
+      }
+
+      current_waypoint_++;
+    }
+  }
+  double WagonHandleSteering::calcDistanceToGoal(tf::Stamped<tf::Pose>& robot_pose){
+    double total_distance=0;
+    
+    tf::Stamped<tf::Pose> target_pose, last_target_pose;
+    tf::poseStampedMsgToTF(global_plan_[current_waypoint_+1], target_pose);
+    
+    tf::Point robot_p = robot_pose.getOrigin();
+    tf::Point target_p = target_pose.getOrigin();
+    total_distance+= target_p.distance(robot_p);
+
+    for(int i=current_waypoint_+1;i<global_plan_.size()-1;i++){
+      tf::poseStampedMsgToTF(global_plan_[i], last_target_pose);
+      tf::poseStampedMsgToTF(global_plan_[i+1], target_pose);
+
+      tf::Point last_target_p = last_target_pose.getOrigin();
+      tf::Point target_p = target_pose.getOrigin();
+
+      total_distance+= target_p.distance(last_target_p);
+     }
+     return total_distance;
+  }
 
   bool WagonHandleSteering::computeVelocityCommands(geometry_msgs::Twist& cmd_vel){
     //get the current pose of the robot in the fixed frame
@@ -138,11 +196,13 @@ namespace wagon_handle_steering {
       cmd_vel = empty_twist;
       return false;
     }
+    //check the waypoint before moving forward
+    updateWaypoint(robot_pose);
 
     //we want to compute a velocity command based on our current waypoint
     tf::Stamped<tf::Pose> target_pose, last_target_pose;
-    tf::poseStampedMsgToTF(global_plan_[current_waypoint_], target_pose);
-    tf::poseStampedMsgToTF(global_plan_[current_waypoint_ - 1], last_target_pose);
+    tf::poseStampedMsgToTF(global_plan_[current_waypoint_+1], target_pose);
+    tf::poseStampedMsgToTF(global_plan_[current_waypoint_], last_target_pose);
 
     ROS_DEBUG("WagonHandleSteering: current robot pose %f %f ==> %f", robot_pose.getOrigin().x(), robot_pose.getOrigin().y(), tf::getYaw(robot_pose.getRotation()));
     ROS_DEBUG("WagonHandleSteering: target robot pose %f %f ==> %f", target_pose.getOrigin().x(), target_pose.getOrigin().y(), tf::getYaw(target_pose.getRotation()));
@@ -161,10 +221,14 @@ namespace wagon_handle_steering {
 		ROS_DEBUG("WagonHandleSteering: Reorienting to the desired heading");
 		speed = 0.0;
 	} else if (!started_reorienting_) {
-		tf::Vector3 diff = target_p - robot_p;
+		
+                tf::Vector3 diff = target_p - robot_p;
 		heading = -1.0 * atan2(diff.getY(), diff.getX());
 		ROS_DEBUG("WagonHandleSteering: Heading directly towards the goal"); 
-		speed = exp(-1.0 * (handle_length_ / distance)) * desired_speed_;
+                
+
+		speed = exp(-1.0 * (handle_length_ / calcDistanceToGoal(robot_pose))) * desired_speed_;
+
 	}
 	ROS_DEBUG("WagonHandleSteering: Goal is within the handle length. Heading directly towards the goal on a heading of %f", heading);
     } else {
@@ -192,8 +256,18 @@ namespace wagon_handle_steering {
     	speed = 0.0;
     }
     geometry_msgs::Twist limit_vel = limitTwist(heading, speed);
-
-    bool legal_traj = collision_planner_.checkTrajectory(limit_vel.linear.x, limit_vel.linear.y, limit_vel.angular.z, true);
+    bool legal_traj=false;
+    
+    for( int i=0;i<collision_tries_;i++){
+      legal_traj= collision_planner_.checkTrajectory(limit_vel.linear.x, limit_vel.linear.y, limit_vel.angular.z, true);
+      if(legal_traj){
+        break;
+      }else{
+         limit_vel.linear.x*=vel_decay_;
+         limit_vel.linear.y*=vel_decay_;
+         limit_vel.angular.z*=angular_decay_;
+      }
+    }
 
     if(!legal_traj){
       ROS_ERROR("Not legal (%.2f, %.2f, %.2f)", limit_vel.linear.x, limit_vel.linear.y, limit_vel.angular.z);
@@ -201,7 +275,6 @@ namespace wagon_handle_steering {
       cmd_vel = empty_twist;
       return false;
     }
-
     //if it is legal... we'll pass it on
     cmd_vel = limit_vel;
 
@@ -242,8 +315,38 @@ namespace wagon_handle_steering {
 
   geometry_msgs::Twist WagonHandleSteering::limitTwist(const double desired_heading, const double desired_speed)
   {
-	geometry_msgs::Twist res;
+    geometry_msgs::Twist res;
+    res.linear.x = desired_speed;
+
+    boost::mutex::scoped_lock lock(odom_lock_);
+
+    if(fabs((res.linear.x-base_odom_.twist.twist.linear.x) /update_time_)/acc_lim_x_){
+      if(res.linear.x<base_odom_.twist.twist.linear.x){
+        res.linear.x=base_odom_.twist.twist.linear.x-acc_lim_x_*update_time_;
+      }else{
+        res.linear.x=base_odom_.twist.twist.linear.x+acc_lim_x_*update_time_;
+      }
+    }
+
+   if(fabs((res.angular.z-base_odom_.twist.twist.angular.z) /update_time_)/acc_lim_th_){
+      if(res.angular.z<base_odom_.twist.twist.angular.z){
+        res.angular.z=base_odom_.twist.twist.angular.z-acc_lim_th_*update_time_;
+      }else{
+        res.angular.z=base_odom_.twist.twist.angular.z+acc_lim_th_*update_time_;
+      }
+    }
+    
+
+    if (fabs(res.angular.z) > max_rotational_vel_) res.angular.z = max_rotational_vel_* sign(res.angular.z);
+    if (fabs(res.angular.z) <   min_rotational_vel_) res.angular.z =   min_rotational_vel_ * sign(res.angular.z);
+
+    if(fabs(res.linear.x) < trans_stopped_velocity_ && fabs(res.linear.y) < trans_stopped_velocity_){
+      if (fabs(res.angular.z) < min_in_place_rotational_vel_) res.angular.z = min_in_place_rotational_vel_* sign(res.angular.z);
+    }
+
+    ROS_DEBUG("Angular command %f", res.angular.z);
     return res;
+
   }
 
   bool WagonHandleSteering::transformGlobalPlan(const tf::TransformListener& tf, const std::vector<geometry_msgs::PoseStamped>& global_plan, 

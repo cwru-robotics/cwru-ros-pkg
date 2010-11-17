@@ -76,9 +76,9 @@ def main(filename):
       print(p.get_state())
       
       while(1):
-        print 'starting inner loop'
+ #       print 'starting inner loop'
         while(p.get_state()!=vlc.State.Ended):
-          print(p.get_state())
+ #         print(p.get_state())
           time.sleep(.2)
 
         time.sleep(.7)
@@ -86,8 +86,11 @@ def main(filename):
         print 'finished sound'
         if client.get_state() == GoalStatus.SUCCEEDED :
           break
+        elif client.get_state()==GoalStatus.ABORTED or client.get_state()==GoalStatus.REJECTED :
+          #resend the goal
+          client.send_goal(goal)
         else:
-          print 'starting stall sound'
+ #         print 'starting stall sound'
           time.sleep(.7)
        #   p=vlc.MediaPlayer(sound_prefix + stall())
        #   p.play()

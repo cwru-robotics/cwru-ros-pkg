@@ -35,20 +35,21 @@ namespace wagon_handle_steering {
 
       void odomCallback(const nav_msgs::Odometry::ConstPtr& msg);
       bool stopped();
+      void updateWaypoint(tf::Stamped<tf::Pose>& robot_pose);
+      double calcDistanceToGoal(tf::Stamped<tf::Pose>& robot_pose);
+
+      double max_rotational_vel_,max_vel_y_,max_vel_x_,acc_lim_th_,acc_lim_x_,acc_lim_y_,min_vel_x_, min_vel_y_,min_in_place_rotational_vel_,min_rotational_vel_,update_time_;
 
       tf::TransformListener* tf_;
       costmap_2d::Costmap2DROS* costmap_ros_;
       ros::Publisher vel_pub_;
-      double handle_length_, reorient_dist_, rotate_in_place_dist_, rotate_in_place_head_, desired_speed_;
+      double handle_length_, reorient_dist_, rotate_in_place_dist_, rotate_in_place_head_, desired_speed_, advance_radius_;
       double tolerance_timeout_, tolerance_trans_, tolerance_rot_;
       //These are just to make it compile right now
-      double K_trans_, K_rot_;
       int samples_;
       bool holonomic_;
       //End compile junk
-      double max_vel_lin_, max_vel_th_;
-      double min_vel_lin_, min_vel_th_;
-      double min_in_place_vel_th_, in_place_trans_vel_;
+
       boost::mutex odom_lock_;
       ros::Subscriber odom_sub_;
       nav_msgs::Odometry base_odom_;
@@ -58,6 +59,10 @@ namespace wagon_handle_steering {
       std::vector<geometry_msgs::PoseStamped> global_plan_;
       base_local_planner::TrajectoryPlannerROS collision_planner_;
       bool started_reorienting_;
+      int forward_waypoint_check_count_;
+      int collision_tries_;
+      double vel_decay_;
+      double angular_decay_;
   };
 };
 #endif
