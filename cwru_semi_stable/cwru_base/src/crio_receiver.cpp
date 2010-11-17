@@ -19,24 +19,35 @@ namespace cwru_base {
 			void dispatchReceivedPacket(CRIOCommand packet);
 			void handlePosePacket(CRIOPosePacket packet);
 			void handleDiagnosticsPacket(CRIODiagnosticsPacket packet);
+			void updateDiagnostics();
 		private:
 			CRIOPosePacket swapPosePacket(CRIOPosePacket& packet);
 			void handleSonarPing(Sonar& ping, const float ping_value, const std::string frame_id, ros::Publisher& sonar_pub);
 			float swap_float(float in);
+			void setupDiagnostics();
 			ros::NodeHandle nh_;
 			ros::NodeHandle priv_nh_;
 			ros::Publisher estop_pub_;
-			ros::Publisher pose_pub_;
 			ros::Publisher flipped_pose_pub_;
 			ros::Publisher sonar1_pub_;
 			ros::Publisher sonar2_pub_;
 			ros::Publisher sonar3_pub_;
 			ros::Publisher sonar4_pub_;
 			ros::Publisher sonar5_pub_;
+			diagnostic_updater::Updater updater_;
+			diagnostic_updater::DiagnosedPublisher<cwru_base::Pose> pose_pub_;
+			double desired_pose_freq_;
 	};
 
-	CrioReceiver::CrioReceiver(): priv_nh_("~") {
-		pose_pub_ = nh_.advertise<cwru_base::Pose>("pose",1);
+	CrioReceiver::CrioReceiver(): 
+		priv_nh_("~"),
+		pose_pub_(nh_.advertise<cwru_base::Pose>("pose",1),
+			updater_,
+			diagnostic_updater::FrequencyStatusParam(&desired_pose_freq_, &desired_pose_freq_, 3.0, 5),
+			diagnostic_updater::TimeStampStatusParam())
+
+	{
+		desired_pose_freq_ = 50.0;
 		flipped_pose_pub_ = nh_.advertise<cwru_base::Pose>("flipped_pose",1);
 		estop_pub_ = nh_.advertise<std_msgs::Bool>("estop_status",1,true);
 		sonar1_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_1",1);
@@ -44,6 +55,15 @@ namespace cwru_base {
 		sonar3_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_3",1);
 		sonar4_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_4",1);
 		sonar5_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_5",1);
+		setupDiagnostics();
+	}
+
+	void CrioReceiver::setupDiagnostics() {
+		updater_.setHardwareID("CRIO-192.168.0.100");	
+	}
+
+	void CrioReceiver::updateDiagnostics() {
+	    updater_.update();
 	}
 
 	CrioReceiver::~CrioReceiver() {
@@ -60,9 +80,9 @@ namespace cwru_base {
 	}
 
 	float CrioReceiver::swap_float(float in) {
-	   uint32_t temp = *((uint32_t *)&in); 
-	   temp = ntohl(temp);
-	   return *((float *) &temp);
+		uint32_t temp = *((uint32_t *)&in); 
+		temp = ntohl(temp);
+		return *((float *) &temp);
 	}
 
 	CRIOPosePacket CrioReceiver::swapPosePacket(CRIOPosePacket& packet) {
@@ -132,7 +152,7 @@ namespace cwru_base {
 int main(int argc, char *argv[]) {
 	ros::init(argc, argv, "crio_receiver");
 	ros::NodeHandle nh;
-	cwru_base::CrioReceiver from_crio = cwru_base::CrioReceiver();
+	cwru_base::CrioReceiver from_crio;
 	boost::asio::io_service io_service;
 	udp::socket socket(io_service, udp::endpoint(udp::v4(), 50000));
 	while (nh.ok()) {
@@ -148,6 +168,7 @@ int main(int argc, char *argv[]) {
 			}
 
 			from_crio.dispatchReceivedPacket(recv_buf[0]);
+			from_crio.updateDiagnostics();
 		} catch (std::exception& e) {
 			ROS_ERROR_STREAM("cRIO receiver threw an exception: " << e.what());
 		}
