@@ -187,7 +187,8 @@ namespace wagon_handle_steering {
   }
 
   bool WagonHandleSteering::computeVelocityCommands(geometry_msgs::Twist& cmd_vel){
-    //get the current pose of the robot in the fixed frame
+	ROS_DEBUG("number of poses in plan %d\n",global_plan_.size());
+	  //get the current pose of the robot in the fixed frame
     double heading = 0.0;
     double speed = 0.0;
     tf::Stamped<tf::Pose> robot_pose;
