@@ -323,6 +323,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
     {
       geometry_msgs::Twist res;
       res.linear.x = desired_speed;
+      res.angular.z = desired_angular_rate;
 
       boost::mutex::scoped_lock lock(odom_lock_);
 
