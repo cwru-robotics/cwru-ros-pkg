@@ -347,6 +347,14 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       }
 
 
+      if(fabs(res.linear.x)>trans_stopped_velocity_ && fabs(res.linear.x)<min_vel_x_){
+        res.linear.x=min_vel_x_;
+      }else if(fabs(res.linear.x)>trans_stopped_velocity_ && fabs(res.linear.x)>max_vel_x_){
+        res.linear.x=max_vel_x_;
+      }
+
+
+
       if (fabs(res.angular.z) > max_rotational_vel_) res.angular.z = max_rotational_vel_* sign(res.angular.z);
       if ((fabs(res.angular.z) <   min_rotational_vel_) && (fabs(res.angular.z) > rot_stopped_velocity_)) res.angular.z =   min_rotational_vel_ * sign(res.angular.z);
 
