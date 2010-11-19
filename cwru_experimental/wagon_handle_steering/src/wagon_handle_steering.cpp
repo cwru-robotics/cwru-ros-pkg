@@ -30,6 +30,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       node_private.param("tolerance_timeout", tolerance_timeout_, 0.5);
 
       node_private.param("trans_stopped_velocity", trans_stopped_velocity_, 1e-4);
+      node_private.param("rot_stopped_velocity", rot_stopped_velocity_, 1e-4);
 
       node_private.param("forward_waypoint_check_count", forward_waypoint_check_count_, 200);
       node_private.param("advance_radius",advance_radius_, 1.0);
