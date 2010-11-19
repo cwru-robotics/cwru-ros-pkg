@@ -260,6 +260,8 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
         speed = 0.0;
       }
       double min_angle = angles::shortest_angular_distance(tf::getYaw(robot_pose.getRotation()), heading);
+      ROS_DEBUG("WagonHandleSteering: current_heading: %f", tf::getYaw(robot_pose.getRotation()));
+      ROS_DEBUG("WagonHandleSteering: desired_heading: %f", heading);
       ROS_DEBUG("WagonHandleSteering: min_angle: %f", min_angle);
       double desired_angular_rate = min_angle/(update_time_ * 10.0);
       geometry_msgs::Twist limit_vel = limitTwist(desired_angular_rate, speed);
