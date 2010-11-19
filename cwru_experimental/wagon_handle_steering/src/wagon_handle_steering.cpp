@@ -40,11 +40,11 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       node_private.param("max_vel_x", max_vel_x_, 0.5);
       node_private.param("max_vel_y", max_vel_y_, 0.0);
       node_private.param("max_rotational_vel", max_rotational_vel_, 1.0);
-      node_private.param("min_rotational_vel", min_rotational_vel_, 0.3);
+      node_private.param("min_rotational_vel", min_rotational_vel_, 0.0);
 
 
-      node_private.param("acc_lim_th", acc_lim_th_, 0.5);
-      node_private.param("acc_lim_x", acc_lim_x_, 0.5);
+      node_private.param("acc_lim_th", acc_lim_th_, 5.5);
+      node_private.param("acc_lim_x", acc_lim_x_, 5.5);
       node_private.param("acc_lim_y", acc_lim_y_, 0.0);
       node_private.param("vel_decay", vel_decay_, 0.75);
       node_private.param("angular_decay", angular_decay_, 0.75);
@@ -130,7 +130,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       double distance = fabs(numerator) / denominator;
 
       if (distance < rotate_in_place_dist_) {
-        double line_heading = -1.0 * atan2(segment1.getY(), segment1.getX());
+        double line_heading = atan2(segment1.getY(), segment1.getX());
         double min_angle = angles::shortest_angular_distance(tf::getYaw(current_loc.getRotation()), line_heading);
         if (fabs(min_angle) > rotate_in_place_head_) {
           return true;
@@ -146,7 +146,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       for(int i=0;i<forward_waypoint_check_count_;i++){
         //we are at the final point
 
-        if(current_waypoint_+1==global_plan_.size()){
+        if(current_waypoint_+2==global_plan_.size()){
           break;
         }
         tf::Stamped<tf::Pose> target_pose;
