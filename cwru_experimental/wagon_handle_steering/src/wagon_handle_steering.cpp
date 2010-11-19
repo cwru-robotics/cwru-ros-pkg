@@ -173,7 +173,7 @@ namespace wagon_handle_steering {
     tf::Point target_p = target_pose.getOrigin();
     total_distance+= target_p.distance(robot_p);
 
-    for(int i=current_waypoint_+1;i<global_plan_.size()-1;i++){
+    for(size_t i=current_waypoint_+1;i<global_plan_.size()-1;i++){
       tf::poseStampedMsgToTF(global_plan_[i], last_target_pose);
       tf::poseStampedMsgToTF(global_plan_[i+1], target_pose);
 
@@ -205,7 +205,8 @@ namespace wagon_handle_steering {
     tf::poseStampedMsgToTF(global_plan_[current_waypoint_], last_target_pose);
 
     ROS_DEBUG("WagonHandleSteering: current robot pose %f %f ==> %f", robot_pose.getOrigin().x(), robot_pose.getOrigin().y(), tf::getYaw(robot_pose.getRotation()));
-    ROS_DEBUG("WagonHandleSteering: target robot pose %f %f ==> %f", target_pose.getOrigin().x(), target_pose.getOrigin().y(), tf::getYaw(target_pose.getRotation()));
+    ROS_DEBUG("WagonHandleSteering: target pose %f %f ==> %f", target_pose.getOrigin().x(), target_pose.getOrigin().y(), tf::getYaw(target_pose.getRotation()));
+    ROS_DEBUG("WagonHandleSteering: last_target pose %f %f ==> %f", last_target_pose.getOrigin().x(), last_target_pose.getOrigin().y(), tf::getYaw(last_target_pose.getRotation()));
 
     tf::Point robot_p = robot_pose.getOrigin();
     tf::Point target_p = target_pose.getOrigin();
