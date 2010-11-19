@@ -162,6 +162,7 @@ namespace wagon_handle_steering {
 
       current_waypoint_++;
     }
+    ROG_DEBUG("updated waypoint to number %d\n",current_waypoint);
   }
   double WagonHandleSteering::calcDistanceToGoal(tf::Stamped<tf::Pose>& robot_pose){
     double total_distance=0;
