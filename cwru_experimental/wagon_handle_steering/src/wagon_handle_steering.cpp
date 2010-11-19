@@ -162,7 +162,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
 
         current_waypoint_++;
       }
-      ROG_DEBUG("updated waypoint to number %d\n",current_waypoint);
+      ROS_DEBUG("updated waypoint to number %d\n",current_waypoint_);
     }
     double WagonHandleSteering::calcDistanceToGoal(tf::Stamped<tf::Pose>& robot_pose){
       double total_distance=0;
@@ -203,8 +203,8 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
 
       //we want to compute a velocity command based on our current waypoint
       tf::Stamped<tf::Pose> target_pose, last_target_pose;
-      tf::poseStampedMsgToTF(global_plan_[current_waypoint_+1], target_pose);
-      tf::poseStampedMsgToTF(global_plan_[current_waypoint_], last_target_pose);
+      tf::poseStampedMsgToTF(global_plan_[global_plan_.size()-1], target_pose);
+      tf::poseStampedMsgToTF(global_plan_[0], last_target_pose);
 
       ROS_DEBUG("WagonHandleSteering: current robot pose %f %f ==> %f", robot_pose.getOrigin().x(), robot_pose.getOrigin().y(), tf::getYaw(robot_pose.getRotation()));
       ROS_DEBUG("WagonHandleSteering: target pose %f %f ==> %f", target_pose.getOrigin().x(), target_pose.getOrigin().y(), tf::getYaw(target_pose.getRotation()));
