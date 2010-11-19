@@ -40,11 +40,11 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       node_private.param("max_vel_x", max_vel_x_, 0.5);
       node_private.param("max_vel_y", max_vel_y_, 0.0);
       node_private.param("max_rotational_vel", max_rotational_vel_, 1.0);
-      node_private.param("min_rotational_vel", min_rotational_vel_, 0.7);
+      node_private.param("min_rotational_vel", min_rotational_vel_, 0.3);
 
 
-      node_private.param("acc_lim_th", acc_lim_th_, 0.3);
-      node_private.param("acc_lim_x", acc_lim_x_, 0.07);
+      node_private.param("acc_lim_th", acc_lim_th_, 0.5);
+      node_private.param("acc_lim_x", acc_lim_x_, 0.5);
       node_private.param("acc_lim_y", acc_lim_y_, 0.0);
       node_private.param("vel_decay", vel_decay_, 0.75);
       node_private.param("angular_decay", angular_decay_, 0.75);
@@ -53,7 +53,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       node_private.param("collision_tries",collision_tries_, 5);
       node_private.param("min_vel_x", min_vel_x_, 0.1);
       node_private.param("min_vel_y", min_vel_y_, 0.0);
-      node_private.param("min_in_place_rotational_vel", min_in_place_rotational_vel_, 0.7);
+      node_private.param("min_in_place_rotational_vel", min_in_place_rotational_vel_, 0.3);
 
       ros::NodeHandle node;
       odom_sub_ = node.subscribe<nav_msgs::Odometry>("odom", 1, boost::bind(&WagonHandleSteering::odomCallback, this, _1));
@@ -260,6 +260,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
         speed = 0.0;
       }
       double min_angle = angles::shortest_angular_distance(tf::getYaw(robot_pose.getRotation()), heading);
+      ROS_DEBUG("WagonHandleSteering: min_angle: %f", min_angle);
       double desired_angular_rate = min_angle/(update_time_ * 10.0);
       geometry_msgs::Twist limit_vel = limitTwist(desired_angular_rate, speed);
       bool legal_traj=false;
@@ -327,7 +328,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
 
       boost::mutex::scoped_lock lock(odom_lock_);
 
-      if(fabs((res.linear.x-base_odom_.twist.twist.linear.x) /update_time_)/acc_lim_x_){
+      if(fabs((res.linear.x-base_odom_.twist.twist.linear.x) /update_time_) > acc_lim_x_){
         if(res.linear.x<base_odom_.twist.twist.linear.x){
           res.linear.x=base_odom_.twist.twist.linear.x-acc_lim_x_*update_time_;
         }else{
