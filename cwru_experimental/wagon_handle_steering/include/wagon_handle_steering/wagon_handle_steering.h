@@ -25,7 +25,7 @@ namespace wagon_handle_steering {
         return n < 0.0 ? -1.0 : 1.0;
       }
 
-      geometry_msgs::Twist limitTwist(const double desired_heading, const double desired_speed);
+      geometry_msgs::Twist limitTwist(const double desired_angular_rate, const double desired_speed);
       bool intersectedWithCircle(const tf::Point& start_p, const tf::Point& robot_p, const tf::Vector3& direction, tf::Point& intersectionPoint);
       bool shouldRotateInPlace(const tf::Point& start, const tf::Point& end, const tf::Pose& current_loc);
 

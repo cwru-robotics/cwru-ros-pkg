@@ -162,7 +162,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
 
         current_waypoint_++;
       }
-      ROS_DEBUG("updated waypoint to number %d\n",current_waypoint_);
+      ROS_DEBUG("updated waypoint to number %d",current_waypoint_);
     }
     double WagonHandleSteering::calcDistanceToGoal(tf::Stamped<tf::Pose>& robot_pose){
       double total_distance=0;
@@ -187,7 +187,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
     }
 
     bool WagonHandleSteering::computeVelocityCommands(geometry_msgs::Twist& cmd_vel){
-      ROS_DEBUG("number of poses in plan %d\n",global_plan_.size());
+      ROS_DEBUG("number of poses in plan %d",global_plan_.size());
       //get the current pose of the robot in the fixed frame
       double heading = 0.0;
       double speed = 0.0;
@@ -258,7 +258,9 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
         ROS_DEBUG("Rotating in place only");
         speed = 0.0;
       }
-      geometry_msgs::Twist limit_vel = limitTwist(heading, speed);
+      double min_angle = angles::shortest_angular_distance(tf::getYaw(robot_pose.getRotation()), heading);
+      double desired_angular_rate = min_angle/(update_time_ * 10.0);
+      geometry_msgs::Twist limit_vel = limitTwist(desired_angular_rate, speed);
       bool legal_traj=false;
 
       for( int i=0;i<collision_tries_;i++){
@@ -316,7 +318,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       return false;
     }
 
-    geometry_msgs::Twist WagonHandleSteering::limitTwist(const double desired_heading, const double desired_speed)
+    geometry_msgs::Twist WagonHandleSteering::limitTwist(const double desired_angular_rate, const double desired_speed)
     {
       geometry_msgs::Twist res;
       res.linear.x = desired_speed;
@@ -331,7 +333,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
         }
       }
 
-      if(fabs((res.angular.z-base_odom_.twist.twist.angular.z) /update_time_)/acc_lim_th_){
+      if(fabs((res.angular.z-base_odom_.twist.twist.angular.z) /update_time_) > acc_lim_th_){
         if(res.angular.z<base_odom_.twist.twist.angular.z){
           res.angular.z=base_odom_.twist.twist.angular.z-acc_lim_th_*update_time_;
         }else{
@@ -341,7 +343,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
 
 
       if (fabs(res.angular.z) > max_rotational_vel_) res.angular.z = max_rotational_vel_* sign(res.angular.z);
-      if (fabs(res.angular.z) <   min_rotational_vel_) res.angular.z =   min_rotational_vel_ * sign(res.angular.z);
+      if ((fabs(res.angular.z) <   min_rotational_vel_) && (fabs(res.angular.z) < rot_stopped_velocity_) res.angular.z =   min_rotational_vel_ * sign(res.angular.z);
 
       if(fabs(res.linear.x) < trans_stopped_velocity_ && fabs(res.linear.y) < trans_stopped_velocity_){
         if (fabs(res.angular.z) < min_in_place_rotational_vel_) res.angular.z = min_in_place_rotational_vel_* sign(res.angular.z);
