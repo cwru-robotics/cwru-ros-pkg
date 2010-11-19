@@ -43,8 +43,8 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       node_private.param("min_rotational_vel", min_rotational_vel_, 0.0);
 
 
-      node_private.param("acc_lim_th", acc_lim_th_, 5.5);
-      node_private.param("acc_lim_x", acc_lim_x_, 5.5);
+      node_private.param("acc_lim_th", acc_lim_th_, 0.5);
+      node_private.param("acc_lim_x", acc_lim_x_, 0.5);
       node_private.param("acc_lim_y", acc_lim_y_, 0.0);
       node_private.param("vel_decay", vel_decay_, 0.75);
       node_private.param("angular_decay", angular_decay_, 0.75);
@@ -204,8 +204,8 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
 
       //we want to compute a velocity command based on our current waypoint
       tf::Stamped<tf::Pose> target_pose, last_target_pose;
-      tf::poseStampedMsgToTF(global_plan_[global_plan_.size()-1], target_pose);
-      tf::poseStampedMsgToTF(global_plan_[0], last_target_pose);
+      tf::poseStampedMsgToTF(global_plan_[current_waypoint_+1], target_pose);
+      tf::poseStampedMsgToTF(global_plan_[current_waypoint_], last_target_pose);
 
       ROS_DEBUG("WagonHandleSteering: current robot pose %f %f ==> %f", robot_pose.getOrigin().x(), robot_pose.getOrigin().y(), tf::getYaw(robot_pose.getRotation()));
       ROS_DEBUG("WagonHandleSteering: target pose %f %f ==> %f", target_pose.getOrigin().x(), target_pose.getOrigin().y(), tf::getYaw(target_pose.getRotation()));
