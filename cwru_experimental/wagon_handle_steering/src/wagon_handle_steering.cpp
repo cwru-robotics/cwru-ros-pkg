@@ -267,8 +267,10 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       for( int i=0;i<collision_tries_;i++){
         legal_traj= collision_planner_.checkTrajectory(limit_vel.linear.x, limit_vel.linear.y, limit_vel.angular.z, true);
         if(legal_traj){
+          ROS_DEBUG("legal velocity found\n");
           break;
         }else{
+          ROS_DEBUG("velocity not legal trying lesser vel\n");
           limit_vel.linear.x*=vel_decay_;
           limit_vel.linear.y*=vel_decay_;
           limit_vel.angular.z*=angular_decay_;
@@ -327,7 +329,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
 
       boost::mutex::scoped_lock lock(odom_lock_);
 
-      if(fabs((res.linear.x-base_odom_.twist.twist.linear.x) /update_time_)/acc_lim_x_){
+      if(fabs((res.linear.x-base_odom_.twist.twist.linear.x) /update_time_)>acc_lim_x_){
         if(res.linear.x<base_odom_.twist.twist.linear.x){
           res.linear.x=base_odom_.twist.twist.linear.x-acc_lim_x_*update_time_;
         }else{
