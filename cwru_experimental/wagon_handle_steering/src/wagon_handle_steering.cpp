@@ -355,6 +355,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       }
 
       ROS_DEBUG("Angular command %f", res.angular.z);
+      ROS_DEBUG("Speed command %f",res.linear.x);
       return res;
 
     }
