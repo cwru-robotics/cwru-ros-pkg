@@ -227,7 +227,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
         } else if (!started_reorienting_) {
 
           tf::Vector3 diff = target_p - robot_p;
-          heading = -1.0 * atan2(diff.getY(), diff.getX());
+          heading = atan2(diff.getY(), diff.getX());
           ROS_DEBUG("WagonHandleSteering: Heading directly towards the goal"); 
 
 
@@ -243,7 +243,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
         ROS_DEBUG("WagonHandleSteering: Intersection point was x: %f, y: %f", intersection_p.getX(), intersection_p.getY());
         if(intersected) {
           tf::Vector3 diff = intersection_p - robot_p;
-          heading =  -1.0 * atan2(diff.getY(), diff.getX());
+          heading = atan2(diff.getY(), diff.getX());
           speed = desired_speed_;
           ROS_DEBUG("Intersected with wagon handle radius");
         } else {
