@@ -1,3 +1,4 @@
+#include <endian.h>
 #include <ros/ros.h>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
@@ -22,6 +23,7 @@ namespace cwru_base {
 			void updateDiagnostics();
 		private:
 			CRIOPosePacket swapPosePacket(CRIOPosePacket& packet);
+			CRIODiagnosticsPacket swapDiagnosticsPacket(CRIODiagnosticsPacket& packet);
 			void handleSonarPing(Sonar& ping, const float ping_value, const std::string frame_id, ros::Publisher& sonar_pub);
 			float swap_float(float in);
 			void setupDiagnostics();
@@ -37,6 +39,8 @@ namespace cwru_base {
 			diagnostic_updater::Updater updater_;
 			diagnostic_updater::DiagnosedPublisher<cwru_base::Pose> pose_pub_;
 			double desired_pose_freq_;
+			CRIODiagnosticsPacket diagnostics_info_;
+			CRIOPosePacket pose_packet_;
 	};
 
 	CrioReceiver::CrioReceiver(): 
@@ -107,9 +111,32 @@ namespace cwru_base {
 		return swapped_packet;
 	}
 
+	CRIODiagnosticsPacket CrioReceiver::swapDiagnosticsPacket(CRIODiagnosticsPacket& packet) {
+		CRIODiagnosticsPacket swapped_packet = packet;
+		swapped_packet.FPGAVersion = be16toh(packet.FPGAVersion);
+		swapped_packet.VMonitor_cRIO_mV = be16toh(packet.VMonitor_cRIO_mV);
+		swapped_packet.LWheelTicks = be32toh(packet.LWheelTicks);
+		swapped_packet.RWheelTicks = be32toh(packet.RWheelTicks);
+		swapped_packet.LMotorTicks = be32toh(packet.LMotorTicks);
+		swapped_packet.RMotorTicks = be32toh(packet.RMotorTicks);
+		swapped_packet.VMonitor_24V_mV = be16toh(packet.VMonitor_24V_mV);
+		swapped_packet.VMonitor_13V_mv = be16toh(packet.VMonitor_13V_mv);
+		swapped_packet.VMonitor_5V_mV = be16toh(packet.VMonitor_13V_mv);
+		swapped_packet.VMonitor_eStop_mV = be16toh(packet.VMonitor_eStop_mV);
+		swapped_packet.YawRate_mV = be16toh(packet.YawRate_mV);
+		swapped_packet.YawSwing_mV = be16toh(packet.YawSwing_mV);
+		swapped_packet.YawTemp_mV = be16toh(packet.YawTemp_mV);
+		swapped_packet.YawRef_mV = be16toh(packet.YawRef_mV);
+		swapped_packet.C1Steering = be16toh(packet.C1Steering);
+		swapped_packet.C2Throttle = be16toh(packet.C2Throttle);
+		swapped_packet.C3Mode = be16toh(packet.C3Mode);
+		return swapped_packet;
+	}
+
 	void CrioReceiver::handlePosePacket(CRIOPosePacket packet) {
 		ros::Time current_time = ros::Time::now();
 		CRIOPosePacket swapped_packet = swapPosePacket(packet);
+		pose_packet_ = swapped_packet;
 		Pose p, p2;
 		p.x = swapped_packet.x;
 		p.y = swapped_packet.y;
@@ -150,6 +177,12 @@ namespace cwru_base {
 	}
 
 	void CrioReceiver::handleDiagnosticsPacket(CRIODiagnosticsPacket packet) {
+		ros::Time current_time = ros::Time::now();
+		CRIODiagnosticsPacket swapped_packet = swapDiagnosticsPacket(packet);
+		diagnostics_info_ = swapped_packet;
+		std_msgs::Bool msg;
+		msg.data = diagnostics_info_.eStopTriggered;
+		estop_pub_.publish(msg);
 	}
 };
 
