@@ -92,11 +92,13 @@ namespace cwru_base {
 		swapped_packet.theta = swap_float(packet.theta);
 		swapped_packet.vel = swap_float(packet.vel);
 		swapped_packet.omega = swap_float(packet.omega);
+		swapped_packet.yaw_bias = swap_float(packet.yaw_bias);
 		swapped_packet.x_variance = swap_float(packet.x_variance);
 		swapped_packet.y_variance = swap_float(packet.y_variance);
 		swapped_packet.theta_variance = swap_float(packet.theta_variance);
 		swapped_packet.omega_variance = swap_float(packet.omega_variance);
 		swapped_packet.vel_variance = swap_float(packet.vel_variance);
+		swapped_packet.yaw_bias_variance = swap_float(packet.yaw_bias_variance);
 		swapped_packet.sonar_ping_1 = swap_float(packet.sonar_ping_1);
 		swapped_packet.sonar_ping_2 = swap_float(packet.sonar_ping_2);
 		swapped_packet.sonar_ping_3 = swap_float(packet.sonar_ping_3);
