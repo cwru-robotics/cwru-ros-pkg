@@ -116,11 +116,13 @@ namespace cwru_base {
 		p.theta = swapped_packet.theta;
 		p.vel = swapped_packet.vel;
 		p.omega = swapped_packet.omega;
+		ROS_DEBUG("Yaw bias: %f", swapped_packet.yaw_bias);
 		p.x_var = swapped_packet.x_variance;
 		p.y_var = swapped_packet.y_variance;
 		p.theta_var = swapped_packet.theta_variance;
 		p.vel_var = swapped_packet.vel_variance;
 		p.omega_var = swapped_packet.omega_variance;
+		ROS_DEBUG("Yaw bias variance: %f", swapped_packet.yaw_bias_variance);
 		p.header.frame_id = "crio";
 		p.header.stamp = current_time;
 		p2 = p;
