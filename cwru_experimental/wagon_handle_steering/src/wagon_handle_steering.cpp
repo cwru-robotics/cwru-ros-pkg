@@ -20,9 +20,9 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       collision_planner_.initialize(name, tf_, costmap_ros_);
 
       node_private.param("handle_length", handle_length_, 1.0);
-      node_private.param("reorient_dist", reorient_dist_, .25);
-      node_private.param("rotate_in_place_heading", rotate_in_place_head_, 0.2);
-      node_private.param("rotate_in_place_distance", rotate_in_place_dist_, 0.1);
+      node_private.param("reorient_dist", reorient_dist_, .5);
+      node_private.param("rotate_in_place_heading", rotate_in_place_head_, 0.3);
+      node_private.param("rotate_in_place_distance", rotate_in_place_dist_, 0.2);
       node_private.param("desired_speed", desired_speed_, 0.5);
 
       node_private.param("tolerance_trans", tolerance_trans_, 0.02);
@@ -43,8 +43,8 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       node_private.param("min_rotational_vel", min_rotational_vel_, 0.0);
 
 
-      node_private.param("acc_lim_th", acc_lim_th_, 5.5);
-      node_private.param("acc_lim_x", acc_lim_x_, 5.5);
+      node_private.param("acc_lim_th", acc_lim_th_, 0.5);
+      node_private.param("acc_lim_x", acc_lim_x_, 0.5);
       node_private.param("acc_lim_y", acc_lim_y_, 0.0);
       node_private.param("vel_decay", vel_decay_, 0.75);
       node_private.param("angular_decay", angular_decay_, 0.75);
@@ -124,14 +124,15 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       double term1 = segment1.getX() * segment2.getY();
       double term2 = segment1.getY() * segment2.getX();
 
-      double denominator = sqrt(pow(segment1.getX(), 2.0) - pow(segment1.getY(), 2.0));
+      double denominator = sqrt(pow(segment1.getX(), 2.0) + pow(segment1.getY(), 2.0));
 
       double numerator = term1 - term2;
       double distance = fabs(numerator) / denominator;
-
+        ROS_DEBUG("Dist calced %f",distance);
       if (distance < rotate_in_place_dist_) {
         double line_heading = atan2(segment1.getY(), segment1.getX());
         double min_angle = angles::shortest_angular_distance(tf::getYaw(current_loc.getRotation()), line_heading);
+        ROS_DEBUG("angle calced %f",min_angle);
         if (fabs(min_angle) > rotate_in_place_head_) {
           return true;
         } else {
@@ -204,9 +205,11 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
 
       //we want to compute a velocity command based on our current waypoint
       tf::Stamped<tf::Pose> target_pose, last_target_pose;
+     // tf::poseStampedMsgToTF(global_plan_[current_waypoint_+1], target_pose);
+     // tf::poseStampedMsgToTF(global_plan_[current_waypoint_], last_target_pose);
       tf::poseStampedMsgToTF(global_plan_[global_plan_.size()-1], target_pose);
       tf::poseStampedMsgToTF(global_plan_[0], last_target_pose);
-
+      
       ROS_DEBUG("WagonHandleSteering: current robot pose %f %f ==> %f", robot_pose.getOrigin().x(), robot_pose.getOrigin().y(), tf::getYaw(robot_pose.getRotation()));
       ROS_DEBUG("WagonHandleSteering: target pose %f %f ==> %f", target_pose.getOrigin().x(), target_pose.getOrigin().y(), tf::getYaw(target_pose.getRotation()));
       ROS_DEBUG("WagonHandleSteering: last_target pose %f %f ==> %f", last_target_pose.getOrigin().x(), last_target_pose.getOrigin().y(), tf::getYaw(last_target_pose.getRotation()));
@@ -258,12 +261,14 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       if (rotate_only) {
         ROS_DEBUG("Rotating in place only");
         speed = 0.0;
+      }else{
+        ROS_DEBUG("Not rotating in place");
       }
       double min_angle = angles::shortest_angular_distance(tf::getYaw(robot_pose.getRotation()), heading);
       ROS_DEBUG("WagonHandleSteering: current_heading: %f", tf::getYaw(robot_pose.getRotation()));
       ROS_DEBUG("WagonHandleSteering: desired_heading: %f", heading);
       ROS_DEBUG("WagonHandleSteering: min_angle: %f", min_angle);
-      double desired_angular_rate = min_angle/(update_time_ * 10.0);
+      double desired_angular_rate = min_angle/(update_time_ * 25.0);
       geometry_msgs::Twist limit_vel = limitTwist(desired_angular_rate, speed);
       bool legal_traj=false;
 

@@ -36,17 +36,23 @@ goals:
       wavs:
          - 'leg4.wav'
     - goal:
-         x: -4.374
-         y: -8.15
+         x: -3.374
+         y: -9.65
          theta: 4.71
       wavs:
          - 'leg6.wav'
+    - goal:
+         x: -3.374
+         y: -9.65
+         theta: 0
+      wavs:
+          - 'endpoint.wav'
     - goal:
          x: 0
          y: 0
          theta: 0
       wavs:
-          - 'endpoint.wav'
+          - 'blank_sound.ogg'
 jokes:
     - 'joke1.wav'
     - 'joke2.wav'
