@@ -2,6 +2,9 @@
 #include <ros/ros.h>
 #include <boost/array.hpp>
 #include <boost/asio.hpp>
+#include <boost/asio/deadline_timer.hpp>
+#include <boost/bind.hpp>
+#include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <cwru_base/packets.h>
 #include <cwru_base/Pose.h>
 #include <cwru_base/Sonar.h>
@@ -9,8 +12,8 @@
 #include <diagnostic_updater/diagnostic_updater.h>
 #include <diagnostic_updater/publisher.h>
 
-
 using boost::asio::ip::udp;
+using boost::asio::deadline_timer;
 
 namespace cwru_base {
 	class CrioReceiver {
@@ -186,26 +189,58 @@ namespace cwru_base {
 	}
 };
 
+void check_deadline(deadline_timer& deadline, udp::socket& socket) {
+	if (deadline.expires_at() <= deadline_timer::traits_type::now()) {
+		socket.cancel();
+		deadline.expires_at(boost::posix_time::pos_infin);
+	}
+	deadline.async_wait(boost::bind(&check_deadline, boost::ref(deadline), boost::ref(socket)));
+}
+
+static void handle_receive(const boost::system::error_code& input_ec, std::size_t input_len,
+			   boost::system::error_code* output_ec, std::size_t* output_len) {
+	*output_ec = input_ec;
+	*output_len = input_len;
+}
+
 int main(int argc, char *argv[]) {
 	ros::init(argc, argv, "crio_receiver");
 	ros::NodeHandle nh;
 	cwru_base::CrioReceiver from_crio;
 	boost::asio::io_service io_service;
 	udp::socket socket(io_service, udp::endpoint(udp::v4(), 50000));
+	deadline_timer deadline(io_service);
+	deadline.expires_at(boost::posix_time::pos_infin);
+	check_deadline(deadline, socket);
+	boost::posix_time::seconds timeout(10);
 	while (nh.ok()) {
 		try {
 			boost::array<cwru_base::CRIOCommand, 1> recv_buf;
 			udp::endpoint remote_endpoint;
-			boost::system::error_code error;
+			
+			deadline.expires_from_now(timeout);
 
-			socket.receive_from(boost::asio::buffer(recv_buf), remote_endpoint, 0, error);
+			boost::system::error_code error = boost::asio::error::would_block;
+			std::size_t length = 0;
 
-			if (error && error != boost::asio::error::message_size) {
-				throw boost::system::system_error(error);
+			socket.async_receive_from(boost::asio::buffer(recv_buf), remote_endpoint, 
+					boost::bind(&handle_receive, _1, _2, &error, &length));
+
+			do {
+				io_service.run_one();
+			} while (error == boost::asio::error::would_block);
+
+			if (error) {
+				if (error == boost::asio::error::operation_aborted) {
+					ROS_WARN("Socket receive timed out. Are you sure you are connected to the cRIO?");
+					from_crio.updateDiagnostics();
+				} else {
+					throw boost::system::system_error(error);
+				}
+			} else {
+				from_crio.dispatchReceivedPacket(recv_buf[0]);
+				from_crio.updateDiagnostics();
 			}
-
-			from_crio.dispatchReceivedPacket(recv_buf[0]);
-			from_crio.updateDiagnostics();
 		} catch (std::exception& e) {
 			ROS_ERROR_STREAM("cRIO receiver threw an exception: " << e.what());
 		}
