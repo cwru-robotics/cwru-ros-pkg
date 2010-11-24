@@ -10,9 +10,10 @@ inflation_radius: 1.0
 #cost_scaling_factor: 0.0
 cost_scaling_factor: 11.8
 
-observation_sources: obstacle_base_laser1
-#
-# map_cloud sonar_1 sonar_2 sonar_3 sonar_5 sonar_1_clearing sonar_2_clearing sonar_3_clearing sonar_5_clearing 
+observation_sources: base_laser1 obstacle_map_cloud 
+
+#sonar_1 sonar_2 sonar_3 sonar_5 sonar_1_clearing sonar_2_clearing sonar_3_clearing sonar_5_clearing
+#  
 #sonar_4
 #sonar_4_clearing
 
