@@ -39,6 +39,8 @@ class FromCRIO:
 	self.omega = 0
 	self.vel_var = 0
 	self.omega_var = 0
+	self.yaw_bias = 0
+	self.yaw_bias_var = 0
 	self.sonar_ping_1 = 0
 	self.sonar_ping_2 = 0
 	self.sonar_ping_3 = 0
@@ -77,9 +79,10 @@ class FromCRIO:
 
             type = packets.read_packet_type(data)
             if type == 1:
-                self.status = packets.read_diagnostics_packet(data)[0]
+                #self.status = packets.read_diagnostics_packet(data)[0]
+		pass
             elif type == 0:
-                self.x, self.y, self.heading, self.vel, self.omega, self.x_var, self.y_var, self.heading_var, self.vel_var, self.omega_var, self.sonar_ping_1, self.sonar_ping_2, self.sonar_ping_3, self.sonar_ping_4, self.sonar_ping_5 = packets.read_pose_packet(data)
+                self.x, self.y, self.heading, self.vel, self.omega, self.yaw_bias, self.x_var, self.y_var, self.heading_var, self.vel_var, self.omega_var, self.yaw_bias_var, self.sonar_ping_1, self.sonar_ping_2, self.sonar_ping_3, self.sonar_ping_4, self.sonar_ping_5 = packets.read_pose_packet(data)
 		duration = ((self.current_time - self.last_time).to_sec())
 		self.has_data.set()
 	    self.last_time = self.current_time
