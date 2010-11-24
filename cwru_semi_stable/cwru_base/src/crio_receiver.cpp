@@ -8,6 +8,7 @@
 #include <cwru_base/packets.h>
 #include <cwru_base/Pose.h>
 #include <cwru_base/Sonar.h>
+#include <cwru_base/cRIOSensors.h>
 #include <std_msgs/Bool.h>
 #include <diagnostic_updater/diagnostic_updater.h>
 #include <diagnostic_updater/publisher.h>
@@ -28,6 +29,7 @@ namespace cwru_base {
       CRIOPosePacket swapPosePacket(CRIOPosePacket& packet);
       CRIODiagnosticsPacket swapDiagnosticsPacket(CRIODiagnosticsPacket& packet);
       void checkEncoderTicks(diagnostic_updater::DiagnosticStatusWrapper &stat);
+      void checkYawSensor(diagnostic_updater::DiagnosticStatusWrapper &stat);
       void handleSonarPing(Sonar& ping, const float ping_value, const std::string frame_id, ros::Publisher& sonar_pub);
       float swap_float(float in);
       void setupDiagnostics();
@@ -42,6 +44,7 @@ namespace cwru_base {
       ros::Publisher sonar5_pub_;
       diagnostic_updater::Updater updater_;
       diagnostic_updater::DiagnosedPublisher<cwru_base::Pose> pose_pub_;
+      diagnostic_updater::DiagnosedPublisher<cwru_base::cRIOSensors> sensor_pub_;
       double desired_pose_freq_;
       CRIODiagnosticsPacket diagnostics_info_;
       CRIOPosePacket pose_packet_;
@@ -50,6 +53,10 @@ namespace cwru_base {
   CrioReceiver::CrioReceiver(): 
     priv_nh_("~"),
     pose_pub_(nh_.advertise<cwru_base::Pose>("pose",1),
+        updater_,
+        diagnostic_updater::FrequencyStatusParam(&desired_pose_freq_, &desired_pose_freq_, 3.0, 5),
+        diagnostic_updater::TimeStampStatusParam()),
+    sensor_pub_(nh_.advertise<cwru_base::cRIOSensors>("crio_sensors",1),
         updater_,
         diagnostic_updater::FrequencyStatusParam(&desired_pose_freq_, &desired_pose_freq_, 3.0, 5),
         diagnostic_updater::TimeStampStatusParam())
@@ -70,10 +77,37 @@ namespace cwru_base {
     updater_.setHardwareID("CRIO-192.168.0.100");	
 
     updater_.add("Encoders", this, &CrioReceiver::checkEncoderTicks);
+    updater_.add("Yaw Sensor", this, &CrioReceiver::checkYawSensor);
   }
 
   void CrioReceiver::updateDiagnostics() {
     updater_.update();
+  }
+  void CrioReceiver::checkYawSensor(diagnostic_updater::DiagnosticStatusWrapper &stat) {
+    stat.add("Yaw Rate", diagnostics_info_.YawRate_mV / 1000.0); 
+    stat.add("Yaw Swing", diagnostics_info_.YawSwing_mV / 1000.0); 
+    stat.add("Yaw Temp", diagnostics_info_.YawTemp_mV / 1000.0); 
+    stat.add("Yaw Ref", diagnostics_info_.YawRef_mV / 1000.0); 
+    stat.add("Yaw Bias", pose_packet_.yaw_bias);
+    stat.add("Yaw Bias Variance", pose_packet_.yaw_bias_variance);
+    std::string status_msg;
+    unsigned char status_lvl = diagnostic_msgs::DiagnosticStatus::OK;
+    if (fabs(pose_packet_.yaw_bias) > 1.) {
+      status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+      status_msg += "Yaw sensor bias has diverged; ";
+    } else if (fabs(pose_packet_.yaw_bias) > 0.4 && fabs(pose_packet_.yaw_bias) < 1.) {
+      status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
+      status_msg += "Yaw sensor bias is outside of expected bounds; ";
+    } else {
+      status_msg += "Yaw sensor bias is okay; ";
+    }
+    if ((diagnostics_info_.YawSwing_mV / 1000.0) < 0.1) {
+      status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+      status_msg += "Yaw sensor seems disconnected; ";
+    } else {
+      status_msg += "Yaw sensor is connected; ";
+    }
+    stat.summary(status_lvl, status_msg);
   }
 
   void CrioReceiver::checkEncoderTicks(diagnostic_updater::DiagnosticStatusWrapper &stat) {
@@ -253,6 +287,18 @@ namespace cwru_base {
     std_msgs::Bool msg;
     msg.data = diagnostics_info_.eStopTriggered;
     estop_pub_.publish(msg);
+
+    cwru_base::cRIOSensors sensor_msg;
+    sensor_msg.header.stamp = current_time;
+    sensor_msg.header.frame_id = "crio";
+    sensor_msg.left_wheel_encoder = diagnostics_info_.LWheelTicks;
+    sensor_msg.right_wheel_encoder = diagnostics_info_.RWheelTicks;
+    sensor_msg.left_motor_encoder = diagnostics_info_.LMotorTicks;
+    sensor_msg.right_motor_encoder = diagnostics_info_.RMotorTicks;
+    sensor_msg.yaw_rate = diagnostics_info_.YawRate_mV;
+    sensor_msg.yaw_temp = diagnostics_info_.YawTemp_mV;
+    sensor_msg.yaw_ref = diagnostics_info_.YawRef_mV;
+    sensor_pub_.publish(sensor_msg);
   }
 };
 
