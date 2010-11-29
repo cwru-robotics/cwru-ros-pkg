@@ -92,7 +92,7 @@ class DemoApp(object):
 	print "Partial: " + hyp
 	hyp = hyp.lower()        
 	if "stop" in hyp:
-		self.msg.header.stamp = ros.Time.now()
+		self.msg.header.stamp = rospy.Time.now()
 		self.msg.data = "stop"
 		rospy.loginfo(self.msg.data)
 	        self.pub.publish(self.msg.data)
@@ -110,32 +110,32 @@ class DemoApp(object):
 	print "Final: " + hyp
 	hyp = hyp.lower()
 	if "right" in hyp:
-		self.msg.header.stamp = ros.Time.now()
+		self.msg.header.stamp = rospy.Time.now()
 		self.msg.data = "right"
 	elif "stop" in hyp:
-		self.msg.header.stamp = ros.Time.now()
+		self.msg.header.stamp = rospy.Time.now()
 		self.msg.data = "stop"
 	elif "left" in hyp:
-		self.msg.header.stamp = ros.Time.now()
+		self.msg.header.stamp = rospy.Time.now()
 		self.msg.data = "left"
 	elif "forward" in hyp:
-		self.msg.header.stamp = ros.Time.now()
+		self.msg.header.stamp = rospy.Time.now()
 		self.msg.data = "forward"
 	elif "speed up" in hyp:
-		self.msg.header.stamp = ros.Time.now()
+		self.msg.header.stamp = rospy.Time.now()
 		self.msg.data = "up"		
 	elif "speed" in hyp:
-		self.msg.header.stamp = ros.Time.now()
+		self.msg.header.stamp = rospy.Time.now()
 		self.msg.data = "up"
 	elif "slow down" in hyp:
-		self.msg.header.stamp = ros.Time.now()
+		self.msg.header.stamp = rospy.Time.now()
 		self.msg.data = "down"
 	elif "slow" in hyp:
-		self.msg.header.stamp = ros.Time.now()
+		self.msg.header.stamp = rospy.Time.now()
 		self.msg.data = "down"
 	else:
 		print "I didn't understand. Please say a command. \n"
-		self.msg.header.stamp = ros.Time.now()
+		self.msg.header.stamp = rospy.Time.now()
 		self.msg.data = "stop"
 	
 	if not self.isstop:
