@@ -42,6 +42,13 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       node_private.param("max_rotational_vel", max_rotational_vel_, 1.0);
       node_private.param("min_rotational_vel", min_rotational_vel_, 0.0);
 
+      propotionalError=0;
+      integralError=0;
+      derivativeError=0;
+
+      node_private.param("proportionalGain", proportionalGain, 0.2);
+      node_private.param("integralGain", integralGain, 0.1);
+      node_private.param("derivativeGain", derivativeGain, 0.1);
 
       node_private.param("acc_lim_th", acc_lim_th_, 0.5);
       node_private.param("acc_lim_x", acc_lim_x_, 0.5);
@@ -58,6 +65,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       ros::NodeHandle node;
       odom_sub_ = node.subscribe<nav_msgs::Odometry>("odom", 1, boost::bind(&WagonHandleSteering::odomCallback, this, _1));
       vel_pub_ = node.advertise<geometry_msgs::Twist>("cmd_vel", 10);
+      desired_heading_pub_ = node.advertise<geometry_msgs::Vector3Stamped>("wagon_steering_desired_heading", 10);
 
       ROS_DEBUG("Initialized");
     }
@@ -188,6 +196,17 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       return total_distance;
     }
 
+    double WagonHandleSteering::PIDSteering(double angle_correction){
+       propotionalError = angle_correction;
+	integralError = (integralError + angle_correction) * integralGain;
+	float derivativeChange = propotionalError - derivativeError;
+	derivativeError = angle_correction;
+	if (fabs(integralError) > 7.0) {
+		integralError = 0.0;
+	}
+	return (propotionalError * proportionalGain) + integralError + (derivativeChange * derivativeGain);
+    }
+
     bool WagonHandleSteering::computeVelocityCommands(geometry_msgs::Twist& cmd_vel){
       ROS_DEBUG("number of poses in plan %d",global_plan_.size());
       //get the current pose of the robot in the fixed frame
@@ -205,10 +224,10 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
 
       //we want to compute a velocity command based on our current waypoint
       tf::Stamped<tf::Pose> target_pose, last_target_pose;
-     // tf::poseStampedMsgToTF(global_plan_[current_waypoint_+1], target_pose);
-     // tf::poseStampedMsgToTF(global_plan_[current_waypoint_], last_target_pose);
-      tf::poseStampedMsgToTF(global_plan_[global_plan_.size()-1], target_pose);
-      tf::poseStampedMsgToTF(global_plan_[0], last_target_pose);
+      tf::poseStampedMsgToTF(global_plan_[current_waypoint_+1], target_pose);
+      tf::poseStampedMsgToTF(global_plan_[current_waypoint_], last_target_pose);
+     // tf::poseStampedMsgToTF(global_plan_[global_plan_.size()-1], target_pose);
+     // tf::poseStampedMsgToTF(global_plan_[0], last_target_pose);
       
       ROS_DEBUG("WagonHandleSteering: current robot pose %f %f ==> %f", robot_pose.getOrigin().x(), robot_pose.getOrigin().y(), tf::getYaw(robot_pose.getRotation()));
       ROS_DEBUG("WagonHandleSteering: target pose %f %f ==> %f", target_pose.getOrigin().x(), target_pose.getOrigin().y(), tf::getYaw(target_pose.getRotation()));
@@ -234,7 +253,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
           ROS_DEBUG("WagonHandleSteering: Heading directly towards the goal"); 
 
 
-          speed = exp(-1.0 * (handle_length_ / calcDistanceToGoal(robot_pose))) * desired_speed_;
+          speed = desired_speed_; //exp(-1.0 * (handle_length_ / calcDistanceToGoal(robot_pose))) * desired_speed_;
 
         }
         ROS_DEBUG("WagonHandleSteering: Goal is within the handle length. Heading directly towards the goal on a heading of %f", heading);
@@ -265,15 +284,23 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
         ROS_DEBUG("Not rotating in place");
       }
       double min_angle = angles::shortest_angular_distance(tf::getYaw(robot_pose.getRotation()), heading);
+      geometry_msgs::Vector3Stamped desired_heading_output;
+      desired_heading_output.header.stamp = ros::Time::now();
+      desired_heading_output.vector.z = heading;
+      desired_heading_output.vector.x = min_angle;
+      desired_heading_pub_.publish(desired_heading_output);
       ROS_DEBUG("WagonHandleSteering: current_heading: %f", tf::getYaw(robot_pose.getRotation()));
       ROS_DEBUG("WagonHandleSteering: desired_heading: %f", heading);
       ROS_DEBUG("WagonHandleSteering: min_angle: %f", min_angle);
-      double desired_angular_rate = min_angle/(update_time_ * 25.0);
+      double desired_angular_rate= PIDSteering(min_angle);
+     // double desired_angular_rate = min_angle/(update_time_ * 25.0);
       geometry_msgs::Twist limit_vel = limitTwist(desired_angular_rate, speed);
       bool legal_traj=false;
+      bool update_costmaps = true;
 
       for( int i=0;i<collision_tries_;i++){
-        legal_traj= collision_planner_.checkTrajectory(limit_vel.linear.x, limit_vel.linear.y, limit_vel.angular.z, true);
+        legal_traj= collision_planner_.checkTrajectory(limit_vel.linear.x, limit_vel.linear.y, limit_vel.angular.z, update_costmaps);
+	update_costmaps = false;
         if(legal_traj){
           ROS_DEBUG("legal velocity found\n");
           break;
@@ -314,6 +341,9 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
 
     bool WagonHandleSteering::setPlan(const std::vector<geometry_msgs::PoseStamped>& global_plan){
       current_waypoint_ = 0;
+      propotionalError=0;
+      integralError=0;
+      derivativeError=0;
       goal_reached_time_ = ros::Time::now();
       if(!transformGlobalPlan(*tf_, global_plan, *costmap_ros_, costmap_ros_->getGlobalFrameID(), global_plan_)){
         ROS_ERROR("Could not transform the global plan to the frame of the controller");
@@ -334,7 +364,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       geometry_msgs::Twist res;
       res.linear.x = desired_speed;
       res.angular.z = desired_angular_rate;
-
+/*
       boost::mutex::scoped_lock lock(odom_lock_);
 
       if(fabs((res.linear.x-base_odom_.twist.twist.linear.x) /update_time_) > acc_lim_x_){
@@ -368,7 +398,7 @@ PLUGINLIB_DECLARE_CLASS(wagon_handle_steering, WagonHandleSteering, wagon_handle
       if(fabs(res.linear.x) < trans_stopped_velocity_ && fabs(res.linear.y) < trans_stopped_velocity_){
         if (fabs(res.angular.z) < min_in_place_rotational_vel_) res.angular.z = min_in_place_rotational_vel_* sign(res.angular.z);
       }
-
+*/
       ROS_DEBUG("Angular command %f", res.angular.z);
       ROS_DEBUG("Speed command %f",res.linear.x);
       return res;
