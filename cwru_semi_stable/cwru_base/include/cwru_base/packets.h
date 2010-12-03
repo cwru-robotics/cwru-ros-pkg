@@ -45,11 +45,13 @@ namespace cwru_base {
 		float theta;
 		float vel;
 		float omega;
+		float yaw_bias;
 		float x_variance;
 		float y_variance;
 		float theta_variance;
 		float vel_variance;
 		float omega_variance;
+		float yaw_bias_variance;
 		float sonar_ping_1;
 		float sonar_ping_2;
 		float sonar_ping_3;

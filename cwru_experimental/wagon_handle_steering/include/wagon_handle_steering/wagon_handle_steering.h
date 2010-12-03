@@ -24,8 +24,15 @@ namespace wagon_handle_steering {
       inline double sign(double n){
         return n < 0.0 ? -1.0 : 1.0;
       }
+      double propotionalError;
+      double integralError;
+      double derivativeError;
 
-      geometry_msgs::Twist limitTwist(const double desired_heading, const double desired_speed);
+      double proportionalGain;
+      double integralGain;
+      double derivativeGain;
+      
+      geometry_msgs::Twist limitTwist(const double desired_angular_rate, const double desired_speed);
       bool intersectedWithCircle(const tf::Point& start_p, const tf::Point& robot_p, const tf::Vector3& direction, tf::Point& intersectionPoint);
       bool shouldRotateInPlace(const tf::Point& start, const tf::Point& end, const tf::Pose& current_loc);
 
@@ -37,6 +44,8 @@ namespace wagon_handle_steering {
       bool stopped();
       void updateWaypoint(tf::Stamped<tf::Pose>& robot_pose);
       double calcDistanceToGoal(tf::Stamped<tf::Pose>& robot_pose);
+
+      double PIDSteering(double angle_correction);
 
       double max_rotational_vel_,max_vel_y_,max_vel_x_,acc_lim_th_,acc_lim_x_,acc_lim_y_,min_vel_x_, min_vel_y_,min_in_place_rotational_vel_,min_rotational_vel_,update_time_;
 
@@ -52,6 +61,7 @@ namespace wagon_handle_steering {
 
       boost::mutex odom_lock_;
       ros::Subscriber odom_sub_;
+      ros::Publisher desired_heading_pub_;
       nav_msgs::Odometry base_odom_;
       double trans_stopped_velocity_, rot_stopped_velocity_;
       ros::Time goal_reached_time_;

@@ -53,7 +53,7 @@ def read_packet_type(packet):
     return type
 
 def read_pose_packet(packet):
-    ret_tuple = struct.unpack(">bxxxfffffffffffffff", packet)[1:]
+    ret_tuple = struct.unpack(">bxxxfffffffffffffffff", packet)[1:]
     return ret_tuple
 
 def read_diagnostics_packet(packet):
