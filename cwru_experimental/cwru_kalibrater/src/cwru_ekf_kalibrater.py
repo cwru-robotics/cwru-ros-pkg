@@ -30,6 +30,8 @@ import geometry_msgs.msg
 from cwru_base.msg import cRIOSensors
 from cwru_ekf_dynamic import EKF
 from scipy.optimize import fmin
+from scipy.optimize import fmin_bfgs
+from scipy.optimize import fmin_powell
 
 import sys
 import rosbag
@@ -38,12 +40,21 @@ class KF_Tuner:
   def __init__(self, bagPath):
     # gX is: qV qW qB encVc encVl yawVc yawVl lec rec yc track
     self.bag = rosbag.Bag(bagPath)
-    gX = (1.0, 1.0, 1e-6, .002, .002, .002, .002, 1e-5, 1e-5, .0126, .56)
-    gXopt = fmin(self.newEKF, gX, ftol=1e-2)
-    print gXopt
+    self.mag = (20, 20, 1, 1, 1, 1, 1)#, 1e-5, 1e-5, .0126, .56)
+    self.signed = (1, 1, 1, 1, -1, 1, -1)#, 1e-5, 1e-5, .0126, .56)
+    #gX = (1.0, 1.0, 1e-6, .002, .002, .002, .002)#, 1e-5, 1e-5, .0126, .56)
+    glX = (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)#, 1e-5, 1e-5, .0126, .56)
+    gXopt = fmin(self.newEKF, glX, xtol=1e-6)#fmin_bfgs(self.newEKF, glX)#
     self.bag.close()
     
-  def newEKF(self, gX):
+  def newEKF(self, glX):
+    gX = glX
+    for i in range(len(glX)):
+      if(self.signed[i] > 0):
+	gX[i] = self.mag[i]*self.logsig(glX[i])
+      else:
+	gX[i] = self.mag[i]*self.signlogsig(glX[i])
+    
     map2odomtrans = False
     map2odomrot = False
     odom2basetrans = False
@@ -96,6 +107,25 @@ class KF_Tuner:
     xp = x*cos(th)-y*sin(th)+trans.x
     yp = x*sin(th)+y*cos(th)+trans.y
     return [xp, yp]
+    
+  def logsig(self,x):
+    if(x > 100):
+      return 1.0
+    elif(x < -100):
+      return 0.0
+    else:
+      return 1.0 / (1.0 + exp(-x))
+      
+  def signlogsig(self,x):
+    if(x > 100):
+      return 1.0
+    elif(x < -100):
+      return -1.0
+    else:
+      return 2.0 / (1.0 + exp(-x))-1.0
+    
+  def tansig(self, x):
+    return 2.0/(1.0+exp(-2.0*x))-1.0
 
 if __name__ == '__main__':
 	try:
