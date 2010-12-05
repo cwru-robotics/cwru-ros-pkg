@@ -40,20 +40,20 @@ class KF_Tuner:
   def __init__(self, bagPath):
     # gX is: qV qW qB encVc encVl yawVc yawVl lec rec yc track
     self.bag = rosbag.Bag(bagPath)
-    #self.mag = (20, 20, 1, 1, 1, 1, 1)#, 1e-5, 1e-5, .0126, .56)
-    #self.signed = (1, 1, 1, 1, -1, 1, -1)#, 1e-5, 1e-5, .0126, .56)
+    self.mag = (20, 20, .01, .01)#, 1, 1, 1)#, 1e-5, 1e-5, .0126, .56)
+    self.signed = (1, 1, 1, 1)#, -1, 1, -1)#, 1e-5, 1e-5, .0126, .56)
     #gX = (1.0, 1.0, 1e-6, .002, .002, .002, .002)#, 1e-5, 1e-5, .0126, .56)
-    glX = (1, 1, 1e-6, 0.01)#(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0)#, 1e-5, 1e-5, .0126, .56)
-    gXopt = fmin(self.newEKF, glX, xtol=1e-6)#fmin_bfgs(self.newEKF, glX)#
+    glX = (0.0, 0.0, 0.0, 0.0)#, 0.0, 0.0, 0.0)#, 1e-5, 1e-5, .0126, .56)
+    gXopt = fmin(self.newEKF, glX, xtol=1e-10)#fmin_bfgs(self.newEKF, glX)#
     self.bag.close()
     
   def newEKF(self, glX):
     gX = glX
-    '''for i in range(len(glX)):
+    for i in range(len(glX)):
       if(self.signed[i] > 0):
 	gX[i] = self.mag[i]*self.logsig(glX[i])
       else:
-	gX[i] = self.mag[i]*self.signlogsig(glX[i])'''
+	gX[i] = self.mag[i]*self.signlogsig(glX[i])
     
     map2odomtrans = False
     map2odomrot = False
