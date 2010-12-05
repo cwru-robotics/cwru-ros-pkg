@@ -38,6 +38,8 @@ class EKF:
       # Model constants
       self.lec = 0.00087589
       self.rec = 0.00087196
+      self.lmec = self.lec / 15.0
+      self.rmec = self.rec / 15.0
       self.yc = 0.0126276
       self.track = 0.561975
       self.dt = 1.0/50.0
@@ -100,14 +102,15 @@ class EKF:
       rospy.spin()
 	      
   def update_filter(self, msg):
+    print self.x
     self.modelJacobian()
-    self.prediction()
+    self.prediction(msg)
     
     self.sensor_update(msg)
     if(self.publish == 1):
       self.publish_filter()
     
-  def prediction(self):
+  def prediction(self, msg):
     # Model prediction
     x = self.x[0]
     y = self.x[1]
@@ -116,12 +119,25 @@ class EKF:
     w = self.x[4]
     Vb = self.x[5]
     
-    self.x[0] = x + v*self.dt*cos(th)
-    self.x[1] = y + v*self.dt*sin(th)
-    self.x[2] = th + w*self.dt
-    
-    # Covariance prediction
-    self.P = dot(dot(self.A,self.P),self.A.T) + self.Q
+    if(self.firstRun == 1):
+      # Just record encoder values
+      self.lme = msg.left_motor_encoder
+      self.rme = msg.right_motor_encoder
+      print "FIRST"
+    else:
+      dl = self.lmec*(msg.left_motor_encoder-self.lme)
+      dr = self.rmec*(msg.right_motor_encoder-self.rme)
+      self.lme = msg.left_motor_encoder
+      self.rme = msg.right_motor_encoder
+      venc = (dl + dr)/(2.0*self.dt)
+      wenc = (dl - dr)/(self.track*self.dt)
+      
+      self.x[0] = x + venc*self.dt*cos(th)
+      self.x[1] = y + venc*self.dt*sin(th)
+      self.x[2] = th + wenc*self.dt
+      
+      # Covariance prediction
+      self.P = dot(dot(self.A,self.P),self.A.T) + self.Q
     
   def modelJacobian(self):
     th = self.x[2]
