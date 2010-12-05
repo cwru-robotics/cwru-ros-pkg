@@ -40,7 +40,9 @@ class KF_Tuner:
   def __init__(self, bagPath):
     # gX is: qV qW qB encVc encVl yawVc yawVl lec rec yc track
     self.bag = rosbag.Bag(bagPath)
-    self.mag = (20, 20, .01, .01)#, 1, 1, 1)#, 1e-5, 1e-5, .0126, .56)
+    maxV = (20.0, 20.0, .01, .01, .0150)#, 1, 1, 1)#, 1e-5, 1e-5, .0126, .56)
+    self.minV = (1e-8, 1e-8, 1e-8, 1e-8, .0100)
+    self.dV = maxV-self.minV
     self.signed = (1, 1, 1, 1)#, -1, 1, -1)#, 1e-5, 1e-5, .0126, .56)
     #gX = (1.0, 1.0, 1e-6, .002, .002, .002, .002)#, 1e-5, 1e-5, .0126, .56)
     glX = (0.0, 0.0, 0.0, 0.0)#, 0.0, 0.0, 0.0)#, 1e-5, 1e-5, .0126, .56)
@@ -52,9 +54,9 @@ class KF_Tuner:
     gX = zeros(shape(glX))
     for i in range(len(glX)):
       if(self.signed[i] > 0):
-	gX[i] = self.mag[i]*self.logsig(glX[i])
+	gX[i] = self.dV[i]*self.logsig(glX[i])+self.minV[i]
       else:
-	gX[i] = self.mag[i]*self.signlogsig(glX[i])
+	gX[i] = self.dV[i]*self.signlogsig(glX[i])+self.minV[i]
     
     map2odomtrans = False
     map2odomrot = False

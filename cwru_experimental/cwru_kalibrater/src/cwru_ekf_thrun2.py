@@ -32,7 +32,7 @@ class EKF:
     if gX is None:
       # Read from YAML
       # Kalman process noise
-      q = array((.000001, .000001, .000001, 10, 10, .0000000001))
+      q = array((.000001, .000001, .000001, 20, 20, 3.59042989e-06 ))
       self.Q = diagflat(q)
       
       # Model constants
@@ -40,12 +40,12 @@ class EKF:
       self.rec = 0.00087196
       self.lmec = self.lec / 15.0
       self.rmec = self.rec / 15.0
-      self.yc = 0.0126276
+      self.yc = gX[4]#0.0126276
       self.track = 0.561975
       self.dt = 1.0/50.0
       
       # Sensor variances
-      self.encV = (1e-12, 0.0002, 0.0) # Constant, "linear", "square"
+      self.encV = (0.0, 0.0, 0.0) # Constant, "linear", "square"
       self.yawV = (.00000019, .000048345, 0.0) # Constant, "linear", "square"
       
       self.publish = 1
@@ -267,7 +267,7 @@ class EKF:
       except (tf.LookupException, tf.ConnectivityException):
 	a = 0
     else: # Copy the transform from amcl to odoms
-      (self.trans,self.rot) = self.listener.lookupTransform('/map', '/odom', rospy.Time(0))
+      #(self.trans,self.rot) = self.listener.lookupTransform('/map', '/odom', rospy.Time(0))
       self.tf_br.sendTransform(translation = self.trans, 
 		rotation = self.rot,
 		time = rospy.Time.now(),
