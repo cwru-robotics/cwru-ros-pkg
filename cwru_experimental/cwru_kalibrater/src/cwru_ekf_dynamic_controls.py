@@ -135,6 +135,8 @@ class EKF:
       self.x[0] = x + venc*self.dt*cos(th)
       self.x[1] = y + venc*self.dt*sin(th)
       self.x[2] = th + wenc*self.dt
+      self.x[3] = venc
+      self.x[4] = wenc
       
       # Covariance prediction
       self.P = dot(dot(self.A,self.P),self.A.T) + self.Q
