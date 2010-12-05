@@ -77,6 +77,8 @@ class EKF:
       # Model constants
       self.lec = 0.00087589
       self.rec = 0.00087196
+      self.lmec = self.lec / 15.0
+      self.rmec = self.rec / 15.0
       self.yc = 0.0126276
       self.track = 0.561975
       self.dt = 1.0/50.0
@@ -102,7 +104,6 @@ class EKF:
       rospy.spin()
 	      
   def update_filter(self, msg):
-    print self.x
     self.modelJacobian()
     self.prediction(msg)
     
@@ -123,7 +124,6 @@ class EKF:
       # Just record encoder values
       self.lme = msg.left_motor_encoder
       self.rme = msg.right_motor_encoder
-      print "FIRST"
     else:
       dl = self.lmec*(msg.left_motor_encoder-self.lme)
       dr = self.rmec*(msg.right_motor_encoder-self.rme)
@@ -235,11 +235,11 @@ class EKF:
 		  time = rospy.Time.now(),
 		  child = 'odom_ekf',
 		  parent = 'map')
-	print self.trans
+	'''print self.trans
 	print trans2
 	print self.rot
 	print rot2
-	print tf.transformations.euler_from_quaternion(rot2)[2]
+	print tf.transformations.euler_from_quaternion(rot2)[2]'''
 	self.x[2] -= tf.transformations.euler_from_quaternion(rot2)[2]
 	self.x[0] += trans2[0]
 	self.x[1] -= trans2[1]
