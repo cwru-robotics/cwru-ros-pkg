@@ -49,7 +49,7 @@ class KF_Tuner:
     
   def newEKF(self, glX):
     print glX
-    gX = glX
+    gX = zeros(shape(glX))
     for i in range(len(glX)):
       if(self.signed[i] > 0):
 	gX[i] = self.mag[i]*self.logsig(glX[i])
