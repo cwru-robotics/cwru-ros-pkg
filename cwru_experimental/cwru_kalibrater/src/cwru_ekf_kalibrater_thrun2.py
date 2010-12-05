@@ -48,6 +48,7 @@ class KF_Tuner:
     self.bag.close()
     
   def newEKF(self, glX):
+    print glX
     gX = glX
     for i in range(len(glX)):
       if(self.signed[i] > 0):
