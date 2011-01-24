@@ -1,0 +1,7 @@
+<launch>
+  <!--- Run AMCL -->
+  <include file="$(find cwru_nav)/amcl_diff.launch" />
+
+  <!-- Startup the map of the second floor -->
+  <node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/2nd_floor_one_door.yaml" />
+</launch>
