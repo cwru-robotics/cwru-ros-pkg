@@ -5,6 +5,6 @@ recovery_behaviors:
       type: clear_costmap_recovery/ClearCostmapRecovery
 
 
-base_local_planner: wagon_handle_steering/WagonHandleSteering
+#base_local_planner: wagon_handle_steering/WagonHandleSteering
 #    - name: playsound_recovery
 #      type: playsound_recovery/PlaySoundRecovery  
