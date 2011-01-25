@@ -30,6 +30,7 @@ namespace cwru_base {
       CRIODiagnosticsPacket swapDiagnosticsPacket(CRIODiagnosticsPacket& packet);
       void checkEncoderTicks(diagnostic_updater::DiagnosticStatusWrapper &stat);
       void checkYawSensor(diagnostic_updater::DiagnosticStatusWrapper &stat);
+      void checkVoltageLevels(diagnostic_updater::DiagnosticStatusWrapper &stat);
       void handleSonarPing(Sonar& ping, const float ping_value, const std::string frame_id, ros::Publisher& sonar_pub);
       float swap_float(float in);
       void setupDiagnostics();
@@ -46,6 +47,8 @@ namespace cwru_base {
       diagnostic_updater::DiagnosedPublisher<cwru_base::Pose> pose_pub_;
       diagnostic_updater::DiagnosedPublisher<cwru_base::cRIOSensors> sensor_pub_;
       double desired_pose_freq_;
+      double lenc_high_warn_, lenc_low_warn_, lenc_high_err_, lenc_low_err_;
+      double renc_high_warn_, renc_low_warn_, renc_high_err_, renc_low_err_;
       CRIODiagnosticsPacket diagnostics_info_;
       CRIOPosePacket pose_packet_;
   };
@@ -62,7 +65,16 @@ namespace cwru_base {
         diagnostic_updater::TimeStampStatusParam())
 
   {
-    desired_pose_freq_ = 50.0;
+    priv_nh_.param("expected_pose_freq", desired_pose_freq_, 50.0);
+    ros::NodeHandle encoders_nh_(priv_nh_, "encoders");
+    encoders_nh_.param("lenc_high_warn", lenc_high_warn_, 15.1);
+    encoders_nh_.param("lenc_low_warn", lenc_low_warn_, 14.9);
+    encoders_nh_.param("lenc_high_err", lenc_high_err_, 16.);
+    encoders_nh_.param("lenc_low_err", lenc_low_err_, 14.);
+    encoders_nh_.param("renc_high_warn", renc_high_warn_, 15.1);
+    encoders_nh_.param("renc_low_warn", renc_low_warn_, 14.9);
+    encoders_nh_.param("renc_high_err", renc_high_err_, 16.);
+    encoders_nh_.param("renc_low_err", renc_low_err_, 14.);
     flipped_pose_pub_ = nh_.advertise<cwru_base::Pose>("flipped_pose",1);
     estop_pub_ = nh_.advertise<std_msgs::Bool>("estop_status",1,true);
     sonar1_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_1",1);
@@ -78,6 +90,7 @@ namespace cwru_base {
 
     updater_.add("Encoders", this, &CrioReceiver::checkEncoderTicks);
     updater_.add("Yaw Sensor", this, &CrioReceiver::checkYawSensor);
+    updater_.add("Voltages", this, &CrioReceiver::checkVoltageLevels);
   }
 
   void CrioReceiver::updateDiagnostics() {
@@ -110,6 +123,57 @@ namespace cwru_base {
     stat.summary(status_lvl, status_msg);
   }
 
+  void CrioReceiver::checkVoltageLevels(diagnostic_updater::DiagnosticStatusWrapper &stat) {
+    stat.add("24V", diagnostics_info_.VMonitor_24V_mV / 1000.0);
+    stat.add("13.8V", diagnostics_info_.VMonitor_13V_mV / 1000.0);
+    stat.add("5V", diagnostics_info_.VMonitor_5V_mV / 1000.0);
+    stat.add("cRIO", diagnostics_info_.VMonitor_cRIO_mV  / 1000.0);
+    stat.add("eStop", diagnostics_info_.VMonitor_eStop_mV / 1000.0);
+    std::string status_msg;
+    unsigned char status_lvl = diagnostic_msgs::DiagnosticStatus::OK;
+
+    if (diagnostics_info_.VMonitor_cRIO_mV < 18 * 1000.0) {
+        status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+        status_msg += "cRIO voltage below 18V; ";
+    } else if (diagnostics_info_.VMonitor_cRIO_mV < 20 * 1000.0) {
+        status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
+        status_msg += "cRIO voltage below 20V; ";
+    }
+
+    if (diagnostics_info_.VMonitor_24V_mV < 21 * 1000.0) {
+        status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+        status_msg += "24V line voltage below 21V. Charge the robot immediately; ";
+    } else if (diagnostics_info_.VMonitor_24V_mV < 24 * 1000.0) {
+        if (status_lvl < diagnostic_msgs::DiagnosticStatus::WARN) {
+          status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
+        }
+        status_msg += "24V line voltage below 24V; ";
+    }
+
+    int16_t v13_diff = std::abs(diagnostics_info_.VMonitor_13V_mV - 13800);
+    if (v13_diff > 400) {
+        status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+        status_msg += "13.8V line voltage is more than 400mv from 13.8V; ";
+    } else if (v13_diff > 200) {
+        if (status_lvl < diagnostic_msgs::DiagnosticStatus::WARN) {
+          status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
+        }
+        status_msg += "13.8V line voltage is more than 200mv from 13.8V; ";
+    }
+
+    int16_t v5_diff = std::abs(diagnostics_info_.VMonitor_5V_mV - 5000);
+    if (v5_diff > 300) {
+        status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+        status_msg += "5V line voltage is more than 300mv from 5V; ";
+    } else if (v5_diff > 150) {
+        if (status_lvl < diagnostic_msgs::DiagnosticStatus::WARN) {
+          status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
+        }
+        status_msg += "5V line voltage is more than 150mv from 5V; ";
+    }
+    stat.summary(status_lvl, status_msg);
+  }
+
   void CrioReceiver::checkEncoderTicks(diagnostic_updater::DiagnosticStatusWrapper &stat) {
     double left_ratio;
     double right_ratio;
@@ -133,10 +197,10 @@ namespace cwru_base {
       //check the ratios
       left_ratio = diagnostics_info_.LMotorTicks / ((double) diagnostics_info_.LWheelTicks);
       stat.add("Left Encoder Gear Ratio", left_ratio);
-      if (left_ratio < 14 || left_ratio > 16) {
+      if (left_ratio < lenc_low_err_ || left_ratio > lenc_high_err_) {
         status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
         status_msg += "Left encoder gear ratio way out of bounds; ";
-      } else if (left_ratio < 14.9 || left_ratio > 15.1) {
+      } else if (left_ratio < lenc_low_warn_ || left_ratio > lenc_high_warn_) {
         if (diagnostic_msgs::DiagnosticStatus::WARN > status_lvl) {
           status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
         }
@@ -158,10 +222,10 @@ namespace cwru_base {
       //check the ratios
       right_ratio = diagnostics_info_.RMotorTicks / (double) diagnostics_info_.RWheelTicks;
       stat.add("Right Encoder Gear Ratio", right_ratio);
-      if (right_ratio < 14 ||  right_ratio > 16) {
+      if (right_ratio < renc_low_err_ ||  right_ratio > renc_high_err_) {
         status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
         status_msg += "Right encoder gear ratio way out of bounds; ";
-      } else if (right_ratio < 14.9 || right_ratio > 15.1) {
+      } else if (right_ratio < renc_low_warn_ || right_ratio > renc_high_warn_) {
         if (diagnostic_msgs::DiagnosticStatus::WARN > status_lvl) {
           status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
         }
@@ -224,8 +288,8 @@ namespace cwru_base {
     swapped_packet.LMotorTicks = be32toh(packet.LMotorTicks);
     swapped_packet.RMotorTicks = be32toh(packet.RMotorTicks);
     swapped_packet.VMonitor_24V_mV = be16toh(packet.VMonitor_24V_mV);
-    swapped_packet.VMonitor_13V_mv = be16toh(packet.VMonitor_13V_mv);
-    swapped_packet.VMonitor_5V_mV = be16toh(packet.VMonitor_13V_mv);
+    swapped_packet.VMonitor_13V_mV = be16toh(packet.VMonitor_13V_mV);
+    swapped_packet.VMonitor_5V_mV = be16toh(packet.VMonitor_5V_mV);
     swapped_packet.VMonitor_eStop_mV = be16toh(packet.VMonitor_eStop_mV);
     swapped_packet.YawRate_mV = be16toh(packet.YawRate_mV);
     swapped_packet.YawSwing_mV = be16toh(packet.YawSwing_mV);
@@ -319,13 +383,16 @@ static void handle_receive(const boost::system::error_code& input_ec, std::size_
 int main(int argc, char *argv[]) {
   ros::init(argc, argv, "crio_receiver");
   ros::NodeHandle nh;
+  ros::NodeHandle priv_nh("~");
+  int timeout_val;
+  priv_nh.param("socket_timeout", timeout_val, 10);
   cwru_base::CrioReceiver from_crio;
   boost::asio::io_service io_service;
   udp::socket socket(io_service, udp::endpoint(udp::v4(), 50000));
   deadline_timer deadline(io_service);
   deadline.expires_at(boost::posix_time::pos_infin);
   check_deadline(deadline, socket);
-  boost::posix_time::seconds timeout(10);
+  boost::posix_time::seconds timeout(timeout_val);
   while (nh.ok()) {
     try {
       boost::array<cwru_base::CRIOCommand, 1> recv_buf;
