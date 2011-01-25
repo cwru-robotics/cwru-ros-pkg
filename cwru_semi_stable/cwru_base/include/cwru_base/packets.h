@@ -73,7 +73,7 @@ namespace cwru_base {
 		int32_t RMotorTicks;
 
 		int16_t VMonitor_24V_mV;
-		int16_t VMonitor_13V_mv;
+		int16_t VMonitor_13V_mV;
 		int16_t VMonitor_5V_mV;
 		int16_t VMonitor_eStop_mV;
 

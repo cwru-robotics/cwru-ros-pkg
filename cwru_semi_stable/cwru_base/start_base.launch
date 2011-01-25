@@ -1,6 +1,8 @@
 <launch>
 	<include file="$(find cwru_configs)/$(optenv ROBOT sim)/base/static_transform.launch" />
-  <node pkg="cwru_base" type="crio_receiver" name="crio_receiver" output="screen"/>
+  <node pkg="cwru_base" type="crio_receiver" name="crio_receiver" output="screen">
+	<rosparam command="load" file="$(find cwru_configs)/$(optenv ROBOT sim)/base/diagnostics.yaml" />
+  </node>
   <node pkg="cwru_base" type="odom_translator.py" name="odom_translator" />
   
   <include file="$(find cwru_configs)/$(optenv ROBOT sim)/base/sonar.launch" />
