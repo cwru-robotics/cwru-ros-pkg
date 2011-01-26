@@ -30,6 +30,7 @@ class TeleopHarlie {
 
 		int linear_axis_, angular_axis_;
 		double linear_, angular_;
+                double delay_;
 		ros::Publisher vel_pub_;
 		ros::Subscriber joy_sub_;
 };
@@ -39,21 +40,25 @@ TeleopHarlie::TeleopHarlie():
 	linear_(1.2), 
 	angular_(2), 
 	linear_axis_(1), 
-	angular_axis_(0)
+	angular_axis_(0),
+        delay_(0.0)
 {
     priv_nh_.param("linear_axis", linear_axis_, linear_axis_);
     priv_nh_.param("angular_axis", angular_axis_, angular_axis_);
-    priv_nh_.param("linear_", linear_, linear_);
-    priv_nh_.param("angular_", angular_, angular_);
+    priv_nh_.param("linear_speed", linear_, linear_);
+    priv_nh_.param("angular_speed", angular_, angular_);
+    priv_nh_.param("delay", delay_, delay_);
+
 
     vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
-    joy_sub_ = nh_.subscribe<joy::Joy>("joy", 10, &TeleopHarlie::joyCallback, this);
+    joy_sub_ = nh_.subscribe<joy::Joy>("joy", 1, &TeleopHarlie::joyCallback, this);
 }
 
 void TeleopHarlie::joyCallback(const joy::Joy::ConstPtr& joy) {
 	geometry_msgs::Twist twist;
 	twist.linear.x = linear_ * joy->axes[linear_axis_];
 	twist.angular.z = angular_ * joy->axes[angular_axis_];
+        ros::Duration(delay_).sleep();
 	vel_pub_.publish(twist);
 }
 
