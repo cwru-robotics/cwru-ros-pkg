@@ -1,0 +1,20 @@
+<package>
+  <description brief="xv_11_laser_driver">
+
+     XV-11 Laser Driver
+
+  </description>
+  <author>Chad Rockey</author>
+  <license>LGPL</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/xv_11_laser_driver</url>
+  <depend package="roscpp"/>
+  <depend package="rospy"/>
+  <depend package="sensor_msgs"/>
+
+  <rosdep name="boost" />
+  <rosdep name="python-serial" />
+
+</package>
+
+
