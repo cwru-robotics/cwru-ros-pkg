@@ -32,40 +32,32 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include "ros/ros.h"
-#include "sensor_msgs/LaserScan.h"
+#include <sensor_msgs/LaserScan.h>
 #include <boost/asio.hpp>
-#include <boost/thread/thread.hpp>
-#include <xv_11_laser_driver/xv11_laser.h>
+#include <boost/array.hpp>
+#include <boost/thread/recursive_mutex.hpp>
+#include <string>
 
-int main(int argc, char **argv)
-{
-  ros::init(argc, argv, "neato_laser_publisher");
-  ros::NodeHandle n;
-  ros::NodeHandle priv_nh("~");
+namespace xv_11_laser_driver {
+    class XV11Laser {
+        public:
+            XV11Laser(const std::string& port, uint32_t baud_rate, boost::asio::io_service& io);
 
-  std::string port;
-  int baud_rate;
+            ~XV11Laser() {};
 
-  priv_nh.param("port", port, std::string("/dev/ttyUSB0"));
-  priv_nh.param("baud_rate", baud_rate, 115200);
+            void poll(sensor_msgs::LaserScan::Ptr scan);
+            void runPID(float update_rate);
+            void close() { shutting_down_ = true; };
 
-  boost::asio::io_service io;
+        private:
+            std::string port_;
+            uint32_t baud_rate_;
 
-  xv_11_laser_driver::XV11Laser laser(port, baud_rate, io);
+            bool shutting_down_;
+            boost::asio::serial_port serial_;
+            boost::array<uint8_t, 1440> raw_bytes_;
+            uint16_t motor_speed_;
 
-  boost::thread pid_thread(boost::bind(&xv_11_laser_driver::XV11Laser::runPID, &laser, 1.0));
-
-  ros::Publisher laser_pub = n.advertise<sensor_msgs::LaserScan>("scan", 1000);
-
-  while (ros::ok()) {
-    sensor_msgs::LaserScan::Ptr scan(new sensor_msgs::LaserScan);
-    scan->header.frame_id = "neato_laser";
-    scan->header.stamp = ros::Time::now();
-    laser.poll(scan);
-    laser_pub.publish(scan);
-  }
-  laser.close();
-  pid_thread.join();
-  return 0;
-}
+            boost::recursive_mutex motor_speed_lock_;
+    };
+};

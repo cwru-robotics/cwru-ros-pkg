@@ -22,9 +22,9 @@ set(LIBRARY_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/lib)
 #rosbuild_gensrv()
 
 #common commands for building c++ executables and libraries
-#rosbuild_add_library(${PROJECT_NAME} src/example.cpp)
+rosbuild_add_library(xv11_laser_driver src/xv11_laser.cpp)
 #target_link_libraries(${PROJECT_NAME} another_library)
-rosbuild_add_executable(neato_node src/neato_laser_publisher.cpp)
+rosbuild_add_executable(neato_laser_publisher src/neato_laser_publisher.cpp)
 rosbuild_add_boost_directories()
-rosbuild_link_boost(neato_node system)
-#target_link_libraries(example ${PROJECT_NAME})
+rosbuild_link_boost(neato_laser_publisher system)
+target_link_libraries(neato_laser_publisher xv11_laser_driver)
