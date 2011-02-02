@@ -43,13 +43,14 @@ namespace xv_11_laser_driver {
   }
 
   void XV11Laser::runPID(float update_rate) {
-    std::string s(0x00);
+    boost::array<uint8_t, 1> send_buffer;
+    send_buffer[0] = 0x00;
     while(!shutting_down_) {
       motor_speed_lock_.lock();
       ROS_INFO("motor_speed from PID thread %d", motor_speed_);
       motor_speed_lock_.unlock();
 
-      //boost::asio::write(serial_,boost::asio::buffer(s.c_str(),s.size()));
+      boost::asio::write(serial_,boost::asio::buffer(send_buffer,send_buffer.size()));
       boost::this_thread::sleep(boost::posix_time::seconds(1.0));
     }
   }
