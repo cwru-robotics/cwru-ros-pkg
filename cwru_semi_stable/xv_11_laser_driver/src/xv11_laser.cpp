@@ -32,9 +32,7 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include <ros/ros.h>
 #include <xv_11_laser_driver/xv11_laser.h>
-#include <boost/thread/thread.hpp>
 
 namespace xv_11_laser_driver {
   XV11Laser::XV11Laser(const std::string& port, uint32_t baud_rate, boost::asio::io_service& io): port_(port),
@@ -59,7 +57,8 @@ namespace xv_11_laser_driver {
           start_count = 2;
         }
       } else if(start_count == 2) {
-        if(temp_char == 0x00) {          start_count = 3;
+        if(temp_char == 0x00) {
+          start_count = 3;
         }
       } else if(start_count == 3) {
         if(temp_char == 0xC0) {
