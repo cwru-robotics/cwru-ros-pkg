@@ -42,34 +42,10 @@ namespace xv_11_laser_driver {
     serial_.set_option(boost::asio::serial_port_base::baud_rate(baud_rate_));
   }
 
-  void XV11Laser::runPID(float update_rate) {
-    boost::array<uint8_t, 1> send_buffer;
-    send_buffer[0] = 200;//0x00;
-    while(!shutting_down_) {
-      //motor_speed_lock_.lock();
-      //ROS_INFO("motor_speed from PID thread %d", motor_speed_);
-      //motor_speed_lock_.unlock();
-
-      //boost::asio::write(serial_,boost::asio::buffer(send_buffer,send_buffer.size()));
-      //send_buffer[0] = send_buffer[0] + 10;
-      boost::this_thread::sleep(boost::posix_time::seconds(1.0));
-    }
-  }
-
   void XV11Laser::poll(sensor_msgs::LaserScan::Ptr scan) {
     uint8_t temp_char;
     uint8_t start_count = 0;
     bool got_scan = false;
-    
-    double kp = 0.3;//0.05;
-    double ki = 0.05;
-    
-    double err_i = 0;
-    
-    uint16_t targetSpeed = 53700;
-    
-    boost::array<uint8_t, 1> send_buffer;
-    send_buffer[0] = 127;
 
     while (!shutting_down_ && !got_scan) {
       // Wait until the start sequence 0x5A, 0xA5, 0x00, 0xC0 comes around
@@ -83,8 +59,7 @@ namespace xv_11_laser_driver {
           start_count = 2;
         }
       } else if(start_count == 2) {
-        if(temp_char == 0x00) {
-          start_count = 3;
+        if(temp_char == 0x00) {          start_count = 3;
         }
       } else if(start_count == 3) {
         if(temp_char == 0xC0) {
@@ -92,21 +67,7 @@ namespace xv_11_laser_driver {
           // Now that entire start sequence has been found, read in the rest of the message
           got_scan = true;
           // Now read speed
-          //motor_speed_lock_.lock();
           boost::asio::read(serial_,boost::asio::buffer(&motor_speed_,2));
-	  //ROS_INFO("motor_speed from PID thread %d", motor_speed_);
-	  double err = (double)motor_speed_ - (double)targetSpeed;
-	  err_i = err_i + err;
-	  float newCmd = 200 + err*kp + err_i*ki;
-	  if(newCmd > 255)
-	    send_buffer[0] = 255;
-	  else if(newCmd < 0)
-	    send_buffer[0] = 0;
-	  else
-	    send_buffer[0] = (uint8_t) newCmd;
-	  ROS_INFO("motor_speed %d; output cmd: %d; err_i: %.0f", motor_speed_, send_buffer[0], err_i);
-	  boost::asio::write(serial_,boost::asio::buffer(send_buffer,send_buffer.size()));
-          //motor_speed_lock_.unlock();
 
           // Read in 360*4 = 1440 chars for each point
           boost::asio::read(serial_,boost::asio::buffer(&raw_bytes_,1440));
@@ -119,7 +80,6 @@ namespace xv_11_laser_driver {
           scan->range_max = 5.0;
           scan->ranges.resize(360);
           scan->intensities.resize(360);
-
 
           for(uint16_t i = 0; i < raw_bytes_.size(); i=i+4) {
             // Four bytes per reading

@@ -35,7 +35,6 @@
 #include "ros/ros.h"
 #include "sensor_msgs/LaserScan.h"
 #include <boost/asio.hpp>
-#include <boost/thread/thread.hpp>
 #include <xv_11_laser_driver/xv11_laser.h>
 
 int main(int argc, char **argv)
@@ -54,8 +53,6 @@ int main(int argc, char **argv)
 
   xv_11_laser_driver::XV11Laser laser(port, baud_rate, io);
 
-  boost::thread pid_thread(boost::bind(&xv_11_laser_driver::XV11Laser::runPID, &laser, 1.0));
-
   ros::Publisher laser_pub = n.advertise<sensor_msgs::LaserScan>("scan", 1000);
 
   while (ros::ok()) {
@@ -66,6 +63,5 @@ int main(int argc, char **argv)
     laser_pub.publish(scan);
   }
   laser.close();
-  pid_thread.join();
   return 0;
 }

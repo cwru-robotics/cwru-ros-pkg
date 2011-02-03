@@ -35,7 +35,6 @@
 #include <sensor_msgs/LaserScan.h>
 #include <boost/asio.hpp>
 #include <boost/array.hpp>
-#include <boost/thread/recursive_mutex.hpp>
 #include <string>
 
 namespace xv_11_laser_driver {
@@ -46,7 +45,6 @@ namespace xv_11_laser_driver {
             ~XV11Laser() {};
 
             void poll(sensor_msgs::LaserScan::Ptr scan);
-            void runPID(float update_rate);
             void close() { shutting_down_ = true; };
 
         private:
@@ -57,7 +55,5 @@ namespace xv_11_laser_driver {
             boost::asio::serial_port serial_;
             boost::array<uint8_t, 1440> raw_bytes_;
             uint16_t motor_speed_;
-
-            boost::recursive_mutex motor_speed_lock_;
     };
 };
