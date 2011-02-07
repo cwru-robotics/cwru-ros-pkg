@@ -40,20 +40,37 @@
 namespace xv_11_laser_driver {
     class XV11Laser {
         public:
+            /**
+              * @brief Constructs a new XV11Laser attached to the given serial port
+              * @param port The string for the serial port device to attempt to connect to, e.g. "/dev/ttyUSB0"
+              * @param baud_rate The baud rate to open the serial port at.
+              * @param io Boost ASIO IO Service to use when creating the serial port object
+              */
             XV11Laser(const std::string& port, uint32_t baud_rate, boost::asio::io_service& io);
 
+            /**
+              * @brief Default destructor
+              */
             ~XV11Laser() {};
 
+            /**
+              * @brief Poll the laser to get a new scan. Blocks until a complete new scan is received or close is called.
+              * @param scan LaserScan message pointer to fill in with the scan. The caller is responsible for filling in the ROS timestamp and frame_id
+              */
             void poll(sensor_msgs::LaserScan::Ptr scan);
+
+            /**
+              * @brief Close the driver down and prevent stop any polling loop
+              */
             void close() { shutting_down_ = true; };
 
         private:
-            std::string port_;
-            uint32_t baud_rate_;
+            std::string port_; ///< @brief The serial port the driver is attached to
+            uint32_t baud_rate_; ///< @brief The baud rate for the serial connection
 
-            bool shutting_down_;
-            boost::asio::serial_port serial_;
-            boost::array<uint8_t, 1440> raw_bytes_;
-            uint16_t motor_speed_;
+            bool shutting_down_; ///< @brief Flag for whether the driver is supposed to be shutting down or not
+            boost::asio::serial_port serial_; ///< @brief Actual serial port object for reading/writing to the XV11 Laser Scanner
+            boost::array<uint8_t, 1440> raw_bytes_; ///< @brief Array to put all the of the scan bytes in before processing them
+            uint16_t motor_speed_; ///< @brief current motor speed as reported by the XV11.
     };
 };
