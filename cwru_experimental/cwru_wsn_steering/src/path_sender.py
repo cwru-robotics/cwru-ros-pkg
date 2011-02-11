@@ -244,6 +244,69 @@ def makeDummyPaths():
 	p5.segs.append(p)
 	paths['lab'] = p5
 
+#figure 8
+	p6 = Path()
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 1
+	p.xRef =  8.2115
+	p.yRef = 14.2321
+	p.tangentAng =  -0.1052
+	p.rho = 0.0
+	p.length =  0.4327
+	p.vDes = 0.5
+	p.accel = 0.01
+	p6.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 2
+	p.xRef =  8.2611
+	p.yRef = 14.8399
+	p.tangentAng = -0.1052
+	p.rho = 1.6404
+	p.length = 3.0776
+	p.vDes = 0.5
+	p.accel = 0.01
+	p6.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 1
+	p.xRef = 7.6682
+	p.yRef = 14.6980
+	p.tangentAng = 4.9473
+	p.rho =  0.0
+	p.length = 0.8655
+	p.vDes = 0.5
+	p.accel = 0.01
+	p6.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 2
+	p.xRef =  7.2724
+	p.yRef = 13.7183
+	p.tangentAng =  4.9473
+	p.rho = -1.6404
+	p.length = 3.0776
+	p.vDes = 0.5
+	p.accel = 0.01
+	p6.segs.append(p)
+
+	p = PathSegment()
+	p.frame_id = "map"
+	p.segType = 1
+	p.xRef =  7.3364
+	p.yRef = 14.3245
+	p.tangentAng =  -0.1052
+	p.rho = 0.0
+	p.length = 0.4327
+	p.vDes = 0.5
+	p.accel = 0.01
+	p6.segs.append(p)
+        paths['figure_8'] = p6
+
 	return paths
 
 class PathSender:
