@@ -58,10 +58,10 @@ floorplan
     name "2nd_floor_one_door"
     bitmap "../maps/2nd_floor_one_door_stage.pgm"
     size [79.45 90.45 1.0]
-    pose [ 0. 0. 0.0 0.0]
+    pose [ 21.6 39.4 0.0 0.0]
 )
 
-harlie( pose [ -21.04 -38.38 0.0 134.54 ] name "harlie" color "blue")
+harlie( pose [ 8.42 15.09 0.0 -137.16] name "harlie" color "blue")
 block( color "orange" )
 block( color "orange" )
 block( color "orange" )
