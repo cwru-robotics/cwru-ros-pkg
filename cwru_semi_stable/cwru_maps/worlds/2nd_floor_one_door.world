@@ -1,7 +1,8 @@
 define block model
 (
-    size [0.5 0.5 0.75]
+    size [0.75 0.75 1.0]
     gui_nose 0
+    laser_return 1
 )
 
 define sick_lms291 laser
@@ -16,11 +17,11 @@ define sick_lms291 laser
 
 define harlie position
 (
-    size [0.9158 0.6096 1.8288]
+    size [0.9158 0.6096 0.1]
     origin [-0.1539 0.0 0.0 0.0]
     gui_nose 1
     drive "diff"
-    sick_lms291(pose [ 0.2032 0.0 0 0.1524 ])
+    sick_lms291(pose [ 0.2032 0.0 0 0.0524 ])
 )
 
 define floorplan model
@@ -44,7 +45,6 @@ resolution 0.01
 
 interval_sim 100
 
-
 window
 (
     size [745.0 448.0]
@@ -57,8 +57,11 @@ floorplan
 (
     name "2nd_floor_one_door"
     bitmap "../maps/2nd_floor_one_door_stage.pgm"
-    size [79.45 90.45 10.0]
+    size [79.45 90.45 1.0]
     pose [ 0. 0. 0.0 0.0]
 )
 
 harlie( pose [ -21.04 -38.38 0.0 134.54 ] name "harlie" color "blue")
+block( color "orange" )
+block( color "orange" )
+block( color "orange" )
