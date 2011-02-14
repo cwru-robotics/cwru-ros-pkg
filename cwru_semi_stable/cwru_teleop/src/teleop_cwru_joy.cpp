@@ -31,17 +31,21 @@ class TeleopHarlie {
 		int linear_axis_, angular_axis_;
 		double linear_, angular_;
                 double delay_;
+                int last_latch_button_;
+                bool latch_linear_;
 		ros::Publisher vel_pub_;
 		ros::Subscriber joy_sub_;
 };
 
 TeleopHarlie::TeleopHarlie(): 
 	priv_nh_("~"),
-	linear_(1.2), 
-	angular_(2), 
 	linear_axis_(1), 
 	angular_axis_(0),
-        delay_(0.0)
+        linear_(1.2), 
+	angular_(2), 
+	delay_(0.0),
+        last_latch_button_(0),
+        latch_linear_(false)
 {
     priv_nh_.param("linear_axis", linear_axis_, linear_axis_);
     priv_nh_.param("angular_axis", angular_axis_, angular_axis_);
@@ -56,8 +60,16 @@ TeleopHarlie::TeleopHarlie():
 
 void TeleopHarlie::joyCallback(const joy::Joy::ConstPtr& joy) {
 	geometry_msgs::Twist twist;
-	twist.linear.x = linear_ * joy->axes[linear_axis_];
-	twist.angular.z = angular_ * joy->axes[angular_axis_];
+        if (joy->buttons[4] != last_latch_button_ && joy->buttons[4] == 1) {
+          latch_linear_ = !latch_linear_;    
+        }
+        last_latch_button_ = joy->buttons[4];
+        if (latch_linear_) {
+          twist.linear.x = linear_;
+        } else {
+          twist.linear.x = linear_ * joy->axes[linear_axis_];
+        }
+        twist.angular.z = angular_ * joy->axes[angular_axis_];
         ros::Duration(delay_).sleep();
 	vel_pub_.publish(twist);
 }

@@ -10,6 +10,7 @@
 	<param name="angular_axis" value="3" />
 	<param name="delay" value="0" />
 	<remap from="cmd_vel" to="delayed_cmd_vel" />
+	<param name="linear_speed" value="0.5" />
     </node>
 
     <node pkg="cwru_teleop" type="repeater.py" name="command_repeater">
