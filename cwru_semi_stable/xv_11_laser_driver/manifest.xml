@@ -1,11 +1,11 @@
 <package>
   <description brief="xv_11_laser_driver">
 
-     XV-11 Laser Driver
+     Neato XV-11 Laser Driver
 
   </description>
-  <author>Chad Rockey</author>
-  <license>LGPL</license>
+  <author>Eric Perko, Chad Rockey</author>
+  <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/xv_11_laser_driver</url>
   <depend package="roscpp"/>
@@ -13,7 +13,6 @@
   <depend package="sensor_msgs"/>
 
   <rosdep name="boost" />
-  <rosdep name="python-serial" />
 
 </package>
 
