@@ -32,8 +32,8 @@
  *  POSSIBILITY OF SUCH DAMAGE.
  *********************************************************************/
 
-#include "ros/ros.h"
-#include "sensor_msgs/LaserScan.h"
+#include <ros/ros.h>
+#include <sensor_msgs/LaserScan.h>
 #include <boost/asio.hpp>
 #include <xv_11_laser_driver/xv11_laser.h>
 
@@ -45,23 +45,29 @@ int main(int argc, char **argv)
 
   std::string port;
   int baud_rate;
+  std::string frame_id;
 
   priv_nh.param("port", port, std::string("/dev/ttyUSB0"));
   priv_nh.param("baud_rate", baud_rate, 115200);
+  priv_nh.param("frame_id", frame_id, std::string("neato_laser"));
 
   boost::asio::io_service io;
 
-  xv_11_laser_driver::XV11Laser laser(port, baud_rate, io);
+  try {
+    xv_11_laser_driver::XV11Laser laser(port, baud_rate, io);
+    ros::Publisher laser_pub = n.advertise<sensor_msgs::LaserScan>("scan", 1000);
 
-  ros::Publisher laser_pub = n.advertise<sensor_msgs::LaserScan>("scan", 1000);
-
-  while (ros::ok()) {
-    sensor_msgs::LaserScan::Ptr scan(new sensor_msgs::LaserScan);
-    scan->header.frame_id = "neato_laser";
-    scan->header.stamp = ros::Time::now();
-    laser.poll(scan);
-    laser_pub.publish(scan);
+    while (ros::ok()) {
+      sensor_msgs::LaserScan::Ptr scan(new sensor_msgs::LaserScan);
+      scan->header.frame_id = frame_id;
+      scan->header.stamp = ros::Time::now();
+      laser.poll(scan);
+      laser_pub.publish(scan);
+    }
+    laser.close();
+    return 0;
+  } catch (boost::system::system_error ex) {
+    ROS_ERROR("Error instantiating laser object. Are you sure you have the correct port and baud rate? Error was %s", ex.what());
+    return -1;
   }
-  laser.close();
-  return 0;
 }
