@@ -7,6 +7,6 @@
 
 \section codeapi Code API
 
-The XV11Laser driver API is documented at xv_11_laser_driver::XV11Laser . This is the only C++ API available in this package.
+The XV11Laser driver API is documented at xv_11_laser_driver::XV11Laser. This is the only C++ API available in this package.
 
 */
