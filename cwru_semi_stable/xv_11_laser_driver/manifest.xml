@@ -1,7 +1,7 @@
 <package>
   <description brief="xv_11_laser_driver">
 
-     Neato XV-11 Laser Driver
+     Neato XV-11 Laser Driver. This driver works with the laser when it is removed from the XV-11 Robot as opposed to reading scans from the Neato's USB port.
 
   </description>
   <author>Eric Perko, Chad Rockey</author>
