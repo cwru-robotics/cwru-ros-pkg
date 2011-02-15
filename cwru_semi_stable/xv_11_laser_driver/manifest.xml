@@ -9,7 +9,6 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/xv_11_laser_driver</url>
   <depend package="roscpp"/>
-  <depend package="rospy"/>
   <depend package="sensor_msgs"/>
 
   <rosdep name="boost" />
