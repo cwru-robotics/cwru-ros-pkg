@@ -60,7 +60,7 @@ namespace xv_11_laser_driver {
             void poll(sensor_msgs::LaserScan::Ptr scan);
 
             /**
-              * @brief Close the driver down and prevent stop any polling loop
+              * @brief Close the driver down and prevent the polling loop from advancing
               */
             void close() { shutting_down_ = true; };
 
@@ -70,7 +70,7 @@ namespace xv_11_laser_driver {
 
             bool shutting_down_; ///< @brief Flag for whether the driver is supposed to be shutting down or not
             boost::asio::serial_port serial_; ///< @brief Actual serial port object for reading/writing to the XV11 Laser Scanner
-            boost::array<uint8_t, 1440> raw_bytes_; ///< @brief Array to put all the of the scan bytes in before processing them
+            boost::array<uint8_t, 1440> raw_bytes_; ///< @brief Array to put all of the scan bytes in before processing them
             uint16_t motor_speed_; ///< @brief current motor speed as reported by the XV11.
     };
 };
