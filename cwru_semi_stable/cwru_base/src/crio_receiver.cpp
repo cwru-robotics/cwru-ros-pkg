@@ -26,7 +26,7 @@
 #include <cwru_base/Pose.h>
 #include <cwru_base/Sonar.h>
 #include <cwru_base/cRIOSensors.h>
-#include <sensor_msgs/NavSatFix.h>
+#include <cwru_base/NavSatFix.h>
 #include <std_msgs/Bool.h>
 #include <diagnostic_updater/diagnostic_updater.h>
 #include <diagnostic_updater/publisher.h>
@@ -105,7 +105,7 @@ namespace cwru_base {
     sonar3_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_3",1);
     sonar4_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_4",1);
     sonar5_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_5",1);
-    gps_pub_ = nh_.advertise<sensor_msgs::NavSatFix>("gps_fix",1);
+    gps_pub_ = nh_.advertise<cwru_base::NavSatFix>("gps_fix",1);
     setupDiagnostics();
   }
 
@@ -416,11 +416,11 @@ namespace cwru_base {
     CRIOGPSPacket swapped_packet = swapGPSPacket(packet);
     gps_packet_ = swapped_packet;
 
-    sensor_msgs::NavSatFix fix_msg;
+    cwru_base::NavSatFix fix_msg;
     fix_msg.header.stamp = current_time;
     fix_msg.header.frame_id = "crio_gps";
-    fix_msg.status.service = sensor_msgs::NavSatStatus::SERVICE_GPS;
-    fix_msg.position_covariance_type = sensor_msgs::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
+    fix_msg.status.service = cwru_base::NavSatStatus::SERVICE_GPS;
+    fix_msg.position_covariance_type = cwru_base::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
 
     fix_msg.longitude = swapped_packet.longitude;
     fix_msg.latitude = swapped_packet.latitude;
@@ -430,22 +430,22 @@ namespace cwru_base {
 
     if (swapped_packet.solution_age > 2.0) {
       //Fix too old... throw it away
-      fix_msg.status.status = sensor_msgs::NavSatStatus::STATUS_NO_FIX;
+      fix_msg.status.status = cwru_base::NavSatStatus::STATUS_NO_FIX;
     } else if (swapped_packet.solution_status == 0) {
       //Solution has been computed
       if (swapped_packet.position_type == 16) {
         //Solution single - no DGPS corrections
-        fix_msg.status.status = sensor_msgs::NavSatStatus::STATUS_FIX;
+        fix_msg.status.status = cwru_base::NavSatStatus::STATUS_FIX;
       } else if ((swapped_packet.position_type == 20) || (swapped_packet.position_type == 64)) {
         //Omnistar or Omnistar HP solution - we have DGPS
-        fix_msg.status.status = sensor_msgs::NavSatStatus::STATUS_GBAS_FIX;
+        fix_msg.status.status = cwru_base::NavSatStatus::STATUS_GBAS_FIX;
       } else {
         //No clue what type of solution we have, so throw it out
-        fix_msg.status.status = sensor_msgs::NavSatStatus::STATUS_NO_FIX;
+        fix_msg.status.status = cwru_base::NavSatStatus::STATUS_NO_FIX;
       }
     } else {
       //No solution has been computed. Throw it out.
-      fix_msg.status.status = sensor_msgs::NavSatStatus::STATUS_NO_FIX;
+      fix_msg.status.status = cwru_base::NavSatStatus::STATUS_NO_FIX;
     }
 
     gps_pub_.publish(fix_msg);
