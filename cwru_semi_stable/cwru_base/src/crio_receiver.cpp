@@ -419,16 +419,34 @@ namespace cwru_base {
     sensor_msgs::NavSatFix fix_msg;
     fix_msg.header.stamp = current_time;
     fix_msg.header.frame_id = "crio_gps";
-    fix_msg.status.status = sensor_msgs::NavSatStatus::STATUS_NO_FIX;
     fix_msg.status.service = sensor_msgs::NavSatStatus::SERVICE_GPS;
-    
     fix_msg.position_covariance_type = sensor_msgs::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
 
     fix_msg.longitude = swapped_packet.longitude;
     fix_msg.latitude = swapped_packet.latitude;
 
-    fix_msg.position_covariance[0] = swapped_packet.lat_std_dev;
-    fix_msg.position_covariance[4] = swapped_packet.long_std_dev;
+    fix_msg.position_covariance[0] = pow(swapped_packet.lat_std_dev, 2.0);
+    fix_msg.position_covariance[4] = pow(swapped_packet.long_std_dev, 2.0);
+
+    if (swapped_packet.solution_age > 2.0) {
+      //Fix too old... throw it away
+      fix_msg.status.status = sensor_msgs::NavSatStatus::STATUS_NO_FIX;
+    } else if (swapped_packet.solution_status == 0) {
+      //Solution has been computed
+      if (swapped_packet.position_type == 16) {
+        //Solution single - no DGPS corrections
+        fix_msg.status.status = sensor_msgs::NavSatStatus::STATUS_FIX;
+      } else if ((swapped_packet.position_type == 20) || (swapped_packet.position_type == 64)) {
+        //Omnistar or Omnistar HP solution - we have DGPS
+        fix_msg.status.status = sensor_msgs::NavSatStatus::STATUS_GBAS_FIX;
+      } else {
+        //No clue what type of solution we have, so throw it out
+        fix_msg.status.status = sensor_msgs::NavSatStatus::STATUS_NO_FIX;
+      }
+    } else {
+      //No solution has been computed. Throw it out.
+      fix_msg.status.status = sensor_msgs::NavSatStatus::STATUS_NO_FIX;
+    }
 
     gps_pub_.publish(fix_msg);
   }
