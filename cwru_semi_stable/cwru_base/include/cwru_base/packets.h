@@ -32,7 +32,9 @@ namespace cwru_base {
 	enum ReceiveEnums {
 		POSE_t = 0,
 		DIAGNOSTICS_t = 1,
-		SONARS_t = 2
+		SONARS_t = 2,
+		GPS_t =3,
+		COMPASS_t = 4,
 	};
 
 	typedef struct posePacket_t {
@@ -87,6 +89,21 @@ namespace cwru_base {
 		uint16_t C3Mode;
 		uint8_t RCeStop;
 	} CRIODiagnosticsPacket;
+
+	typedef struct gpsPacket_t {
+		int8_t type;
+		int8_t data1; /* Padding */
+		uint8_t satellites_computed;
+		uint8_t satellites_tracked;
+		double latitude;
+		double longitude;
+		float lat_std_dev;
+		float long_std_dev;
+		uint32_t solution_status;
+		uint32_t position_type;
+		float differential_age;
+		float solution_age;
+	} CRIOGPSPacket;
 
 	typedef struct Command_t {
 		int8_t type;
