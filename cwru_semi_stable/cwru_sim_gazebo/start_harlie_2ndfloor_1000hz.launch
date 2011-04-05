@@ -5,7 +5,7 @@
 
 <include file="$(find cwru_urdf)/cwru_urdf.launch" />
 
-<node name="gazebo" pkg="gazebo" type="gazebo" args="$(find cwru_maps)/gazebo_worlds/2nd_floor_100hz.world" respawn="false" output="screen" />
+<node name="gazebo" pkg="gazebo" type="gazebo" args="$(find cwru_maps)/gazebo_worlds/2nd_floor_1000hz.world" respawn="false" output="screen" />
 
 <node name="spawn_harlie" pkg="gazebo" type="spawn_model" args="-urdf -param robot_description -model harlie" respawn="false" output="screen" />
 
