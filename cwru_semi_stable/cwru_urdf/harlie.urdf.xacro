@@ -347,4 +347,20 @@
 	<xacro:sick_lms291_laser name="base_laser1" parent="base" ros_topic="base_laser1_scan" update_rate="75.0" min_angle="-1.57" max_angle="1.57" num_rays="181" >
 		<origin xyz="${base_laser_x + bodylen/2+originX} ${base_laser_y} ${base_laser_z}" rpy="0 0 0" />
 	</xacro:sick_lms291_laser>
+
+	<gazebo>
+		<controller:diffdrive_plugin name="differential_drive_controller" plugin="libdiffdrive_plugin.so">
+			<alwaysOn>true</alwaysOn>
+			<update>100</update>
+			<updateRate>100.0</updateRate>
+			<leftJoint>right_wheel_joint</leftJoint>
+			<rightJoint>left_wheel_joint</rightJoint>
+			<wheelSeparation>${track}</wheelSeparation>
+			<wheelDiameter>${tirediam}</wheelDiameter>
+			<torque>50</torque>
+			<interface:position name="position_iface_0"/>
+			<robotNamespace>/</robotNamespace>
+			<topicName>cmd_vel</topicName>
+		</controller:diffdrive_plugin>
+	</gazebo>
 </robot>
