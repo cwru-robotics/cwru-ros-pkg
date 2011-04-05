@@ -94,8 +94,9 @@
 		<body:map name="map_body">
 			<geom:map name="map_geom">
 				<image>2nd_floor_one_door_5cm.png</image>
+				<height>3</height>
 				<threshold>200</threshold>
-				<granularity>10</granularity>
+				<granularity>2</granularity>
 				<negative>false</negative>
 				<scale>0.05</scale>
 				<material>Gazebo/Rocky</material>
