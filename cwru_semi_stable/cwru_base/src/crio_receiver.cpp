@@ -264,7 +264,7 @@ namespace cwru_base {
     stat.summary(status_lvl, status_msg);
   }
 
-void CrioReceiver::checkGPSValues(diagnostic_updater::DiagnosticStatusWrapper &stat) {
+  void CrioReceiver::checkGPSValues(diagnostic_updater::DiagnosticStatusWrapper &stat) {
     stat.add("Latitude", gps_packet_.latitude); 
     stat.add("Longitude", gps_packet_.longitude); 
     stat.add("Lat Std Dev", gps_packet_.lat_std_dev);
@@ -273,25 +273,27 @@ void CrioReceiver::checkGPSValues(diagnostic_updater::DiagnosticStatusWrapper &s
     stat.add("Position Type", gps_packet_.position_type);
     stat.add("Differential Age", gps_packet_.differential_age);
     stat.add("Solution Age", gps_packet_.solution_age);
-    stat.add("Satellites Tracked", gps_packet_.satellites_tracked);
-    stat.add("Satellites Computed", gps_packet_.satellites_computed);
-    std::string status_msg("No valid ranges specified. Must be eyeballed");
+    //Need to cast the following... if they are uint8_t (chars) they get interpreted by the runtime monitor as characters and, when 0, can mess up the runtime_monitor
+    stat.add("Satellites Tracked", (uint16_t) gps_packet_.satellites_tracked);
+    stat.add("Satellites Computed", (uint16_t) gps_packet_.satellites_computed);
+    std::string status_msg;
+    status_msg += "No ranges specified for diagnostics checks. Values must be eyeballed";
     unsigned char status_lvl = diagnostic_msgs::DiagnosticStatus::OK;
     /*if (fabs(pose_packet_.yaw_bias) > 1.) {
       status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
       status_msg += "Yaw sensor bias has diverged; ";
-    } else if (fabs(pose_packet_.yaw_bias) > 0.4 && fabs(pose_packet_.yaw_bias) < 1.) {
+      } else if (fabs(pose_packet_.yaw_bias) > 0.4 && fabs(pose_packet_.yaw_bias) < 1.) {
       status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
       status_msg += "Yaw sensor bias is outside of expected bounds; ";
-    } else {
+      } else {
       status_msg += "Yaw sensor bias is okay; ";
-    }
-    if ((diagnostics_info_.YawSwing_mV / 1000.0) < 0.1) {
+      }
+      if ((diagnostics_info_.YawSwing_mV / 1000.0) < 0.1) {
       status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
       status_msg += "Yaw sensor seems disconnected; ";
-    } else {
+      } else {
       status_msg += "Yaw sensor is connected; ";
-    }*/
+      }*/
     stat.summary(status_lvl, status_msg);
   }
 
