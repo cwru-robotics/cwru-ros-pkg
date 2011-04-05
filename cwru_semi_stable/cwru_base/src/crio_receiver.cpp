@@ -51,6 +51,7 @@ namespace cwru_base {
       void checkEncoderTicks(diagnostic_updater::DiagnosticStatusWrapper &stat);
       void checkYawSensor(diagnostic_updater::DiagnosticStatusWrapper &stat);
       void checkVoltageLevels(diagnostic_updater::DiagnosticStatusWrapper &stat);
+      void checkGPSValues(diagnostic_updater::DiagnosticStatusWrapper &stat);
       void handleSonarPing(Sonar& ping, const float ping_value, const std::string frame_id, ros::Publisher& sonar_pub);
       float swap_float(float in);
       double swap_double(double in);
@@ -115,6 +116,7 @@ namespace cwru_base {
     updater_.add("Encoders", this, &CrioReceiver::checkEncoderTicks);
     updater_.add("Yaw Sensor", this, &CrioReceiver::checkYawSensor);
     updater_.add("Voltages", this, &CrioReceiver::checkVoltageLevels);
+    updater_.add("GPS", this, &CrioReceiver::checkGPSValues);
   }
 
   void CrioReceiver::updateDiagnostics() {
@@ -259,6 +261,37 @@ namespace cwru_base {
       }
     }
 
+    stat.summary(status_lvl, status_msg);
+  }
+
+void CrioReceiver::checkGPSValues(diagnostic_updater::DiagnosticStatusWrapper &stat) {
+    stat.add("Latitude", gps_packet_.latitude); 
+    stat.add("Longitude", gps_packet_.longitude); 
+    stat.add("Lat Std Dev", gps_packet_.lat_std_dev);
+    stat.add("Long Std Dev", gps_packet_.long_std_dev); 
+    stat.add("Solution Status", gps_packet_.solution_status);
+    stat.add("Position Type", gps_packet_.position_type);
+    stat.add("Differential Age", gps_packet_.differential_age);
+    stat.add("Solution Age", gps_packet_.solution_age);
+    stat.add("Satellites Tracked", gps_packet_.satellites_tracked);
+    stat.add("Satellites Computed", gps_packet_.satellites_computed);
+    std::string status_msg("No valid ranges specified. Must be eyeballed");
+    unsigned char status_lvl = diagnostic_msgs::DiagnosticStatus::OK;
+    /*if (fabs(pose_packet_.yaw_bias) > 1.) {
+      status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+      status_msg += "Yaw sensor bias has diverged; ";
+    } else if (fabs(pose_packet_.yaw_bias) > 0.4 && fabs(pose_packet_.yaw_bias) < 1.) {
+      status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
+      status_msg += "Yaw sensor bias is outside of expected bounds; ";
+    } else {
+      status_msg += "Yaw sensor bias is okay; ";
+    }
+    if ((diagnostics_info_.YawSwing_mV / 1000.0) < 0.1) {
+      status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+      status_msg += "Yaw sensor seems disconnected; ";
+    } else {
+      status_msg += "Yaw sensor is connected; ";
+    }*/
     stat.summary(status_lvl, status_msg);
   }
 
