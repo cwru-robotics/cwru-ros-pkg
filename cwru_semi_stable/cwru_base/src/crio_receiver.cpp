@@ -460,8 +460,8 @@ namespace cwru_base {
     fix_msg.longitude = swapped_packet.longitude;
     fix_msg.latitude = swapped_packet.latitude;
 
-    fix_msg.position_covariance[0] = pow(swapped_packet.lat_std_dev, 2.0);
-    fix_msg.position_covariance[4] = pow(swapped_packet.long_std_dev, 2.0);
+    fix_msg.position_covariance[0] = pow(swapped_packet.long_std_dev, 2.0);
+    fix_msg.position_covariance[4] = pow(swapped_packet.lat_std_dev, 2.0);
 
     if (swapped_packet.solution_age > 2.0) {
       //Fix too old... throw it away
