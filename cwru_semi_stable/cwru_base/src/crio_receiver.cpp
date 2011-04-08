@@ -26,6 +26,7 @@
 #include <cwru_base/Pose.h>
 #include <cwru_base/Sonar.h>
 #include <cwru_base/cRIOSensors.h>
+#include <cwru_base/NavSatFix.h>
 #include <std_msgs/Bool.h>
 #include <diagnostic_updater/diagnostic_updater.h>
 #include <diagnostic_updater/publisher.h>
@@ -41,15 +42,19 @@ namespace cwru_base {
       void dispatchReceivedPacket(CRIOCommand packet);
       void handlePosePacket(CRIOPosePacket packet);
       void handleDiagnosticsPacket(CRIODiagnosticsPacket packet);
+      void handleGPSPacket(CRIOGPSPacket packet);
       void updateDiagnostics();
     private:
       CRIOPosePacket swapPosePacket(CRIOPosePacket& packet);
       CRIODiagnosticsPacket swapDiagnosticsPacket(CRIODiagnosticsPacket& packet);
+      CRIOGPSPacket swapGPSPacket(CRIOGPSPacket& packet);
       void checkEncoderTicks(diagnostic_updater::DiagnosticStatusWrapper &stat);
       void checkYawSensor(diagnostic_updater::DiagnosticStatusWrapper &stat);
       void checkVoltageLevels(diagnostic_updater::DiagnosticStatusWrapper &stat);
+      void checkGPSValues(diagnostic_updater::DiagnosticStatusWrapper &stat);
       void handleSonarPing(Sonar& ping, const float ping_value, const std::string frame_id, ros::Publisher& sonar_pub);
       float swap_float(float in);
+      double swap_double(double in);
       void setupDiagnostics();
       ros::NodeHandle nh_;
       ros::NodeHandle priv_nh_;
@@ -60,6 +65,7 @@ namespace cwru_base {
       ros::Publisher sonar3_pub_;
       ros::Publisher sonar4_pub_;
       ros::Publisher sonar5_pub_;
+      ros::Publisher gps_pub_;
       diagnostic_updater::Updater updater_;
       diagnostic_updater::DiagnosedPublisher<cwru_base::Pose> pose_pub_;
       diagnostic_updater::DiagnosedPublisher<cwru_base::cRIOSensors> sensor_pub_;
@@ -68,6 +74,7 @@ namespace cwru_base {
       double renc_high_warn_, renc_low_warn_, renc_high_err_, renc_low_err_;
       CRIODiagnosticsPacket diagnostics_info_;
       CRIOPosePacket pose_packet_;
+      CRIOGPSPacket gps_packet_;
   };
 
   CrioReceiver::CrioReceiver(): 
@@ -99,6 +106,7 @@ namespace cwru_base {
     sonar3_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_3",1);
     sonar4_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_4",1);
     sonar5_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_5",1);
+    gps_pub_ = nh_.advertise<cwru_base::NavSatFix>("gps_fix",1);
     setupDiagnostics();
   }
 
@@ -108,6 +116,7 @@ namespace cwru_base {
     updater_.add("Encoders", this, &CrioReceiver::checkEncoderTicks);
     updater_.add("Yaw Sensor", this, &CrioReceiver::checkYawSensor);
     updater_.add("Voltages", this, &CrioReceiver::checkVoltageLevels);
+    updater_.add("GPS", this, &CrioReceiver::checkGPSValues);
   }
 
   void CrioReceiver::updateDiagnostics() {
@@ -150,43 +159,43 @@ namespace cwru_base {
     unsigned char status_lvl = diagnostic_msgs::DiagnosticStatus::OK;
 
     if (diagnostics_info_.VMonitor_cRIO_mV < 18 * 1000.0) {
-        status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
-        status_msg += "cRIO voltage below 18V; ";
+      status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+      status_msg += "cRIO voltage below 18V; ";
     } else if (diagnostics_info_.VMonitor_cRIO_mV < 20 * 1000.0) {
-        status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
-        status_msg += "cRIO voltage below 20V; ";
+      status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
+      status_msg += "cRIO voltage below 20V; ";
     }
 
     if (diagnostics_info_.VMonitor_24V_mV < 21 * 1000.0) {
-        status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
-        status_msg += "24V line voltage below 21V. Charge the robot immediately; ";
+      status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+      status_msg += "24V line voltage below 21V. Charge the robot immediately; ";
     } else if (diagnostics_info_.VMonitor_24V_mV < 24 * 1000.0) {
-        if (status_lvl < diagnostic_msgs::DiagnosticStatus::WARN) {
-          status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
-        }
-        status_msg += "24V line voltage below 24V; ";
+      if (status_lvl < diagnostic_msgs::DiagnosticStatus::WARN) {
+        status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
+      }
+      status_msg += "24V line voltage below 24V; ";
     }
 
     int16_t v13_diff = std::abs(diagnostics_info_.VMonitor_13V_mV - 13800);
     if (v13_diff > 400) {
-        status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
-        status_msg += "13.8V line voltage is more than 400mv from 13.8V; ";
+      status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+      status_msg += "13.8V line voltage is more than 400mv from 13.8V; ";
     } else if (v13_diff > 200) {
-        if (status_lvl < diagnostic_msgs::DiagnosticStatus::WARN) {
-          status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
-        }
-        status_msg += "13.8V line voltage is more than 200mv from 13.8V; ";
+      if (status_lvl < diagnostic_msgs::DiagnosticStatus::WARN) {
+        status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
+      }
+      status_msg += "13.8V line voltage is more than 200mv from 13.8V; ";
     }
 
     int16_t v5_diff = std::abs(diagnostics_info_.VMonitor_5V_mV - 5000);
     if (v5_diff > 300) {
-        status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
-        status_msg += "5V line voltage is more than 300mv from 5V; ";
+      status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+      status_msg += "5V line voltage is more than 300mv from 5V; ";
     } else if (v5_diff > 150) {
-        if (status_lvl < diagnostic_msgs::DiagnosticStatus::WARN) {
-          status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
-        }
-        status_msg += "5V line voltage is more than 150mv from 5V; ";
+      if (status_lvl < diagnostic_msgs::DiagnosticStatus::WARN) {
+        status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
+      }
+      status_msg += "5V line voltage is more than 150mv from 5V; ";
     }
     stat.summary(status_lvl, status_msg);
   }
@@ -255,6 +264,39 @@ namespace cwru_base {
     stat.summary(status_lvl, status_msg);
   }
 
+  void CrioReceiver::checkGPSValues(diagnostic_updater::DiagnosticStatusWrapper &stat) {
+    stat.add("Latitude", gps_packet_.latitude); 
+    stat.add("Longitude", gps_packet_.longitude); 
+    stat.add("Lat Std Dev", gps_packet_.lat_std_dev);
+    stat.add("Long Std Dev", gps_packet_.long_std_dev); 
+    stat.add("Solution Status", gps_packet_.solution_status);
+    stat.add("Position Type", gps_packet_.position_type);
+    stat.add("Differential Age", gps_packet_.differential_age);
+    stat.add("Solution Age", gps_packet_.solution_age);
+    //Need to cast the following... if they are uint8_t (chars) they get interpreted by the runtime monitor as characters and, when 0, can mess up the runtime_monitor
+    stat.add("Satellites Tracked", (uint16_t) gps_packet_.satellites_tracked);
+    stat.add("Satellites Computed", (uint16_t) gps_packet_.satellites_computed);
+    std::string status_msg;
+    status_msg += "No ranges specified for diagnostics checks. Values must be eyeballed";
+    unsigned char status_lvl = diagnostic_msgs::DiagnosticStatus::OK;
+    /*if (fabs(pose_packet_.yaw_bias) > 1.) {
+      status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+      status_msg += "Yaw sensor bias has diverged; ";
+      } else if (fabs(pose_packet_.yaw_bias) > 0.4 && fabs(pose_packet_.yaw_bias) < 1.) {
+      status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
+      status_msg += "Yaw sensor bias is outside of expected bounds; ";
+      } else {
+      status_msg += "Yaw sensor bias is okay; ";
+      }
+      if ((diagnostics_info_.YawSwing_mV / 1000.0) < 0.1) {
+      status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
+      status_msg += "Yaw sensor seems disconnected; ";
+      } else {
+      status_msg += "Yaw sensor is connected; ";
+      }*/
+    stat.summary(status_lvl, status_msg);
+  }
+
   CrioReceiver::~CrioReceiver() {
   }
 
@@ -263,6 +305,8 @@ namespace cwru_base {
       handlePosePacket(*((CRIOPosePacket*) &packet));
     } else if (packet.type == DIAGNOSTICS_t) {
       handleDiagnosticsPacket(*((CRIODiagnosticsPacket*) &packet));
+    } else if (packet.type == GPS_t) {
+      handleGPSPacket(*((CRIOGPSPacket*) &packet));
     } else {
       ROS_WARN("Unhandled packet type received: %d", packet.type);
     }	
@@ -272,6 +316,12 @@ namespace cwru_base {
     uint32_t temp = *((uint32_t *)&in); 
     temp = ntohl(temp);
     return *((float *) &temp);
+  }
+
+  double CrioReceiver::swap_double(double in) {
+    uint64_t temp = *((uint64_t *)&in);
+    temp = be64toh(temp);
+    return *((double *) &temp);
   }
 
   CRIOPosePacket CrioReceiver::swapPosePacket(CRIOPosePacket& packet) {
@@ -315,6 +365,19 @@ namespace cwru_base {
     swapped_packet.C1Steering = be16toh(packet.C1Steering);
     swapped_packet.C2Throttle = be16toh(packet.C2Throttle);
     swapped_packet.C3Mode = be16toh(packet.C3Mode);
+    return swapped_packet;
+  }
+
+  CRIOGPSPacket CrioReceiver::swapGPSPacket(CRIOGPSPacket& packet) {
+    CRIOGPSPacket swapped_packet = packet;
+    swapped_packet.latitude = swap_double(packet.latitude);
+    swapped_packet.longitude = swap_double(packet.longitude);
+    swapped_packet.lat_std_dev = swap_float(packet.lat_std_dev);
+    swapped_packet.long_std_dev = swap_float(packet.long_std_dev);
+    swapped_packet.solution_status = be32toh(packet.solution_status);
+    swapped_packet.position_type = be32toh(packet.position_type);
+    swapped_packet.differential_age = swap_float(packet.differential_age);
+    swapped_packet.solution_age = swap_float(packet.solution_age);
     return swapped_packet;
   }
 
@@ -380,6 +443,47 @@ namespace cwru_base {
     sensor_msg.yaw_temp = diagnostics_info_.YawTemp_mV;
     sensor_msg.yaw_ref = diagnostics_info_.YawRef_mV;
     sensor_pub_.publish(sensor_msg);
+  }
+
+  void CrioReceiver::handleGPSPacket(CRIOGPSPacket packet) {
+    ROS_DEBUG("Got a GPS Packet. Now broadcasting as a ROS topic");
+    ros::Time current_time = ros::Time::now();
+    CRIOGPSPacket swapped_packet = swapGPSPacket(packet);
+    gps_packet_ = swapped_packet;
+
+    cwru_base::NavSatFix fix_msg;
+    fix_msg.header.stamp = current_time;
+    fix_msg.header.frame_id = "crio_gps";
+    fix_msg.status.service = cwru_base::NavSatStatus::SERVICE_GPS;
+    fix_msg.position_covariance_type = cwru_base::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
+
+    fix_msg.longitude = swapped_packet.longitude;
+    fix_msg.latitude = swapped_packet.latitude;
+
+    fix_msg.position_covariance[0] = pow(swapped_packet.long_std_dev, 2.0);
+    fix_msg.position_covariance[4] = pow(swapped_packet.lat_std_dev, 2.0);
+
+    if (swapped_packet.solution_age > 2.0) {
+      //Fix too old... throw it away
+      fix_msg.status.status = cwru_base::NavSatStatus::STATUS_NO_FIX;
+    } else if (swapped_packet.solution_status == 0) {
+      //Solution has been computed
+      if (swapped_packet.position_type == 16) {
+        //Solution single - no DGPS corrections
+        fix_msg.status.status = cwru_base::NavSatStatus::STATUS_FIX;
+      } else if ((swapped_packet.position_type == 20) || (swapped_packet.position_type == 64)) {
+        //Omnistar or Omnistar HP solution - we have DGPS
+        fix_msg.status.status = cwru_base::NavSatStatus::STATUS_GBAS_FIX;
+      } else {
+        //No clue what type of solution we have, so throw it out
+        fix_msg.status.status = cwru_base::NavSatStatus::STATUS_NO_FIX;
+      }
+    } else {
+      //No solution has been computed. Throw it out.
+      fix_msg.status.status = cwru_base::NavSatStatus::STATUS_NO_FIX;
+    }
+
+    gps_pub_.publish(fix_msg);
   }
 };
 
