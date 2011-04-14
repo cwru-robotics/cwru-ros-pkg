@@ -72,6 +72,7 @@ namespace cwru_base {
       double desired_pose_freq_;
       double lenc_high_warn_, lenc_low_warn_, lenc_high_err_, lenc_low_err_;
       double renc_high_warn_, renc_low_warn_, renc_high_err_, renc_low_err_;
+      bool push_casters_;
       CRIODiagnosticsPacket diagnostics_info_;
       CRIOPosePacket pose_packet_;
       CRIOGPSPacket gps_packet_;
@@ -87,9 +88,9 @@ namespace cwru_base {
         updater_,
         diagnostic_updater::FrequencyStatusParam(&desired_pose_freq_, &desired_pose_freq_, 3.0, 5),
         diagnostic_updater::TimeStampStatusParam())
-
   {
     priv_nh_.param("expected_pose_freq", desired_pose_freq_, 50.0);
+    priv_nh_.param("push_casters", push_casters_, false);
     ros::NodeHandle encoders_nh_(priv_nh_, "encoders");
     encoders_nh_.param("lenc_high_warn", lenc_high_warn_, 15.1);
     encoders_nh_.param("lenc_low_warn", lenc_low_warn_, 14.9);
@@ -384,6 +385,12 @@ namespace cwru_base {
   void CrioReceiver::handlePosePacket(CRIOPosePacket packet) {
     ros::Time current_time = ros::Time::now();
     CRIOPosePacket swapped_packet = swapPosePacket(packet);
+    if (push_casters_) {
+      swapped_packet.x = -swapped_packet.x;
+      swapped_packet.y = -swapped_packet.y;
+      swapped_packet.theta = swapped_packet.theta + M_PI;
+      swapped_packet.vel = -swapped_packet.vel;
+    }
     pose_packet_ = swapped_packet;
     Pose p, p2;
     p.x = swapped_packet.x;
