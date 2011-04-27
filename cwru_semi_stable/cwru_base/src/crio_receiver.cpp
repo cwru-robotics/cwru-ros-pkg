@@ -101,7 +101,7 @@ namespace cwru_base {
     encoders_nh_.param("renc_high_err", renc_high_err_, 16.);
     encoders_nh_.param("renc_low_err", renc_low_err_, 14.);
     flipped_pose_pub_ = nh_.advertise<cwru_base::Pose>("flipped_pose",1);
-    estop_pub_ = nh_.advertise<std_msgs::Bool>("estop_status",1,true);
+    estop_pub_ = nh_.advertise<std_msgs::Bool>("motors_enabled",1,true);
     sonar1_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_1",1);
     sonar2_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_2",1);
     sonar3_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_3",1);
@@ -436,7 +436,7 @@ namespace cwru_base {
     CRIODiagnosticsPacket swapped_packet = swapDiagnosticsPacket(packet);
     diagnostics_info_ = swapped_packet;
     std_msgs::Bool msg;
-    msg.data = diagnostics_info_.eStopTriggered;
+    msg.data = !diagnostics_info_.eStopTriggered;
     estop_pub_.publish(msg);
 
     cwru_base::cRIOSensors sensor_msg;
