@@ -1,0 +1,21 @@
+goals:
+    - goal:
+         x: 0
+         y: 0
+         theta: 0
+      wavs:
+          - 'produce.wav'
+    - goal:
+         x: 0
+         y: 0
+         theta: 0
+      wavs:
+          - 'blank_sound.ogg'
+jokes:
+    - 'joke1.wav'
+    - 'joke2.wav'
+    - 'joke3.wav'
+    - 'joke4.wav'
+
+
+

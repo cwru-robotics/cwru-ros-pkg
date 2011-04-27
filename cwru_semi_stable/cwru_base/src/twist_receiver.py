@@ -63,8 +63,18 @@ class ToCRIO:
 
 to_crio = ToCRIO()
 
-def twist_receiver(msg, toCRIO):
-    toCRIO.send_angular_rate_command(-1*msg.angular.z, msg.linear.x)
+def twist_receiver(msg, params):
+    toCRIO = params[0]
+    push_casters = params[1]
+    multiplier_z = 0
+    multiplier_x = 0
+    if push_casters:
+        multiplier_z = -1
+        multiplier_x = -1
+    else:
+        multiplier_z = -1
+        multiplier_x = 1
+    toCRIO.send_angular_rate_command(multiplier_z*msg.angular.z, multiplier_x*msg.linear.x)
 
 def handle_reboot_request(req):
     to_crio.send_reboot_command()
@@ -85,7 +95,8 @@ def handle_enable_motors_request(req):
 
 if __name__ == "__main__":
     rospy.init_node('twist_receiver')
-    rospy.Subscriber('/cmd_vel', Twist, twist_receiver, to_crio)
+    push_casters = rospy.get_param("~push_casters")
+    rospy.Subscriber('/cmd_vel', Twist, twist_receiver, (to_crio, push_casters))
     rospy.Service('reboot_crio', Empty, handle_reboot_request)
     rospy.Service('disable_motors', Empty, handle_disable_motors_request)
     rospy.Service('enable_motors', Empty, handle_enable_motors_request)

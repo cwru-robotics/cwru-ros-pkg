@@ -11,7 +11,7 @@
 
   <node pkg="map_server" type="map_server" name="obstacle_map_server" args="$(find cwru_maps)/maps/3rd_floor_obstacles/map.yaml" />
 
-  <node launch-prefix="xterm -e gdb --args" pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+ <node launch-prefix="xterm -e gdb --args" pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
 
     <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_common_params.yaml" command="load" ns="global_costmap" />
     <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_common_params.yaml" command="load" ns="local_costmap" />

@@ -12,7 +12,6 @@
   <depend package="cwru_nav"/>
   <depend package="map_server" />
   <depend package="cwru_maps" />
-  <depend package="nav_view" />
 
 </package>
 

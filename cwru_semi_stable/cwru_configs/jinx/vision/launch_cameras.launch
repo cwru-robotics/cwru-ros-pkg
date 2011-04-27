@@ -1,0 +1,14 @@
+<launch>
+	<node name="front_camera" pkg="uvc_cam" type="uvc_cam_node" respawn="true" >
+		<param name="frame_rate" value="30.0" />
+		<param name="camera_info_url" value="file://$(find cwru_configs)/$(optenv ROBOT sim)/vision/calibration/calibration_front_camera.yaml" />
+		<remap from="camera" to="front_camera" />
+		<param name="camera_name" value="front_camera" />
+		<param name="frame_id" value="front_camera" />
+		<param name="exposure" value="3" />
+		<param name="brightness" value="120" />
+		<param name="contrast" value="30" />
+		<param name="saturation" value="40" />
+	</node>
+	<node pkg="image_proc" type="image_proc" name="proc" ns="front_camera" />
+</launch>

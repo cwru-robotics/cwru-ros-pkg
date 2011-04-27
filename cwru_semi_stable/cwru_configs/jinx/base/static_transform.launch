@@ -1,0 +1,4 @@
+<launch>
+	<node pkg="tf" type="static_transform_publisher" name="base_laser1_broadcaster" args="0.2159 0 0.53975 0 0 0 base_link base_laser1_link 100" />
+	<node pkg="tf" type="static_transform_publisher" name="front_sonar_broadcaster" args="0.0381 0 0.7223 0 0 0 base_link front_sonar 100" />
+</launch>
