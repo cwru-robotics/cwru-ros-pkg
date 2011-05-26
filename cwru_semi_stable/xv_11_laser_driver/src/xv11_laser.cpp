@@ -77,8 +77,8 @@ namespace xv_11_laser_driver {
           scan->time_increment = motor_speed_/1e8;
           scan->range_min = 0.06;
           scan->range_max = 5.0;
-          //scan->ranges.resize(0);
-          //scan->intensities.resize(0);
+          scan->ranges.reserve(360);
+          scan->intensities.reserve(360);
 
           for(uint16_t i = 0; i < raw_bytes_.size(); i=i+4) {
             // Four bytes per reading
