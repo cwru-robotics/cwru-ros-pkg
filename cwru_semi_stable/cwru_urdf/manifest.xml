@@ -1,0 +1,14 @@
+<package>
+  <description brief="cwru_urdf">
+
+     cwru_urdf
+
+  </description>
+  <author>Chad Rockey, Eric Perko</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/cwru_urdf</url>
+
+</package>
+
+
