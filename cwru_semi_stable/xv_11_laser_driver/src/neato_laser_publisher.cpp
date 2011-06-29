@@ -46,15 +46,17 @@ int main(int argc, char **argv)
   std::string port;
   int baud_rate;
   std::string frame_id;
+  int firmware_number;
 
   priv_nh.param("port", port, std::string("/dev/ttyUSB0"));
   priv_nh.param("baud_rate", baud_rate, 115200);
   priv_nh.param("frame_id", frame_id, std::string("neato_laser"));
+  priv_nh.param("firmware_version", firmware_number, 1);
 
   boost::asio::io_service io;
 
   try {
-    xv_11_laser_driver::XV11Laser laser(port, baud_rate, io);
+    xv_11_laser_driver::XV11Laser laser(port, baud_rate, firmware_number, io);
     ros::Publisher laser_pub = n.advertise<sensor_msgs::LaserScan>("scan", 1000);
 
     while (ros::ok()) {

@@ -46,7 +46,7 @@ namespace xv_11_laser_driver {
               * @param baud_rate The baud rate to open the serial port at.
               * @param io Boost ASIO IO Service to use when creating the serial port object
               */
-            XV11Laser(const std::string& port, uint32_t baud_rate, boost::asio::io_service& io);
+            XV11Laser(const std::string& port, uint32_t baud_rate, uint32_t firmware, boost::asio::io_service& io);
 
             /**
               * @brief Default destructor
@@ -67,10 +67,10 @@ namespace xv_11_laser_driver {
         private:
             std::string port_; ///< @brief The serial port the driver is attached to
             uint32_t baud_rate_; ///< @brief The baud rate for the serial connection
+            uint32_t firmware_; ///< @brief The firmware version to check.  Currently supports two different versions: 1 and 2.
 
             bool shutting_down_; ///< @brief Flag for whether the driver is supposed to be shutting down or not
             boost::asio::serial_port serial_; ///< @brief Actual serial port object for reading/writing to the XV11 Laser Scanner
-            boost::array<uint8_t, 1440> raw_bytes_; ///< @brief Array to put all of the scan bytes in before processing them
-            uint16_t motor_speed_; ///< @brief current motor speed as reported by the XV11.
+	    uint16_t motor_speed_; ///< @brief current motor speed as reported by the XV11.
     };
 };
