@@ -1,0 +1,16 @@
+<package>
+  <description brief="tour_guide_kinect">
+
+     tour_guide_kinect
+
+  </description>
+  <author>Roberto</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/tour_guide_kinect</url>
+  <depend package="openni_camera"/>
+  <depend package="sensor_msgs"/>
+  <depend package="octomap_ros"/>
+</package>
+
+

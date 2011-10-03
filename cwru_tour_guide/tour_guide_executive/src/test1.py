@@ -51,15 +51,10 @@ def main(filename):
   for entry in goallist:
     print entry
   p=0
-  print "test1"
   i=vlc.Instance()
-  print "test2"
   iterator=goallist.__iter__();
-  print "test3"
   client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-  print "test4"
   client.wait_for_server()
-  print "test5"
   while(1):
     try:
       print 'starting location'

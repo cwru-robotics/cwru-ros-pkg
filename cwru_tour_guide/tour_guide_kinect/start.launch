@@ -1,0 +1,3 @@
+<launch>
+	<node name="kinect_mapper" pkg="tour_guide_kinect" type="kinect_mapping.cpp" output="screen"/>
+</launch>
