@@ -1,11 +1,10 @@
 <launch>
   <!--- Run AMCL -->
-  <!-- Don't run AMCL <group ns="amcl">
+  <group ns="amcl">
     <include file="$(find cwru_nav)/amcl_diff.launch" />
     <node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/veale_bluebash/map.yaml" >
     </node>
   </group>
-  -->
 
   <include file="$(find cwru_nav)/start_map_as_sensor.launch" />
   <include file="$(find cwru_nav)/sonar_filter.launch" />
