@@ -1,7 +1,4 @@
 <launch>
 	<node name="tour_guide_goal_planner" pkg="tour_guide_executive" type="test1.py" output="screen">
-
-	    <param name="filename" value="$(find tour_guide_executive)/configs/goals.yaml" />
-	    <param name="soundpath" value="$(find tour_guide_executive)/configs/sounds/" />
 	</node>
 </launch>
