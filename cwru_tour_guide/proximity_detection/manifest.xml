@@ -1,0 +1,18 @@
+<package>
+  <description brief="proximity_detection">
+
+     proximity_detection
+
+  </description>
+  <author>mobilerobots</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/proximity_detection</url>
+  <depend package="std_msgs"/>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+  <depend package="nite"/>
+
+</package>
+
+
