@@ -99,11 +99,11 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	bool notWritten=true;
 
-	int total_iterations=10;
-	int count_iterations=0;
+	//int total_iterations=10;
+	//int count_iterations=0;
 
 	// Main loop
-	while (count_iterations<total_iterations && n.ok())
+	while (/* count_iterations<total_iterations && */ n.ok())
 	{
 		// Wait for new data to be available
 		nRetVal = context.WaitOneUpdateAll(depth);
