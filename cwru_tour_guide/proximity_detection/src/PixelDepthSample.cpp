@@ -2,9 +2,9 @@
 // Headers
 //#include "stdafx.h" // commenting out this line because i think it's just a visual studio thing
 // Include OpenNI
-#include </home/mobilerobots/kinect/OpenNI/Include/XnCppWrapper.h>
+#include "openni/XnCppWrapper.h"
 // Include NITE
-#include "/home/mobilerobots/kinect/NITE/Nite-1.4.0.5/Include/XnVNite.h"
+#include "nite/XnVNite.h"
 
 // the following 3 things i'm adding because now i'm gonna run this in ros.  source: http://www.ros.org/wiki/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29
 #include "ros/ros.h"

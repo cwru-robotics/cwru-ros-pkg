@@ -1,10 +1,9 @@
 // this is dumb: export ROS_PACKAGE_PATH=$ROS_PACKAGE_PATH:/home/mobilerobots/kinect/proximity_detection
 
-// possibly useful: http://www.ros.org/doc/api/nao_openni/html/namespacexn.html
 // Include OpenNI
-#include </home/mobilerobots/kinect/OpenNI/Include/XnCppWrapper.h>
+#include "openni/XnCppWrapper.h"
 // Include NITE
-#include "/home/mobilerobots/kinect/NITE/Nite-1.4.0.5/Include/XnVNite.h"
+#include "nite/XnVNite.h"
 
 // the following 3 things i'm adding because now i'm gonna run this in ros.  source: http://www.ros.org/wiki/ROS/Tutorials/WritingPublisherSubscriber%28c%2B%2B%29
 #include "ros/ros.h"
@@ -19,12 +18,9 @@
 #include <fstream>
 
 // to do the ros msg i have this source http://www.ros.org/wiki/navigation/Tutorials/RobotSetup/Sensors
-#include </opt/ros/electric/stacks/common_msgs/sensor_msgs/msg_gen/cpp/include/sensor_msgs/LaserScan.h>
-//#include <sensor_msgs/LaserScan.h>
+#include "sensor_msgs/LaserScan.h"
 
 using namespace std;
-//using namespace sensor_msgs;
-
 
 
 // This macro checks the return code that all OpenNI calls make
@@ -196,13 +192,7 @@ int _tmain(int argc, _TCHAR* argv[])
 		printf("count_iterations = %d\n",count_iterations);
 
 	}
-/*
-    //generate some fake data for our laser scan
-    for(unsigned int i = 0; i < 2*angleMax; ++i){
-      ranges[i] = count;
-      //intensities[i] = 100 + count;
-    }
-*/
+    
     ros::Time scan_time = ros::Time::now();
 
     //populate the LaserScan message
@@ -234,6 +224,8 @@ int _tmain(int argc, _TCHAR* argv[])
 	context.Shutdown();
 	return 0;
 }
+
+
 double* xYToRTheta(double x, double y){
 	double* result= new double[2];
 	result[0]=sqrt(x*x+y*y);
