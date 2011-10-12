@@ -70,7 +70,7 @@ int _tmain(int argc, _TCHAR* argv[])
 	// to publish:
 	ros::init(argc, argv, "laser_scan_publisher");
 	ros::NodeHandle n;
-	ros::Publisher scan_pub = n.advertise<sensor_msgs::LaserScan>("scan", 50);
+	ros::Publisher scan_pub = n.advertise<sensor_msgs::LaserScan>("kinect_scan", 50);
 //	ros::Publisher scan_pub = n.advertise<LaserScan>("scan", 50);
 
   double laser_frequency = 40;
@@ -78,7 +78,7 @@ int _tmain(int argc, _TCHAR* argv[])
   //double intensities[2*angleMax];
 
   //int count = 0;
-  ros::Rate r(1.0);
+  ros::Rate r(5.0);
 
 
 	
@@ -99,11 +99,11 @@ int _tmain(int argc, _TCHAR* argv[])
 
 	bool notWritten=true;
 
-	//int total_iterations=10;
-	//int count_iterations=0;
+	int total_iterations=10;
+	int count_iterations=0;
 
 	// Main loop
-	while (/* count_iterations<total_iterations && */ n.ok())
+	while (/*count_iterations++<total_iterations && */ n.ok())
 	{
 		// Wait for new data to be available
 		nRetVal = context.WaitOneUpdateAll(depth);
@@ -134,11 +134,10 @@ int _tmain(int argc, _TCHAR* argv[])
 		} 
 
 
-		//depth.ConvertProjectiveToRealWorld(XN_QQVGA_Y_RES*XN_QQVGA_X_RES, pointList, realWorld); 
 		depth.ConvertProjectiveToRealWorld(XN_VGA_Y_RES*XN_VGA_X_RES, pointList, realWorld); 
 		// hey guys, x is horizontal, y is vertical, z is depth.
 
-		printf("length = %f\n",(double)(sizeof(realWorld)/sizeof(XnPoint3D)));
+		//printf("length = %f\n",(double)(sizeof(realWorld)/sizeof(XnPoint3D)));
 
 		for(int i=0; i<2*angleMax; i++){
 			distances[i]=unknownDist;
@@ -150,8 +149,6 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		for(int j=0; j<y_res; j++){ // as opposed to XN_QQVGA_X_RES
 			for(int i=0; i<x_res; i++){
-				//rotatedResult=rotate(realWorld[j*XN_QQVGA_X_RES + i].X,realWorld[j*XN_QQVGA_X_RES + i].Z,realWorld[j*XN_QQVGA_X_RES + i].Y,-tiltAngle);
-				//printf("j*x_res + i = %d\n",j*x_res + i); // okay.  goes up to 615680
 				rotatedResult=rotate(realWorld[j*x_res + i].X,realWorld[j*x_res + i].Y,realWorld[j*x_res + i].Z,-tiltAngle);
 
 				if(rotatedResult[1]>floorThreshold){
@@ -167,7 +164,6 @@ int _tmain(int argc, _TCHAR* argv[])
 						else{
 							angleIndex2=270-angleIndex;
 						}
-						//distances[angleIndex]=(int)(tempRTheta[0]);
 						distances[angleIndex2]=(int)(tempRTheta[0]);
 					}
 				}
@@ -188,10 +184,10 @@ int _tmain(int argc, _TCHAR* argv[])
 
 		myfile.close();
 */
-		count_iterations++;
-		printf("count_iterations = %d\n",count_iterations);
+		//count_iterations++;
+		//printf("count_iterations = %d\n",count_iterations);
 
-	}
+
     
     ros::Time scan_time = ros::Time::now();
 
@@ -216,7 +212,7 @@ int _tmain(int argc, _TCHAR* argv[])
     scan_pub.publish(scan);
    // ++count;
     r.sleep();
-
+}
 
 
 
