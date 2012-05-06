@@ -1,4 +1,4 @@
-/* Copyright (c) 2010, Eric Perko
+/* Copyright (c) 2010, Eric Perko; 2012, Edward Venator
  * All rights reserved
  *
  * This program is free software: you can redistribute it and/or modify
@@ -17,13 +17,13 @@
 
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
-#include <joy/Joy.h>
+#include <sensor_msgs/Joy.h>
 
 class TeleopHarlie {
 	public: 
 		TeleopHarlie();
 	private:
-		void joyCallback(const joy::Joy::ConstPtr& joy);
+		void joyCallback(const sensor_msgs::Joy::ConstPtr& joy);
 
 		ros::NodeHandle nh_;
 		ros::NodeHandle priv_nh_;
@@ -47,10 +47,10 @@ TeleopHarlie::TeleopHarlie():
     priv_nh_.param("angular_", angular_, angular_);
 
     vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
-    joy_sub_ = nh_.subscribe<joy::Joy>("joy", 10, &TeleopHarlie::joyCallback, this);
+    joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 10, &TeleopHarlie::joyCallback, this);
 }
 
-void TeleopHarlie::joyCallback(const joy::Joy::ConstPtr& joy) {
+void TeleopHarlie::joyCallback(const sensor_msgs::Joy::ConstPtr& joy) {
 	geometry_msgs::Twist twist;
 	twist.linear.x = linear_ * joy->axes[linear_axis_];
 	twist.angular.z = angular_ * joy->axes[angular_axis_];

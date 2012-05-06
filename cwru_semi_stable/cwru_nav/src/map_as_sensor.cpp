@@ -1,7 +1,7 @@
 /*********************************************************************
  * Software License Agreement (BSD License)
  *
- *  Copyright (c) 2010, Eric Perko, Jesse Fish
+ *  Copyright (c) 2010, Eric Perko, Jesse Fish; 2012, Edward Venator
  *  All rights reserved.
  *
  *  Redistribution and use in source and binary forms, with or without
@@ -122,11 +122,11 @@ int main(int argc, char *argv[]){
 
 				sensor_points=NULL;
 				sensor_points=new sensor_msgs::PointCloud;
-				sensor_points->set_points_size(points.size());
+				//sensor_points->set_points_size(points.size());
 
-				sensor_points->set_channels_size(1);
+				//sensor_points->set_channels_size(1);
 				sensor_points->channels[0].name = channel_name;
-				sensor_points->channels[0].set_values_size(points.size());
+				//sensor_points->channels[0].set_values_size(points.size());
 
 				sensor_points->header.frame_id =frame_id;
 				//for everything in list points, set the x and y value to the right stuff, and set intensity to intensity
