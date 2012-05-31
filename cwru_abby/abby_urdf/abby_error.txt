@@ -1,0 +1,17 @@
+Constrained Parts: front right plate.ipt, LIDAR PSU.ipt
+Constrain Name: Tangent:5
+Error Details: Massless connector is not supported if there are more than one constrain between parts. A weld joint has been added between the constrained parts.
+---------------------------------------------------------------------------------
+Constrained Parts: Kinect.ipt, robot.iam
+Constrain Name: <All constrains>
+Error Details: Two sequential revolute joints are not supported.A weld joint has been added between the constrained parts.
+---------------------------------------------------------------------------------
+Constrained Parts: IRB120_Base_rev0.iam, arm rail.ipt
+Constrain Name: Tangent:1
+Error Details: Massless connector is not supported if there are more than one constrain between parts. A weld joint has been added between the constrained parts.
+---------------------------------------------------------------------------------
+Constrained Parts: robot.iam, SICK LMS291.ipt
+Constrain Name: Mate:118
+Error Details: Unknown
+---------------------------------------------------------------------------------
+
