@@ -48,35 +48,26 @@ def main(filename):
     data = yaml.safe_load(datafile)
   jokelist=data['jokes']
   goallist=data['goals']
-  for entry in goallist:
-    print entry
   p=0
-  print "test1"
   i=vlc.Instance()
-  print "test2"
   iterator=goallist.__iter__();
-  print "test3"
   client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-  print "test4"
   client.wait_for_server()
-  print "test5"
   while(1):
     try:
       print 'starting location'
       nextThing=iterator.next()
       goal=create_move_base_goal_from_yaml(nextThing['goal'])
+      print "current goal: %s" % goal
       sound=nextThing['wavs']
       print 'send location'
       client.send_goal(goal)
       #client.wait_for_result()
-      print 'got next file'
       if p!=0:
         p.release()
 
       p=vlc.MediaPlayer(sound_prefix + sound[0])
-      print 'created next file'
       
-      print 'retained next file'
       p.play()
       print(p.get_state())
       
@@ -88,9 +79,9 @@ def main(filename):
 
         time.sleep(.7)
 
-        print 'finished sound'
+	print "Goal state: %s" % client.get_state()
         if client.get_state() == GoalStatus.SUCCEEDED :
-          break
+	  break
         elif client.get_state()==GoalStatus.ABORTED or client.get_state()==GoalStatus.REJECTED :
           #resend the goal
           client.send_goal(goal)

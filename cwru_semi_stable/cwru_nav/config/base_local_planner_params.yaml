@@ -18,6 +18,9 @@ TrajectoryPlannerROS:
   dwa: false
   sim_time: 2.0
 
+  yaw_goal_tolerance: 6.28
+  xy_goal_tolerance: 0.75
+
   path_distance_bias: 5.0
   goal_distance_bias: 0.8
   occdist_scale: 0.05
