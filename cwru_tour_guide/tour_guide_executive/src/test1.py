@@ -40,45 +40,57 @@ def create_move_base_goal_from_yaml(yaml_goal):
 def stall():  
   return 'testsound1.wav'
 
+
 def main(filename):
-  soundpath=rospy.get_param('~soundpath')
   
   #open the yaml config file and load path and tour
   with open(filename, 'r') as datafile:
     data = yaml.safe_load(datafile)
   jokelist=data['jokes']
   goallist=data['goals']
-  p=0
-  i=vlc.Instance()
   iterator=goallist.__iter__();
+
+  # Set up VLC player
+  player=0
+  instance=vlc.Instance()
+
+  # Our interface to the planner
   client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
   client.wait_for_server()
+
   while(1):
     try:
       print 'starting location'
+      # Get the next goal and sound
       nextThing=iterator.next()
-      goal=create_move_base_goal_from_yaml(nextThing['goal'])
-      print "current goal: %s" % goal
+      goal =create_move_base_goal_from_yaml(nextThing['goal'])
       sound=nextThing['wavs']
-      print 'send location'
+
+      print "current goal: %s" % goal
+
+      # Send goal to planner
+      print 'sending location to planner'
       client.send_goal(goal)
       #client.wait_for_result()
-      if p!=0:
-        p.release()
 
-      p=vlc.MediaPlayer(sound_prefix + sound[0])
-      
-      p.play()
-      print(p.get_state())
+      # Play the sound
+      if player!=0:
+        player.release()
+
+      player=vlc.MediaPlayer(sound_prefix + sound[0])
+      player.play()
+      print(player.get_state())
       
       while(1):
  #       print 'starting inner loop'
-        while(p.get_state()!=vlc.State.Ended):
- #         print(p.get_state())
+        # Wait for the sound to end
+        while(player.get_state()!=vlc.State.Ended):
+ #         print(player.get_state())
           time.sleep(.2)
 
         time.sleep(.7)
 
+        # Check if the robot is now at the goal
 	print "Goal state: %s" % client.get_state()
         if client.get_state() == GoalStatus.SUCCEEDED :
 	  break
@@ -88,8 +100,8 @@ def main(filename):
         else:
  #         print 'starting stall sound'
           time.sleep(.7)
-       #   p=vlc.MediaPlayer(sound_prefix + stall())
-       #   p.play()
+       #   player=vlc.MediaPlayer(sound_prefix + stall())
+       #   player.play()
         #if client.get_state() == GoalStatus.SUCCEEDED:
 	    #rospy.loginfo("Goal executed successfully")
 	#else:
@@ -105,7 +117,7 @@ def main(filename):
 if __name__ == '__main__':
   rospy.init_node('roberto_goal_planner')
   sound_prefix=rospy.get_param('~soundpath')
-  print('woooow'+sound_prefix)
+  print('Looking for sounds in the directory \'' + sound_prefix + '\'')
   
   main(rospy.get_param('~filename'))
   
