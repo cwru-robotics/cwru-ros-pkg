@@ -1,56 +1,44 @@
 goals:
     - goal:
-         x: 0
-         y: 0
-         theta: 0
+         x: -5.79
+         y: 32.22
+         theta: 3.76
       wavs:
-          - 'intro.wav'
+          - 'blank_sound.ogg'
     - goal:
-         x: 11.4
-         y: .999
-         theta: 1.28
+         x: -9
+         y: 29.99
+         theta: 3.76
       wavs:
-         - 'leg1.wav'
+         - 'blank_sound.ogg'
     - goal:
-         x: 15.093
-         y: 4.5
-         theta: 0.758
+         x: -14.9
+         y: 25.14
+         theta: 3.76
       wavs:
-         - 'leg2.wav'
+         - 'blank_sound.ogg'
     - goal:
-         x: 21.82
-         y: 5.6
-         theta: 0
+         x: -15.31
+         y: 19.85
+         theta: .95
       wavs:
-         - 'leg3.wav'
+         - 'blank_sound.ogg'
     - goal:
-         x: 21.82
-         y: 5.6
-         theta: 0
+         x: -8.7
+         y: 19.11
+         theta: .57
       wavs:
-         - 'midpoint.wav'
+         - 'blank_sound.ogg'
     - goal:
-         x: 15.093
-         y: 4.0
-         theta: 0.758
+         x: -5.09
+         y: 21.6
+         theta: 2.16
       wavs:
-         - 'leg4.wav'
+         - 'blank_sound.ogg'
     - goal:
-         x: -3.374
-         y: -9.65
-         theta: 4.71
-      wavs:
-         - 'leg6.wav'
-    - goal:
-         x: -3.374
-         y: -9.65
-         theta: 0
-      wavs:
-          - 'endpoint.wav'
-    - goal:
-         x: 0
-         y: 0
-         theta: 0
+         x: -5.79
+         y: 32.22
+         theta: 3.76
       wavs:
           - 'blank_sound.ogg'
 jokes:
