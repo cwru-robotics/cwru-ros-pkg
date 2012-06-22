@@ -43,8 +43,8 @@ TeleopHarlie::TeleopHarlie():
 {
     priv_nh_.param("linear_axis", linear_axis_, linear_axis_);
     priv_nh_.param("angular_axis", angular_axis_, angular_axis_);
-    priv_nh_.param("linear_", linear_, linear_);
-    priv_nh_.param("angular_", angular_, angular_);
+    priv_nh_.param("linear_speed_max", linear_, linear_);
+    priv_nh_.param("angular_speed_max", angular_, angular_);
 
     vel_pub_ = nh_.advertise<geometry_msgs::Twist>("cmd_vel", 1);
     joy_sub_ = nh_.subscribe<sensor_msgs::Joy>("joy", 10, &TeleopHarlie::joyCallback, this);

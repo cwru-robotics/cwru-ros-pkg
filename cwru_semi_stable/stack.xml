@@ -11,7 +11,7 @@
   <depend stack="laser_drivers" /> <!-- sicktoolbox_wrapper -->
   <depend stack="navigation" /> <!-- move_base, map_server, costmap_2d, nav_view, amcl, nav_core -->
   <depend stack="ros" /> <!-- std_srvs, std_msgs, roscpp, rospy -->
-  <depend stack="simulator_stage" /> <!-- stage -->
-  <depend stack="sound_drivers" /> <!-- sound_play -->
+  <depend stack="stage" /> <!-- stage -->
+  <depend stack="audio_common" /> <!-- sound_play -->
 
 </stack>
