@@ -14,6 +14,7 @@ import tf
 import actionlib
 
 from geometry_msgs.msg import Quaternion
+from geometry_msgs.msg import PoseStamped
 from move_base_msgs.msg import MoveBaseAction
 from move_base_msgs.msg import MoveBaseGoal
 from actionlib_msgs.msg import GoalStatus
@@ -33,7 +34,9 @@ def create_move_base_goal_from_yaml(yaml_goal):
     quaternion = tf.transformations.quaternion_about_axis(yaml_goal['theta'], (0,0,1))
     goal.target_pose.pose.orientation = Quaternion(*quaternion)
     
-    return goal
+    posestamped = PoseStamped()
+    
+    return goal, posestamped
 
 
 #define an empty stall function for now
@@ -57,7 +60,9 @@ def main(filename):
   # Our interface to the planner
   client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
   client.wait_for_server()
-
+  
+  pub = rospy.Publisher('/goal', 
+  
   while(1):
     try:
       print 'starting location'
