@@ -1,18 +1,6 @@
 <!-- -->
 <launch>
-  <!--- Run AMCL -->
-  <group ns="amcl">
-    <include file="$(find cwru_nav)/amcl_diff.launch" />
-    <!--node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/3rd_floor_removed_behind_glass/map.yaml" -->
-    <node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/thinkbox_1/map.yaml" >
-    </node>
-  </group>
-
-  <include file="$(find cwru_nav)/start_map_as_sensor.launch" />
-  <include file="$(find cwru_nav)/sonar_filter.launch" />
-
-  <!--node pkg="map_server" type="map_server" name="obstacle_map_server" args="$(find cwru_maps)/maps/3rd_floor_obstacles/map.yaml" /-->
-  <node pkg="map_server" type="map_server" name="obstacle_map_server" args="$(find cwru_maps)/maps/thinkbox_1/map.yaml" />
+    <include file="$(find cwru_nav)/start_tour_guide_no_nav.launch" />
 
  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
 
