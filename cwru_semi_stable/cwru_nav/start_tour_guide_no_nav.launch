@@ -2,10 +2,10 @@
 <launch>
   <!--- Run AMCL -->
   <include file="$(find cwru_nav)/amcl_diff.launch" />
-  <node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/thinkbox_1/map.yaml" />
+  <node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/thinkbox_localization/map.yaml" />
 
   <group ns="obstacle">
-    <node pkg="map_server" type="map_server" name="obstacle_map_server" args="$(find cwru_maps)/maps/thinkbox_1/map.yaml" />
+    <node pkg="map_server" type="map_server" name="obstacle_map_server" args="$(find cwru_maps)/maps/thinkbox_obstacle/map.yaml" />
   </group>
 
   <include file="$(find cwru_nav)/start_map_as_sensor.launch" />

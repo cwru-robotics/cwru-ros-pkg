@@ -7,7 +7,7 @@
     <include file="$(find cwru_sim_stage)/amcl_diff.launch" />
 
     <!-- Localization map server -->
-    <node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/thinkbox_1/map.yaml" />
+    <node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/thinkbox_localization/map.yaml" />
 
     <group ns="obstacle">
       <node pkg="map_server" type="map_server" name="obstacle_map_server" args="$(find cwru_maps)/maps/thinkbox_obstacles/map.yaml" />
