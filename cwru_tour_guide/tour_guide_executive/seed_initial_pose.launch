@@ -1,5 +1,3 @@
 <launch>
-	<group ns="amcl">
-		<node name="initial_pose_setup" pkg="tour_guide_executive" type="initial_pose_setup.py" />
-	</group>
+	<node name="initial_pose_setup" pkg="tour_guide_executive" type="initial_pose_setup.py" />
 </launch>

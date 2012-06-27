@@ -20,4 +20,6 @@
 
   <node pkg="rviz" type="rviz" name="rviz"/>
 
+    <include file="$(find tour_guide_executive)/seed_initial_pose.launch"/>
+
 </launch>
