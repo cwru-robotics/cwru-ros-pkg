@@ -9,7 +9,6 @@
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/cwru_teleop</url>
   <depend package="cwru_base"/>
-  <depend package="joy"/>
   <depend package="roscpp"/>
   <depend package="rospy"/>
   <depend package="geometry_msgs"/>
