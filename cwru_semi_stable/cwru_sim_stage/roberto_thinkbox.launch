@@ -1,12 +1,23 @@
+<!---->
 <launch>
 	<!-- Make ROS use simulator time instead of current clock time -->
     <param name="/use_sim_time" value="true" />
 
+    <!--- Run AMCL -->
+    <include file="$(find cwru_sim_stage)/amcl_diff.launch" />
+
+    <!-- Localization map server -->
+    <node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/thinkbox_1/map.yaml" />
+
+    <group ns="obstacle">
+      <node pkg="map_server" type="map_server" name="obstacle_map_server" args="$(find cwru_maps)/maps/thinkbox_obstacles/map.yaml" />
+    </group>
+    <include file="$(find cwru_nav)/start_map_as_sensor.launch" />
+    <include file="$(find cwru_nav)/sonar_filter.launch" />
+
     <!-- Startup the Stage simulator on the 2nd floor -->
     <node pkg="stage" type="stageros" name="stageros" args="$(find cwru_maps)/worlds/thinkbox.world" respawn="false" /> 
 
-      <!--- Run AMCL -->
-    <include file="$(find cwru_nav)/start_tour_guide_nav.launch" />
+  <node pkg="rviz" type="rviz" name="rviz"/>
 
-    <include file="$(find tour_guide_executive)/../rviz.launch" />
 </launch>

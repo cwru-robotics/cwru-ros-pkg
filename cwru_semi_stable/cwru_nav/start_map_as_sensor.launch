@@ -1,6 +1,6 @@
 <launch>
   	<node name="map_to_sensor" pkg="cwru_nav" type="map_as_sensor" respawn="false" output="screen" >
-	  <remap from="input_map" to="map"/>
+	  <remap from="input_map" to="/obstacle/map"/>
 	  <remap from="map_cloud" to="obstacle_map_cloud"/>
 	  
 		<param name="target_frame" value="base_link" />
