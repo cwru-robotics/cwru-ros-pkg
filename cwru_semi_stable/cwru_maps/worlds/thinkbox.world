@@ -29,7 +29,7 @@ define floorplan model
     color "gray30"
 
     #bouding box or something...
-    boundary 1
+    #boundary 1
 
     gui_nose 0
     gui_grid 0
@@ -57,8 +57,8 @@ floorplan
 (
     name "thinkbox"
     bitmap "../maps/thinkbox_1/map.pgm"
-    size [35 35 1.0]
-    pose [ 0 0 0.0 -127]
+    size [26.65 23.2 1.0]
+    pose [ 0 0 0.0 0.0]
 )
 
 harlie( pose [ 8.42 15.09 0.0 -137.16] name "harlie" color "blue")
