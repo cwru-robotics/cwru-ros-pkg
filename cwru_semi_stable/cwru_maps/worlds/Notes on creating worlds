@@ -1,0 +1,12 @@
+A world file needs to load a bitmap file representing the map.  The bitmap needs an expected size.
+
+#load the actual map
+floorplan
+(
+    name "thinkbox"
+    bitmap "../maps/thinkbox_1/map.pgm"
+    size [26.65 23.2 1.0]
+    pose [ 0 0 0.0 -125.2]
+)
+
+Finding this size was troublesome because upon loading the map, stage seems to perform cropping or something.  I arived with these values for Thinkbox by opening up GIMP and using autocrop, and then multiplying the pixels by the resolution.  The third value of pose (-125.2) is the rotation of the map in degrees (set by trial and error.)

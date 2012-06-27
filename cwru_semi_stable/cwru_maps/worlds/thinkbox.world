@@ -58,10 +58,10 @@ floorplan
     name "thinkbox"
     bitmap "../maps/thinkbox_1/map.pgm"
     size [26.65 23.2 1.0]
-    pose [ 0 0 0.0 0.0]
+    pose [ 0 0 0.0 -125.2]
 )
 
-harlie( pose [ 8.42 15.09 0.0 -137.16] name "harlie" color "blue")
+harlie( pose [ 4.64 -5.17 0.0 91.06] name "harlie" color "blue")
 block( color "orange" )
 block( color "orange" )
 block( color "orange" )
