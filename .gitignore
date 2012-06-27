@@ -8,3 +8,11 @@ lib/
 *.pyo
 *.pyc
 *~
+
+cwru_semi_stable/cwru_base/src/cwru_base/__init__.py
+cwru_semi_stable/cwru_base/src/cwru_base/msg/_cRIOSensors.py
+cwru_semi_stable/cwru_base/src/cwru_base/msg/__init__.py
+cwru_semi_stable/cwru_base/src/cwru_base/msg/_NavSatFix.py
+cwru_semi_stable/cwru_base/src/cwru_base/msg/_NavSatStatus.py
+cwru_semi_stable/cwru_base/src/cwru_base/msg/_Pose.py
+cwru_semi_stable/cwru_base/src/cwru_base/msg/_Sonar.py
