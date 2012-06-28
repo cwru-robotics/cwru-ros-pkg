@@ -1,44 +1,56 @@
 goals:
     - goal:
-         x: -5.79
-         y: 32.22
-         theta: 3.76
+         x: -20.7
+         y: -16.82
+         theta: 0
       wavs:
           - 'blank_sound.ogg'
     - goal:
-         x: -9
-         y: 29.99
-         theta: 3.76
+         x: -22.93
+         y: -18.73
+         theta: 0
+      wavs:
+          - 'blank_sound.ogg'
+    - goal:
+         x: -26.22
+         y: -21.31
+         theta: 0
       wavs:
          - 'blank_sound.ogg'
     - goal:
-         x: -14.9
-         y: 25.14
-         theta: 3.76
+         x: -30.34
+         y: -24.18
+         theta: 0
       wavs:
          - 'blank_sound.ogg'
     - goal:
-         x: -15.31
-         y: 19.85
-         theta: .95
+         x: -30.75
+         y: -29.29
+         theta: 0
       wavs:
          - 'blank_sound.ogg'
     - goal:
-         x: -8.7
-         y: 19.11
-         theta: .57
+         x: -23.59
+         y: -29.93
+         theta: 0
       wavs:
          - 'blank_sound.ogg'
     - goal:
-         x: -5.09
-         y: 21.6
-         theta: 2.16
+         x: -18.51
+         y: -26.47
+         theta: 0
       wavs:
          - 'blank_sound.ogg'
     - goal:
-         x: -5.79
-         y: 32.22
-         theta: 3.76
+         x: -17.46
+         y: -22.26
+         theta: 0
+      wavs:
+          - 'blank_sound.ogg'
+    - goal:
+         x: -20.7
+         y: -16.82
+         theta: 0
       wavs:
           - 'blank_sound.ogg'
 jokes:
