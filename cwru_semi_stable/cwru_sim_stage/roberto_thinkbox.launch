@@ -9,9 +9,11 @@
     <!-- Localization map server -->
     <node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/thinkbox_localization/map.yaml" />
 
+    <!-- Obstacle map server -->
     <group ns="obstacle">
       <node pkg="map_server" type="map_server" name="obstacle_map_server" args="$(find cwru_maps)/maps/thinkbox_obstacles/map.yaml" />
     </group>
+
     <include file="$(find cwru_nav)/start_map_as_sensor.launch" />
     <include file="$(find cwru_nav)/sonar_filter.launch" />
 
