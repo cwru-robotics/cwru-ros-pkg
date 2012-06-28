@@ -5,54 +5,72 @@ goals:
          theta: 0
       wavs:
           - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
     - goal:
          x: -22.93
          y: -18.73
          theta: 0
       wavs:
           - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
     - goal:
          x: -26.22
          y: -21.31
          theta: 0
       wavs:
          - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
     - goal:
          x: -30.34
          y: -24.18
          theta: 0
       wavs:
          - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
     - goal:
          x: -30.75
          y: -29.29
          theta: 0
       wavs:
          - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
     - goal:
          x: -23.59
          y: -29.93
          theta: 0
       wavs:
          - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
     - goal:
          x: -18.51
          y: -26.47
          theta: 0
       wavs:
          - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
     - goal:
          x: -17.46
          y: -22.26
          theta: 0
       wavs:
           - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
     - goal:
          x: -20.7
          y: -16.82
          theta: 0
       wavs:
           - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
 jokes:
     - 'joke1.wav'
     - 'joke2.wav'

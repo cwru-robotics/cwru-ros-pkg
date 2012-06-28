@@ -13,6 +13,7 @@
   <depend package="rospy"/>
   <depend package="tf"/>
   <depend package="cwru_nav"/>
+  <depend package="opencv2"/>
 
 </package>
 

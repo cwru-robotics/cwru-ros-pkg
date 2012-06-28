@@ -7,10 +7,12 @@ import vlc
 import yaml
 import math
 
+
 import roslib
 roslib.load_manifest('tour_guide_executive')
 import rospy
 
+import cv
 import tf
 import actionlib
 
@@ -24,7 +26,7 @@ rospy.init_node('roberto_goal_planner')
 # Create a transform listener to transform to map coordinates
 listener       = tf.TransformListener()
 last_odom      = PoseStamped()
-last_odom_time = rospy.Time.from_sec(45)
+last_odom_time = rospy.Time.from_sec(0)
 
 
 # Odometry callback
@@ -62,7 +64,7 @@ def dist_to_goal(goal):
       return 999
 
     if now - last_odom_time > rospy.Duration.from_sec(2.0):
-      rospy.loginfo('stale odom: ' + str( (now.to_sec()-last_odom_time.to_sec()).to_sec() ) + ' secs old')
+      rospy.loginfo('stale odom: ' + str( (now-last_odom_time).to_sec() ) + ' secs old')
       return 999
 
     dx = goal.pose.position.x - last_odom.pose.position.x
@@ -97,8 +99,8 @@ def main():
   filename     = rospy.get_param('~filename' )
   sound_prefix = rospy.get_param('~soundpath')
 
-  print('Running tour script   \'' + filename     + '\'')
-  print('Looking for sounds in \'' + sound_prefix + '\'')
+  rospy.loginfo('Running tour script   \'' + filename     + '\'')
+  rospy.loginfo('Looking for sounds in \'' + sound_prefix + '\'')
   
   #open the yaml config file and load path and tour
   with open(filename, 'r') as datafile:
@@ -115,16 +117,22 @@ def main():
   pub = rospy.Publisher('/goal', PoseStamped)
   odom_sub = rospy.Subscriber('/odom', Odometry, odom_callback)
   
-  while(1):
+  while not rospy.is_shutdown():
     try:
       # Get the next goal and sound
-      print 'Getting next goal'
+      rospy.loginfo('Getting next goal')
       nextThing=iterator.next()
       goal = create_move_base_goal_from_yaml(nextThing['goal'])
       sound=nextThing['wavs']
       
-      # Play the sound
-      print 'Playing %s' %(sound[0])
+      imgname = str(sound_prefix + nextThing['pics'][0])
+      img = cv.LoadImage(imgname)
+      cv.NamedWindow("window")
+      cv.ShowImage("window", img)
+      cv.WaitKey(100)
+
+      # Play the sound and display the image
+      rospy.loginfo('Playing %s' %(sound[0]))
       if player!=0:
         player.release()
       player=vlc.MediaPlayer(sound_prefix + sound[0])
@@ -135,17 +143,20 @@ def main():
         time.sleep(.2)
       
       # Send goal to planner
-      print 'Sending goal to planner: %s' %goal
+      rospy.loginfo('Sending goal to planner: %s' %goal)
       pub.publish(goal)
       
       # Wait for planner to get to goal
       dist = dist_to_goal(goal)
 
-      while dist > 1.0:
+      while dist > 1.0 and not rospy.is_shutdown():
         rospy.loginfo('Distance to goal: ' + str(dist) + 'm')
         time.sleep(1.0)
         dist = dist_to_goal(goal)
       
+      cv.DestroyAllWindows()
+      cv.WaitKey(100)
+      time.sleep(5)
     except StopIteration:
       break;
     
