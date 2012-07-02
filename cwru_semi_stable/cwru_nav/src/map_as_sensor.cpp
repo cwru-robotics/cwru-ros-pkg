@@ -142,11 +142,16 @@ int main(int argc, char *argv[]){
 				}
 			}
 
-			ros::Time latest_transform_time = ros::Time::now();
-			listener.getLatestCommonTime(frame_id, target_frame, latest_transform_time, NULL);
-			sensor_points->header.stamp = latest_transform_time;
-			listener.transformPointCloud(target_frame, *sensor_points, temp_out);
-			cloud_pub.publish(temp_out);
+			try{
+				ros::Time latest_transform_time = ros::Time::now();
+				listener.getLatestCommonTime(frame_id, target_frame, latest_transform_time, NULL);
+				sensor_points->header.stamp = latest_transform_time;
+				listener.transformPointCloud(target_frame, *sensor_points, temp_out);
+				cloud_pub.publish(temp_out);
+				ROS_INFO_THROTTLE(2,"map transformed successfully.");
+			} catch( tf::TransformException e ) {
+				ROS_WARN_STREAM("map-to-sensor got a TF exception: " << e.what());
+			}
 		}
 
 		ros::spinOnce();
