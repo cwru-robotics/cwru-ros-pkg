@@ -113,19 +113,19 @@ int main(int argc, char *argv[]){
 	listener.waitForTransform(target_frame, frame_id, ros::Time::now(), ros::Duration(10));
 	sensor_msgs::PointCloud temp_out;
 
-	while(n.ok()){
-		if(recieved_map){
-			if(updated_map){
+	while(n.ok())
+	{
+		if(recieved_map)
+		{
+			if(updated_map)
+			{
 				updated_map=false;
-
+				
 				if(sensor_points!=NULL){ delete(sensor_points);}
-
+				
 				sensor_points=NULL;
 				sensor_points=new sensor_msgs::PointCloud;
-				//sensor_points->set_points_size(points.size());
 				sensor_points->points.resize(points.size());
-
-				//sensor_points->set_channels_size(1);
 				sensor_points->channels.resize(1);
 				sensor_points->channels[0].name = channel_name;
 				sensor_points->channels[0].values.resize(points.size());
@@ -133,30 +133,31 @@ int main(int argc, char *argv[]){
 				sensor_points->header.frame_id =frame_id;
 				//for everything in list points, set the x and y value to the right stuff, and set intensity to intensity
 				int point_number=0;
-				for(std::list<geometry_msgs::Point32>::const_iterator iterator = points.begin(), end = points.end(); iterator != end; ++iterator){
+				for(std::list<geometry_msgs::Point32>::const_iterator iterator = points.begin(), end = points.end(); iterator != end; ++iterator)
+				{
 					sensor_points->points[point_number].x = (*iterator).x;
 					sensor_points->points[point_number].y = (*iterator).y;
 					sensor_points->points[point_number].z = height;
 					sensor_points->channels[0].values[point_number] = (float)intensity;
 					++point_number;
 				}
-			}
+			}//updated map
 
-			try{
+			try {
 				ros::Time latest_transform_time = ros::Time::now();
 				listener.getLatestCommonTime(frame_id, target_frame, latest_transform_time, NULL);
 				sensor_points->header.stamp = latest_transform_time;
 				listener.transformPointCloud(target_frame, *sensor_points, temp_out);
 				cloud_pub.publish(temp_out);
-				ROS_INFO_THROTTLE(2,"map transformed successfully.");
+				//ROS_INFO_THROTTLE(2,"map transformed successfully.");
 			} catch( tf::TransformException e ) {
 				ROS_WARN_STREAM("map-to-sensor got a TF exception: " << e.what());
 			}
-		}
+		}// recieved map
 
 		ros::spinOnce();
 		r.sleep();
-	}
+	}// while ok
 
 	return 0;
 }
