@@ -1,0 +1,12 @@
+<launch>
+	<node pkg="gmapping" type="slam_gmapping" name="slam_mapper" >
+		<remap from="scan" to="/base_laser1_scan" />
+		<param name="xmin" value="-35"/>
+		<param name="ymin" value="-35"/>
+		<param name="xmax" value="35"/>
+		<param name="ymax" value="35"/>
+		<param name="delta" value="0.025"/>
+	</node>
+</launch>
+
+<!-- to save after launch run rosrun map_server map_saver -->
