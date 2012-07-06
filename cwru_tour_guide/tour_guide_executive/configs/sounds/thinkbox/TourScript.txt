@@ -1,0 +1,97 @@
+
+
+Hello, I am talking to you from a robot.
+[photo 1: Ian Charnas]
+
+My name is Ian Charnas, I'm the staff member that runs thinkbox.  I graduated from Case in 2005 with degrees in computer engineering and mechanical engineering.  [photo 2: roberta] Thanks to my robot friend here, I'm able to give you a tour of the lab and continue my work at the same time.
+
+[photo 3: floorplan of temporary thinkbox home]
+I want to welcome you to the temporary home of the thinkbox, a multi-million dollar invention center at Case Western Reserve University.  This is a space endowed by our donors to give students, faculty, and staff a place to tinker, and creatively invent.  [photo 4: rendering of future thinkbox home] I said this was a temporary home, because in a year or two we will be moving into our future home, a 7-story, 50,000 sq ft facility.  You can see a rendering of this building on the wall to your right, above the copy machine.
+
+[photo 5: same as photo 3] Even though this is a temporary home, we wanted to have all the basics you need to invent.  We have wood working, metal working, 3d printers, laser cutters, everything from computerized embroidery, to the ability to make your own printed circuit board in-house.
+
+So, let's go on a tour.  Robot, take me to the plotter.
+[photo 6: plotter plus example posters]
+[3 beeps are heard]
+[robot moves just past the plotter]
+
+We're going to skip the copier, I think you've seen one of those before.  To your right here is a giant printer, sometimes called a plotter.  We use this to make our posters.
+
+Robot, take me to the vinyl cutter.
+[photo of vinyl cutter appears on screen]
+[3 beeps are heard]
+[robot moves just past the vinyl cutter]
+
+[photo 7: vinyl cutter plus examples]
+Over here is our vinyl cutter, this cuts vinyl lettering that we use around the shop to label things.  If you are making a project for a class, put your professor's name on it.  If you're approaching a potential investor with your invention, give them a demo with their name on it.  A little polish goes a long way.  
+
+Robot, let's go to the media center
+[photo montage of cameras and lights appears on screen]
+[3 beeps are heard]
+[robot moves just past media center]
+
+[photo 8: montage of cameras, lights, etc]
+The idea with the media center is to help produce finished, polished inventions.  Your invention could be a project for a class, or something you want to show an investor.  Either way you want to have beautiful photos and video to go along with whatever you make.  At the media center you can use digital cameras, color-calibrated lights, and seamless backdrops to make professional-looking photos and videos.
+
+OK Robot, time for the Electronics Center
+[photo montage of 3D microscope, PCB router, etc appears on screen]
+[3 beeps are heard]
+[robot moves opposite electronics center, between wood workbench and green cabinets]
+
+[photo 9: montage of solder station, 3D microscope, etc]
+thinkbox gives you the ability to produce your own printed circuit boards in-house.  On your right you will see a fully equipped electronics workbench, complete with a 3D microscope, oscilloscopes, power supplies, and RF Soldering
+station.  The centerpiece here is the printed circuit board router.  [photo 10: PCB Router plus examples] The idea with this machine is you put in a blank piece of copper-coated fiberglass, and this machine mills and drills a double-sided circuit board.  In the past students would send their board designs out to a company in Colorado, who would send a finished board back in about 3 weeks.  If you're on a 13 week semester, or if you have last-minute changes before you show a demo to an investor, sitting on your hands for 3 weeks is not an option.  This machine gives you the ability to have your printed circuit board milled in about an hour.  We're fortunate that thanks to our donors, we can buy a $25k machine like this, that just gets the job done.  Like a number of machines in thinkbox, this machine is not available at most universities.  You won't find this at MIT, or Harvard, or Yale.  They have one at Carnegie Mellon and Stanford, but they are locked away in graduate labs.  Here at think[box], the doors are open, anyone can walk in and use what will soon be over a million dollars of fabrication equipment.
+
+Next up is the wood shop.  Robot, take me to the wood shop.
+[3 beeps are heard]
+[robot moves to about where the sink is]
+[photo 11: just a white screen that says "WOOD SHOP" on it]
+
+ROBOT, we have to show these people the wood shop, come on.
+[robot voice says "I don't want to go into the wood shop"]
+
+ROBOT, what's the problem here?  
+[robot voice says "I don't really want to talk about it"]
+
+OH Robot.  Well, folks the robot doesn't seem to want to go into the
+wood shop today, but you can peek through the door there and see what's inside.  In most wood shops you'll see table saws, drill presses, table routers, bandsaws, all those kind of things.  Our wood shop is basically this one machine, the ShopBot.  [photo 12: shopbot plus examples] This is a full-sheet CNC table router.  You can put down a full 4'x8' sheet of wood, plastic, composites, even thin sheet aluminum, and the computerized cutting head goes around and routes, mills, and drills whatever you want.  There's no programming to learn, you just draw what you want on the screen, click a few buttons, and 30 minutes later your parts are done.  Now this isn't the machine you'd use to learn to become a master woodworker.  Those are good skills to have, but Case isn't a place you learn woodworking.  This university has very strong science and engineering programs.  Think[box] is a place to apply your physics, kinematics, thermodynamics, circuits, and so on.  Making cutouts in wood and plastic should be easy, so you can get back to the advanced stuff.  We're lucky that thanks to our donors, we can buy a top of the line $26k ShopBot that just gets the job done.  That's the motto of the shop, get it done.
+
+Ok next up is the 3D Printer
+[3 beeps are heard]
+[robot moves just past the 3D Printer, leaving space for people to pick up the samples]
+
+[photo 13: 3D Printer]
+This is one of the most popular machines in the shop, the 3D Printer.  You draw something on the screen, click print essentially, and this machine builds it from scratch out of plastic.  The technology is actually very simple, the machine squirts a layer of melted plastic on to a tray, and the tray lowers, and then the machine squirts another layer of melted plastic, and layer by layer it builds up a three dimensional part.  There are many different kinds of 3D Printers, this technology is called Fused Deposition Modeling, which is just a fancy term for saying that it squirts plastic on a tray.  Somewhere around here you should see some samples of the parts that come out.
+
+[photo 14: gear, bracket, wrench montage]
+Here's a gear, and a boring old bracket, and... a working wrench!  This came out of the machine as one working assembly.  It wasn't three parts that we assembled later, this thing can actually print fully assembled models.  It's great!  You draw it up on the screen, hit print, and a few hours later you have your part.  A number of students come to think[box] never having built anything before. This machine is a great way to sort of jump over that gap, and go from someone with experience observing things happening, to being the person actually making things.
+
+Ok, time to move on.  Robot, to the laser cutter!
+[3 beeps are heard]
+[robot moves just past the laser cutter]
+
+[photo 15: laser cutter plus examples]
+This machine cuts and etches wood and plastic.  [photo 16: wooden coaster] Here's a wooden coaster, you can see the graphic design was etched, and the outer profile was cut.  This is a 2-dimensional operation, but you can put together an assembly out of these flat pieces and end up with a 3D part [photo 16: giraffe], like this giraffe, [photo 17: DBF Airplane montage] or this remote-controlled firefighting airplane that Case students designed. 
+
+[photo 18: same as photo 15]
+This machine is the most popular machine in thinkbox right now, it's extremely easy to use, and it can make very complex parts very easily.  You just draw what you want on the computer and then you literally click File, Print.  That's it.  If you can use Microsoft word, and you type your name and click print, it will etch your name onto your material.  It really is that easy to get going on the laser cutter.  Of course engineers and designers will usually start with a sketch from a CAD software package such as SolidWorks, or a vector art file from CorelDraw or Adobe Illustrator.  So you can make complex pieces, but it's very easy to use.
+
+There's two more stops on the tour, next up is the sewing center.  Let's go Robot.
+[3 beeps are heard]
+[robot moves just past the sewing center]
+
+[photo 19: sewing center montage]
+So that remote-controlled airplane you saw a minute ago, the wings are covered in fabric.  If you are using fabric, you need fabric working tools.  Here we have all the usual hand tools, plus a sewing machine that can do computerized embroidery.  Just like across the room with the vinyl cutter, we use this to add a touch of class to the things we produce here in think[box].  
+
+OK, the final stop on our tour is going to be the metal shop, come on robot! These people have other things to do today.
+[3 beeps are heard]
+[robot moves just past the door to the metal shop]
+
+[photo 20: metal shop montage]
+Inside our metal shop you can see all the usual suspects, we have drill presses and band saws and grinders and sanders.  Once we've moved into our future home, in the 7-story, 50,000 sq ft facility, we'll be adding welding, sheet metal bending, cnc pipe bending, smoothie machines, ball pits, all the things you'd expect in the world's largest university-based invention center.  
+
+[photo 21: White screen that says "thanks for visiting think[box]"]
+Ok folks, that's the tour, I'm going to send the robot back to its home now.  I'm sure you have questions about access, safety, the capabilities of each machine, intellectual property, all those types of things.  Most of the answers are available on our website, engineering.case.edu/thinkbox, check it out, and add yourself to our email list.  Thanks for your time everyone, and I hope you enjoyed the tour.  When you have your next great idea, remember to come invent it in think[box].  Good bye!
+
+[3 beeps are heard]
+[robot goes back to start]
