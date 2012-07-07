@@ -7,7 +7,6 @@ import vlc
 import yaml
 import math
 
-
 import roslib
 roslib.load_manifest('tour_guide_executive')
 import rospy
@@ -94,6 +93,7 @@ def stall():
 
 
 def main():
+  skip_sounds = False
 
   # Load parameter files
   filename     = rospy.get_param('~filename' )
@@ -124,6 +124,9 @@ def main():
       nextThing=iterator.next()
       goal = create_move_base_goal_from_yaml(nextThing['goal'])
       sound=nextThing['wavs']
+
+      if skip_sounds == True:
+        sound = 'blank_sound.ogg'
       
       imgname = str(sound_prefix + nextThing['pics'][0])
       img = cv.LoadImage(imgname)
