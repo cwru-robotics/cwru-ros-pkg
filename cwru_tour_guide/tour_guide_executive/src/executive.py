@@ -151,7 +151,7 @@ def main():
 
       while dist > 1.0 and not rospy.is_shutdown():
         rospy.loginfo('Distance to goal: ' + str(dist) + 'm')
-        time.sleep(1.0)
+        time.sleep(0.5)
         dist = dist_to_goal(goal)
       
       cv.DestroyAllWindows()

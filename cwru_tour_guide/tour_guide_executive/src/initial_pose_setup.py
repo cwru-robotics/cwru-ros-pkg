@@ -15,8 +15,8 @@ from geometry_msgs.msg import PoseWithCovarianceStamped
 def main(pub):
   initialPose=PoseWithCovarianceStamped()
   initialPose.header.frame_id='/map'
-  initialPose.pose.pose.position.x=-20.23
-  initialPose.pose.pose.position.y=-16.41
+  initialPose.pose.pose.position.x=-18.
+  initialPose.pose.pose.position.y=-24.
   
   pi = 3.141
   quaternion = tf.transformations.quaternion_about_axis(pi*1.2 , (0,0,1))
