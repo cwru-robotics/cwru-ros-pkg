@@ -5,7 +5,7 @@ goals:
          y: -23.42
          theta: 0
       wavs:
-          - 'blank_sound.ogg'
+          - 'tour_paragraph1_intro.wav'
       pics:
           - 'cwru.jpg'
 
@@ -15,7 +15,7 @@ goals:
          y: -24.40
          theta: 0
       wavs:
-          - 'blank_sound.ogg'
+          - 'tour_paragraph2_plotter.wav'
       pics:
           - 'cwru.jpg'
 
@@ -25,7 +25,7 @@ goals:
          y: -24.58
          theta: 0
       wavs:
-         - 'blank_sound.ogg'
+         - 'tour_paragraph3_vinyl.wav'
       pics:
           - 'cwru.jpg'
 
@@ -35,7 +35,7 @@ goals:
          y: -24.52
          theta: 0
       wavs:
-         - 'blank_sound.ogg'
+         - 'tour_paragraph4_media.wav'
       pics:
           - 'cwru.jpg'
 
@@ -55,7 +55,7 @@ goals:
          y: -25.96
          theta: 0
       wavs:
-         - 'blank_sound.ogg'
+         - 'tour_paragraph5_electronics.wav'
       pics:
           - 'cwru.jpg'
 
@@ -75,7 +75,7 @@ goals:
          y: -33.23
          theta: 0
       wavs:
-         - 'blank_sound.ogg'
+         - 'tour_paragraph6_wood.wav'
       pics:
           - 'cwru.jpg'
 
@@ -85,7 +85,7 @@ goals:
          y: -33.20
          theta: 0
       wavs:
-         - 'blank_sound.ogg'
+         - 'tour_paragraph7_3d.wav'
       pics:
           - 'cwru.jpg'
 
@@ -95,7 +95,7 @@ goals:
          y: -33.31
          theta: 0
       wavs:
-         - 'blank_sound.ogg'
+         - 'tour_paragraph8_laser.wav'
       pics:
           - 'cwru.jpg'
 
@@ -105,7 +105,7 @@ goals:
          y: -32.66
          theta: 0
       wavs:
-         - 'blank_sound.ogg'
+         - 'tour_paragraph9_fabric.wav'
       pics:
           - 'cwru.jpg'
 
@@ -115,7 +115,7 @@ goals:
          y: -28.58
          theta: 0
       wavs:
-          - 'blank_sound.ogg'
+          - 'tour_paragraph10_metal.wav'
       pics:
           - 'cwru.jpg'
 
@@ -138,7 +138,6 @@ goals:
           - 'blank_sound.ogg'
       pics:
           - 'cwru.jpg'
-
 
     # Back home
     - goal:
