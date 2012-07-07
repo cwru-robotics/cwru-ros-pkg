@@ -93,14 +93,14 @@ def stall():
 
 
 def main():
-  skip_sounds = False
-
   # Load parameter files
   filename     = rospy.get_param('~filename' )
   sound_prefix = rospy.get_param('~soundpath')
+  skip_sounds = rospy.get_param('~skip_sounds' )
 
   rospy.loginfo('Running tour script   \'' + filename     + '\'')
   rospy.loginfo('Looking for sounds in \'' + sound_prefix + '\'')
+  rospy.loginfo('Skip sounds = ' + str(skip_sounds))
   
   #open the yaml config file and load path and tour
   with open(filename, 'r') as datafile:
@@ -126,7 +126,7 @@ def main():
       sound=nextThing['wavs']
 
       if skip_sounds == True:
-        sound = 'blank_sound.ogg'
+        sound = ['blank_sound.ogg']
       
       imgname = str(sound_prefix + nextThing['pics'][0])
       img = cv.LoadImage(imgname)
