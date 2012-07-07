@@ -1,0 +1,156 @@
+goals:
+    # Start
+    - goal:
+         x: -19.28
+         y: -23.42
+         theta: 0
+      wavs:
+          - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    # Plotter
+    - goal:
+         x: -22.89
+         y: -24.40
+         theta: 0
+      wavs:
+          - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    # Vinyl cutter
+    - goal:
+         x: -24.69
+         y: -24.58
+         theta: 0
+      wavs:
+         - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    # Media center
+    - goal:
+         x: -26.59
+         y: -24.52
+         theta: 0
+      wavs:
+         - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    # Intermediate
+    - goal:
+         x: -27.21
+         y: -24.78
+         theta: 0
+      wavs:
+         - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    # Electronics
+    - goal:
+         x: -27.18
+         y: -25.96
+         theta: 0
+      wavs:
+         - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    # Intermediate
+    - goal:
+         x: -27.60
+         y: -29.14
+         theta: 0
+      wavs:
+         - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    # Wood shop entrance
+    - goal:
+         x: -26.99
+         y: -33.23
+         theta: 0
+      wavs:
+         - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    # 3D Printer
+    - goal:
+         x: -23.94
+         y: -33.20
+         theta: 0
+      wavs:
+         - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    # Laser cutter
+    - goal:
+         x: -20.82
+         y: -33.31
+         theta: 0
+      wavs:
+         - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    # Embroidery
+    - goal:
+         x: -18.34
+         y: -32.66
+         theta: 0
+      wavs:
+         - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    # Metal shop
+    - goal:
+         x: -19.00
+         y: -28.58
+         theta: 0
+      wavs:
+          - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    # Intermediate
+    - goal:
+         x: -17.58
+         y: -26.21
+         theta: 0
+      wavs:
+          - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    # Intermediate
+    - goal:
+         x: -17.59
+         y: -23.75
+         theta: 0
+      wavs:
+          - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+
+    # Back home
+    - goal:
+         x: -19.28
+         y: -23.42
+         theta: 0
+      wavs:
+          - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+jokes:
+    - 'joke1.wav'
+    - 'joke2.wav'
+    - 'joke3.wav'
+    - 'joke4.wav'
