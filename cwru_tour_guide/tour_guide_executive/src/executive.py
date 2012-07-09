@@ -122,7 +122,7 @@ def main():
       # Get the next goal and sound
       rospy.loginfo('Getting next goal')
       nextThing=iterator.next()
-      goal = create_move_base_goal_from_yaml(nextThing['goal'])
+      
       sound=nextThing['wavs']
 
       if skip_sounds == True:
@@ -146,6 +146,7 @@ def main():
         time.sleep(.2)
       
       # Send goal to planner
+      goal = create_move_base_goal_from_yaml(nextThing['goal'])
       rospy.loginfo('Sending goal to planner: %s' %goal)
       pub.publish(goal)
       
