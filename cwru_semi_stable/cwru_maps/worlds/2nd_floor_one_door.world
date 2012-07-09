@@ -5,12 +5,13 @@ define block model
     laser_return 1
 )
 
-define sick_lms291 laser
+define sick_lms291 ranger
 (
-
-    range_max 80.0
-    fov 180.0
-    samples 181
+    sensor(
+      range_max 80.0
+      fov 180.0
+      samples 181
+    )
     # generic model stuff
     size [ 0.05 0.05 0.1]
 )
