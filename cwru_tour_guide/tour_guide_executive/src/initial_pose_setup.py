@@ -19,7 +19,7 @@ def main(pub):
   initialPose.pose.pose.position.y=-24.
   
   pi = 3.141
-  quaternion = tf.transformations.quaternion_about_axis(pi*1.2 , (0,0,1))
+  quaternion = tf.transformations.quaternion_about_axis(pi*1.0 , (0,0,1))
   initialPose.pose.pose.orientation= Quaternion(*quaternion)
   initialPose.pose.covariance[0]=.25
   initialPose.pose.covariance[7]=.25
