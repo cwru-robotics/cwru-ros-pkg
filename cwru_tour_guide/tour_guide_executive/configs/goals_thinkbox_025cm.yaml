@@ -1,123 +1,147 @@
+# Actions happen in the following order.
+# 1: Play the sound
+# 2: Go to the location
 goals:
-    # Start
+   
     - goal:
          x: -19.28
-         y: -23.42
+         y: -23.42 # Start
+         theta: 0
+      wavs:
+          - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+   
+    - goal:
+         x: -22.89
+         y: -24.40 # Plotter
          theta: 0
       wavs:
           - 'tour_paragraph1_intro.ogg'
       pics:
           - 'cwru.jpg'
 
-    # Plotter
+   
     - goal:
-         x: -22.89
-         y: -24.40
+         x: -24.69
+         y: -24.58 # Vinyl cutter
          theta: 0
       wavs:
           - 'tour_paragraph2_plotter.ogg'
       pics:
           - 'cwru.jpg'
 
-    # Vinyl cutter
+   
     - goal:
-         x: -24.69
-         y: -24.58
+         x: -26.59
+         y: -24.52 # Media center
          theta: 0
       wavs:
          - 'tour_paragraph3_vinyl.ogg'
       pics:
           - 'cwru.jpg'
 
-    # Media center
+   
     - goal:
-         x: -26.59
-         y: -24.52
+         x: -27.21
+         y: -24.78 # Intermediate
          theta: 0
       wavs:
          - 'tour_paragraph4_media.ogg'
       pics:
           - 'cwru.jpg'
 
-    # Intermediate
+   
     - goal:
-         x: -27.21
-         y: -24.78
+         x: -27.18
+         y: -25.96 # Electronics
          theta: 0
       wavs:
          - 'blank_sound.ogg'
       pics:
           - 'cwru.jpg'
 
-    # Electronics
+    
     - goal:
-         x: -27.18
-         y: -25.96
+         x: -27.60 # Intermediate
+         y: -29.14
          theta: 0
       wavs:
          - 'tour_paragraph5_electronics.ogg'
       pics:
           - 'cwru.jpg'
 
-    # Intermediate
+
     - goal:
-         x: -27.60
-         y: -29.14
+         x: -27.65  # Intermediate
+         y: -31.04
+         theta: 0
+      wavs:
+         - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+    
+
+    - goal:
+         x: -26.99 # Wood shop entrance
+         y: -33.23
          theta: 0
       wavs:
          - 'blank_sound.ogg'
       pics:
           - 'cwru.jpg'
 
-    # Wood shop entrance
+   
     - goal:
-         x: -26.99
-         y: -33.23
+         x: -23.94 # 3D Printer
+         y: -33.20
          theta: 0
       wavs:
          - 'tour_paragraph6_wood.ogg'
       pics:
           - 'cwru.jpg'
 
-    # 3D Printer
+   
     - goal:
-         x: -23.94
-         y: -33.20
+         x: -20.82 # Laser cutter
+         y: -33.31
          theta: 0
       wavs:
          - 'tour_paragraph7_3d.ogg'
       pics:
           - 'cwru.jpg'
 
-    # Laser cutter
+   
     - goal:
-         x: -20.82
-         y: -33.31
+         x: -18.34 # Embroidery
+         y: -32.66
          theta: 0
       wavs:
          - 'tour_paragraph8_laser.ogg'
       pics:
           - 'cwru.jpg'
 
-    # Embroidery
+   
     - goal:
-         x: -18.34
-         y: -32.66
+         x: -18.26 # Intermediate
+         y: -30.94
          theta: 0
       wavs:
-         - 'tour_paragraph9_fabric.ogg'
+          - 'tour_paragraph9_fabric.ogg'
       pics:
           - 'cwru.jpg'
 
-    # Metal shop
+   
     - goal:
-         x: -19.00
+         x: -19.00 # Metal shop
          y: -28.58
          theta: 0
       wavs:
-          - 'tour_paragraph10_metal.ogg'
+         - 'blank_sound.ogg'
       pics:
           - 'cwru.jpg'
+
 
     # Intermediate
     - goal:
@@ -125,9 +149,10 @@ goals:
          y: -26.21
          theta: 0
       wavs:
-          - 'blank_sound.ogg'
+          - 'tour_paragraph10_metal.ogg'
       pics:
           - 'cwru.jpg'
+
 
     # Intermediate
     - goal:
@@ -138,6 +163,7 @@ goals:
           - 'blank_sound.ogg'
       pics:
           - 'cwru.jpg'
+
 
     # Back home
     - goal:
