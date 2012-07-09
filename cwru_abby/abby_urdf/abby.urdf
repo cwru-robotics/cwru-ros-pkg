@@ -1,38 +1,31 @@
 <?xml version="1.0" ?>
 <robot name="robot">
-	<link name="base_link">
-	</link>
-	<joint name="frame bracket:11--base_link" type="fixed">
-		<parent link="base_link"/>
-		<child link="frame bracket:11"/>
-		<origin rpy="0 0 0" xyz="0 0 0"/>
-	</joint>
 	<link name="frame bracket:11">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/frame bracket_ipt_f5a4f28d.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/frame bracket_ipt_f5a4f28d.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
-			<origin rpy="0 0 0" xyz="-0.668614855779 0.223187514005 0.385510620591"/>
+			<origin rpy="0 0 0" xyz="-0.0163353016417 0.217135176601 -0.44243540602"/>
 			<material name="frame bracket:11_color">
 				<color rgba="0.639216 0.639216 0.639216 1"/>
 			</material>
 		</visual>
 		<inertial>
-			<mass value="3.472875"/>
-			<inertia ixx="0.000430464342" ixy="0.0" ixz="-1.181352018e-05" iyy="0.001091541374" iyz="0.0" izz="0.001059703568"/>
-			<origin rpy="0 0 0" xyz="-0.591517946993 0.248587514004 0.402240585061"/>
+			<mass value="0.71440798275"/>
+			<inertia ixx="0.00043051877529" ixy="0.0" ixz="-1.18150140291e-05" iyy="0.00109167940213" iyz="0.0" izz="0.00105983757016"/>
+			<origin rpy="0 0 0" xyz="0.0607616071447 0.2425351766 -0.42570544155"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/frame bracket_ipt_f5a4f28d.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/frame bracket_ipt_f5a4f28d.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
-			<origin rpy="0 0 0" xyz="-0.668614855779 0.223187514005 0.385510620591"/>
+			<origin rpy="0 0 0" xyz="-0.0163353016417 0.217135176601 -0.44243540602"/>
 		</collision>
 	</link>
 	<link name="front frame plate:21">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/front frame plate_ipt_3e5bfe16.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/front frame plate_ipt_3e5bfe16.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.0380997460006 -0.076198819979 -0.0063519134942"/>
 			<material name="front frame plate:21_color">
@@ -40,13 +33,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="0.352841895"/>
-			<inertia ixx="0.0001399573098" ixy="0.0" ixz="0.0" iyy="3.54713128e-05" iyz="0.0" izz="0.0001749408584"/>
-			<origin rpy="0 0 0" xyz="-9.49960000032e-05 -5.73476592547e-07 -0.00317623313274"/>
+			<mass value="0.072583397455"/>
+			<inertia ixx="0.000139975007751" ixy="0.0" ixz="0.0" iyy="3.5475798236e-05" iyz="0.0" izz="0.000174962980108"/>
+			<origin rpy="0 0 0" xyz="-9.49960000032e-05 -5.73476592436e-07 -0.00317623313274"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/front frame plate_ipt_3e5bfe16.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/front frame plate_ipt_3e5bfe16.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.0380997460006 -0.076198819979 -0.0063519134942"/>
 		</collision>
@@ -54,255 +47,12 @@
 	<joint name="front frame plate:2--frame bracket:11" type="fixed">
 		<parent link="frame bracket:11"/>
 		<child link="front frame plate:21"/>
-		<origin rpy="0 0 -1.57079632679" xyz="-0.59241441583 0.235887514004 0.385512358526"/>
-	</joint>
-	<link name="invacare assy:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/invacare assy_iam_8d469021.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-3.057628886 -0.32113474 1.5698851"/>
-			<material name="invacare assy:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="408.24252"/>
-			<inertia ixx="-46.619958" ixy="10.86283352" ixz="-89.425875" iyy="-209.160721" iyz="-5.78642834" izz="-163.0940696"/>
-			<origin rpy="0 0 0" xyz="0.2089091834 -0.1016889 -0.4207637"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/invacare assy_iam_8d469021.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-3.057628886 -0.32113474 1.5698851"/>
-		</collision>
-	</link>
-	<joint name="frame bracket:1--invacare assy:11" type="fixed">
-		<parent link="frame bracket:11"/>
-		<child link="invacare assy:11"/>
-		<origin rpy="1.47691506249 0 -1.5707963268" xyz="-0.668614855779 0.223187514005 0.385510620591"/>
-	</joint>
-	<link name="back frame plate:21">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/back frame plate_ipt_475e4947.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.47756318 -0.0269875139443 -0.00634996092948"/>
-			<material name="back frame plate:21_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="0.47233305"/>
-			<inertia ixx="0.00033438328" ixy="8.4144445e-07" ixz="0.0" iyy="4.75112176e-05" iyz="0.0" izz="0.00038124317"/>
-			<origin rpy="0 0 0" xyz="-0.439520330002 0.074461052695 -0.00317660211541"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/back frame plate_ipt_475e4947.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.47756318 -0.0269875139443 -0.00634996092948"/>
-		</collision>
-	</link>
-	<joint name="invacare assy:1--back frame plate:21" type="fixed">
-		<parent link="invacare assy:11"/>
-		<child link="back frame plate:21"/>
-		<origin rpy="1.6646775911 0 0" xyz="0.428673514 0.05834888 -0.6874312388"/>
-	</joint>
-	<link name="short frame bracket:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/short frame bracket_ipt_f5a4f28d.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.0253999879046 -0.0254000000063 1.10656414559e-06"/>
-			<material name="short frame bracket:11_color">
-				<color rgba="0.639216 0.639216 0.639216 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="3.472875"/>
-			<inertia ixx="0.00044426921" ixy="0.0" ixz="-8.33766626e-05" iyy="0.000868211498" iyz="0.0" izz="0.000832332886"/>
-			<origin rpy="0 0 0" xyz="0.0451349027302 0 0.0181780891503"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/short frame bracket_ipt_f5a4f28d.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.0253999879046 -0.0254000000063 1.10656414559e-06"/>
-		</collision>
-	</link>
-	<joint name="back frame plate:2--short frame bracket:11" type="fixed">
-		<parent link="back frame plate:21"/>
-		<child link="short frame bracket:11"/>
-		<origin rpy="3.14159265353 0 -1.57079632653" xyz="-0.452163434002 0.100012345488 -0.00635038374072"/>
-	</joint>
-	<link name="lower front rail:51">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/lower front rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.024500078 0.01391412"/>
-			<material name="lower front rail:51_color">
-				<color rgba="0.772549 0.760784 0.803922 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="3.3373998"/>
-			<inertia ixx="0.0002209592308" ixy="0.0" ixz="0.0" iyy="0.01201763794" iyz="0.0" izz="0.01201763794"/>
-			<origin rpy="0 0 0" xyz="0.228118763983 -0.0170002199428 0.0199999600125"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/lower front rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.024500078 0.01391412"/>
-		</collision>
-	</link>
-	<joint name="lower front rail:5--short frame bracket:11" type="fixed">
-		<parent link="short frame bracket:11"/>
-		<child link="lower front rail:51"/>
-		<origin rpy="-0.0938812643083 0 -1.5707963268" xyz="0.0737204456572 -0.0190449199831 0.0570486936296"/>
-	</joint>
-	<link name="front frame plate:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/front frame plate_ipt_3e5bfe16.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.0381002539994 -0.0762020599195 -0.00634843762365"/>
-			<material name="front frame plate:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="0.352841895"/>
-			<inertia ixx="0.0001399573098" ixy="0.0" ixz="0.0" iyy="3.54713128e-05" iyz="0.0" izz="0.0001749408584"/>
-			<origin rpy="0 0 0" xyz="-9.49959999988e-05 -2.19344651986e-06 -0.00317394242619"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/front frame plate_ipt_3e5bfe16.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.0381002539994 -0.0762020599195 -0.00634843762365"/>
-		</collision>
-	</link>
-	<joint name="front frame plate:1--invacare assy:11" type="fixed">
-		<parent link="invacare assy:11"/>
-		<child link="front frame plate:11"/>
-		<origin rpy="-1.6646775911 0 -3.14159265359" xyz="0.45466 0.00082296 -0.07646162"/>
-	</joint>
-	<link name="short frame bracket:21">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/short frame bracket_ipt_f5a4f28d.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.12541235717 -0.0507999999928 1.4695302738e-06"/>
-			<material name="short frame bracket:21_color">
-				<color rgba="0.639216 0.639216 0.639216 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="3.472875"/>
-			<inertia ixx="0.00044426921" ixy="0.0" ixz="-8.33766626e-05" iyy="0.000868211498" iyz="0.0" izz="0.000832332886"/>
-			<origin rpy="0 0 0" xyz="-0.0548774665279 -0.0253999999971 0.0181784521161"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/short frame bracket_ipt_f5a4f28d.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.12541235717 -0.0507999999928 1.4695302738e-06"/>
-		</collision>
-	</link>
-	<joint name="short frame bracket:2--invacare assy:11" type="fixed">
-		<parent link="invacare assy:11"/>
-		<child link="short frame bracket:21"/>
-		<origin rpy="0 1.47691506249 1.57079632741" xyz="0.445437514 0.06467094 -0.6868359898"/>
-	</joint>
-	<link name="lower vertical rail:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/lower vertical rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.00168655999995 0.00839292200654 -0.0260857999979"/>
-			<material name="lower vertical rail:11_color">
-				<color rgba="0.772549 0.760784 0.803922 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="2.6309619"/>
-			<inertia ixx="0.0001741879986" ixy="0.0" ixz="0.0" iyy="0.00592055618" iyz="0.0" izz="0.00592055618"/>
-			<origin rpy="0 0 0" xyz="0.17814544 0.015893034005 -0.0199999599957"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/lower vertical rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.00168655999995 0.00839292200654 -0.0260857999979"/>
-		</collision>
-	</link>
-	<joint name="short frame bracket:2--lower vertical rail:11" type="fixed">
-		<parent link="short frame bracket:21"/>
-		<child link="lower vertical rail:11"/>
-		<origin rpy="1.57079632667 -1.47691506249 0" xyz="-0.0323364095033 -0.0463549999982 0.00466476737885"/>
-	</joint>
-	<link name="lower front rail:41">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/lower front rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.027500072 -0.02308606"/>
-			<material name="lower front rail:41_color">
-				<color rgba="0.772549 0.760784 0.803922 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="3.3373998"/>
-			<inertia ixx="0.0002209592308" ixy="0.0" ixz="0.0" iyy="0.01201763794" iyz="0.0" izz="0.01201763794"/>
-			<origin rpy="0 0 0" xyz="0.228118763986 -0.0200002139428 -0.0170002199875"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/lower front rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.027500072 -0.02308606"/>
-		</collision>
-	</link>
-	<joint name="lower front rail:4--lower vertical rail:11" type="fixed">
-		<parent link="lower vertical rail:11"/>
-		<child link="lower front rail:41"/>
-		<origin rpy="0 -1.57079632674 3.14159265359" xyz="0.354977700001 -0.00410717987564 -0.496237514"/>
-	</joint>
-	<link name="back frame plate:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/back frame plate_ipt_475e4947.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.044741846 -0.0847806933563 0"/>
-			<material name="back frame plate:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="0.47233305"/>
-			<inertia ixx="0.00033438328" ixy="8.4144445e-07" ixz="0.0" iyy="4.75112176e-05" iyz="0.0" izz="0.00038124317"/>
-			<origin rpy="0 0 0" xyz="-0.00669874200006 0.016668112919 0.003174163661"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/back frame plate_ipt_475e4947.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.044741846 -0.0847806933563 0"/>
-		</collision>
-	</link>
-	<joint name="back frame plate:1--invacare assy:11" type="fixed">
-		<parent link="invacare assy:11"/>
-		<child link="back frame plate:11"/>
-		<origin rpy="1.47691506249 0 -3.14159265357" xyz="0.451495668 0.0529336 -0.629892568"/>
+		<origin rpy="0 0 -1.57079632679" xyz="0.0598651383077 0.2298351766 -0.442433668085"/>
 	</joint>
 	<link name="front upright:11">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/front upright_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/front upright_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.36211002 0.0112344200002 -0.0260857999993"/>
 			<material name="front upright:11_color">
@@ -310,13 +60,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="3.01928445"/>
-			<inertia ixx="0.0001998978828" ixy="0.0" ixz="0.0" iyy="0.00891645832" iyz="0.0" izz="0.00891645832"/>
+			<mass value="0.621099496317"/>
+			<inertia ixx="0.000199923160386" ixy="0.0" ixz="0.0" iyy="0.0089175858284" iyz="0.0" izz="0.0089175858284"/>
 			<origin rpy="0 0 0" xyz="-0.15573502 0.0187350400002 -0.0199999599996"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/front upright_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/front upright_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.36211002 0.0112344200002 -0.0260857999993"/>
 		</collision>
@@ -324,201 +74,12 @@
 	<joint name="frame bracket:1--front upright:11" type="fixed">
 		<parent link="frame bracket:11"/>
 		<child link="front upright:11"/>
-		<origin rpy="-1.5707963268 1.47691506249 3.14159265359" xyz="-0.605070815547 0.227632514004 0.445910562843"/>
-	</joint>
-	<link name="lower front rail:31">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/lower front rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.00750062 -0.00608584"/>
-			<material name="lower front rail:31_color">
-				<color rgba="0.772549 0.760784 0.803922 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="3.3373998"/>
-			<inertia ixx="0.0002209592308" ixy="0.0" ixz="0.0" iyy="0.01201763794" iyz="0.0" izz="0.01201763794"/>
-			<origin rpy="0 0 0" xyz="0.22811876398 0 0"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/lower front rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.00750062 -0.00608584"/>
-		</collision>
-	</link>
-	<joint name="lower front rail:3--front upright:11" type="fixed">
-		<parent link="front upright:11"/>
-		<child link="lower front rail:31"/>
-		<origin rpy="-3.14159265316 -1.57079632679 3.14159265316" xyz="-0.07291324 0.01873504 0"/>
-	</joint>
-	<link name="LIDAR Bracket:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/lidar bracket_ipt_795304a8.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.0508000711198 -0.0199999600004 -0.00635000000009"/>
-			<material name="LIDAR Bracket:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="0.81895905"/>
-			<inertia ixx="0.00036615964" ixy="0.0" ixz="0.0" iyy="0.000689690386" iyz="-1.84667175e-05" izz="0.000354233264"/>
-			<origin rpy="0 0 0" xyz="0 0.0197358 0.028702"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/lidar bracket_ipt_795304a8.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.0508000711198 -0.0199999600004 -0.00635000000009"/>
-		</collision>
-	</link>
-	<joint name="LIDAR Bracket:1--lower front rail:31" type="fixed">
-		<parent link="lower front rail:31"/>
-		<child link="LIDAR Bracket:11"/>
-		<origin rpy="3.14159265359 0 0" xyz="0.22585001312 0 0.0199999599996"/>
-	</joint>
-	<link name="SICK LMS291:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/sick lms291_ipt_2ad4e53c.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.068399985119 -0.00245618 -0.0929995600008"/>
-			<material name="SICK LMS291:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="18.07087905"/>
-			<inertia ixx="0.01747837322" ixy="-4.41896224e-07" ixz="4.15939678e-07" iyy="0.01276274384" iyz="0.00072844233" izz="0.01750198604"/>
-			<origin rpy="0 0 0" xyz="-0.0684016767592 0.06534658 -0.0708761600008"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/sick lms291_ipt_2ad4e53c.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.068399985119 -0.00245618 -0.0929995600008"/>
-		</collision>
-	</link>
-	<joint name="SICK LMS291:1--LIDAR Bracket:11" type="fixed">
-		<parent link="LIDAR Bracket:11"/>
-		<child link="SICK LMS291:11"/>
-		<origin rpy="-1.57079632679 0 3.14159265359" xyz="-0.0683999851203 0.0263499599995 0.0793749999999"/>
-	</joint>
-	<link name="lower side rail:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0.0370001800001 0.0125001019998 -0.0260858"/>
-			<material name="lower side rail:11_color">
-				<color rgba="0.772549 0.760784 0.803922 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="3.81828825"/>
-			<inertia ixx="0.0002527964516" ixy="0.0" ixz="0.0" iyy="0.0179577398" iyz="0.0" izz="0.0179577398"/>
-			<origin rpy="0 0 0" xyz="0.29798772 0.0199999599977 -0.01999996"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0.0370001800001 0.0125001019998 -0.0260858"/>
-		</collision>
-	</link>
-	<joint name="lower front rail:3--lower side rail:11" type="fixed">
-		<parent link="lower front rail:31"/>
-		<child link="lower side rail:11"/>
-		<origin rpy="0 0 1.57079632679" xyz="0 -0.01700022 0.01999996"/>
-	</joint>
-	<link name="base plate:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/base plate_iam_348b8023.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0.238813339998 -0.242769136001 -0.581264014"/>
-			<material name="base plate:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="49.0464765"/>
-			<inertia ixx="0.178907344" ixy="-0.01934955022" ixz="-0.001438351376" iyy="0.217495432" iyz="0.00237885263" izz="0.382030264"/>
-			<origin rpy="0 0 0" xyz="0.274068540002 0.274410423998 -0.0294030399995"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/base plate_iam_348b8023.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0.238813339998 -0.242769136001 -0.581264014"/>
-		</collision>
-	</link>
-	<joint name="base plate:1--lower front rail:31" type="fixed">
-		<parent link="lower front rail:31"/>
-		<child link="base plate:11"/>
-		<origin rpy="0 0 1.57079632679" xyz="0.466924898 0.00750061999634 -0.00499872000083"/>
-	</joint>
-	<link name="arm rail:21">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/arm rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-1.2192 0.00758951999885 0.147264120002"/>
-			<material name="arm rail:21_color">
-				<color rgba="0.772549 0.760784 0.803922 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="8.9185194"/>
-			<inertia ixx="0.0005904668" ixy="0.0" ixz="0.0" iyy="0.2275222488" iyz="0.0" izz="0.2275222488"/>
-			<origin rpy="0 0 0" xyz="-0.6096 0.0150901399988 0.153349960001"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/arm rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-1.2192 0.00758951999885 0.147264120002"/>
-		</collision>
-	</link>
-	<joint name="lower front rail:3--arm rail:21" type="fixed">
-		<parent link="lower front rail:31"/>
-		<child link="arm rail:21"/>
-		<origin rpy="0 1.57079632679 0" xyz="0 -0.01700022 0.01999996"/>
-	</joint>
-	<link name="router keepout:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/router keepout_ipt_2b3ba7b4.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.00294386 0"/>
-			<material name="router keepout:11_color">
-				<color rgba="0.25098 0.321569 0.392157 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="1.378125"/>
-			<inertia ixx="0.00067720807" ixy="0.0" ixz="0.0" iyy="0.00089532674" iyz="0.0" izz="0.001503955222"/>
-			<origin rpy="0 0 0" xyz="0 -0.00110744 0.01905"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/router keepout_ipt_2b3ba7b4.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.00294386 0"/>
-		</collision>
-	</link>
-	<joint name="router keepout:1--arm rail:21" type="fixed">
-		<parent link="arm rail:21"/>
-		<child link="router keepout:11"/>
-		<origin rpy="-1.57120376088 -1.57079632679 0.000376104790139" xyz="-0.49485296 0.0350900999982 0.225850013121"/>
+		<origin rpy="-1.5707963268 1.47691506249 -3.14159265359" xyz="0.0472087385903 0.2215801766 -0.382035463768"/>
 	</joint>
 	<link name="front right plate:11">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/front right plate_ipt_a8be7025.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/front right plate_ipt_a8be7025.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.106674666001 -0.13335 -0.00158749997673"/>
 			<material name="front right plate:11_color">
@@ -526,13 +87,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="1.149883245"/>
-			<inertia ixx="0.001350562598" ixy="-6.82770396e-05" ixz="0.0" iyy="0.000865838512" iyz="0.0" izz="0.002216301626"/>
-			<origin rpy="0 0 0" xyz="0.00252806199982 -0.00324104 -0.000792480000552"/>
+			<mass value="0.236543431439"/>
+			<inertia ixx="0.00135073338001" ixy="-6.8285673402e-05" ixz="0.0" iyy="0.00086594799944" iyz="0.0" izz="0.00221658188287"/>
+			<origin rpy="0 0 0" xyz="0.00252806199982 -0.00324104 -0.000792480000551"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/front right plate_ipt_a8be7025.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/front right plate_ipt_a8be7025.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.106674666001 -0.13335 -0.00158749997673"/>
 		</collision>
@@ -542,10 +103,37 @@
 		<child link="front right plate:11"/>
 		<origin rpy="3.14159265359 -1.57079632657 -1.57079706377" xyz="-0.22876002 0.0387349999995 0.0666750000007"/>
 	</joint>
+	<link name="front left plate:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/front left plate_ipt_a8be7025.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.040000174 -0.22670008 0"/>
+			<material name="front left plate:11_color">
+				<color rgba="0.772549 0.760784 0.803922 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.236679962742"/>
+			<inertia ixx="0.00135167274478" ixy="-6.8324008849e-05" ixz="0.0" iyy="0.00086623771007" iyz="0.0" izz="0.00221781095827"/>
+			<origin rpy="0 0 0" xyz="0.06919468 -0.09660636 0.000792480000876"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/front left plate_ipt_a8be7025.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.040000174 -0.22670008 0"/>
+		</collision>
+	</link>
+	<joint name="front left plate:1--front right plate:11" type="fixed">
+		<parent link="front right plate:11"/>
+		<child link="front left plate:11"/>
+		<origin rpy="-3.14159265359 0 3.14159265359" xyz="0.384175 0.0933500799993 0"/>
+	</joint>
 	<link name="LIDAR PSU:11">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/lidar psu_ipt_2888cf41.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/LIDAR PSU_ipt_2888cf41.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.081819185234 0.00544283938007 0.00270255999996"/>
 			<material name="LIDAR PSU:11_color">
@@ -553,13 +141,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="1.819125"/>
-			<inertia ixx="0.0002922014788" ixy="0.0" ixz="0.0" iyy="0.000526369844" iyz="0.0" izz="0.000764631098"/>
+			<mass value="0.37421370525"/>
+			<inertia ixx="0.000292238428406" ixy="0.0" ixz="0.0" iyy="0.00052643640478" iyz="0.0" izz="0.00076472778751"/>
 			<origin rpy="0 0 0" xyz="-0.0192017162198 0.00713515039153 0.0163982399999"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/lidar psu_ipt_2888cf41.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/LIDAR PSU_ipt_2888cf41.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.081819185234 0.00544283938007 0.00270255999996"/>
 		</collision>
@@ -567,12 +155,12 @@
 	<joint name="front right plate:1--LIDAR PSU:11" type="fixed">
 		<parent link="front right plate:11"/>
 		<child link="LIDAR PSU:11"/>
-		<origin rpy="0 0 1.57160500763" xyz="0.00252806199982 -0.00324104 -0.000792480000552"/>
+		<origin rpy="0 0 1.57160500763" xyz="0.00252806199982 -0.00324104 -0.000792480000551"/>
 	</joint>
 	<link name="top plate:11">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/top plate_ipt_9041f1eb.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/top plate_ipt_9041f1eb.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.269874679958 -0.301624492002 -0.00635000000047"/>
 			<material name="top plate:11_color">
@@ -580,13 +168,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="11.7595296"/>
-			<inertia ixx="0.0704677358" ixy="-3.27700296e-05" ixz="0.0" iyy="0.059930332" iyz="0.0" izz="0.1303819748"/>
+			<mass value="2.41906254029"/>
+			<inertia ixx="0.070476646621" ixy="-3.2774173452e-05" ixz="0.0" iyy="0.05993791034" iyz="0.0" izz="0.130398461926"/>
 			<origin rpy="0 0 0" xyz="-0.000294589199942 -0.0066802 -0.003175"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/top plate_ipt_9041f1eb.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/top plate_ipt_9041f1eb.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.269874679958 -0.301624492002 -0.00635000000047"/>
 		</collision>
@@ -596,10 +184,64 @@
 		<child link="top plate:11"/>
 		<origin rpy="1.57079632679 0 0" xyz="0.163200013903 0.13335 -0.261625080036"/>
 	</joint>
+	<link name="router keepout:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/router keepout_ipt_2b3ba7b4.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.08889992888 0.08255 0"/>
+			<material name="router keepout:11_color">
+				<color rgba="0.25098 0.321569 0.392157 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.28349523125"/>
+			<inertia ixx="0.00067729370465" ixy="0.0" ixz="0.0" iyy="0.0008954399563" iyz="0.0" izz="0.00150414540089"/>
+			<origin rpy="0 0 0" xyz="-0.0888999288799 0.08438642 0.0190500000007"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/router keepout_ipt_2b3ba7b4.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.08889992888 0.08255 0"/>
+		</collision>
+	</link>
+	<joint name="router keepout:1--top plate:11" type="fixed">
+		<parent link="top plate:11"/>
+		<child link="router keepout:11"/>
+		<origin rpy="1.57079632679 0 0" xyz="0.0848749280385 0.263535160001 -0.31115"/>
+	</joint>
+	<link name="compressor:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/compressor_iam_e870b89.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.2170938 0.0541649920005 0.0585088999996"/>
+			<material name="compressor:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="2.12621423437"/>
+			<inertia ixx="-0.0061140063136" ixy="0.0073422915937" ixz="0.0121866630191" iyy="-0.0247184035886" iyz="0.0043080263318" izz="-0.0223276763534"/>
+			<origin rpy="0 0 0" xyz="0.0555625 -0.000189230000282 -0.03601466"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/compressor_iam_e870b89.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.2170938 0.0541649920005 0.0585088999996"/>
+		</collision>
+	</link>
+	<joint name="compressor:1--top plate:11" type="fixed">
+		<parent link="top plate:11"/>
+		<child link="compressor:11"/>
+		<origin rpy="-1.5708595819 1.57079632679 0" xyz="0.174625066039 0.161925000001 -0.00634999999969"/>
+	</joint>
 	<link name="Spike H:11">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/spike h_iam_f19c9874.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/Spike H_iam_f19c9874.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0.164325112034 -0.232999280004 0"/>
 			<material name="Spike H:11_color">
@@ -607,13 +249,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="0.124133121"/>
-			<inertia ixx="4.84250074e-06" ixy="-7.83000526e-09" ixz="-2.276395814e-09" iyy="8.25012034e-06" iyz="-1.999534768e-07" izz="1.021235446e-05"/>
+			<mass value="0.02553552678"/>
+			<inertia ixx="4.8431130863e-06" ixy="-7.8309953837e-09" ixz="-2.27668366993e-09" iyy="8.2511635883e-06" iyz="-1.99978761416e-07" izz="1.02136458377e-05"/>
 			<origin rpy="0 0 0" xyz="0.164211574034 -0.231630220004 0.00965708"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/spike h_iam_f19c9874.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/Spike H_iam_f19c9874.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0.164325112034 -0.232999280004 0"/>
 		</collision>
@@ -623,37 +265,10 @@
 		<child link="Spike H:11"/>
 		<origin rpy="-3.14159265359 0 0" xyz="0 0 -0.00635"/>
 	</joint>
-	<link name="compressor:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/compressor_iam_e870b89.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0.2170938 0.0541649920005 0.0585088999996"/>
-			<material name="compressor:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="10.3359375"/>
-			<inertia ixx="-0.00611323328" ixy="0.00734136326" ixz="0.01218512218" iyy="-0.02471527828" iyz="0.00430748164" izz="-0.02232485332"/>
-			<origin rpy="0 0 0" xyz="0.0555625 -0.000189230000282 -0.03601466"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/compressor_iam_e870b89.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0.2170938 0.0541649920005 0.0585088999996"/>
-		</collision>
-	</link>
-	<joint name="compressor:1--top plate:11" type="fixed">
-		<parent link="top plate:11"/>
-		<child link="compressor:11"/>
-		<origin rpy="-1.57079632679 1.57079632679 6.32411066351e-05" xyz="0.174625066039 0.161925000001 -0.00634999999969"/>
-	</joint>
 	<link name="Breaker:11">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/breaker_iam_746c8f85.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/Breaker_iam_746c8f85.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.0160837880002 -0.0289115499999 0.00508"/>
 			<material name="Breaker:11_color">
@@ -661,13 +276,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="0.455268555"/>
-			<inertia ixx="3.69211458e-05" ixy="-4.35295168e-06" ixz="1.05369649e-07" iyy="2.44135199e-05" iyz="-2.552221056e-12" izz="4.8643287e-05"/>
+			<mass value="0.0936536702263"/>
+			<inertia ixx="3.6925814571e-05" ixy="-4.3535021216e-06" ixz="1.05382973255e-07" iyy="2.44166070505e-05" iyz="-2.55254379072e-12" izz="4.8649438065e-05"/>
 			<origin rpy="0 0 0" xyz="-0.0161287460002 -0.0289115499999 0.01533652"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/breaker_iam_746c8f85.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/Breaker_iam_746c8f85.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.0160837880002 -0.0289115499999 0.00508"/>
 		</collision>
@@ -677,91 +292,10 @@
 		<child link="Breaker:11"/>
 		<origin rpy="-3.14159265359 0 0" xyz="0.196423854041 -0.104857549998 -0.00634999999966"/>
 	</joint>
-	<link name="front left plate:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/front left plate_ipt_a8be7025.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.040000174 -0.22670008 0"/>
-			<material name="front left plate:11_color">
-				<color rgba="0.772549 0.760784 0.803922 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="1.15054695"/>
-			<inertia ixx="0.001351501844" ixy="-6.83153702e-05" ixz="0.0" iyy="0.000866128186" iyz="0.0" izz="0.002217530546"/>
-			<origin rpy="0 0 0" xyz="0.06919468 -0.09660636 0.000792480000876"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/front left plate_ipt_a8be7025.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.040000174 -0.22670008 0"/>
-		</collision>
-	</link>
-	<joint name="front left plate:1--front right plate:11" type="fixed">
-		<parent link="front right plate:11"/>
-		<child link="front left plate:11"/>
-		<origin rpy="3.14159265359 0 3.14159265359" xyz="0.384175 0.0933500799993 0"/>
-	</joint>
-	<link name="front top side rail:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/front top side rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 0.01249934 -0.01188466"/>
-			<material name="front top side rail:11_color">
-				<color rgba="0.772549 0.760784 0.803922 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="0.975463335"/>
-			<inertia ixx="6.45823794e-05" ixy="0.0" ixz="0.0" iyy="0.000329605122" iyz="0.0" izz="0.000329605122"/>
-			<origin rpy="0 0 0" xyz="0.0666750000053 0.0199999599822 -0.00579882000012"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/front top side rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 0.01249934 -0.01188466"/>
-		</collision>
-	</link>
-	<joint name="front top side rail:1--front upright:11" type="fixed">
-		<parent link="front upright:11"/>
-		<child link="front top side rail:11"/>
-		<origin rpy="-1.57085818898 -1.57079632654 1.57085818905" xyz="-0.34790888 -0.00126492 0"/>
-	</joint>
-	<link name="front top side rail:21">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/front top side rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.02450084 0.01391412"/>
-			<material name="front top side rail:21_color">
-				<color rgba="0.772549 0.760784 0.803922 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="0.975463335"/>
-			<inertia ixx="6.45823794e-05" ixy="0.0" ixz="0.0" iyy="0.000329605122" iyz="0.0" izz="0.000329605122"/>
-			<origin rpy="0 0 0" xyz="0.0666750000003 -0.0170002199992 0.0199999599999"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/front top side rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.02450084 0.01391412"/>
-		</collision>
-	</link>
-	<joint name="front top side rail:2--front top side rail:11" type="fixed">
-		<parent link="front top side rail:11"/>
-		<child link="front top side rail:21"/>
-		<origin rpy="-3.14159265359 0 3.14159265334" xyz="0.45085000001 0.03700017988 0.0142011399992"/>
-	</joint>
 	<link name="lower side rail:21">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0 -0.027499564 -0.02308606"/>
 			<material name="lower side rail:21_color">
@@ -769,13 +303,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="3.81828825"/>
-			<inertia ixx="0.0002527964516" ixy="0.0" ixz="0.0" iyy="0.0179577398" iyz="0.0" izz="0.0179577398"/>
+			<mass value="0.785463227511"/>
+			<inertia ixx="0.000252828418342" ixy="0.0" ixz="0.0" iyy="0.017960010601" iyz="0.0" izz="0.017960010601"/>
 			<origin rpy="0 0 0" xyz="0.26098754 -0.019999706002 -0.01700022"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0 -0.027499564 -0.02308606"/>
 		</collision>
@@ -785,10 +319,91 @@
 		<child link="lower side rail:21"/>
 		<origin rpy="-1.57079632679 0 1.57079632679" xyz="-0.35911028 0.0387350000003 -0.0399996659991"/>
 	</joint>
+	<link name="lower side rail:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.0274995639995 -0.29228288"/>
+			<material name="lower side rail:11_color">
+				<color rgba="0.772549 0.760784 0.803922 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.785463227511"/>
+			<inertia ixx="0.000252828418342" ixy="0.0" ixz="0.0" iyy="0.017960010601" iyz="0.0" izz="0.017960010601"/>
+			<origin rpy="0 0 0" xyz="0.26098754 -0.0199997060015 -0.28619704"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.0274995639995 -0.29228288"/>
+		</collision>
+	</link>
+	<joint name="lower side rail:2--lower side rail:11" type="fixed">
+		<parent link="lower side rail:21"/>
+		<child link="lower side rail:11"/>
+		<origin rpy="0 0 0" xyz="0 0 0"/>
+	</joint>
+	<link name="lower front rail:51">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/lower front rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.0258000498675 0.534474674006 -0.0260857999986"/>
+			<material name="lower front rail:51_color">
+				<color rgba="0.772549 0.760784 0.803922 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.686539267537"/>
+			<inertia ixx="0.000220987171646" ixy="0.0" ixz="0.0" iyy="0.0120191576003" iyz="0.0" izz="0.0120191576003"/>
+			<origin rpy="0 0 0" xyz="0.253918813845 0.541974532064 -0.0199999599861"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/lower front rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.0258000498675 0.534474674006 -0.0260857999986"/>
+		</collision>
+	</link>
+	<joint name="lower side rail:1--lower front rail:51" type="fixed">
+		<parent link="lower side rail:11"/>
+		<child link="lower front rail:51"/>
+		<origin rpy="0 0 -1.57079632705" xyz="0 -0.0141996159995 -0.26619708"/>
+	</joint>
+	<link name="PC:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/PC_ipt_a7ade237.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<material name="PC:11_color">
+				<color rgba="0 0 0 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="13.0796535036"/>
+			<inertia ixx="0.199045542023" ixy="0.000104306361732" ixz="0.00061701926176" iyy="0.3078833877" iyz="0.000148148651798" izz="0.128774326576"/>
+			<origin rpy="0 0 0" xyz="0.164833554002 0.0475996 0.207873599999"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/PC_ipt_a7ade237.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+		</collision>
+	</link>
+	<joint name="PC:1--lower side rail:21" type="fixed">
+		<parent link="lower side rail:21"/>
+		<child link="PC:11"/>
+		<origin rpy="-1.57079632679 0 -1.57079632679" xyz="0.0901750799996 -0.0507997460009 0.10459974"/>
+	</joint>
 	<link name="lower side rail:41">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0 -0.481350066 -0.0260858"/>
 			<material name="lower side rail:41_color">
@@ -796,13 +411,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="3.81828825"/>
-			<inertia ixx="0.0002527964516" ixy="0.0" ixz="0.0" iyy="0.0179577398" iyz="0.0" izz="0.0179577398"/>
+			<mass value="0.785463227511"/>
+			<inertia ixx="0.000252828418342" ixy="0.0" ixz="0.0" iyy="0.017960010601" iyz="0.0" izz="0.017960010601"/>
 			<origin rpy="0 0 0" xyz="0.260987539996 -0.473849954002 -0.01999996"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0 -0.481350066 -0.0260858"/>
 		</collision>
@@ -815,7 +430,7 @@
 	<link name="lower vertical rail:21">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/lower vertical rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/lower vertical rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.3606038 -0.549474644003 0.0139138658617"/>
 			<material name="lower vertical rail:21_color">
@@ -823,13 +438,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="2.6309619"/>
-			<inertia ixx="0.0001741879986" ixy="0.0" ixz="0.0" iyy="0.00592055618" iyz="0.0" izz="0.00592055618"/>
+			<mass value="0.541217344037"/>
+			<inertia ixx="0.000174210025107" ixy="0.0" ixz="0.0" iyy="0.0059213048491" iyz="0.0" izz="0.0059213048491"/>
 			<origin rpy="0 0 0" xyz="-0.1807718 -0.541974532005 0.0199997058639"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/lower vertical rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/lower vertical rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.3606038 -0.549474644003 0.0139138658617"/>
 		</collision>
@@ -842,7 +457,7 @@
 	<link name="IRC5_Compact:11">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/irc5_compact_ipt_c844072c.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/IRC5_Compact_ipt_c844072c.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0 0 -0.462398872"/>
 			<material name="IRC5_Compact:11_color">
@@ -850,13 +465,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="138.2535"/>
-			<inertia ixx="0.754899222" ixy="-0.001222912922" ixz="-0.001242885798" iyy="1.080495724" iyz="-0.00649174064" izz="0.610855168"/>
+			<mass value="28.440241599"/>
+			<inertia ixx="0.75499468089" ixy="-0.00122306756239" ixz="-0.00124304296401" iyy="1.08063235538" iyz="-0.0064925615368" izz="0.61093241216"/>
 			<origin rpy="0 0 0" xyz="-0.224836540483 0.12333478 -0.249483371944"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/irc5_compact_ipt_c844072c.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/IRC5_Compact_ipt_c844072c.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0 0 -0.462398872"/>
 		</collision>
@@ -864,12 +479,12 @@
 	<joint name="IRC5_Compact:1--lower vertical rail:21" type="fixed">
 		<parent link="lower vertical rail:21"/>
 		<child link="IRC5_Compact:11"/>
-		<origin rpy="1.57095443956 1.57079632679 0.000126494212215" xyz="-0.27484578 -0.52197457201 0.0408498038687"/>
+		<origin rpy="1.57089118845 1.57079632679 0" xyz="-0.27484578 -0.52197457201 0.0408498038687"/>
 	</joint>
 	<link name="lower side rail:31">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0 -0.027500072 -0.02308606"/>
 			<material name="lower side rail:31_color">
@@ -877,13 +492,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="3.81828825"/>
-			<inertia ixx="0.0002527964516" ixy="0.0" ixz="0.0" iyy="0.0179577398" iyz="0.0" izz="0.0179577398"/>
+			<mass value="0.785463227511"/>
+			<inertia ixx="0.000252828418342" ixy="0.0" ixz="0.0" iyy="0.017960010601" iyz="0.0" izz="0.017960010601"/>
 			<origin rpy="0 0 0" xyz="0.26098754 -0.019999960002 -0.01700022"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/lower side rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0 -0.027500072 -0.02308606"/>
 		</collision>
@@ -893,37 +508,718 @@
 		<child link="lower side rail:31"/>
 		<origin rpy="0 0 0" xyz="0 -0.490849666 -0.269196820001"/>
 	</joint>
-	<link name="PC:11">
+	<link name="front top side rail:11">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/pc_ipt_a7ade237.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/front top side rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
-			<origin rpy="0 0 0" xyz="0 0 0"/>
-			<material name="PC:11_color">
+			<origin rpy="0 0 0" xyz="0 0.01249934 -0.01188466"/>
+			<material name="front top side rail:11_color">
+				<color rgba="0.772549 0.760784 0.803922 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.200663367787"/>
+			<inertia ixx="6.4590546003e-05" ixy="0.0" ixz="0.0" iyy="0.00032964680139" iyz="0.0" izz="0.00032964680139"/>
+			<origin rpy="0 0 0" xyz="0.0666750000053 0.0199999599822 -0.00579882000012"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/front top side rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0.01249934 -0.01188466"/>
+		</collision>
+	</link>
+	<joint name="front top side rail:1--front upright:11" type="fixed">
+		<parent link="front upright:11"/>
+		<child link="front top side rail:11"/>
+		<origin rpy="-1.57085818895 -1.57079632654 1.57085818902" xyz="-0.34790888 -0.00126492 0"/>
+	</joint>
+	<link name="arm rail:21">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/arm rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.00169926000011 0.01391412"/>
+			<material name="arm rail:21_color">
+				<color rgba="0.772549 0.760784 0.803922 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="1.83463598709"/>
+			<inertia ixx="0.000590541466" ixy="0.0" ixz="0.0" iyy="0.227551019556" iyz="0.0" izz="0.227551019556"/>
+			<origin rpy="0 0 0" xyz="0.6096 0.00580135999984 0.019999959999"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/arm rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.00169926000011 0.01391412"/>
+		</collision>
+	</link>
+	<joint name="arm rail:2--front top side rail:11" type="fixed">
+		<parent link="front top side rail:11"/>
+		<child link="arm rail:21"/>
+		<origin rpy="0 1.57079632679 0" xyz="0.133350000005 0.0122885199645 0.96420432"/>
+	</joint>
+	<link name="front top side rail:21">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/front top side rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.02450084 0.01391412"/>
+			<material name="front top side rail:21_color">
+				<color rgba="0.772549 0.760784 0.803922 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.200663367787"/>
+			<inertia ixx="6.4590546003e-05" ixy="0.0" ixz="0.0" iyy="0.00032964680139" iyz="0.0" izz="0.00032964680139"/>
+			<origin rpy="0 0 0" xyz="0.0666750000003 -0.0170002199992 0.0199999599999"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/front top side rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.02450084 0.01391412"/>
+		</collision>
+	</link>
+	<joint name="front top side rail:2--front top side rail:11" type="fixed">
+		<parent link="front top side rail:11"/>
+		<child link="front top side rail:21"/>
+		<origin rpy="3.14159265359 0 3.14159265334" xyz="0.45085000001 0.03700017988 0.0142011399992"/>
+	</joint>
+	<link name="lower front rail:31">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/lower front rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.00750062 -0.00608584"/>
+			<material name="lower front rail:31_color">
+				<color rgba="0.772549 0.760784 0.803922 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.686539267537"/>
+			<inertia ixx="0.000220987171646" ixy="0.0" ixz="0.0" iyy="0.0120191576003" iyz="0.0" izz="0.0120191576003"/>
+			<origin rpy="0 0 0" xyz="0.22811876398 0 0"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/lower front rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.00750062 -0.00608584"/>
+		</collision>
+	</link>
+	<joint name="lower front rail:3--front upright:11" type="fixed">
+		<parent link="front upright:11"/>
+		<child link="lower front rail:31"/>
+		<origin rpy="-3.13327192996 -1.57079632679 3.13327192996" xyz="-0.07291324 0.01873504 0"/>
+	</joint>
+	<link name="LIDAR Bracket:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/LIDAR Bracket_ipt_795304a8.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.0508000711198 -0.0199999600004 -0.00635000000009"/>
+			<material name="LIDAR Bracket:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.168468742142"/>
+			<inertia ixx="0.0003662059418" ixy="0.0" ixz="0.0" iyy="0.00068977759907" iyz="-1.84690526625e-05" izz="0.00035427805768"/>
+			<origin rpy="0 0 0" xyz="0 0.0197358 0.028702"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/LIDAR Bracket_ipt_795304a8.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.0508000711198 -0.0199999600004 -0.00635000000009"/>
+		</collision>
+	</link>
+	<joint name="LIDAR Bracket:1--lower front rail:31" type="fixed">
+		<parent link="lower front rail:31"/>
+		<child link="LIDAR Bracket:11"/>
+		<origin rpy="3.14159265359 0 0" xyz="0.22585001312 0 0.0199999599996"/>
+	</joint>
+	<link name="SICK LMS291:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/SICK LMS291_ipt_2ad4e53c.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.068399985119 -0.00245618 -0.0929995600008"/>
+			<material name="SICK LMS291:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="3.71737544502"/>
+			<inertia ixx="0.0174805834039" ixy="-4.4195210288e-07" ixz="4.1599227461e-07" iyy="0.0127643577208" iyz="0.00072853444335" izz="0.0175041992098"/>
+			<origin rpy="0 0 0" xyz="-0.0684016767592 0.06534658 -0.0708761600008"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/SICK LMS291_ipt_2ad4e53c.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.068399985119 -0.00245618 -0.0929995600008"/>
+		</collision>
+	</link>
+	<joint name="SICK LMS291:1--LIDAR Bracket:11" type="fixed">
+		<parent link="LIDAR Bracket:11"/>
+		<child link="SICK LMS291:11"/>
+		<origin rpy="-1.57079632679 0 3.14159265359" xyz="-0.0683999851203 0.0263499599995 0.0793749999999"/>
+	</joint>
+	<link name="base plate:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/base plate_iam_348b8023.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.238813339998 -0.242769136001 -0.581264014"/>
+			<material name="base plate:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="11.253309185"/>
+			<inertia ixx="0.192702049774" ixy="-0.0128927375727" ixz="-0.00057983680454" iyy="0.235790506928" iyz="0.002976996201" izz="0.41200655867"/>
+			<origin rpy="0 0 0" xyz="0.275671280002 0.269130779998 -0.0311556399995"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/base plate_iam_348b8023.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.238813339998 -0.242769136001 -0.581264014"/>
+		</collision>
+	</link>
+	<joint name="base plate:1--lower front rail:31" type="fixed">
+		<parent link="lower front rail:31"/>
+		<child link="base plate:11"/>
+		<origin rpy="0 0 1.57079632679" xyz="0.466924898 0.00750061999635 -0.00499872000083"/>
+	</joint>
+	<link name="frame:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/frame_ipt_29593391.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.420037514 -0.0666738903817 -0.689874018721"/>
+			<material name="frame:11_color">
+				<color rgba="1 0.560784 0.34902 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="3.238400046"/>
+			<inertia ixx="0.101240111246" ixy="7.9308431281e-08" ixz="4.9290020458e-07" iyy="0.218754643973" iyz="0.000271806805703" izz="0.119386531616"/>
+			<origin rpy="0 0 0" xyz="0.223177332461 -0.0389168320979 -0.316964635512"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/frame_ipt_29593391.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.420037514 -0.0666738903817 -0.689874018721"/>
+		</collision>
+	</link>
+	<joint name="frame bracket:1--frame:11" type="fixed">
+		<parent link="frame bracket:11"/>
+		<child link="frame:11"/>
+		<origin rpy="1.5707959168 0 -1.5707963268" xyz="-0.0163353016417 0.217135176601 -0.44243540602"/>
+	</joint>
+	<link name="caster:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/caster_ipt_ca03a3d7.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="6.15234530432e-07 -0.136525 -0.0254008560038"/>
+			<material name="caster:11_color">
 				<color rgba="0 0 0 1"/>
 			</material>
 		</visual>
 		<inertial>
-			<mass value="63.5827185"/>
-			<inertia ixx="0.1990203754" ixy="0.0001042931736" ixz="0.000616941248" iyy="0.30784446" iyz="0.0001481299204" izz="0.1287580448"/>
-			<origin rpy="0 0 0" xyz="0.164833554002 0.0475996 0.207873599999"/>
+			<mass value="0.141176996424"/>
+			<inertia ixx="0.00051323847608" ixy="0.0" ixz="0.0" iyy="0.00026112292147" iyz="0.000151341028831" izz="0.00058482333902"/>
+			<origin rpy="0 0 0" xyz="7.70252313792e-07 -0.059548268 0.0181310864467"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/pc_ipt_a7ade237.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/caster_ipt_ca03a3d7.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="6.15234530432e-07 -0.136525 -0.0254008560038"/>
+		</collision>
+	</link>
+	<joint name="Left Caster" type="continuous">
+		<parent link="frame:11"/>
+		<child link="caster:11"/>
+		<axis xyz="0 1 0"/>
+		<origin rpy="-0.113808556509 0.599759885216 -0.0644280863472" xyz="0.438376314 -0.0930717791273 -0.0402738600969"/>
+	</joint>
+	<link name="caster wheel:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/caster wheel_ipt_4784d7d8.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.0380996753602 1.08327234849e-07"/>
+			<material name="caster wheel:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="1.4177347039"/>
+			<inertia ixx="0.0034966317219" ixy="0.0" ixz="0.0" iyy="0.0063467697834" iyz="0.0" izz="0.0034966317219"/>
+			<origin rpy="0 0 0" xyz="0 -0.0380996753602 1.08327234849e-07"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/caster wheel_ipt_4784d7d8.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.0380996753602 1.08327234849e-07"/>
+		</collision>
+	</link>
+	<joint name="Left Caster Wheel" type="continuous">
+		<parent link="caster:11"/>
+		<child link="caster wheel:11"/>
+		<axis xyz="0 1 0"/>
+		<origin rpy="-4.13084785385e-07 0 1.57079632679" xyz="-0.0374391391943 -0.136525 0.057149470843"/>
+	</joint>
+	<link name="caster:12">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/caster_ipt_ca03a3d7.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.136525 -0.0254001327259"/>
+			<material name="caster:12_color">
+				<color rgba="0 0 0 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.141176996424"/>
+			<inertia ixx="0.00051323847608" ixy="0.0" ixz="0.0" iyy="0.00026112292147" iyz="0.000151341028831" izz="0.00058482333902"/>
+			<origin rpy="0 0 0" xyz="7.43113543256e-07 -0.059548268 0.0181319980636"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/caster_ipt_ca03a3d7.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.136525 -0.0254001327259"/>
+		</collision>
+	</link>
+	<joint name="Right Caster" type="continuous">
+		<parent link="frame:11"/>
+		<child link="caster:12"/>
+		<axis xyz="0 1 0"/>
+		<origin rpy="-0.393667317717 1.32390459026 -0.382877964465" xyz="0.007998714 -0.0930717791273 -0.0402738600969"/>
+	</joint>
+	<link name="caster wheel:12">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/caster wheel_ipt_4784d7d8.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.0381013123316 1.4601111184e-07"/>
+			<material name="caster wheel:12_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="1.4177347039"/>
+			<inertia ixx="0.0034966317219" ixy="0.0" ixz="0.0" iyy="0.0063467697834" iyz="0.0" izz="0.0034966317219"/>
+			<origin rpy="0 0 0" xyz="0 -0.0381013123316 1.46011111896e-07"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/caster wheel_ipt_4784d7d8.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.0381013123316 1.4601111184e-07"/>
+		</collision>
+	</link>
+	<joint name="Right Caster Wheel" type="continuous">
+		<parent link="caster:12"/>
+		<child link="caster wheel:12"/>
+		<axis xyz="0 1 0"/>
+		<origin rpy="-3.1415922422 -0.131082218832 -1.57079652096" xyz="-0.0374398564987 -0.136525 0.0571499693664"/>
+	</joint>
+	<link name="battery rails:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/battery rails_ipt_62ca575f.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.1778 -0.015875 -0.34100008"/>
+			<material name="battery rails:11_color">
+				<color rgba="0 0 0 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.429243531578"/>
+			<inertia ixx="0.0064463248908" ixy="0.0" ixz="0.0" iyy="0.0165747840978" iyz="-4.7992760637e-05" izz="0.0104958356968"/>
+			<origin rpy="0 0 0" xyz="0 -0.0104648 -0.191353694"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/battery rails_ipt_62ca575f.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.1778 -0.015875 -0.34100008"/>
+		</collision>
+	</link>
+	<joint name="frame:1--battery rails:11" type="fixed">
+		<parent link="frame:11"/>
+		<child link="battery rails:11"/>
+		<origin rpy="-3.04771179927 0 3.14159265359" xyz="0.223187514 -0.0365116467139 -0.661299066183"/>
+	</joint>
+	<link name="battery:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/battery_ipt_8c19ab2.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.223836992 0"/>
+			<material name="battery:11_color">
+				<color rgba="0 0 0 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="21.545637575"/>
+			<inertia ixx="0.180950040491" ixy="0.0" ixz="0.0" iyy="0.209387333603" iyz="0.0" izz="0.260657336003"/>
+			<origin rpy="0 0 0" xyz="0 -0.095066358 0.09525"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/battery_ipt_8c19ab2.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.223836992 0"/>
+		</collision>
+	</link>
+	<joint name="battery:1--battery rails:11" type="fixed">
+		<parent link="battery rails:11"/>
+		<child link="battery:11"/>
+		<origin rpy="0 0 0" xyz="0 -0.0118999 -0.34100008"/>
+	</joint>
+	<link name="battery:21">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/battery_ipt_8c19ab2.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.196849492 0"/>
+			<material name="battery:21_color">
+				<color rgba="0 0 0 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="21.545637575"/>
+			<inertia ixx="0.180950040491" ixy="0.0" ixz="0.0" iyy="0.209387333603" iyz="0.0" izz="0.260657336003"/>
+			<origin rpy="0 0 0" xyz="0 -0.068078858 0.09525"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/battery_ipt_8c19ab2.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.196849492 0"/>
+		</collision>
+	</link>
+	<joint name="battery:2--battery rails:11" type="fixed">
+		<parent link="battery rails:11"/>
+		<child link="battery:21"/>
+		<origin rpy="3.14159265359 0 3.14159265359" xyz="0 -0.0388874 0.03999992"/>
+	</joint>
+	<link name="motor_MIR:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/motor_MIR_ipt_80c03f9e.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.181228424395 0.1804416 0.226806071559"/>
+			<material name="motor_MIR:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="2.88893887638"/>
+			<inertia ixx="0.037028530158" ixy="8.9967734006e-05" ixz="-0.005475823544" iyy="0.037953555715" iyz="0.00142684533734" izz="0.0053992989685"/>
+			<origin rpy="0 0 0" xyz="0.162841872423 0.1851787 0.0215882303416"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/motor_MIR_ipt_80c03f9e.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.181228424395 0.1804416 0.226806071559"/>
+		</collision>
+	</link>
+	<joint name="battery rails:1--motor_MIR:11" type="fixed">
+		<parent link="battery rails:11"/>
+		<child link="motor_MIR:11"/>
+		<origin rpy="-3.14159265359 0.211571921606 -1.57079632679" xyz="0 -0.0104648 -0.191353694"/>
+	</joint>
+	<link name="motor:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/motor_ipt_8185475f.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.0743585972119 0.4030472 -0.219481652091"/>
+			<material name="motor:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="8.845051215"/>
+			<inertia ixx="0.113369914896" ixy="0.00027545335536" ixz="0.0167652907848" iyy="0.116202055782" iyz="-0.0043685729271" izz="0.0165310348663"/>
+			<origin rpy="0 0 0" xyz="0.0559720452404 0.4077843 -0.014263810873"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/motor_ipt_8185475f.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.0743585972119 0.4030472 -0.219481652091"/>
+		</collision>
+	</link>
+	<joint name="motor_MIR:1--motor:11" type="fixed">
+		<parent link="motor_MIR:11"/>
+		<child link="motor:11"/>
+		<origin rpy="3.14159265359 0 0" xyz="0.106869827183 0.2226056 0.00732441946858"/>
+	</joint>
+	<link name="wheel:21">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/wheel_ipt_982fa4fe.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<material name="wheel:21_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="3.52668067675"/>
+			<inertia ixx="0.032456077033" ixy="0.0" ixz="0.0" iyy="0.062503458919" iyz="0.0" izz="0.032456077033"/>
+			<origin rpy="0 0 0" xyz="0 -0.00071882 0"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/wheel_ipt_982fa4fe.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0 0 0"/>
 		</collision>
 	</link>
-	<joint name="PC:1--lower side rail:21" type="fixed">
-		<parent link="lower side rail:21"/>
-		<child link="PC:11"/>
-		<origin rpy="-1.57079632679 0 -1.57079632679" xyz="0.0901750799996 -0.0507997460009 0.10459974"/>
+	<joint name="Right Wheel" type="continuous">
+		<parent link="motor:11"/>
+		<child link="wheel:21"/>
+		<axis xyz="0 1 0"/>
+		<origin rpy="3.14159265359 -1.17052308335 0" xyz="0.0494411886234 0.5008626 0.0986537374286"/>
+	</joint>
+	<link name="wheel:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/wheel_ipt_982fa4fe.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+			<material name="wheel:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="3.52668067675"/>
+			<inertia ixx="0.032456077033" ixy="0.0" ixz="0.0" iyy="0.062503458919" iyz="0.0" izz="0.032456077033"/>
+			<origin rpy="0 0 0" xyz="0 -0.00071882 0"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/wheel_ipt_982fa4fe.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+		</collision>
+	</link>
+	<joint name="Left Wheel" type="continuous">
+		<parent link="motor_MIR:11"/>
+		<child link="wheel:11"/>
+		<axis xyz="0 1 0"/>
+		<origin rpy="3.14159265359 0.902962593822 0" xyz="0.156311015806 0.278257 -0.0913293179601"/>
+	</joint>
+	<link name="front frame plate:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/front frame plate_ipt_3e5bfe16.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.0381002539994 -0.0762020599195 -0.00634843762365"/>
+			<material name="front frame plate:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.072583397455"/>
+			<inertia ixx="0.000139975007751" ixy="0.0" ixz="0.0" iyy="3.5475798236e-05" iyz="0.0" izz="0.000174962980108"/>
+			<origin rpy="0 0 0" xyz="-9.49959999988e-05 -2.19344651986e-06 -0.00317394242619"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/front frame plate_ipt_3e5bfe16.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.0381002539994 -0.0762020599195 -0.00634843762365"/>
+		</collision>
+	</link>
+	<joint name="front frame plate:1--frame:11" type="fixed">
+		<parent link="frame:11"/>
+		<child link="front frame plate:11"/>
+		<origin rpy="-1.57079673678 0 3.14159265359" xyz="0.45466 -0.00634840638155 -0.076202062522"/>
+	</joint>
+	<link name="back frame plate:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/back frame plate_ipt_475e4947.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.044741846 -0.0847806933563 0"/>
+			<material name="back frame plate:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.0971640215777"/>
+			<inertia ixx="0.0003344255636" ixy="8.4155085275e-07" ixz="0.0" iyy="4.7517225512e-05" iyz="0.0" izz="0.00038129137915"/>
+			<origin rpy="0 0 0" xyz="-0.00669874200006 0.016668112919 0.003174163661"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/back frame plate_ipt_475e4947.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.044741846 -0.0847806933563 0"/>
+		</collision>
+	</link>
+	<joint name="back frame plate:1--frame:11" type="fixed">
+		<parent link="frame:11"/>
+		<child link="back frame plate:11"/>
+		<origin rpy="1.5707959168 0 -3.14159265357" xyz="0.451495668 -0.00634752228531 -0.632080945917"/>
+	</joint>
+	<link name="back frame plate:21">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/back frame plate_ipt_475e4947.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.47756318 -0.0269875139443 -0.00634996092948"/>
+			<material name="back frame plate:21_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.0971640215777"/>
+			<inertia ixx="0.0003344255636" ixy="8.4155085275e-07" ixz="0.0" iyy="4.7517225512e-05" iyz="0.0" izz="0.00038129137915"/>
+			<origin rpy="0 0 0" xyz="-0.439520330002 0.074461052695 -0.00317660211541"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/back frame plate_ipt_475e4947.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.47756318 -0.0269875139443 -0.00634996092948"/>
+		</collision>
+	</link>
+	<joint name="frame:1--back frame plate:21" type="fixed">
+		<parent link="frame:11"/>
+		<child link="back frame plate:21"/>
+		<origin rpy="1.57079673678 0 0" xyz="0.428673514 -0.0063499370587 -0.689873885703"/>
+	</joint>
+	<link name="short frame bracket:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/short frame bracket_ipt_f5a4f28d.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.0253999879046 -0.0254000000063 1.10656414543e-06"/>
+			<material name="short frame bracket:11_color">
+				<color rgba="0.639216 0.639216 0.639216 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.71440798275"/>
+			<inertia ixx="0.00044432538895" ixy="0.0" ixz="-8.3387205787e-05" iyy="0.00086832128551" iyz="0.0" izz="0.00083243813657"/>
+			<origin rpy="0 0 0" xyz="0.0451349027302 0 0.0181780891503"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/short frame bracket_ipt_f5a4f28d.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.0253999879046 -0.0254000000063 1.10656414543e-06"/>
+		</collision>
+	</link>
+	<joint name="back frame plate:2--short frame bracket:11" type="fixed">
+		<parent link="back frame plate:21"/>
+		<child link="short frame bracket:11"/>
+		<origin rpy="3.14159265353 0 -1.57079632653" xyz="-0.452163434002 0.100012345488 -0.00635038374072"/>
+	</joint>
+	<link name="short frame bracket:21">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/short frame bracket_ipt_f5a4f28d.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.12541235717 -0.0507999999928 1.4695302738e-06"/>
+			<material name="short frame bracket:21_color">
+				<color rgba="0.639216 0.639216 0.639216 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.71440798275"/>
+			<inertia ixx="0.00044432538895" ixy="0.0" ixz="-8.3387205787e-05" iyy="0.00086832128551" iyz="0.0" izz="0.00083243813657"/>
+			<origin rpy="0 0 0" xyz="-0.0548774665279 -0.0253999999971 0.0181784521161"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/short frame bracket_ipt_f5a4f28d.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.12541235717 -0.0507999999928 1.4695302738e-06"/>
+		</collision>
+	</link>
+	<joint name="short frame bracket:2--frame:11" type="fixed">
+		<parent link="frame:11"/>
+		<child link="short frame bracket:21"/>
+		<origin rpy="0.000140706182803 1.5707959168 1.57093703311" xyz="0.445437514 0 -0.689873906859"/>
+	</joint>
+	<link name="lower vertical rail:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/lower vertical rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.00168655999995 0.00839292200654 -0.0260857999979"/>
+			<material name="lower vertical rail:11_color">
+				<color rgba="0.772549 0.760784 0.803922 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.541217344037"/>
+			<inertia ixx="0.000174210025107" ixy="0.0" ixz="0.0" iyy="0.0059213048491" iyz="0.0" izz="0.0059213048491"/>
+			<origin rpy="0 0 0" xyz="0.17814544 0.015893034005 -0.0199999599957"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/lower vertical rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.00168655999995 0.00839292200654 -0.0260857999979"/>
+		</collision>
+	</link>
+	<joint name="short frame bracket:2--lower vertical rail:11" type="fixed">
+		<parent link="short frame bracket:21"/>
+		<child link="lower vertical rail:11"/>
+		<origin rpy="1.57079632667 -1.47691506249 0" xyz="-0.0323364095033 -0.0463549999982 0.00466476737885"/>
+	</joint>
+	<link name="lower front rail:41">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/lower front rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.027500072 -0.02308606"/>
+			<material name="lower front rail:41_color">
+				<color rgba="0.772549 0.760784 0.803922 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.686539267537"/>
+			<inertia ixx="0.000220987171646" ixy="0.0" ixz="0.0" iyy="0.0120191576003" iyz="0.0" izz="0.0120191576003"/>
+			<origin rpy="0 0 0" xyz="0.228118763986 -0.0200002139428 -0.0170002199875"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/lower front rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.027500072 -0.02308606"/>
+		</collision>
+	</link>
+	<joint name="lower front rail:4--lower vertical rail:11" type="fixed">
+		<parent link="lower vertical rail:11"/>
+		<child link="lower front rail:41"/>
+		<origin rpy="1.80907794896e-07 -1.57079632674 3.14159247268" xyz="0.354977700001 -0.00410717987564 -0.496237514"/>
 	</joint>
 	<link name="frame bracket:41">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/frame bracket_ipt_f5a4f28d.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/frame bracket_ipt_f5a4f28d.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.0508011227754 -0.0508002539996 -0.00635025313587"/>
 			<material name="frame bracket:41_color">
@@ -931,13 +1227,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="3.472875"/>
-			<inertia ixx="0.000430464342" ixy="0.0" ixz="-1.181352018e-05" iyy="0.001091541374" iyz="0.0" izz="0.001059703568"/>
+			<mass value="0.71440798275"/>
+			<inertia ixx="0.00043051877529" ixy="0.0" ixz="-1.18150140291e-05" iyy="0.00109167940213" iyz="0.0" izz="0.00105983757016"/>
 			<origin rpy="0 0 0" xyz="0.026295786011 -0.0254000000002 0.010379711334"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/frame bracket_ipt_f5a4f28d.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/frame bracket_ipt_f5a4f28d.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.0508011227754 -0.0508002539996 -0.00635025313587"/>
 		</collision>
@@ -945,12 +1241,39 @@
 	<joint name="frame bracket:4--frame bracket:11" type="fixed">
 		<parent link="frame bracket:11"/>
 		<child link="frame bracket:41"/>
-		<origin rpy="0 0 0" xyz="-0.617813733008 -0.218772485996 0.391860873726"/>
+		<origin rpy="0 0 0" xyz="0.0344658211298 -0.2248248234 -0.436085152885"/>
+	</joint>
+	<link name="front upright:21">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/front upright_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.00750062000008 -0.00608583999991"/>
+			<material name="front upright:21_color">
+				<color rgba="0.772549 0.760784 0.803922 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.621099496317"/>
+			<inertia ixx="0.000199923160386" ixy="0.0" ixz="0.0" iyy="0.0089175858284" iyz="0.0" izz="0.0089175858284"/>
+			<origin rpy="0 0 0" xyz="0.206375 0 0"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/front upright_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.00750062000008 -0.00608583999991"/>
+		</collision>
+	</link>
+	<joint name="front upright:2--frame bracket:41" type="fixed">
+		<parent link="frame bracket:41"/>
+		<child link="front upright:21"/>
+		<origin rpy="1.5707963268 -1.47691506249 0" xyz="0.0266482908163 -0.0244449600002 0.00187642115383"/>
 	</joint>
 	<link name="arm rail:11">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/arm rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/arm rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0.0929132000003 0.0124993400012 0.15043912"/>
 			<material name="arm rail:11_color">
@@ -958,13 +1281,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="8.9185194"/>
-			<inertia ixx="0.0005904668" ixy="0.0" ixz="0.0" iyy="0.2275222488" iyz="0.0" izz="0.2275222488"/>
+			<mass value="1.83463598709"/>
+			<inertia ixx="0.000590541466" ixy="0.0" ixz="0.0" iyy="0.227551019556" iyz="0.0" izz="0.227551019556"/>
 			<origin rpy="0 0 0" xyz="0.7025132 0.0199999600012 0.156524959999"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/arm rail_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/arm rail_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0.0929132000003 0.0124993400012 0.15043912"/>
 		</collision>
@@ -974,199 +1297,10 @@
 		<child link="arm rail:11"/>
 		<origin rpy="-1.57079632681 -1.47691506249 0" xyz="0.00958189891915 -0.00762000000005 0.0543473244699"/>
 	</joint>
-	<link name="IRB120_Base_rev0:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_base_rev0_iam_38446303.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0.04203954 -0.07963916 8.0162399451e-05"/>
-			<material name="IRB120_Base_rev0:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="30.212469"/>
-			<inertia ixx="0.02472399776" ixy="-0.001308714946" ixz="-8.07856896e-05" iyy="0.047231492" iyz="-8.03154814e-06" izz="0.0491222732"/>
-			<origin rpy="0 0 0" xyz="0 0 0"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_base_rev0_iam_38446303.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0.04203954 -0.07963916 8.0162399451e-05"/>
-		</collision>
-	</link>
-	<joint name="IRB120_Base_rev0:1--arm rail:11" type="fixed">
-		<parent link="arm rail:11"/>
-		<child link="IRB120_Base_rev0:11"/>
-		<origin rpy="0 0 -3.14159265359" xyz="0.55055262 -0.0796391599982 0.2324448234"/>
-	</joint>
-	<link name="IRB120_Link1_rev0:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_link1_rev0_iam_3fe6e7e5.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.17649952 0"/>
-			<material name="IRB120_Link1_rev0:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="14.91106995"/>
-			<inertia ixx="0.01421766808" ixy="2.310489566e-05" ixz="-1.086002456e-05" iyy="0.01045483208" iyz="1.933857772e-05" izz="0.01440358612"/>
-			<origin rpy="0 0 0" xyz="9.92932610522e-05 0.0619125 0.000120146707416"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_link1_rev0_iam_3fe6e7e5.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.17649952 0"/>
-		</collision>
-	</link>
-	<joint name="IRB120_Base_rev0:1--IRB120_Link1_rev0:11" type="fixed">
-		<parent link="IRB120_Base_rev0:11"/>
-		<child link="IRB120_Link1_rev0:11"/>
-		<origin rpy="-3.14159265359 -0.668845740547 3.14159265359" xyz="0.04203954 0.09686036 8.01624008326e-05"/>
-	</joint>
-	<link name="IRB120_Link2_rev0:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_link2_rev0_iam_90725b7e.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="1.54358428861e-06 0.269999754796 0.115499748015"/>
-			<material name="IRB120_Link2_rev0:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="19.0011906"/>
-			<inertia ixx="0.060306323" ixy="-5.7248653e-05" ixz="9.01272372e-06" iyy="0.02595221552" iyz="-0.000504936894" izz="0.0415658782"/>
-			<origin rpy="0 0 0" xyz="0.000778420420581 0.101238818962 0.0596167646499"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_link2_rev0_iam_90725b7e.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="1.54358428861e-06 0.269999754796 0.115499748015"/>
-		</collision>
-	</link>
-	<joint name="IRB120_Link2_rev0:1--IRB120_Link1_rev0:11" type="fixed">
-		<parent link="IRB120_Link1_rev0:11"/>
-		<child link="IRB120_Link2_rev0:11"/>
-		<origin rpy="-3.80159157812e-07 -2.82044180594e-07 1.9676191066" xyz="5.57577730098e-07 0.1134999 -0.0574996276953"/>
-	</joint>
-	<link name="IRB120_Link3_rev0:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_link3_rev0_iam_86ced70a.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0.071952848745 -0.0661526901756 0.0589997805382"/>
-			<material name="IRB120_Link3_rev0:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="14.3105382"/>
-			<inertia ixx="0.0083134975" ixy="-0.001428467348" ixz="-7.99166676e-05" iyy="0.01265442332" iyz="-0.0001816964072" izz="0.0167115564"/>
-			<origin rpy="0 0 0" xyz="0.0228077138503 0.0579088629114 0.0579265785584"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_link3_rev0_iam_86ced70a.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="0.071952848745 -0.0661526901756 0.0589997805382"/>
-		</collision>
-	</link>
-	<joint name="IRB120_Link3_rev0:1--IRB120_Link2_rev0:11" type="fixed">
-		<parent link="IRB120_Link2_rev0:11"/>
-		<child link="IRB120_Link3_rev0:11"/>
-		<origin rpy="3.27588928035e-07 1.6571775175e-07 0.989050240485" xyz="1.65908264516e-06 0.270000153642 -0.00150067174086"/>
-	</joint>
-	<link name="IRB120_Link4_rev0:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_link4_rev0_iam_467bed4b.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="500.300717948 0.000323115263097 -0.000534198444973"/>
-			<material name="IRB120_Link4_rev0:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="6.45520365"/>
-			<inertia ixx="0.002845438442" ixy="1.647987572e-05" ixz="-2.124167738e-05" iyy="0.0052529015" iyz="1.313867632e-05" izz="0.00401239454"/>
-			<origin rpy="0 0 0" xyz="500.223422762 0.00073052394364 -0.000688254218928"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_link4_rev0_iam_467bed4b.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="500.300717948 0.000323115263097 -0.000534198444973"/>
-		</collision>
-	</link>
-	<joint name="IRB120_Link3_rev0:1--IRB120_Link4_rev0:11" type="fixed">
-		<parent link="IRB120_Link3_rev0:11"/>
-		<child link="IRB120_Link4_rev0:11"/>
-		<origin rpy="-1.52544583094 1.29532332105e-07 2.10681567856e-07" xyz="-499.998719007 0.0704151062567 0.0594124809604"/>
-	</joint>
-	<link name="IRB120_Link5_rev0:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_link5_rev0_iam_8f44ede8.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.301998488439 -0.629998750685 -0.0619993114233"/>
-			<material name="IRB120_Link5_rev0:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="2.6572896"/>
-			<inertia ixx="0.000404250308" ixy="-8.15101672e-07" ixz="1.61652722e-06" iyy="0.000815283084" iyz="-1.388805418e-08" izz="0.000892037916"/>
-			<origin rpy="0 0 0" xyz="-0.00109373496991 6.05486054402e-05 -0.0620361403843"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_link5_rev0_iam_8f44ede8.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="-0.301998488439 -0.629998750685 -0.0619993114233"/>
-		</collision>
-	</link>
-	<joint name="IRB120_Link4_rev0:1--IRB120_Link5_rev0:11" type="fixed">
-		<parent link="IRB120_Link4_rev0:11"/>
-		<child link="IRB120_Link5_rev0:11"/>
-		<origin rpy="1.62064242789e-07 3.95710603923e-07 -0.163660073928" xyz="500.300717002 0.000323170094552 0.0614640480071"/>
-	</joint>
-	<link name="IRB120_Link6_rev0:11">
-		<visual>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_link6_rev0_ipt_8026fdc3.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="1.12309129374e-06 -1.47603399692e-06 -0.0130014294661"/>
-			<material name="IRB120_Link6_rev0:11_color">
-				<color rgba="0.752941 0.752941 0.752941 1"/>
-			</material>
-		</visual>
-		<inertial>
-			<mass value="0.066493539"/>
-			<inertia ixx="1.657479516e-06" ixy="-3.06665282e-12" ixz="8.92143252e-11" iyy="1.694034034e-06" iyz="-7.66146766e-09" izz="2.97641498e-06"/>
-			<origin rpy="0 0 0" xyz="9.55338238295e-07 0.000168825897927 -0.00706242193177"/>
-		</inertial>
-		<collision>
-			<geometry>
-				<mesh filename="package://abby_urdf/irb120_link6_rev0_ipt_8026fdc3.stl" scale=".0254 .0254 .0254"/>
-			</geometry>
-			<origin rpy="0 0 0" xyz="1.12309129374e-06 -1.47603399692e-06 -0.0130014294661"/>
-		</collision>
-	</link>
-	<joint name="IRB120_Link5_rev0:1--IRB120_Link6_rev0:11" type="fixed">
-		<parent link="IRB120_Link5_rev0:11"/>
-		<child link="IRB120_Link6_rev0:11"/>
-		<origin rpy="-1.5707961734 0.571193670262 -1.57079621992" xyz="0.0720015346867 1.53654876478e-06 -0.0620000617744"/>
-	</joint>
 	<link name="aim rail cross brace:11">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/aim rail cross brace_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/aim rail cross brace_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.1095375 -0.00750061999914 -0.00608583999981"/>
 			<material name="aim rail cross brace:11_color">
@@ -1174,13 +1308,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="0.801272745"/>
-			<inertia ixx="5.3049843e-05" ixy="0.0" ixz="0.0" iyy="0.000191312121" iyz="0.0" izz="0.000191312121"/>
+			<mass value="0.164830477742"/>
+			<inertia ixx="5.3056551285e-05" ixy="0.0" ixz="0.0" iyy="0.000191336312895" iyz="0.0" izz="0.000191336312895"/>
 			<origin rpy="0 0 0" xyz="-0.0547688262 0 0"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/aim rail cross brace_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/aim rail cross brace_ipt_926bd022.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.1095375 -0.00750061999914 -0.00608583999981"/>
 		</collision>
@@ -1193,7 +1327,7 @@
 	<link name="Kinect:11">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/kinect_ipt_94e5d325.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/Kinect_ipt_94e5d325.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0.0263710419994 0 0.0756615200002"/>
 			<material name="Kinect:11_color">
@@ -1201,13 +1335,13 @@
 			</material>
 		</visual>
 		<inertial>
-			<mass value="3.49291845"/>
-			<inertia ixx="0.000622538686" ixy="2.78141171e-08" ixz="6.83399486e-07" iyy="0.00310445674" iyz="-4.75346256e-05" izz="0.00322690984"/>
+			<mass value="0.718531137393"/>
+			<inertia ixx="0.00062261740757" ixy="2.78176342645e-08" ixz="6.8348590357e-07" iyy="0.0031048493063" iyz="-4.7540636472e-05" izz="0.0032273178908"/>
 			<origin rpy="0 0 0" xyz="0.0644280680445 0.05292598 0.0438175400005"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/kinect_ipt_94e5d325.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/Kinect_ipt_94e5d325.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="0.0263710419994 0 0.0756615200002"/>
 		</collision>
@@ -1217,32 +1351,206 @@
 		<child link="Kinect:11"/>
 		<origin rpy="1.57079632679 0 0" xyz="-0.114298984 0.0194614800009 0.0199999600002"/>
 	</joint>
-	<link name="front upright:21">
+	<link name="IRB120_Base_rev0:11">
 		<visual>
 			<geometry>
-				<mesh filename="package://abby_urdf/front upright_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/IRB120_Base_rev0_iam_38446303.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.00750062000008 -0.00608583999991"/>
-			<material name="front upright:21_color">
-				<color rgba="0.772549 0.760784 0.803922 1"/>
+			<origin rpy="0 0 0" xyz="0.04203954 -0.07963916 8.0162399451e-05"/>
+			<material name="IRB120_Base_rev0:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
 			</material>
 		</visual>
 		<inertial>
-			<mass value="3.01928445"/>
-			<inertia ixx="0.0001998978828" ixy="0.0" ixz="0.0" iyy="0.00891645832" iyz="0.0" izz="0.00891645832"/>
-			<origin rpy="0 0 0" xyz="0.206375 0 0"/>
+			<mass value="6.21503193527"/>
+			<inertia ixx="0.0247271241712" ixy="-0.00130888043627" ixz="-8.0795905152e-05" iyy="0.04723746454" iyz="-8.0325637493e-06" izz="0.049128484834"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://abby_urdf/front upright_ipt_926bd022.stl" scale=".0254 .0254 .0254"/>
+				<mesh filename="package://abby_urdf/IRB120_Base_rev0_iam_38446303.STL" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
-			<origin rpy="0 0 0" xyz="0 -0.00750062000008 -0.00608583999991"/>
+			<origin rpy="0 0 0" xyz="0.04203954 -0.07963916 8.0162399451e-05"/>
 		</collision>
 	</link>
-	<joint name="front upright:2--frame bracket:41" type="fixed">
-		<parent link="frame bracket:41"/>
-		<child link="front upright:21"/>
-		<origin rpy="1.5707963268 -1.47691506249 0" xyz="0.0266482908163 -0.0244449600002 0.00187642115383"/>
+	<joint name="IRB120_Base_rev0:1--arm rail:11" type="fixed">
+		<parent link="arm rail:11"/>
+		<child link="IRB120_Base_rev0:11"/>
+		<origin rpy="0 0 3.14159265359" xyz="0.37592762 -0.0796391599982 0.2324448234"/>
+	</joint>
+	<link name="IRB120_Link1_rev0:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/IRB120_Link1_rev0_iam_3fe6e7e5.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.17649952 0"/>
+			<material name="IRB120_Link1_rev0:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="3.06736850696"/>
+			<inertia ixx="0.0142194659396" ixy="2.31078173317e-05" ixz="-1.08613978372e-05" iyy="0.0104561541196" iyz="1.93410231314e-05" izz="0.0144054074894"/>
+			<origin rpy="0 0 0" xyz="9.92932610521e-05 0.0619125 0.000120146707416"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/IRB120_Link1_rev0_iam_3fe6e7e5.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0 -0.17649952 0"/>
+		</collision>
+	</link>
+	<joint name="ABB Base Joint" type="revolute">
+		<parent link="IRB120_Base_rev0:11"/>
+		<child link="IRB120_Link1_rev0:11"/>
+		<limit effort="300" lower="-3.141592" upper="3.141592" velocity="10.0"/>
+		<axis xyz="0 1 0"/>
+		<origin rpy="-3.14159265359 -0.668845740547 3.14159265359" xyz="0.04203954 0.09686036 8.01624008326e-05"/>
+	</joint>
+	<link name="IRB120_Link2_rev0:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/IRB120_Link2_rev0_iam_90725b7e.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="1.54358428872e-06 0.269999754796 0.115499748015"/>
+			<material name="IRB120_Link2_rev0:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="3.90875060185"/>
+			<inertia ixx="0.060313948885" ixy="-5.7255892235e-05" ixz="9.0138634014e-06" iyy="0.0259554972424" iyz="-0.00050500074453" izz="0.041571134309"/>
+			<origin rpy="0 0 0" xyz="0.000778420420581 0.101238818962 0.0596167646499"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/IRB120_Link2_rev0_iam_90725b7e.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="1.54358428872e-06 0.269999754796 0.115499748015"/>
+		</collision>
+	</link>
+	<joint name="ABB First Joint" type="revolute">
+		<parent link="IRB120_Link1_rev0:11"/>
+		<child link="IRB120_Link2_rev0:11"/>
+		<limit effort="300" lower="-3.141592" upper="0.0" velocity="10.0"/>
+		<axis xyz="0 0 1"/>
+		<origin rpy="-3.80159157889e-07 -2.82044180378e-07 1.9676191066" xyz="5.57577729543e-07 0.1134999 -0.0574996276953"/>
+	</joint>
+	<link name="IRB120_Link3_rev0:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/IRB120_Link3_rev0_iam_86ced70a.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.071952848745 -0.0661526901756 0.0589997805382"/>
+			<material name="IRB120_Link3_rev0:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="2.94383262499"/>
+			<inertia ixx="0.0083145487625" ixy="-0.00142864798126" ixz="-7.9926773262e-05" iyy="0.0126560235034" iyz="-0.000181719383164" izz="0.016713669618"/>
+			<origin rpy="0 0 0" xyz="0.0228077138503 0.0579088629114 0.0579265785584"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/IRB120_Link3_rev0_iam_86ced70a.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.071952848745 -0.0661526901756 0.0589997805382"/>
+		</collision>
+	</link>
+	<joint name="ABB Second Joint" type="revolute">
+		<parent link="IRB120_Link2_rev0:11"/>
+		<child link="IRB120_Link3_rev0:11"/>
+		<limit effort="300" lower="-2.141592" upper="1.0" velocity="10.0"/>
+		<axis xyz="0 0 1"/>
+		<origin rpy="3.2758892825e-07 1.65717751769e-07 0.989050240485" xyz="1.65908264504e-06 0.270000153642 -0.00150067174086"/>
+	</joint>
+	<link name="IRB120_Link4_rev0:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/IRB120_Link4_rev0_iam_467bed4b.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="500.302187012 0.00151561224702 -0.000313229561613"/>
+			<material name="IRB120_Link4_rev0:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="1.32790527095"/>
+			<inertia ixx="0.00284579825479" ixy="1.64819596414e-05" ixz="-2.12443634431e-05" iyy="0.0052535657425" iyz="1.31403377384e-05" izz="0.0040129019173"/>
+			<origin rpy="0 0 0" xyz="500.224891826 0.00192302092756 -0.000467285335568"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/IRB120_Link4_rev0_iam_467bed4b.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="500.302187012 0.00151561224702 -0.000313229561613"/>
+		</collision>
+	</link>
+	<joint name="ABB Third Joint" type="revolute">
+		<parent link="IRB120_Link3_rev0:11"/>
+		<child link="IRB120_Link4_rev0:11"/>
+		<limit effort="300" lower="-3.141592" upper="3.141592" velocity="10.0"/>
+		<axis xyz="1 0 0"/>
+		<origin rpy="-1.52544583094 1.29532332074e-07 2.10681567879e-07" xyz="-500.000188071 0.0701403024607 0.060593734446"/>
+	</joint>
+	<link name="IRB120_Link5_rev0:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/IRB120_Link5_rev0_iam_8f44ede8.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.301998488439 -0.629998750685 -0.0619993114233"/>
+			<material name="IRB120_Link5_rev0:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.546633236934"/>
+			<inertia ixx="0.00040430142646" ixy="-8.1520474364e-07" ixz="1.6167316339e-06" iyy="0.00081538617858" iyz="-1.38898103591e-08" izz="0.00089215071642"/>
+			<origin rpy="0 0 0" xyz="-0.00109373496991 6.05486054406e-05 -0.0620361403843"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/IRB120_Link5_rev0_iam_8f44ede8.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-0.301998488439 -0.629998750685 -0.0619993114233"/>
+		</collision>
+	</link>
+	<joint name="ABB Fourth Joint" type="revolute">
+		<parent link="IRB120_Link4_rev0:11"/>
+		<child link="IRB120_Link5_rev0:11"/>
+		<limit effort="300" lower="-2.0" upper="2.0" velocity="10.0"/>
+		<axis xyz="0 0 1"/>
+		<origin rpy="1.62064242872e-07 3.95710603931e-07 -0.163660073928" xyz="500.302186066 0.00151566707848 0.0616850168905"/>
+	</joint>
+	<link name="IRB120_Link6_rev0:11">
+		<visual>
+			<geometry>
+				<mesh filename="package://abby_urdf/IRB120_Link6_rev0_ipt_8026fdc3.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-2.74896335695e-07 -8.57788299224e-07 -0.0130000906507"/>
+			<material name="IRB120_Link6_rev0:11_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual>
+		<inertial>
+			<mass value="0.0136784407912"/>
+			<inertia ixx="1.65768910842e-06" ixy="-3.0670406059e-12" ixz="8.9225606574e-11" iyy="1.69424824883e-06" iyz="-7.6624364717e-09" izz="2.9767913551e-06"/>
+			<origin rpy="0 0 0" xyz="-4.42649390919e-07 0.000169444143624 -0.0070610831163"/>
+		</inertial>
+		<collision>
+			<geometry>
+				<mesh filename="package://abby_urdf/IRB120_Link6_rev0_ipt_8026fdc3.STL" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="-2.74896335695e-07 -8.57788299224e-07 -0.0130000906507"/>
+		</collision>
+	</link>
+	<joint name="ABB Fifth Joint" type="revolute">
+		<parent link="IRB120_Link5_rev0:11"/>
+		<child link="IRB120_Link6_rev0:11"/>
+		<limit effort="300" lower="-3.141592" upper="3.141592" velocity="10.0"/>
+		<axis xyz="0 0 1"/>
+		<origin rpy="-1.5707961734 0.571193670262 -1.57079621992" xyz="0.072000865279 7.81392714644e-07 -0.0620001796247"/>
 	</joint>
 </robot>
 
