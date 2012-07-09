@@ -1,7 +1,7 @@
 map_type: voxel
 
-obstacle_range: 5.0
-raytrace_range: 6.0 
+obstacle_range: 7.0
+raytrace_range: 7.0 
 footprint: [[0.21, 0.31], [0.21, -0.31], [-0.79, -0.31], [-0.79, 0.31]]
 #footprint_padding: 0.25
 inflation_radius: 1.0
