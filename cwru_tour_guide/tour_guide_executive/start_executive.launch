@@ -2,6 +2,6 @@
 <node name="tour_guide_goal_planner" pkg="tour_guide_executive" type="executive.py" output="screen">
 	<param name="filename" value="$(find tour_guide_executive)/configs/goals_thinkbox_025cm.yaml" />
 	<param name="soundpath" value="$(find tour_guide_executive)/configs/sounds/thinkbox/finished/" />
-	<param name="skip_sounds" value="true" type="boolean"/>
+	<param name="skip_sounds" value="false" type="boolean"/>
 </node>
 </launch>
