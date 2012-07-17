@@ -1,1 +1,0 @@
-The AMCL node is in its own namespace.  If rviz is run as "rosrun rviz rviz", it cannot seed an initial pose.  Rviz publishes on the topic /initialpose, and AMCL expects a message on the topic /amcl/initialpose.  Use a launch file to run rviz and remap the topic.
