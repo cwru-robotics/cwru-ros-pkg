@@ -4,11 +4,20 @@
 goals:
    
     - goal:
-         x: -19.28
-         y: -23.42 # Start
+         x: -18.9
+         y: -23.9 # Start
          theta: 0
       wavs:
           - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'   
+
+    - goal:
+         x: -20.91
+         y: -24.19 # Intermediate
+         theta: 0
+      wavs:
+          - 'tour_paragraph1_intro.ogg'
       pics:
           - 'cwru.jpg'
 
@@ -18,7 +27,7 @@ goals:
          y: -24.40 # Plotter
          theta: 0
       wavs:
-          - 'tour_paragraph1_intro.ogg'
+          - 'blank_sound.ogg'
       pics:
           - 'cwru.jpg'
 
@@ -54,11 +63,21 @@ goals:
 
    
     - goal:
-         x: -27.18
-         y: -25.96 # Electronics
+         x: -27.29
+         y: -25.57 # Electronics
          theta: 0
       wavs:
          - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    
+    - goal:
+         x: -27.16 # Intermediate
+         y: -27.36
+         theta: 0
+      wavs:
+         - 'tour_paragraph5_electronics.ogg'
       pics:
           - 'cwru.jpg'
 
@@ -68,7 +87,7 @@ goals:
          y: -29.14
          theta: 0
       wavs:
-         - 'tour_paragraph5_electronics.ogg'
+         - 'blank_sound.ogg'
       pics:
           - 'cwru.jpg'
 
@@ -84,8 +103,8 @@ goals:
     
 
     - goal:
-         x: -26.99 # Wood shop entrance
-         y: -33.23
+         x: -27.31 # Wood shop entrance
+         y: -33.08
          theta: 0
       wavs:
          - 'blank_sound.ogg'
@@ -114,11 +133,20 @@ goals:
 
    
     - goal:
+         x: -20.02 # Intermediate
+         y: -33.24
+         theta: 0
+      wavs:
+         - 'tour_paragraph8_laser.ogg'
+      pics:
+          - 'cwru.jpg'
+
+    - goal:
          x: -18.34 # Embroidery
          y: -32.66
          theta: 0
       wavs:
-         - 'tour_paragraph8_laser.ogg'
+         - 'blank_sound.ogg'
       pics:
           - 'cwru.jpg'
 
@@ -132,6 +160,15 @@ goals:
       pics:
           - 'cwru.jpg'
 
+   
+    - goal:
+         x: -18.57 # Intermediate
+         y: -29.90
+         theta: 0
+      wavs:
+         - 'blank_sound.ogg'
+      pics:
+          - 'cwru.jpg'
    
     - goal:
          x: -19.00 # Metal shop
