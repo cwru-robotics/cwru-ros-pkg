@@ -128,22 +128,26 @@ def main():
       if skip_sounds == True:
         sound = ['blank_sound.ogg']
       
-      imgname = str(sound_prefix + nextThing['pics'][0])
-      img = cv.LoadImage(imgname)
-      cv.NamedWindow("window")
-      cv.ShowImage("window", img)
-      cv.WaitKey(100)
+      try:
+        imgname = str(sound_prefix + nextThing['pics'][0])
+        img = cv.LoadImage(imgname)
+        cv.NamedWindow("window")
+        cv.ShowImage("window", img)
+        cv.WaitKey(100)
+      except e as Exception:
+        rospy.logwarn('Error in displaying image: ' + str(e));
 
-      # Play the sound and display the image
-      rospy.loginfo('Playing %s' %(sound[0]))
-      if player!=0:
-        player.release()
-      player=vlc.MediaPlayer(sound_prefix + sound[0])
-      player.play()
-      
-      # Wait for sound to finish
-      while(player.get_state()!=vlc.State.Ended):
-        time.sleep(.2)
+      if not sound == ['blank_sound.ogg']:
+        # Play the sound and display the image
+        rospy.loginfo('Playing %s' %(sound[0]))
+        if player!=0:
+          player.release()
+        player=vlc.MediaPlayer(sound_prefix + sound[0])
+        player.play()
+        
+        # Wait for sound to finish
+        while(player.get_state()!=vlc.State.Ended):
+          time.sleep(.2)
       
       # Send goal to planner
       goal = create_move_base_goal_from_yaml(nextThing['goal'])
