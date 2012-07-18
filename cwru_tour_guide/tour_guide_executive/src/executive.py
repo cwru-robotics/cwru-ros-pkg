@@ -59,11 +59,11 @@ def dist_to_goal(goal):
     now = rospy.Time.now()
 
     if now < last_odom_time:
-      rospy.logerror('WTF time travel')
+      rospy.logwarn('WTF time travel')
       return 999
 
     if now - last_odom_time > rospy.Duration.from_sec(2.0):
-      rospy.loginfo('stale odom: ' + str( (now-last_odom_time).to_sec() ) + ' secs old')
+      rospy.logwarn('stale odom: ' + str( (now-last_odom_time).to_sec() ) + ' secs old')
       return 999
 
     dx = goal.pose.position.x - last_odom.pose.position.x
