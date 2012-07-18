@@ -19,7 +19,7 @@ goals:
       wavs:
           - 'tour_paragraph1_intro.ogg'
       pics:
-          - 'cwru.jpg'
+          - '4-rendering.jpg'
 
    
     - goal:
@@ -29,7 +29,7 @@ goals:
       wavs:
           - 'blank_sound.ogg'
       pics:
-          - 'cwru.jpg'
+          - '4-rendering.jpg'
 
    
     - goal:
@@ -39,7 +39,7 @@ goals:
       wavs:
           - 'tour_paragraph2_plotter.ogg'
       pics:
-          - 'cwru.jpg'
+          - '6-1-plotter.jpg'
 
    
     - goal:
@@ -49,7 +49,7 @@ goals:
       wavs:
          - 'tour_paragraph3_vinyl.ogg'
       pics:
-          - 'cwru.jpg'
+          - '7-2-vinylcutterex.jpg'
 
    
     - goal:
@@ -59,7 +59,7 @@ goals:
       wavs:
          - 'tour_paragraph4_media.ogg'
       pics:
-          - 'cwru.jpg'
+          - '8-1-mediacenter.jpg'
 
    
     - goal:
@@ -69,7 +69,7 @@ goals:
       wavs:
          - 'blank_sound.ogg'
       pics:
-          - 'cwru.jpg'
+          - '8-1-mediacenter.jpg'
 
     
     - goal:
@@ -79,7 +79,7 @@ goals:
       wavs:
          - 'tour_paragraph5_electronics.ogg'
       pics:
-          - 'cwru.jpg'
+          - '10-1-circutboardrouter.jpg'
 
     
     - goal:
@@ -89,7 +89,7 @@ goals:
       wavs:
          - 'blank_sound.ogg'
       pics:
-          - 'cwru.jpg'
+          - '9-1-microscope.jpg'
 
 
     - goal:
@@ -99,7 +99,7 @@ goals:
       wavs:
          - 'blank_sound.ogg'
       pics:
-          - 'cwru.jpg'
+          - '9-1-microscope.jpg'
     
 
     - goal:
@@ -109,7 +109,7 @@ goals:
       wavs:
          - 'blank_sound.ogg'
       pics:
-          - 'cwru.jpg'
+          - '12-1-shopbot.jpg'
 
    
     - goal:
@@ -119,7 +119,7 @@ goals:
       wavs:
          - 'tour_paragraph6_wood.ogg'
       pics:
-          - 'cwru.jpg'
+          - '12-1-shopbot.jpg'
 
    
     - goal:
@@ -129,7 +129,7 @@ goals:
       wavs:
          - 'tour_paragraph7_3d.ogg'
       pics:
-          - 'cwru.jpg'
+          - '14-1-3Dprintstuff.jpg'
 
    
     - goal:
@@ -139,7 +139,7 @@ goals:
       wavs:
          - 'tour_paragraph8_laser.ogg'
       pics:
-          - 'cwru.jpg'
+          - '16-coaster.jpg'
 
     - goal:
          x: -18.34 # Embroidery
@@ -148,7 +148,7 @@ goals:
       wavs:
          - 'blank_sound.ogg'
       pics:
-          - 'cwru.jpg'
+          - '20-sewingcenter.jpg'
 
    
     - goal:
@@ -158,7 +158,7 @@ goals:
       wavs:
           - 'tour_paragraph9_fabric.ogg'
       pics:
-          - 'cwru.jpg'
+          - '20-sewingcenter.jpg'
 
    
     - goal:
@@ -168,7 +168,7 @@ goals:
       wavs:
          - 'blank_sound.ogg'
       pics:
-          - 'cwru.jpg'
+          - '21-1-metalshop.jpg'
    
     - goal:
          x: -19.00 # Metal shop
@@ -177,7 +177,7 @@ goals:
       wavs:
          - 'blank_sound.ogg'
       pics:
-          - 'cwru.jpg'
+          - '21-1-metalshop.jpg'
 
 
     # Intermediate
@@ -188,7 +188,7 @@ goals:
       wavs:
           - 'tour_paragraph10_metal.ogg'
       pics:
-          - 'cwru.jpg'
+          - '21-1-metalshop.jpg'
 
 
     # Intermediate
@@ -199,7 +199,7 @@ goals:
       wavs:
           - 'blank_sound.ogg'
       pics:
-          - 'cwru.jpg'
+          - '22-thanksforcoming.jpg'
 
 
     # Back home
@@ -210,7 +210,7 @@ goals:
       wavs:
           - 'blank_sound.ogg'
       pics:
-          - 'cwru.jpg'
+          - '22-thanksforcoming.jpg'
 jokes:
     - 'joke1.wav'
     - 'joke2.wav'
