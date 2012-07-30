@@ -117,6 +117,8 @@ def main():
   pub = rospy.Publisher('/goal', PoseStamped)
   odom_sub = rospy.Subscriber('/odom', Odometry, odom_callback)
   
+  #cv.NamedWindow("window", cv.CV_WINDOW_NORMAL )
+
   while not rospy.is_shutdown():
     try:
       # Get the next goal and sound
@@ -131,8 +133,11 @@ def main():
       try:
         imgname = str(sound_prefix + nextThing['pics'][0])
         img = cv.LoadImage(imgname)
-        cv.NamedWindow("window")
+        cv.DestroyWindow("window")
+        cv.NamedWindow("window", cv.CV_WINDOW_NORMAL )
+        cv.MoveWindow("window",1,1)
         cv.ShowImage("window", img)
+        cv.ResizeWindow("window",700,850)
         cv.WaitKey(100)
       except e as Exception:
         rospy.logwarn('Error in displaying image: ' + str(e));
@@ -147,7 +152,7 @@ def main():
         
         # Wait for sound to finish
         while(player.get_state()!=vlc.State.Ended):
-          time.sleep(.2)
+          cv.WaitKey(100)
       
       # Send goal to planner
       goal = create_move_base_goal_from_yaml(nextThing['goal'])
@@ -159,7 +164,7 @@ def main():
 
       while dist > 1.0 and not rospy.is_shutdown():
         rospy.loginfo('Distance to goal: ' + str(dist) + 'm')
-        time.sleep(0.5)
+        cv.WaitKey(500)
         dist = dist_to_goal(goal)
       
       cv.DestroyAllWindows()
