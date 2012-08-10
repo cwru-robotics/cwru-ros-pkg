@@ -17,6 +17,6 @@
     </node>
     <node pkg="cwru_base" type="sonar_translator.py" name="sonar_5_translator">
 		<remap from="sonar" to="sonar_5" />
-		<remap from="sonar_scan" to="sonar_scan_5" /-->
-    </node>
+		<remap from="sonar_scan" to="sonar_scan_5" />
+    </node-->
 </launch>
