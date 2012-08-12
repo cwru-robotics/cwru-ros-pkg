@@ -1,0 +1,14 @@
+<package>
+  <description brief="Abby Choreographer">
+     Goal point choreographer for abby to demonstrate simple movement. Reads goal points from a YAML file and then goes to them.
+  </description>
+  <author>Ed Venator</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/abby_choreo</url>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <depend package="rospy"/>
+  <depend package="tf"/>
+  <depend package="cwru_nav"/>
+</package>
