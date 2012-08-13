@@ -50,7 +50,7 @@ def main(filename):
     rospy.loginfo("Waiting for movebase server");
     rospy.sleep(5)
   
-  while(! rospy.is_shutdown()):
+  while(not rospy.is_shutdown()):
     try:
       rospy.logInfo('Loading next goal.')
       nextThing = iterator.next()
