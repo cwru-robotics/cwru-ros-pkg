@@ -393,7 +393,7 @@ namespace cwru_base {
       swapped_packet.vel = -swapped_packet.vel;
     }
     if (rl_swap_) {
-      swapped_packet.x = -swapped_packet.x;
+      swapped_packet.x = swapped_packet.x;
     }
     pose_packet_ = swapped_packet;
     Pose p, p2;
