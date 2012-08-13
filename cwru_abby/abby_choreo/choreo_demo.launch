@@ -3,7 +3,7 @@
     <include file="$(find cwru_nav)/../cwru_bringup_no_tele.launch"/>
     
     <!--Start the map, just to shut up the nav algorithms-->
-    <include file="$(find cwru_nav)/start_ambl_2ndfloor.launch" />
+    <include file="$(find cwru_nav)/start_amcl_2ndfloor.launch" />
     
     <!--Start the nav algorithms-->
     <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
