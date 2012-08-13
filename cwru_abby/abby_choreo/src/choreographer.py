@@ -52,7 +52,7 @@ def main(filename):
   
   while(not rospy.is_shutdown()):
     try:
-      rospy.logInfo('Loading next goal.')
+      rospy.loginfo('Loading next goal.')
       nextThing = iterator.next()
       goal = create_move_base_goal_from_yaml(nextThing['goal'])
       rospy.logdebug('Sending goal.')
