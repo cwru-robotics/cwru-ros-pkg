@@ -46,7 +46,7 @@ def main(filename):
     rospy.logdebug(entry)
   iterator=goallist.__iter__();
   client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-  while(not client.wait_for_server(5.0)):
+  while(not client.wait_for_server(rospy.Duration.from_sec(5.0)):
     rospy.loginfo("Waiting for movebase server");
   
   while(1):
