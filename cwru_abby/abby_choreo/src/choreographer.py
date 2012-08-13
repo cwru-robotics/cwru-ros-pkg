@@ -28,9 +28,9 @@ def create_move_base_goal_from_yaml(yaml_goal, static_frame='/map'):
     goal.target_pose.header.frame_id = static_frame
     goal.target_pose.header.stamp = rospy.Time.now()
     
-    goal.target_pose.pose.position.x = yaml_goal['x'] - origin_offset[0]
-    goal.target_pose.pose.position.y = yaml_goal['y'] - origin_offset[1]
-    quaternion = tf.transformations.quaternion_about_axis(yaml_goal['theta'] - origin_offset[2], (0,0,1))
+    goal.target_pose.pose.position.x = yaml_goal['x']
+    goal.target_pose.pose.position.y = yaml_goal['y']
+    quaternion = tf.transformations.quaternion_about_axis(yaml_goal['theta'], (0,0,1))
     goal.target_pose.pose.orientation = Quaternion(*quaternion)
     
     return goal
