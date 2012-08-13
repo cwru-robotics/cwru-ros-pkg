@@ -22,10 +22,10 @@ from actionlib_msgs.msg import GoalStatus
 
 import yaml
 
-def create_move_base_goal_from_yaml(yaml_goal, origin_offset = [0,0,0]):
+def create_move_base_goal_from_yaml(yaml_goal, static_frame='/map'):
     """Creates a MoveBaseGoal from a goal loaded up from the yaml file"""
     goal = MoveBaseGoal()
-    goal.target_pose.header.frame_id = '/map'
+    goal.target_pose.header.frame_id = static_frame
     goal.target_pose.header.stamp = rospy.Time.now()
     
     goal.target_pose.pose.position.x = yaml_goal['x'] - origin_offset[0]
@@ -36,7 +36,7 @@ def create_move_base_goal_from_yaml(yaml_goal, origin_offset = [0,0,0]):
     return goal
 
 
-def main(filename):
+def main(filename, static_frame):
   
   #open the yaml config file and load path
   with open(filename, 'r') as datafile:
@@ -54,7 +54,7 @@ def main(filename):
     try:
       rospy.loginfo('Loading next goal.')
       nextThing = iterator.next()
-      goal = create_move_base_goal_from_yaml(nextThing['goal'])
+      goal = create_move_base_goal_from_yaml(nextThing['goal'], static_frame)
       rospy.logdebug('Sending goal.')
       client.send_goal(goal)
       #client.wait_for_result()
@@ -79,5 +79,5 @@ def main(filename):
 
 if __name__ == '__main__':
     rospy.init_node('abby_choreographer')
-    main(rospy.get_param('~filename'))
+    main(rospy.get_param('~filename'),rospy.get_param('~static_frame'))
 

@@ -23,6 +23,7 @@
     <!--Start the waypoint server-->
 	<node name="abby_choreographer" pkg="abby_choreo" type="choreographer.py" output="screen">
 	    <param name="filename" value="$(find abby_choreo)/configs/demo.yaml" />
+	    <param name="static_frame" value="/odom" />
 	</node>
 
 </launch>
