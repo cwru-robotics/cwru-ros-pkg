@@ -5,6 +5,8 @@
 Orignal tour executive written by Jesse Fish, Toby Waite, and Bill Kulp.
 Modified for use on the robot Abby by Edward Venator."""
 
+import roslib
+roslib.load_manifest('abby_choreo')
 import rospy
 
 import time
@@ -44,7 +46,7 @@ def main(filename):
     rospy.logdebug(entry)
   iterator=goallist.__iter__();
   client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-  while(! client.wait_for_server()):
+  while(not client.wait_for_server()):
     rospy.loginfo("Waiting for movebase server");
   
   while(1):
@@ -61,7 +63,7 @@ def main(filename):
         if client.get_state() == GoalStatus.SUCCEEDED :
           rospy.loginfo('Goal succeeded.')
           break
-        elif client.get_state()==GoalStatus.ABORTED
+        elif client.get_state()==GoalStatus.ABORTED :
           rospy.logwarn('Goal aborted. Resending goal.')
           client.send_goal(goal)
         elif client.get_state()==GoalStatus.REJECTED :
