@@ -388,9 +388,13 @@ namespace cwru_base {
     CRIOPosePacket swapped_packet = swapPosePacket(packet);
     if (push_casters_) {
       swapped_packet.x = -swapped_packet.x;
-      swapped_packet.y = swapped_packet.y;
+      swapped_packet.y = -swapped_packet.y;
       swapped_packet.theta = swapped_packet.theta + M_PI;
       swapped_packet.vel = -swapped_packet.vel;
+    }
+    
+    if (rl_swap_){
+      swapped_packet.y = -swapped_packey.y;
     }
     pose_packet_ = swapped_packet;
     Pose p, p2;
