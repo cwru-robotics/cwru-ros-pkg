@@ -46,11 +46,11 @@ def main(filename):
     rospy.logdebug(entry)
   iterator=goallist.__iter__();
   client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-  while(not client.wait_for_server(rospy.Duration.from_sec(5.0))):
+  while(not client.wait_for_server() and not rospy.is_shutdown()):
     rospy.loginfo("Waiting for movebase server");
     rospy.sleep(5)
   
-  while(1):
+  while(! rospy.is_shutdown()):
     try:
       rospy.logInfo('Loading next goal.')
       nextThing = iterator.next()
