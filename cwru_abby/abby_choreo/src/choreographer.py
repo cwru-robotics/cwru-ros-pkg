@@ -55,11 +55,8 @@ def main(filename, static_frame):
       rospy.loginfo('Loading next goal.')
       nextThing = iterator.next()
       goal = create_move_base_goal_from_yaml(nextThing['goal'], static_frame)
-      rospy.logdebug('Sending goal.')
+      rospy.loginfo('Sending goal.')
       client.send_goal(goal)
-      #client.wait_for_result()
-      rospy.logdebug('got next file')
-      
       while(1):
         if client.get_state() == GoalStatus.SUCCEEDED :
           rospy.loginfo('Goal succeeded.')
