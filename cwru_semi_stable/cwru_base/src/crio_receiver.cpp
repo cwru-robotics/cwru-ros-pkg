@@ -394,7 +394,8 @@ namespace cwru_base {
     }
     
     if (rl_swap_){
-      swapped_packet.y = -swapped_packey.y;
+      swapped_packet.y = -swapped_packet.y;
+      swapped_packet.theta = swapped_packet.theta - M_PI;
     }
     pose_packet_ = swapped_packet;
     Pose p, p2;
