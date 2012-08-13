@@ -15,7 +15,7 @@
         <!--To run w/ AMCL-->
         <!--rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_global_params.yaml" command="load" /-->
         <!--To run mapless:-->
-        <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_global_params_nomap.yaml" command="load" />
+        <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_global_params_outdoor.yaml" command="load" />
         <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/base_local_planner_params.yaml" command="load" />
         <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/move_base_params.yaml" command="load" />
     </node>
