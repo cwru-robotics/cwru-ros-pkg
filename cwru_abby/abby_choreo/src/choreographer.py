@@ -46,7 +46,7 @@ def main(filename):
     rospy.logdebug(entry)
   iterator=goallist.__iter__();
   client = actionlib.SimpleActionClient('move_base', MoveBaseAction)
-  while(not client.wait_for_server()):
+  while(not client.wait_for_server(5)):
     rospy.loginfo("Waiting for movebase server");
   
   while(1):
@@ -77,8 +77,6 @@ def main(filename):
 
 
 if __name__ == '__main__':
-  rospy.init_node('abby_choreographer')
-
-  
-main(rospy.get_param('~filename'))
+    rospy.init_node('abby_choreographer')
+    main(rospy.get_param('~filename'))
 
