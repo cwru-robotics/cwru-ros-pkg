@@ -1,7 +1,7 @@
 <launch>
-  <param name="amcl/initial_pose_x" type="double" value="7.8" />
-  <param name="amcl/initial_pose_y" type="double" value="14.5"/>
-  <param name="amcl/initial_pose_a" type="double" value="4" />
+  <param name="amcl/initial_pose_x" type="double" value="0" />
+  <param name="amcl/initial_pose_y" type="double" value="0"/>
+  <param name="amcl/initial_pose_a" type="double" value="0" />
   
   <!--- Run AMCL -->
   <include file="$(find cwru_nav)/amcl_diff.launch" />
