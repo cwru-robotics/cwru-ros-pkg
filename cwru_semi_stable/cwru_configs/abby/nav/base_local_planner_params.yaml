@@ -21,3 +21,5 @@ TrajectoryPlannerROS:
   path_distance_bias: 5.0
   goal_distance_bias: 0.8
   occdist_scale: 0.05
+  
+  xy_goal_tolerance: .2

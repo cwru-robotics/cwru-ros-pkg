@@ -69,6 +69,7 @@ def main(filename, static_frame):
           rospy.logwarn('Goal rejected. Resending goal.')
           client.send_goal(goal)
         else :
+          client.send_goal(goal)
           rospy.loginfo('Still not at goal.')
     except StopIteration:
       break;
