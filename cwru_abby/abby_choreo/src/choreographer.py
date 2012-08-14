@@ -57,7 +57,8 @@ def main(filename, static_frame):
       goal = create_move_base_goal_from_yaml(nextThing['goal'], static_frame)
       rospy.loginfo('Sending goal.')
       client.send_goal(goal)
-      while(1):
+      while(not rospy.is_shutdown()):
+        client.wait_for_result(rospy.Duration.from_sec(5.0))
         if client.get_state() == GoalStatus.SUCCEEDED :
           rospy.loginfo('Goal succeeded.')
           break
@@ -67,8 +68,6 @@ def main(filename, static_frame):
         elif client.get_state()==GoalStatus.REJECTED :
           rospy.logwarn('Goal rejected. Resending goal.')
           client.send_goal(goal)
-        else:
-          time.sleep(.7)
     except StopIteration:
       break;
   rospy.sleep(2)
