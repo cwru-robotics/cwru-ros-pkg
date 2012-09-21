@@ -21,10 +21,10 @@ def velocity_callback(odom):
     global wallTime
     global at_speed
     if not at_speed:
-        if odom.twist.x >= v_max:
-        delta_t = rospy.get_time() - wallTime
-        rospy.loginfo('Reached speed in %f seconds (%f m/s^2)',delta_t, v_max/delta_t)
-        at_speed = True
+        if odom.twist.twist.x >= v_max:
+            delta_t = rospy.get_time() - wallTime
+            rospy.loginfo('Reached speed in %f seconds (%f m/s^2)',delta_t, v_max/delta_t)
+            at_speed = True
     else:
         rsopy.loginfo('Speed: %f')
 
