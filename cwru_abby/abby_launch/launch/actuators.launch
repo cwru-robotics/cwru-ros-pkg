@@ -1,0 +1,4 @@
+<launch>
+    <include file="arm.launch" />
+    <include file="base.launch" />
+</launch>

@@ -1,0 +1,14 @@
+<package>
+  <description brief="abby_launch">
+
+      Launch files for the robot Abby. This package contains generic launch
+      files for things such as robot bringup.
+  </description>
+  <author>Edward Venator</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/abby_launch</url>
+
+</package>
+
+
