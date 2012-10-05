@@ -8,7 +8,12 @@
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
   <url>http://ros.org/wiki/abby_launch</url>
-
+  <depend package="cwru_base"/>
+  <depend package="irb_120_arm_navigation"/>
+  <depend package="irc5"/>
+  <depend package="cwru_configs"/>
+  <depend package="sicktoolbox_wrapper"/>
+  <depend package="cwru_teleop"/>
 </package>
 
 
