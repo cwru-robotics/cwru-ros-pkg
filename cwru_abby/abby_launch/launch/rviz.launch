@@ -1,0 +1,3 @@
+<launch>
+    <node pkg="rviz" type="rviz" name="viewer" args="-d $(find abby_config)/config/abby.vcg"/> 
+</launch>

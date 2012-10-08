@@ -1,0 +1,12 @@
+<launch>
+    <arg name="rviz" default="false"/>
+    <include file="$(find abby_launch)/launch/arm.launch">
+        <arg name="streaming" value="streaming"/>
+    </include>
+    <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_setter">
+        <remap from="joint_states" to="command"/>
+    </node>
+    <param name="use_gui" value="true"/>
+    <!--rviz visualization-->
+    <include if="$(arg rviz)" file="$(find abby_launch)/launch/rviz.launch"/>
+</launch>

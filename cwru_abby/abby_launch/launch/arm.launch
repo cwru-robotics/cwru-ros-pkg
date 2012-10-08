@@ -1,6 +1,8 @@
 <launch>
     <arg name="irc5_ip" default="192.168.0.50" />
-    <node name="irc5_sender" pkg="irc5" type="motion_download_interface" args="$(arg irc5_ip)" />
+    <arg name="streaming" default="" />
+    <node name="irc5_sender" pkg="irc5" type="motion_download_interface" args="$(arg irc5_ip) $(arg streaming)" />
     <node name="irc5_receiver" pkg="irc5" type="robot_state" args="$(arg irc5_ip)" />
+    <node name="arm_state" pkg="robot_state_publisher" type="state_publisher" />
     <include file="$(find irb_120_arm_navigation)/launch/environment.launch" />
 </launch>
