@@ -1,0 +1,16 @@
+<package>
+  <description brief="abby_description">
+
+     abby_description
+
+  </description>
+  <author>Edward Venator</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/abby_description</url>
+  <depend package="urdf"/>
+  <depend package="xacro"/>
+  <depend package="abb_common"/>
+</package>
+
+
