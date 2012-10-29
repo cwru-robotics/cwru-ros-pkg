@@ -1,5 +1,6 @@
 <?xml version="1.0" ?>
-<robot name="robot_no_arm">
+<robot xmlns:xacro="http://ros.org/wiki/xacro">
+	<xacro:macro name="abby_no_arm">
 	<link name="frame1">
 		<visual>
 			<geometry>
@@ -676,5 +677,6 @@
         <axis xyz="0 1 0"/>
 		<origin rpy="0 -0.443332433305 -1.57079632679" xyz="-0.509833626015 -0.217162738527 0.147715939697"/>
 	</joint>
+  </xacro:macro>
 </robot>
 
