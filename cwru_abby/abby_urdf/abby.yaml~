@@ -1,4 +1,0 @@
-freezeAll: True
-forcelowercase: True
-filenameformat: "package://abby_urdf/%s"
-scale: 
