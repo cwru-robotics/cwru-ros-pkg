@@ -3,7 +3,7 @@
     <include filename="$(find cwru_description)/urdf/kinect.urdf.xacro"/>
     
 	<xacro:macro name="abby_no_arm">
-	  <xacro:kinect xyz="0.414 -0.217502 -1.661" rpy="0 0.436331944 -1.570795" parent_frame="frame1" />
+	  <xacro:kinect xyz="0.04464 -0.6357 1.491" rpy="0 0.436331944 -1.570795" parent_frame="frame1" />
 	  <link name="frame1">
 		<visual>
 			<geometry>

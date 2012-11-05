@@ -1,9 +1,9 @@
 <launch>
-    <include file="$(find abby_launch)/launch/rviz.launch"/>
-    
-	<arg name="gui" default="True" />
-	<param name="robot_description" textfile="$(find abby_description)/urdf/abby.urdf" />
-	<param name="use_gui" value="$(arg gui)"/>
-	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node>
-	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+	<arg name="joint_gui" default="True" />
+	
+    <include file="$(find abby_launch)/launch/abby.launch">
+        <arg name="real_robot" value="False" />
+        <arg name="joint_gui" value="$(arg joint_gui)" />
+        <arg name="rviz" value="True" />
+    </include>
 </launch>

@@ -1,0 +1,22 @@
+<launch>
+    <!-- Start the urdf server and publish tfs -->
+	<param name="robot_description" textfile="$(find abby_description)/urdf/abby.urdf" />
+	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+	<node pkg="tf" type="static_transform_publisher" name="base_frame_broadcaster" args="-0.04203954 -0.07963916 8.0162399451e-05 1.570795 0 0 base_link frame1 100" />
+	<node pkg="tf" type="static_transform_publisher" name="base_laser1_broadcaster" args="0.4318 0 0.4477 0 0 0 base_link base_laser1_link 100" /> <!-- Remove this once the SICK LIDAR is defined in the URDF -->
+
+    <!--Only start the robot driver nodes if the robot is actually running.
+        Otherwise, start the joint_state_publisher -->
+    <arg name="real_robot" default="False" />
+    <include file="$(find abby_launch)/launch/actuators.launch" if="$(arg real_robot)"/>
+	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" unless="$(arg real_robot)"></node>
+    
+    <!-- If joint_gui is set, use the gui sliders to set joint positions -->
+	<arg name="joint_gui" default="False" />
+	<param name="use_gui" value="$(arg joint_gui)"/>
+	
+	<!-- If rviz is set, start rviz -->
+	<arg name="rviz" default="False" />
+    <include file="$(find abby_launch)/launch/rviz.launch" if="$(arg rviz)"/>
+	
+</launch>
