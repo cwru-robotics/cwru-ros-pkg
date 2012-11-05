@@ -1,7 +1,10 @@
 <?xml version="1.0" ?>
 <robot xmlns:xacro="http://ros.org/wiki/xacro">
+    <include filename="$(find cwru_description)/urdf/kinect.urdf.xacro"/>
+    
 	<xacro:macro name="abby_no_arm">
-	<link name="frame1">
+	  <xacro:kinect xyz="0 0 0" rpy="0 0.436331944 -1.570795" parent_frame="frame1" />
+	  <link name="frame1">
 		<visual>
 			<geometry>
 				<mesh filename="package://abby_description/meshes/al_frame_iam_3826baa4.stl" scale="0.0254 0.0254 0.0254"/>
@@ -22,8 +25,8 @@
 			</geometry>
 			<origin rpy="0 0 0" xyz="0.0446356739978 0.177065647653 -0.0893087163603"/>
 		</collision>
-	</link>
-	<link name="f_r_frame_bracket1">
+	  </link>
+	  <link name="f_r_frame_bracket1">
 		<visual>
 			<geometry>
 				<mesh filename="package://abby_description/meshes/frame bracket_ipt_f5a4f28d.stl" scale="0.0254 0.0254 0.0254"/>
@@ -44,7 +47,7 @@
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.0946635865578 -0.0205552039632 -0.424782665556"/>
 		</collision>
-	</link>
+	  </link>
 	<joint name="frame--f_r_frame_bracket1" type="fixed">
 		<parent link="frame1"/>
 		<child link="f_r_frame_bracket1"/>
