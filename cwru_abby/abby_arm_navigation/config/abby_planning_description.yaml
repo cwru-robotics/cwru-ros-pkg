@@ -1,0 +1,1769 @@
+multi_dof_joints:
+  - name: world_joint
+    type: Floating
+    parent_frame_id: frame1
+    child_frame_id: frame1
+groups:
+  - name: irb_120
+    base_link: irb_120_base_link
+    tip_link: irb_120_link_6
+default_collision_operations:
+  - object1: frame1
+    object2: b_l_frame_bracket1
+    operation: disable  # Adjacent in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: b_l_frame_plate1
+    operation: disable  # Adjacent in collision
+  -
+    object1: b_l_frame_plate1
+    object2: frame_solid:11
+    operation: disable  # Adjacent in collision
+  -
+    object1: frame_solid:11
+    object2: l_caster1
+    operation: disable  # Adjacent in collision
+  -
+    object1: l_caster1
+    object2: l_caster_wheel1
+    operation: disable  # Adjacent in collision
+  -
+    object1: frame_solid:11
+    object2: l_drive_wheel1
+    operation: disable  # Adjacent in collision
+  -
+    object1: frame_solid:11
+    object2: r_caster1
+    operation: disable  # Adjacent in collision
+  -
+    object1: r_caster1
+    object2: r_caster_wheel1
+    operation: disable  # Adjacent in collision
+  -
+    object1: frame_solid:11
+    object2: r_drive wheel1
+    operation: disable  # Adjacent in collision
+  -
+    object1: frame1
+    object2: IRC5_Compact1
+    operation: disable  # Adjacent in collision
+  -
+    object1: frame1
+    object2: SICK_LMS2911
+    operation: disable  # Adjacent in collision
+  -
+    object1: frame1
+    object2: b_r_frame_bracket1
+    operation: disable  # Adjacent in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: b_r_frame_plate1
+    operation: disable  # Adjacent in collision
+  -
+    object1: frame1
+    object2: base_plate1
+    operation: disable  # Adjacent in collision
+  -
+    object1: frame1
+    object2: f_r_frame_bracket1
+    operation: disable  # Adjacent in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: f_l_frame_bracket1
+    operation: disable  # Adjacent in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: f_l_frame_plate1
+    operation: disable  # Adjacent in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: f_r_frame_plate1
+    operation: disable  # Adjacent in collision
+  -
+    object1: frame1
+    object2: router1
+    operation: disable  # Adjacent in collision
+  -
+    object1: frame1
+    object2: top_plate1
+    operation: disable  # Adjacent in collision
+  -
+    object1: top_plate1
+    object2: PC1
+    operation: disable  # Adjacent in collision
+  -
+    object1: top_plate1
+    object2: compressor1
+    operation: disable  # Adjacent in collision
+  -
+    object1: top_plate1
+    object2: main_breaker1
+    operation: disable  # Adjacent in collision
+  -
+    object1: top_plate1
+    object2: spike_relay1
+    operation: disable  # Adjacent in collision
+  -
+    object1: frame1
+    object2: irb_120_base_link
+    operation: disable  # Adjacent in collision
+  -
+    object1: IRC5_Compact1
+    object2: base_plate1
+    operation: disable  # Always in collision
+  -
+    object1: b_r_frame_plate1
+    object2: frame_solid:11
+    operation: disable  # Always in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: frame1
+    operation: disable  # Always in collision
+  -
+    object1: f_l_frame_plate1
+    object2: frame_solid:11
+    operation: disable  # Always in collision
+  -
+    object1: f_r_frame_plate1
+    object2: frame_solid:11
+    operation: disable  # Always in collision
+  -
+    object1: irb_120_base_link
+    object2: irb_120_link_1
+    operation: disable  # Always in collision
+  -
+    object1: irb_120_link_1
+    object2: irb_120_link_2
+    operation: disable  # Always in collision
+  -
+    object1: irb_120_link_2
+    object2: irb_120_link_3
+    operation: disable  # Always in collision
+  -
+    object1: irb_120_link_3
+    object2: irb_120_link_4
+    operation: disable  # Always in collision
+  -
+    object1: irb_120_link_4
+    object2: irb_120_link_5
+    operation: disable  # Always in collision
+  -
+    object1: irb_120_link_5
+    object2: irb_120_link_6
+    operation: disable  # Always in collision
+  -
+    object1: IRC5_Compact1
+    object2: PC1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: SICK_LMS2911
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: b_l_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: b_l_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: b_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: b_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: compressor1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: f_l_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: f_l_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: f_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: f_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: frame_solid:11
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: IRC5_Compact1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: SICK_LMS2911
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: b_l_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: b_l_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: b_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: b_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: base_plate1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: compressor1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: f_l_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: f_l_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: f_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: f_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: frame1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: frame_solid:11
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: PC1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: b_l_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: b_l_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: b_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: b_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: base_plate1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: compressor1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: f_l_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: f_l_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: f_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: f_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: frame_solid:11
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: SICK_LMS2911
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: b_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: b_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: base_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: compressor1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: f_l_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: f_l_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: f_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: f_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: frame_solid:11
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: irb_120_link_4
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: irb_120_link_5
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: irb_120_link_6
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_bracket1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: b_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: b_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: base_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: compressor1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: f_l_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: f_l_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: f_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: f_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: frame1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: irb_120_link_4
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: irb_120_link_5
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: irb_120_link_6
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: b_l_frame_plate1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: base_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: compressor1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: f_l_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: f_l_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: f_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: f_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: frame_solid:11
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: irb_120_link_4
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: irb_120_link_5
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: irb_120_link_6
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_bracket1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: base_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: compressor1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: f_l_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: f_l_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: f_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: f_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: frame1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: irb_120_link_4
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: irb_120_link_5
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: irb_120_link_6
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: b_r_frame_plate1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: compressor1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: f_l_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: f_l_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: f_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: f_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: frame_solid:11
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: base_plate1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: f_l_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: f_l_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: f_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: f_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: frame1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: frame_solid:11
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: compressor1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: f_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: frame_solid:11
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_bracket1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: f_r_frame_bracket1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: f_r_frame_plate1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: frame1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: f_l_frame_plate1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: frame_solid:11
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_bracket1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: frame1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: f_r_frame_plate1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: frame1
+    object2: frame_solid:11
+    operation: disable  # Never in collision
+  -
+    object1: frame1
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: frame1
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: frame1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: frame1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: frame1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: frame1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: frame1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: frame1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: frame1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: frame1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: frame1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: frame_solid:11
+    object2: irb_120_base_link
+    operation: disable  # Never in collision
+  -
+    object1: frame_solid:11
+    object2: irb_120_link_1
+    operation: disable  # Never in collision
+  -
+    object1: frame_solid:11
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: frame_solid:11
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: frame_solid:11
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: frame_solid:11
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: frame_solid:11
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: frame_solid:11
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: frame_solid:11
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: frame_solid:11
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_base_link
+    object2: irb_120_link_2
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_base_link
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_base_link
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_base_link
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_base_link
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_base_link
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_base_link
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_base_link
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_base_link
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_base_link
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_base_link
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_1
+    object2: irb_120_link_3
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_1
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_1
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_2
+    object2: irb_120_link_4
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_2
+    object2: irb_120_link_5
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_2
+    object2: irb_120_link_6
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_2
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_2
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_2
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_2
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_2
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_2
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_2
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_2
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_2
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_2
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_3
+    object2: irb_120_link_5
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_3
+    object2: irb_120_link_6
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_3
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_3
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_3
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_3
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_3
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_3
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_3
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_3
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_3
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_3
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_4
+    object2: irb_120_link_6
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_4
+    object2: l_caster1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_4
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_4
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_4
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_4
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_4
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_5
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_5
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_5
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_5
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_5
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_6
+    object2: l_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_6
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_6
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_6
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: irb_120_link_6
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster_wheel1
+    object2: l_drive_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster_wheel1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster_wheel1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster_wheel1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster_wheel1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster_wheel1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster_wheel1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: l_caster_wheel1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: l_drive_wheel1
+    object2: main_breaker1
+    operation: disable  # Never in collision
+  -
+    object1: l_drive_wheel1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: l_drive_wheel1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: l_drive_wheel1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: l_drive_wheel1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: l_drive_wheel1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: l_drive_wheel1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: main_breaker1
+    object2: r_caster1
+    operation: disable  # Never in collision
+  -
+    object1: main_breaker1
+    object2: r_caster_wheel1
+    operation: disable  # Never in collision
+  -
+    object1: main_breaker1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: main_breaker1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: main_breaker1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: r_caster1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: r_caster1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: r_caster1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: r_caster1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: r_caster_wheel1
+    object2: r_drive wheel1
+    operation: disable  # Never in collision
+  -
+    object1: r_caster_wheel1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: r_caster_wheel1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: r_caster_wheel1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: r_drive wheel1
+    object2: router1
+    operation: disable  # Never in collision
+  -
+    object1: r_drive wheel1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: r_drive wheel1
+    object2: top_plate1
+    operation: disable  # Never in collision
+  -
+    object1: router1
+    object2: spike_relay1
+    operation: disable  # Never in collision
+  -
+    object1: router1
+    object2: top_plate1
+    operation: disable  # Never in collision

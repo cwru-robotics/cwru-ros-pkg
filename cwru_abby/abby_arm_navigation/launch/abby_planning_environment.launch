@@ -1,0 +1,4 @@
+<launch>
+    <param name="robot_description" textfile="$(find abby_description)/urdf/abby.urdf" />
+    <rosparam command="load" ns="robot_description_planning" file="$(find abby_arm_navigation)/config/abby_planning_description.yaml" />
+</launch>
