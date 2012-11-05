@@ -1,0 +1,6 @@
+moveit_setup_assistant_config:
+  URDF:
+    package: abby_description
+    relative_path: urdf/abby.urdf
+  SRDF:
+    relative_path: config/abby.srdf
