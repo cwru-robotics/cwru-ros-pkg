@@ -6,20 +6,20 @@ import struct
 
 
 class gripperRequest(genpy.Message):
-  _md5sum = "69b5423fe6aaee12926f65ca78a821a4"
+  _md5sum = "0a17d0ebd452dc70ad1dd7c89336363b"
   _type = "abby_gripper/gripperRequest"
   _has_header = False #flag to mark the presence of a Header object
   _full_text = """
-uint8 OPEN=0
-uint8 CLOSE=1
+uint8 CLOSE=0
+uint8 OPEN=1
 uint8 CHECK=2
 
 int8 command
 
 """
   # Pseudo-constants
-  OPEN = 0
-  CLOSE = 1
+  CLOSE = 0
+  OPEN = 1
   CHECK = 2
 
   __slots__ = ['command']
@@ -114,10 +114,12 @@ import struct
 
 
 class gripperResponse(genpy.Message):
-  _md5sum = "7e96934ff1efadb45d56aa96ca403c2a"
+  _md5sum = "be9eaca5178777646c257b20756e5d51"
   _type = "abby_gripper/gripperResponse"
   _has_header = False #flag to mark the presence of a Header object
   _full_text = """
+uint8 CLOSED=0
+uint8 OPEN=1
 int8 SUCCESS=1
 int8 FAILURE=-1
 
@@ -127,6 +129,8 @@ int8 success
 
 """
   # Pseudo-constants
+  CLOSED = 0
+  OPEN = 1
   SUCCESS = 1
   FAILURE = -1
 
@@ -223,6 +227,6 @@ _struct_I = genpy.struct_I
 _struct_Bb = struct.Struct("<Bb")
 class gripper(object):
   _type          = 'abby_gripper/gripper'
-  _md5sum = 'f3c0af2ef7880a6bdba19047f7144ff5'
+  _md5sum = '20af923aadfaaf341b756122f5fa4c2b'
   _request_class  = gripperRequest
   _response_class = gripperResponse
