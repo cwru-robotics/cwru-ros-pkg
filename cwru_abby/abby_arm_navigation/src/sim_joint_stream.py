@@ -13,7 +13,7 @@ def sim_joint_stream():
     jointPub = rospy.Publisher("command", JointTrajectory)
     rospy.init_node('sim_joint_stream')
     velocity = 10.0
-    jointRange = .77777770 #radians
+    jointRange = 2*.77777770 #radians
     jointNum = 0 
     while not rospy.is_shutdown():
         jointAngles = [.0, 0., 0, 0, 0, 0] #initial arm position in radians
