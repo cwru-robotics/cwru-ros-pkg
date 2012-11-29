@@ -32,7 +32,7 @@ def sim_joint_stream():
             jointTrajectoryPt.positions = copy.deepcopy(jointAngles)
             jointTrajectoryMsg.points.append(jointTrajectoryPt)
         jointPub.publish(jointTrajectoryMsg)
-        rospy.sleep(1)
+        rospy.sleep(30)
 
 if __name__ == '__main__':
     sim_joint_stream()
