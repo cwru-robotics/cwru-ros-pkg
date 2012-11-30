@@ -1,9 +1,10 @@
 <launch>
-    <include file="$(find cwru_configs)/$(optenv ROBOT sim)/base/static_transform.launch" />
+    <!--include file="$(find cwru_configs)/$(optenv ROBOT sim)/base/static_transform.launch" / --> <!-- This is now in abby.launch -->
     <node pkg="cwru_base" type="crio_receiver" name="crio_receiver" output="screen">
         <rosparam command="load" file="$(find cwru_configs)/$(optenv ROBOT sim)/base/diagnostics.yaml" />
         <rosparam command="load" file="$(find cwru_configs)/$(optenv ROBOT sim)/base/base.yaml" />
     </node>
+    <node pkg="cwru_base" type="wheel_state_publisher.py" name="wheel_state_publisher" />
     <node pkg="cwru_base" type="odom_translator.py" name="odom_translator" />
     <node pkg="sicktoolbox_wrapper" type="sicklms" name="base_laser1" respawn="true">
         <param name="port" type="string" value="/dev/ttyUSB1" />    

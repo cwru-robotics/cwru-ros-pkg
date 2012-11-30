@@ -1,4 +1,5 @@
 <launch>
     <include file="$(find abby_launch)/launch/arm.launch" />
     <include file="$(find abby_launch)/launch/base.launch" />
+    <node name="gripper" pkg="rosserial_python" type="serial_node.py" />
 </launch>
