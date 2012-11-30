@@ -1,7 +1,7 @@
 <stack>
   <description brief="cwru_abby">CWRU Abby</description>
   <author>Maintained by Edward Venator</author>
-  <license>LGPL</license>  
+  <license>BSD</license>  
   <review status="unreviewed" notes=""/>
   <depend stack="camera_drivers" /> <!-- camera1394 -->
   <depend stack="common" /> <!-- actionlib -->
