@@ -4,8 +4,8 @@
 
   <include filename="$(find cwru_description)/urdf/gazebo.urdf.xacro"/>
 
-<xacro:macro name="SICK_LMS291" params="xyz rpy parent_frame" >
-	<joint name="base_camera_joint" type="fixed">
+<xacro:macro name="SICK_LMS291" params="xyz rpy parent_frame laser_frame" >
+  <joint name="base_laser_joint" type="fixed">
     <origin xyz="${xyz}" rpy="${rpy}" />
     <parent link="${parent_frame}" />
     <origin xyz="0 0 0" rpy="0 0 0" />
@@ -14,7 +14,7 @@
   <link name="SICK_LMS291">
 		<visual>
 			<geometry>
-				<mesh filename="package://cwru_description/meshes/sick lms291.stl" scale="0.0254 0.0254 0.0254"/>
+				<mesh filename="package://cwru_description/meshes/sick_lms291.stl" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.0683999139953 -0.00245779587475 -0.0929987962566"/>
 			<material name="SICK_LMS2911_color">
@@ -28,13 +28,13 @@
 		</inertial>
 		<collision>
 			<geometry>
-				<mesh filename="package://cwru_description/meshes/sick lms291.stl" scale="0.0254 0.0254 0.0254"/>
+				<mesh filename="package://cwru_description/meshes/sick_lms291.stl" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
 			<origin rpy="0 0 0" xyz="-0.0683999139953 -0.00245779587475 -0.0929987962566"/>
 		</collision>
 	</link>
 
-  <link name="SICK_laser_frame">
+  <link name="${laser_frame}">
     <inertial>
       <mass value="0.01" />
       <origin xyz="0 0 0" />
@@ -45,9 +45,9 @@
   </link>
 
   <joint name="SICK_laser_frame_joint" type="fixed">
-    <origin xyz="0 0 0" rpy="${-M_PI/2} 0 ${-M_PI/2}" />
-    <parent link="camera_depth_frame" />
-    <child link="camera_depth_optical_frame" />
+    <origin xyz="-0.0683999139953 0.035 -0.093" rpy="1.266 1.571 2.837" />
+    <parent link="SICK_LMS291" />
+    <child link="${laser_frame}" />
   </joint>
 
 </xacro:macro>

@@ -297,6 +297,46 @@
       </controller:gazebo_ros_openni_kinect>
     </sensor:camera>
   </gazebo>
+  <joint name="base_laser_joint" type="fixed">
+    <origin rpy="1.5707959092 0 -3.14159265358" xyz="-0.0255468119868 -0.474758386705 0.311455920061"/>
+    <parent link="frame1"/>
+    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <child link="SICK_LMS291"/>
+  </joint>
+  <link name="SICK_LMS291">
+    <visual>
+      <geometry>
+        <mesh filename="package://cwru_description/meshes/sick_lms291.stl" scale="0.0254 0.0254 0.0254"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.0683999139953 -0.00245779587475 -0.0929987962566"/>
+      <material name="SICK_LMS2911_color">
+        <color rgba="0.752941 0.752941 0.752941 1"/>
+      </material>
+    </visual>
+    <inertial>
+      <mass value="3.71737544502"/>
+      <inertia ixx="0.0174805834039" ixy="-4.4195210288e-07" ixz="4.1599227461e-07" iyy="0.0127643577208" iyz="0.00072853444335" izz="0.0175041992098"/>
+      <origin rpy="0 0 0" xyz="-0.0684016920036 0.0653465146418 -0.0708751847642"/>
+    </inertial>
+    <collision>
+      <geometry>
+        <mesh filename="package://cwru_description/meshes/sick_lms291.stl" scale="0.0254 0.0254 0.0254"/>
+      </geometry>
+      <origin rpy="0 0 0" xyz="-0.0683999139953 -0.00245779587475 -0.0929987962566"/>
+    </collision>
+  </link>
+  <link name="base_laser1_link">
+    <inertial>
+      <mass value="0.01"/>
+      <origin xyz="0 0 0"/>
+      <inertia ixx="0.001" ixy="0.0" ixz="0.0" iyy="0.001" iyz="0.0" izz="0.001"/>
+    </inertial>
+  </link>
+  <joint name="SICK_laser_frame_joint" type="fixed">
+    <origin rpy="1.266 1.571 2.837" xyz="-0.0683999139953 0.035 -0.093"/>
+    <parent link="SICK_LMS291"/>
+    <child link="base_laser1_link"/>
+  </joint>
   <link name="frame1">
     <visual>
       <geometry>
@@ -534,33 +574,6 @@
     <parent link="frame1"/>
     <child link="router1"/>
     <origin rpy="-1.5707959092 0 0" xyz="-0.0354469698523 -0.430316747951 1.61002981286"/>
-  </joint>
-  <link name="SICK_LMS2911">
-    <visual>
-      <geometry>
-        <mesh filename="package://abby_description/meshes/sick lms291_ipt_2ad4e53c.stl" scale="0.0254 0.0254 0.0254"/>
-      </geometry>
-      <origin rpy="0 0 0" xyz="-0.0683999139953 -0.00245779587475 -0.0929987962566"/>
-      <material name="SICK_LMS2911_color">
-        <color rgba="0.752941 0.752941 0.752941 1"/>
-      </material>
-    </visual>
-    <inertial>
-      <mass value="3.71737544502"/>
-      <inertia ixx="0.0174805834039" ixy="-4.4195210288e-07" ixz="4.1599227461e-07" iyy="0.0127643577208" iyz="0.00072853444335" izz="0.0175041992098"/>
-      <origin rpy="0 0 0" xyz="-0.0684016920036 0.0653465146418 -0.0708751847642"/>
-    </inertial>
-    <collision>
-      <geometry>
-        <mesh filename="package://abby_description/meshes/sick lms291_ipt_2ad4e53c.stl" scale="0.0254 0.0254 0.0254"/>
-      </geometry>
-      <origin rpy="0 0 0" xyz="-0.0683999139953 -0.00245779587475 -0.0929987962566"/>
-    </collision>
-  </link>
-  <joint name="frame--SICK_LMS2911" type="fixed">
-    <parent link="frame1"/>
-    <child link="SICK_LMS2911"/>
-    <origin rpy="1.5707959092 0 -3.14159265358" xyz="-0.0255468119868 -0.474758386705 0.311455920061"/>
   </joint>
   <link name="base_plate1">
     <visual>
