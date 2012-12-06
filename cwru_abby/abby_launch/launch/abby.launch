@@ -17,5 +17,9 @@
 	<!-- If rviz is set, start rviz -->
 	<arg name="rviz" default="False" />
     <include file="$(find abby_launch)/launch/rviz.launch" if="$(arg rviz)"/>
-	
+
+    <!-- If no_kinect not set, start kinect -->
+    <arg name="no_kinect" default="False" />
+    <include file="$(find openni_launch)/launch/openni.launch" unless="no_kinect"/>
+    <param name="depth_registration" value="true" />
 </launch>
