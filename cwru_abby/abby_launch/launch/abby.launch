@@ -6,7 +6,7 @@
 	
     <!--Only start the robot driver nodes if the robot is actually running.
         Otherwise, start the joint_state_publisher -->
-    <arg name="real_robot" default="False" />
+    <arg name="real_robot" default="True" />
     <include file="$(find abby_launch)/launch/actuators.launch" if="$(arg real_robot)"/>
 	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" unless="$(arg real_robot)"></node>
     
