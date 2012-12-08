@@ -66,7 +66,7 @@ def handle_harlie_pose(msg, push_casters):
 	odom_pub.publish(odom_msg)
 
 if __name__ == "__main__":
-	rospy.init_node('harlie_odom_translator')
+    rospy.init_node('harlie_odom_translator')
     push_casters = rospy.get_param("~push_casters")
-	rospy.Subscriber('pose', Pose, handle_harlie_pose, push_casters)
-	rospy.spin()
+    rospy.Subscriber('pose', Pose, handle_harlie_pose, push_casters)
+    rospy.spin()
