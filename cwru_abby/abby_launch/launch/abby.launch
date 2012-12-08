@@ -7,8 +7,11 @@
     <!--Only start the robot driver nodes if the robot is actually running.
         Otherwise, start the joint_state_publisher -->
     <arg name="real_robot" default="True" />
-    <include file="$(find abby_launch)/launch/actuators.launch" if="$(arg real_robot)"/>
-	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" unless="$(arg real_robot)"></node>
+    <arg name="arm" default="True" />
+    <include file="$(find abby_launch)/launch/actuators.launch" if="$(arg real_robot)">
+        <arg name="arm" value="$(arg arm)" />
+	</include>
+    <node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" unless="$(arg real_robot)"></node>
     
     <!-- If joint_gui is set, use the gui sliders to set joint positions -->
 	<arg name="joint_gui" default="False" />
@@ -17,7 +20,6 @@
 	<!-- If rviz is set, start rviz -->
 	<arg name="rviz" default="False" />
     <include file="$(find abby_launch)/launch/rviz.launch" if="$(arg rviz)">
-        <arg name="arm" value="$(arg arm)" />
     </include>
 
     <!-- If no_kinect not set, start kinect -->
