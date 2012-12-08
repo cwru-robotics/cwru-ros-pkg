@@ -33,10 +33,11 @@ def changePoseCoordFrame(pose):
 	p = Pose(x = pose.x, y = -1*pose.y, theta = -1*pose.theta, x_var = pose.x_var, y_var = pose.y_var, theta_var = pose.theta_var, vel = pose.vel, omega = -1*pose.omega, vel_var = pose.vel_var, omega_var = pose.omega_var)
 	return p
 
-def handle_harlie_pose(msg):
+def handle_harlie_pose(msg, push_casters):
 	pose = changePoseCoordFrame(msg)
 	current_time = rospy.Time.now()
-	quaternion = tf.transformations.quaternion_about_axis(pose.theta, (0,0,1))
+	theta = pose.theta + pi if push_casters else pose.theta
+	quaternion = tf.transformations.quaternion_about_axis(theta, (0,0,1))
 	tf_br.sendTransform(translation = (pose.x, pose.y, 0), 
 			rotation = tuple(quaternion),
 			time = current_time,
@@ -66,5 +67,6 @@ def handle_harlie_pose(msg):
 
 if __name__ == "__main__":
 	rospy.init_node('harlie_odom_translator')
-	rospy.Subscriber('pose', Pose, handle_harlie_pose)
+    push_casters = rospy.get_param("~push_casters")
+	rospy.Subscriber('pose', Pose, handle_harlie_pose, push_casters)
 	rospy.spin()
