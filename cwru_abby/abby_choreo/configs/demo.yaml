@@ -1,9 +1,0 @@
-goals:
-    - goal:
-         x: 1.0
-         y: 0
-         theta: 0
-    - goal:
-         x: -1.54
-         y: 3.785
-         theta: 4.712
