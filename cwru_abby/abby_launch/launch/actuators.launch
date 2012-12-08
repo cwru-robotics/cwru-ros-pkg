@@ -1,5 +1,7 @@
 <launch>
-    <include file="$(find abby_launch)/launch/arm.launch" />
+    <arg name="arm" default="True" />
+    <include file="$(find abby_launch)/launch/arm.launch" if="$(arg arm)" />
+    <node name="arm_joints" pkg="robot_model_visualization" type="joint_state_publisher" unless="$(arg arm)" />
     <include file="$(find abby_launch)/launch/base.launch" />
     <node name="gripper" pkg="rosserial_python" type="serial_node.py" >
         <param name="~port" value="/dev/ttyUSB0"/>
