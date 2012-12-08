@@ -1,0 +1,30 @@
+<launch>
+    <!--Start the Robot-->
+    <include file="$(find cwru_nav)/../cwru_bringup_no_tele.launch"/>
+
+    <!-- Startup the map of the second floor -->
+    <!--node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/2nd_floor_one_door.yaml" />
+	<node pkg="tf" type="static_transform_publisher" name="null_odom_broadcaster" args="0 0 0 0 0 0 /map /odom 100" />
+    <include file="$(find cwru_nav)/start_amcl_2ndfloor.launch" /-->
+    
+    <!--Start the nav algorithms-->
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+        <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_common_params.yaml" command="load" ns="global_costmap" />
+        <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_common_params.yaml" command="load" ns="local_costmap" />
+        <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_local_params.yaml" command="load" />
+        <!--To run w/ AMCL-->
+        <!--rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_global_params.yaml" command="load" /-->
+        <!--To run mapless:-->
+        <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_global_params_outdoor.yaml" command="load" />
+        <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/base_local_planner_params.yaml" command="load" />
+        <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/move_base_params.yaml" command="load" />
+    </node>
+    
+    <!--Start the waypoint server-->
+	<node name="abby_choreographer" pkg="abby_choreo" type="choreographer.py" output="screen">
+	    <param name="filename" value="$(find abby_choreo)/configs/demo.yaml" />
+	    <param name="static_frame" value="/odom" />
+	</node>
+
+</launch>
+

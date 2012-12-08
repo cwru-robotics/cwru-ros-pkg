@@ -1,9 +1,9 @@
 <launch>
 <node pkg="amcl" type="amcl" name="amcl">
 
-  <param name="~/initial_pose_x" type="double" value="7.8" />
-  <param name="~/initial_pose_y" type="double" value="14.5"/>
-  <param name="~/initial_pose_a" type="double" value="4" />
+
+
+
   
   <!-- Publish scans from best pose at a max of 10 Hz -->
   <param name="odom_model_type" value="diff"/>
