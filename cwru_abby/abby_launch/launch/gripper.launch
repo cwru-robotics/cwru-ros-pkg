@@ -1,0 +1,16 @@
+<launch>
+    <!-- Start the urdf server and publish tfs -->
+	<param name="robot_description" textfile="$(find abby_description)/urdf/gripper.urdf" />
+	<node pkg="tf" type="static_transform_publisher" name="base_frame_broadcaster" args="-0.04203954 -0.07963916 8.0162399451e-05 1.570795 0 0 base_link gripper_body 100" />
+    <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher"/>
+	<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher"></node>
+    
+    <!-- If joint_gui is set, use the gui sliders to set joint positions -->
+	<arg name="joint_gui" default="True" />
+	<param name="use_gui" value="$(arg joint_gui)"/>
+	
+	<!-- If rviz is set, start rviz -->
+	<arg name="rviz" default="True" />
+    <include file="$(find abby_launch)/launch/rviz.launch" if="$(arg rviz)"/>
+	
+</launch>
