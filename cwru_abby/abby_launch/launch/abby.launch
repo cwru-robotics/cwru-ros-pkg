@@ -2,7 +2,7 @@
     <!-- Start the urdf server and publish tfs -->
 	<param name="robot_description" textfile="$(find abby_description)/urdf/abby.urdf" />
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
-	<node pkg="tf" type="static_transform_publisher" name="base_frame_broadcaster" args="-0.04203954 -0.07963916 8.0162399451e-05 1.570795 0 1.570795 base_link frame1 100" />
+	<node pkg="tf" type="static_transform_publisher" name="base_frame_broadcaster" args="-0.04203954 -0.07963916 8.0162399451e-05 1.570795 0 0 base_link frame1 100" />
 	
     <!--Only start the robot driver nodes if the robot is actually running.
         Otherwise, start the joint_state_publisher -->
