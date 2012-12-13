@@ -1070,8 +1070,8 @@
     <origin rpy="3.1415926535 1.57079632679 0" xyz="0.046 -0.55 .75"/>
   </joint>
   <joint name="arm_gripper" type="fixed">
-    <parent link="irb_120_link_6"/>
-    <child link="gripper_body"/>
+    <parent link="frame1"/>
+    <child link="irb_120_base_link"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
   </joint>
 </robot>

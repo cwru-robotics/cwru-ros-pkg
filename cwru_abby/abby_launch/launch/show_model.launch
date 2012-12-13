@@ -5,5 +5,6 @@
         <arg name="real_robot" value="False" />
         <arg name="joint_gui" value="$(arg joint_gui)" />
         <arg name="rviz" value="True" />
+        <arg name="no_kinect" value="True" />
     </include>
 </launch>
