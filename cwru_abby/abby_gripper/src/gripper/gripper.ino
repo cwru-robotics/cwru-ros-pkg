@@ -69,6 +69,7 @@ void loop()
       joint_positions[0] = CLOSED_POSITION;
       joint_positions[1] = CLOSED_POSITION;
   }
+  joint_msg.header.stamp = nh.now();
   joint_pub.publish(&joint_msg);
   nh.spinOnce();
   delay(50);

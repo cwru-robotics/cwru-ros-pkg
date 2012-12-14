@@ -1,7 +1,7 @@
 Background\ ColorB=0.188235
 Background\ ColorG=0.188235
 Background\ ColorR=0.188235
-Camera\ Config=0.189797 4.46539 1.01906 0.944704 0.282281 0.450108
+Camera\ Config=0.374797 5.09539 1.01906 0.944704 0.282281 0.450108
 Camera\ Type=rviz::OrbitViewController
 Fixed\ Frame=/base_link
 LaserScan..AxisColorAutocompute\ Value\ Bounds=1
@@ -259,7 +259,7 @@ Name=Map
 ClassName=rviz::OdometryDisplay
 Name=Odometry
 [Window]
-Height=1026
-Width=1680
-X=1666
-Y=-1265
+Height=1062
+Width=1696
+X=1658
+Y=-1293
