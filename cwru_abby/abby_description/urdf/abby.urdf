@@ -1052,7 +1052,7 @@
       <origin rpy="1.570796327 0 0" xyz="0 0.0127 0"/>
     </collision>
   </link>
-  <joint name="gripper__jaw_1" type="prismatic">
+  <joint name="gripper_jaw_1" type="prismatic">
     <parent link="gripper_body"/>
     <child link="gripper_jaw_1"/>
     <origin rpy="0 0 3.14159265359" xyz="0 0 0.075"/>
