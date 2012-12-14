@@ -70,14 +70,14 @@
 	<joint name="gripper__jaw_1" type="prismatic">
 		<parent link="gripper_body"/>
 		<child link="gripper_jaw_1"/>
-		<origin rpy="0 0 3.14159265359" xyz="0 0 0.07699"/>
-		<limit upper="-0.022225" lower="-0.03175" effort="1" velocity="1" />
+		<origin rpy="0 0 3.14159265359" xyz="0 0 0.075"/>
+		<limit upper="-0.03" lower="-0.039" effort="1" velocity="1" />
 	</joint>
 	<joint name="gripper_jaw_2" type="prismatic">
 		<parent link="gripper_body"/>
 		<child link="gripper_jaw_2"/>
-		<origin rpy="0 0 0" xyz="0 0 0.07699"/>
-		<limit upper="-0.022225" lower="-0.03175" effort="1" velocity="1" />
+		<origin rpy="0 0 0" xyz="0 0 0.075"/>
+		<limit upper="-0.03" lower="-0.039" effort="1" velocity="1" />
 	</joint>
   </xacro:macro>
 </robot>

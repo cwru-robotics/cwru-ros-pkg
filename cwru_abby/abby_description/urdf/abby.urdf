@@ -1055,14 +1055,14 @@
   <joint name="gripper__jaw_1" type="prismatic">
     <parent link="gripper_body"/>
     <child link="gripper_jaw_1"/>
-    <origin rpy="0 0 3.14159265359" xyz="0 0 0.07699"/>
-    <limit effort="1" lower="-0.03175" upper="-0.022225" velocity="1"/>
+    <origin rpy="0 0 3.14159265359" xyz="0 0 0.075"/>
+    <limit effort="1" lower="-0.039" upper="-0.03" velocity="1"/>
   </joint>
   <joint name="gripper_jaw_2" type="prismatic">
     <parent link="gripper_body"/>
     <child link="gripper_jaw_2"/>
-    <origin rpy="0 0 0" xyz="0 0 0.07699"/>
-    <limit effort="1" lower="-0.03175" upper="-0.022225" velocity="1"/>
+    <origin rpy="0 0 0" xyz="0 0 0.075"/>
+    <limit effort="1" lower="-0.039" upper="-0.03" velocity="1"/>
   </joint>
   <joint name="frame_arm" type="fixed">
     <parent link="frame1"/>
