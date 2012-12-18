@@ -11,6 +11,8 @@
   <depend package="openni_camera"/>
   <depend package="pcl"/>
   <depend package="pcl_ros"/>
+  <depend package="cwru_base"/>
+  <depend package="abby_gripper"/>
 
 </package>
 

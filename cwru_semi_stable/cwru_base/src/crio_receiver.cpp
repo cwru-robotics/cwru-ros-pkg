@@ -24,6 +24,7 @@
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <cwru_base/packets.h>
 #include <cwru_base/Pose.h>
+#include <cwru_base/PowerState.h>
 #include <cwru_base/Sonar.h>
 #include <cwru_base/cRIOSensors.h>
 #include <cwru_base/NavSatFix.h>
@@ -66,6 +67,7 @@ namespace cwru_base {
       ros::Publisher sonar4_pub_;
       ros::Publisher sonar5_pub_;
       ros::Publisher gps_pub_;
+      ros::Publisher power_pub_;
       diagnostic_updater::Updater updater_;
       diagnostic_updater::DiagnosedPublisher<cwru_base::Pose> pose_pub_;
       diagnostic_updater::DiagnosedPublisher<cwru_base::cRIOSensors> sensor_pub_;
@@ -108,6 +110,7 @@ namespace cwru_base {
     sonar4_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_4",1);
     sonar5_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_5",1);
     gps_pub_ = nh_.advertise<cwru_base::NavSatFix>("gps_fix",1);
+    power_pub_ = nh_.advertise<cwru_base::PowerState>("power_state",1);
     setupDiagnostics();
   }
 
@@ -438,7 +441,16 @@ namespace cwru_base {
     std_msgs::Bool msg;
     msg.data = !diagnostics_info_.eStopTriggered;
     estop_pub_.publish(msg);
-
+	
+	cwru_base::PowerState power_msg;
+	power_msg.header.stamp = current_time;
+	power_msg.header.frame_id = "crio";
+	power_msg.battery_voltage = diagnostics_info_.VMonitor_24V_mV / 1000.0;
+	power_msg.v13_8_voltage = diagnostics_info_.VMonitor_13V_mV / 1000.0;
+	power_msg.motor_voltage = diagnostics_info_.VMonitor_eStop_mV / 1000.0;
+	power_msg.cRIO_voltage = diagnostics_info_.VMonitor_cRIO_mV / 1000.0;
+	power_pub_.publish(power_msg);
+	
     cwru_base::cRIOSensors sensor_msg;
     sensor_msg.header.stamp = current_time;
     sensor_msg.header.frame_id = "crio";
