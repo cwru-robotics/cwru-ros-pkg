@@ -130,13 +130,13 @@ class BatteryAnalyzer:
         rospy.loginfo('Battery Voltage: %fV    13.8v Rail Voltage: %fV    cRIO Voltage: %fV', 
                       powerStateMsg.battery_voltage, 
                       powerStateMsg.v13_8_voltage, 
-                      cRIO_voltage)
+                      powerStateMsg.cRIO_voltage)
         if self.file_output:
-            self.file_handle.write(format('%f,%f,%f,%f\n', 
+            self.file_handle.write("{0},{1},{2},{3}\n".format( 
                       powerStateMsg.header.stamp, 
                       powerStateMsg.battery_voltage, 
                       powerStateMsg.v13_8_voltage, 
-                      cRIO_voltage))
+                      powerStateMsg.cRIO_voltage))
         if powerStateMsg.battery_voltage < 21.5:
             rospy.signal_shutdown("Test is complete. Battery at critical voltage! Recharge now!")
 
