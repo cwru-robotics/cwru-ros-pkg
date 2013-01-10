@@ -2,6 +2,6 @@
     <node pkg="move_arm" type="move_arm_simple_action" name="abby_move_irb_120">
         <param name="group" type="string" value="irb_120" />
         <remap from="arm_ik" to="abby_irb_120_kinematics/get_constraint_aware_ik" />
-        <param name="controller_action_name" type="string" value="irb_120_controller/follow_joint_trajectory" />
+        <param name="controller_action_name" type="string" value="joint_trajectory_action" />
     </node>
 </launch>
