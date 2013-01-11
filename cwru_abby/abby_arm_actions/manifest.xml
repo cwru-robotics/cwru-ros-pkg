@@ -1,0 +1,17 @@
+<package>
+  <description brief="abby_arm_actions">
+
+     abby_arm_actions
+
+  </description>
+  <author>Edward Venator</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/abby_arm_actions</url>
+  <depend package="abby_arm_navigation"/>
+  <depend package="arm_navigation_msgs"/>
+  <depend package="move_arm"/>
+
+</package>
+
+

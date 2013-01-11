@@ -653,7 +653,34 @@
         <child link="r_drive wheel1"/>
         <axis xyz="0 1 0"/>
 		<origin rpy="0 -0.443332433305 -1.57079632679" xyz="-0.509833626015 -0.217162738527 0.147715939697"/>
-	</joint>
+    </joint>
+    <link name="bin">
+        <visual>
+            <geometry>
+                <mesh filename="package://abby_description/meshes/bin_ipt.stl" scale="0.0254 0.0254 0.0254"/>
+            </geometry>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+            <material name="yellow bin plastic">
+                <color rgba="0.98 0.98 0 1"/>
+            </material>
+        </visual>
+        <inertial>
+            <mass value="4.36697868587"/>
+			<inertia ixx="0.044427271429" ixy="0.00203259222186" ixz="-1.69295186692e-05" iyy="0.100418971824" iyz="3.3400709269e-06" izz="0.080242528585"/>
+			<origin rpy="0 0 0" xyz="0.17978882 -0.0977169394 0.104752255"/>
+		</inertial>
+        <collision>
+            <geometry>
+                <mesh filename="package://abby_description/meshes/bin_ipt.stl" scale="0.0254 0.0254 0.0254"/>
+            </geometry>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+        </collision>
+    </link>
+    <joint name="frame-bin" type="fixed">
+        <parent link="frame1"/>
+        <child link="bin"/>
+		<origin rpy="1.57079619722 0 -1.57079632679" xyz="-0.035 -0.474758386705 0.592669"/>
+    </joint>
   </xacro:macro>
 </robot>
 

@@ -4,8 +4,15 @@ planner_configs:
   LBKPIECEkConfig1:
     type: kinematic::LBKPIECE
 groups:
+  - gripper
   - irb_120
   - irb_120_cartesian
+gripper:
+  planner_type: JointPlanner
+  planner_configs:
+    - SBLkConfig1
+    - LBKPIECEkConfig1
+  projection_evaluator: joint_state
 irb_120:
   planner_type: JointPlanner
   planner_configs:
@@ -45,7 +52,7 @@ irb_120_cartesian:
     - SBLkConfig1
     - LBKPIECEkConfig1
   kinematics_solver: arm_kinematics_constraint_aware/KDLArmKinematicsPlugin
-  tip_name: irb_120_link_6
+  tip_name: gripper_body
   root_name: irb_120_base_link
   projection_evaluator: joint_state
   longest_valid_segment_fraction: 0.001

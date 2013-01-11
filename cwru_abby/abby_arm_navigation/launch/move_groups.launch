@@ -1,3 +1,4 @@
 <launch>
+    <include file="$(find abby_arm_navigation)/launch/move_gripper.launch" />
     <include file="$(find abby_arm_navigation)/launch/move_irb_120.launch" />
 </launch>
