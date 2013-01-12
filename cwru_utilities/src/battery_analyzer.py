@@ -102,9 +102,9 @@ class BatteryAnalyzer:
         
     def exerciseDT(self):
         self.twistMsg.angular.z = self.twistMsg.angular.z + self.twistIncrement
-        if math.abs(self.twistMsg.angular.z) > 1.57:
+        if math.fabs(self.twistMsg.angular.z) > 1.57:
         	self.twistIncrement = - self.twistIncrement
-        self.commandPublisher(self.twistMsg)
+        self.commandPublisher.publish(self.twistMsg)
         rospy.sleep(.05)
         
     def stopDT(self):
@@ -114,7 +114,7 @@ class BatteryAnalyzer:
         self.twistMsg.linear.x = 0.0
         self.twistMsg.linear.y = 0.0
         self.twistMsg.linear.z = 0.0
-        self.commandPublisher(self.twistMsg)
+        self.commandPublisher.publish(self.twistMsg)
     
     def exerciseArm(self):
         self.armPublisher.publish(self.jointTrajectoryMsg)
@@ -142,5 +142,5 @@ class BatteryAnalyzer:
 
 if __name__ == '__main__':
     rospy.init_node('battery_analyzer')
-    analyzer = BatteryAnalyzer("idle","file")
+    analyzer = BatteryAnalyzer("drivetrain","file")
     analyzer.run()
