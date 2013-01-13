@@ -17,7 +17,7 @@ if __name__ == '__main__':
     goal.motion_plan_request.group_name = "irb-120"
     goal.motion_plan_request.num_planning_attempts = 1
     goal.motion_plan_request.planner_id = ""
-    goal.planner_service_name = "ompl_planning/plan_kinematic_path"
+    goal.planner_service_name = "/ompl_planning/plan_kinematic_path"
     goal.motion_plan_request.allowed_planning_time = rospy.Duration(5,0)
     for i in range(0,6):
     	joint_constraint = JointConstraint()
