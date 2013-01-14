@@ -1,0 +1,14 @@
+<launch>
+  <arg name="map" default="glennan_2_2012-12-08.yaml"/>
+    <include file="$(find abby_launch)/launch/amcl.launch">
+        <arg map="$(arg map)"/>
+    </include>
+    <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <rosparam file="$(find abby_config)/config/nav/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find abby_config)/config/nav/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find abby_config)/config/nav/costmap_local_params.yaml" command="load" />
+    <rosparam file="$(find abby_config)/config/nav/costmap_global_params.yaml" command="load" />
+    <rosparam file="$(find abby_config)/config/nav/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find abby_config)/config/nav/move_base_params.yaml" command="load" />
+  </node>
+</launch>  
