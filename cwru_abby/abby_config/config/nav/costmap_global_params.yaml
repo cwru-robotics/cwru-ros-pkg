@@ -1,6 +1,11 @@
 global_costmap:
+  #Coordinate Frame/TF
   global_frame: /map
-  robot_base_frame: base_link
+  tranform_tolerance: 0.5
+  
+  #Rate
   update_frequency: 1.0
   publish_frequency: 1.0
+  
+  #Map management
   static_map: true 
