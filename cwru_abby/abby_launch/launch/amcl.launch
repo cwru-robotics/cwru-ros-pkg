@@ -1,0 +1,8 @@
+<launch>
+  <arg name="map" default="glennan_2_2012-12-08.yaml"/>
+  <!--- Run AMCL -->
+  <include file="$(find cwru_nav)/amcl_diff.launch" />
+
+  <!-- Startup the map of the second floor -->
+  <node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/$(arg map)" />
+</launch>
