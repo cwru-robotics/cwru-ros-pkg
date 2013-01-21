@@ -30,8 +30,8 @@ base_laser1: {
   topic: /base_laser1_scan, 
   marking: true, 
   clearing: true, 
-  max_obstacle_height: 0.6, 
-  min_obstacle_height: 0.4
+  max_obstacle_height: 0.5, 
+  min_obstacle_height: 0.2
 }
 kinect: {
   sensor_frame: 
