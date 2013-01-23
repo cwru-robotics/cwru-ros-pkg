@@ -6,9 +6,12 @@
     <include file="$(find industrial_robot_client)/launch/robot_interface_download.launch">
         <arg name="robot_ip" value="$(arg irc5_ip)"/>
     </include>
-    <!--node name="irc5_sender" pkg="irc5" type="motion_download_interface" args="$(arg irc5_ip)" if="$(arg connect)" /-->
-    <!--node name="irc5_receiver" pkg="irc5" type="robot_state" args="$(arg irc5_ip)" if="$(arg connect)" /-->
-    <!--node name="arm_state" pkg="robot_state_publisher" type="state_publisher" /-->
-    <!--include file="$(find irb_120_arm_navigation)/launch/irb_120_planning_environment.launch" /-->
+        
+    <node pkg="robot_self_filter" type="self_filter" respawn="true" name="kinect_self_filter" output="screen">
+        <remap from="cloud_in" to="/camera/depth_registered/points"/>
+        <remap from="cloud_out" to="/camera/depth_registers/filtered"/>
+        <param name="sensor_frame" type="string" value="camera_rgb_frame"/>
+    </node>
+    
     <include if="$(arg rviz)" file="$(find abby_launch)/launch/rviz.launch"/>
 </launch>
