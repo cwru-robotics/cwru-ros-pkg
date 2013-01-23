@@ -31,13 +31,13 @@ typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
   boost::shared_ptr< pcl::PointCloud<pcl::PointXYZ> > laser_cloud_ptr;
   
   void floor_pcl_callback(const sensor_msgs::PointCloud2ConstPtr& msg){
-	ROS_INFO("Got a point cloud message with %d points", msg->height * msg->row_step);
+	ROS_DEBUG("Got a point cloud message with %d points", msg->height * msg->row_step);
     
     //Transform point cloud into the world (/base_link frame)
     pcl::fromROSMsg (*msg, cloud_in);
-    ROS_INFO("Converted a point cloud message with %d points.",cloud_in.size());
+    ROS_DEBUG("Converted a point cloud message with %d points.",cloud_in.size());
     pcl_ros::transformPointCloud("/base_link", cloud_in, cloud, *tf_listener_ptr);
-    ROS_INFO("Transformed point cloud message with %d points", cloud.size());
+    ROS_DEBUG("Transformed point cloud message with %d points", cloud.size());
     seg.setInputCloud(cloud.makeShared());
     //Segment it
     seg.segment(inliers, coefficients);
@@ -53,6 +53,7 @@ typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
     tx.transform.rotation.y = q.y();
     tx.transform.rotation.z = q.z();
     tx.transform.rotation.w = q.w();
+    tx.transform.translation.z = - coefficients.values[3] / coefficients.values[2];
     tx.child_frame_id = "/floor";
     tx.header.frame_id = "/base_link";
     tx.header.stamp = ros::Time::now();
