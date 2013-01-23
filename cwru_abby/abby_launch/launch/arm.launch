@@ -9,7 +9,7 @@
         
     <node pkg="robot_self_filter" type="self_filter" respawn="true" name="kinect_self_filter" output="screen">
         <remap from="cloud_in" to="/camera/depth_registered/points"/>
-        <remap from="cloud_out" to="/camera/depth_registers/filtered"/>
+        <remap from="cloud_out" to="/camera/depth_registered/filtered"/>
         <param name="sensor_frame" type="string" value="camera_rgb_frame"/>
     </node>
     
