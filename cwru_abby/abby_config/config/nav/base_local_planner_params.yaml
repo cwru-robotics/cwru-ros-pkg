@@ -23,8 +23,9 @@ TrajectoryPlannerROS:
   vtheta_samples: 20
   
   #Trajectory Scoring
-  path_distance_bias: 5.0
+  path_distance_bias: 1.2
   goal_distance_bias: 0.8
   occdist_scale: 0.05
   heading_scoring: false
   dwa: false
+  publish_cost_grid_pc: true
