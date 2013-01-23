@@ -201,7 +201,7 @@
     <origin rpy="-1.5707961734 0 -1.57079621992" xyz="0.072000865279 0 -0.0620001796247"/>
   </joint>
   <joint name="base_camera_joint" type="fixed">
-    <origin rpy="0 0.8901 -1.570795" xyz="0.04464 -0.6557 1.491"/>
+    <origin rpy="0 0.8901 -1.570795" xyz="0.04464 -0.59 1.491"/>
     <parent link="frame1"/>
     <origin rpy="0 0 0" xyz="0 0 0"/>
     <child link="camera_link"/>
@@ -333,7 +333,7 @@
     </inertial>
   </link>
   <joint name="SICK_laser_frame_joint" type="fixed">
-    <origin rpy="1.266 1.571 2.837" xyz="-0.0683999139953 0.035 -0.093"/>
+    <origin rpy="1.266 1.571 2.837" xyz="-0.0683999139953 0.035 -0.0273"/>
     <parent link="SICK_LMS291"/>
     <child link="base_laser1_link"/>
   </joint>
