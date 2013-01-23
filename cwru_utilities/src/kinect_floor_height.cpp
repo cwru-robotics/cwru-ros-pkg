@@ -61,18 +61,7 @@ typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
     ROS_INFO("Published floor transform");
   }
   
-  void init_floor_cal(ros::NodeHandle& nh){
-    ROS_INFO("Setting up TF Broadcaster and listener...");
-    tf_br_ptr = boost::shared_ptr<tf::TransformBroadcaster>(new tf::TransformBroadcaster());
-    tf_listener_ptr = boost::shared_ptr<tf::TransformListener>(new tf::TransformListener());
-    try{
-      tf_listener_ptr->waitForTransform("/camera_rgb_fram","/base_link", ros::Time(0),ros::Duration(10.0) );
-    }
-    catch (tf::TransformException ex){
-      ROS_ERROR("%s", ex.what());
-    }
-    //ROS_INFO("Subscribing to /camera/depth/points...");
-    //sub_ptr = boost::shared_ptr<ros::Subscriber>( nh.subscribe<sensor_msgs::PointCloud2>("/camera/depth/points", 1, floor_pcl_callback));
+  void init_segmentation(){
     ROS_INFO("Configuring SAC segmentation...");
     seg.setOptimizeCoefficients (true);
     seg.setModelType (pcl::SACMODEL_PLANE);
@@ -80,15 +69,17 @@ typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
     seg.setDistanceThreshold (0.01);
     ROS_INFO("Waiting for PointCloud2 Messages...");
   }
-/*
-  void wall_laser_callback(const sensor_msgs::LaserScan& msg){
+
+  void wall_laser_callback(const sensor_msgs::LaserScanConstPtr& msg){
     laser_geometry::LaserProjection projector_;
 
-    ROS_INFO("Got a laser message.");
+    ROS_DEBUG("Got a laser message.");
     //Convert laserscan to pointcloud
-    projector_.transformLaserScanToPointCloud("/base_link", msg, laser_cloud_msg, *tf_listener_ptr, -1.0, laser_geometry::channel_option::Default);
+    projector_.transformLaserScanToPointCloud("/base_link", *msg, laser_cloud_msg, *tf_listener_ptr, -1.0, laser_geometry::channel_option::Default);
+    ROS_DEBUG("Transformed and converted laser message to point cloud message.");
+    laser_cloud_ptr = boost::shared_ptr<pcl::PointCloud<pcl::PointXYZ> >(new pcl::PointCloud<pcl::PointXYZ>());
     pcl::fromROSMsg (laser_cloud_msg, *laser_cloud_ptr);
-    
+    ROS_DEBUG("Converted laser point cloud message to point cloud.");
     //Fit a line to the pointcloud
     pcl::SampleConsensusModelLine<pcl::PointXYZ>::Ptr model(new pcl::SampleConsensusModelLine<pcl::PointXYZ> (laser_cloud_ptr));
     pcl::RandomSampleConsensus<pcl::PointXYZ> ransac (model);
@@ -96,10 +87,21 @@ typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
     ransac.computeModel();
     Eigen::VectorXf line_coefficients;
     ransac.getModelCoefficients(line_coefficients);
+    ROS_DEBUG("Got model coefficients for laser line.");
+    //Make a TF from the wall line    
+    Eigen::AngleAxis<float> aa = Eigen::AngleAxis<float>(0.0,
+                                Eigen::Vector3f(line_coefficients[3],line_coefficients[4],
+                                                line_coefficients[5]));
+    Eigen::Quaternion<float> q = Eigen::Quaternion<float>(aa);
     geometry_msgs::TransformStamped tx;
+    tx.transform.rotation.x = q.x();
+    tx.transform.rotation.y = q.y();
+    tx.transform.rotation.z = q.z();
+    tx.transform.rotation.w = q.w();
     tx.transform.translation.x = line_coefficients[0];
-    tx.transform.translation.y = line_coefficients[1];
+    tx.transform.translation.y = 0.0;
     tx.transform.translation.z = line_coefficients[2];
+    
     tx.child_frame_id = "/laser_wall";
     tx.header.frame_id = "/base_link";
     tx.header.stamp = ros::Time::now();
@@ -108,12 +110,14 @@ typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
   }
 
   void wall_pcl_callback(const sensor_msgs::PointCloud2ConstPtr& msg){
-	ROS_INFO("Got a point cloud message");
+	ROS_DEBUG("Got a point cloud message");
     
     //Transform point cloud into the world (/base_link frame)
     pcl::fromROSMsg (*msg, cloud_in);
+    ROS_DEBUG("Converted point cloud message to point cloud.");
     pcl_ros::transformPointCloud("/base_link", cloud_in, cloud, *tf_listener_ptr);
-    
+    ROS_DEBUG("Tranformed point cloud.");
+    seg.setInputCloud(cloud.makeShared());
     //Segment it
     seg.segment(inliers, coefficients);
 	
@@ -128,18 +132,30 @@ typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
     tx.transform.rotation.y = q.y();
     tx.transform.rotation.z = q.z();
     tx.transform.rotation.w = q.w();
+    tx.transform.translation.x = -coefficients.values[3] / coefficients.values[0];
     tx.child_frame_id = "/wall";
     tx.header.frame_id = "/base_link";
     tx.header.stamp = ros::Time::now();
     tf_br_ptr->sendTransform(tx);
     ROS_INFO("Published wall transform");
   }
-*/
+
 int main(int argc, char** argv)
 {
   ros::init(argc, argv, "kinect_calibrator");
   ros::NodeHandle nh;
-  init_floor_cal(nh);
-  ros::Subscriber sub =nh.subscribe<sensor_msgs::PointCloud2>("/camera/depth_registered/points", 1, floor_pcl_callback); 
+  ROS_INFO("Setting up TF Broadcaster and listener...");
+  tf_br_ptr = boost::shared_ptr<tf::TransformBroadcaster>(new tf::TransformBroadcaster());
+  tf_listener_ptr = boost::shared_ptr<tf::TransformListener>(new tf::TransformListener());
+  try{
+    tf_listener_ptr->waitForTransform("/camera_rgb_frame","/base_link", ros::Time(0),ros::Duration(10.0) );
+  }
+  catch (tf::TransformException ex){
+    ROS_ERROR("%s", ex.what());
+  }
+  init_segmentation();
+  //ros::Subscriber pcl_sub = nh.subscribe<sensor_msgs::PointCloud2>("/camera/depth_registered/points", 1, floor_pcl_callback); 
+  ros::Subscriber pcl_sub = nh.subscribe<sensor_msgs::PointCloud2>("/camera/depth_registered/points", 1, wall_pcl_callback); 
+  ros::Subscriber laser_sub = nh.subscribe<sensor_msgs::LaserScan>("/base_laser1_scan", 1, wall_laser_callback);
   ros::spin();
 }
