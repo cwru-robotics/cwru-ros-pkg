@@ -3,7 +3,7 @@
     <include filename="$(find cwru_description)/urdf/kinect.urdf.xacro"/>
     <include filename="$(find cwru_description)/urdf/sick_LMS291.urdf.xacro"/>
 	<xacro:macro name="abby_no_arm">
-	  <xacro:kinect xyz="0.04464 -0.6357 1.491" rpy="0 0.9599 -1.570795" parent_frame="frame1" />
+	  <xacro:kinect xyz="0.04464 -0.6557 1.491" rpy="0 0.8901 -1.570795" parent_frame="frame1" />
 	  <xacro:SICK_LMS291 parent_frame="frame1" laser_frame="base_laser1_link" rpy="1.5707959092 0 -3.14159265358" xyz="-0.0255468119868 -0.474758386705 0.311455920061"/>
 	  <link name="frame1">
 		<visual>

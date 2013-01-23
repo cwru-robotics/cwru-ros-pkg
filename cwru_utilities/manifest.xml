@@ -13,6 +13,7 @@
   <depend package="pcl_ros"/>
   <depend package="cwru_base"/>
   <depend package="abby_gripper"/>
+  <depend package="laser_geometry"/>
 
 </package>
 
