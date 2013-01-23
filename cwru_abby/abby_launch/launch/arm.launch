@@ -11,6 +11,7 @@
         <remap from="cloud_in" to="/camera/depth_registered/points"/>
         <remap from="cloud_out" to="/camera/depth_registers/filtered"/>
         <param name="sensor_frame" type="string" value="camera_rgb_frame"/>
+        <rosparam command="load" file="$(find abby_config)/config/arm/self_filter.yaml"/>
     </node>
     
     <include if="$(arg rviz)" file="$(find abby_launch)/launch/rviz.launch"/>

@@ -45,7 +45,7 @@
   </link>
 
   <joint name="SICK_laser_frame_joint" type="fixed">
-    <origin xyz="-0.0683999139953 0.035 -0.093" rpy="1.266 1.571 2.837" />
+    <origin xyz="-0.0683999139953 0.035 -0.0273" rpy="1.266 1.571 2.837" />
     <parent link="SICK_LMS291" />
     <child link="${laser_frame}" />
   </joint>
