@@ -14,7 +14,7 @@ if __name__ == '__main__':
     rospy.loginfo("Connected to action server.")
     
     goal = MoveArmGoal()
-    goal.motion_plan_request.group_name = "irb-120"
+    goal.motion_plan_request.group_name = "irb_120"
     goal.motion_plan_request.num_planning_attempts = 1
     goal.motion_plan_request.planner_id = ""
     goal.planner_service_name = "/ompl_planning/plan_kinematic_path"
