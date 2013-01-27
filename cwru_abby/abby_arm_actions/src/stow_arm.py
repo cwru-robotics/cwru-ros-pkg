@@ -36,15 +36,16 @@ if __name__ == '__main__':
     
     rospy.loginfo("Sending stow goal...")
     client.send_goal(goal)
-    finishedInTime = client.wait_for_result(rospy.Duration(10,0))
+    finishedInTime = client.wait_for_result(rospy.Duration(60,0))
     r= rospy.Rate(0.1);
     while not finishedInTime:
         client.cancel_goal()
         rospy.loginfo("Timed out trying to stow arm. Resending stow goal...")
         client.send_goal(goal)
-        finishedInTime = client.wait_for_result(rospy.Duration(10,0))
+        finishedInTime = client.wait_for_result(rospy.Duration(60,0))
         r.sleep();
-    if client.get_state() == actionlib.SimpleGoalState.DONE:
+    status = client.get_result().error_code.val
+    if status == ArmNavigationErrorCodes.SUCCESS:
         rospy.loginfo("Arm successfully stowed.")
     else:
-        rospy.loginfo("Arm failed to stow.")
+        rospy.logwarn("Arm failed to stow.")
