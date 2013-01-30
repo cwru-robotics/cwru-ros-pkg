@@ -4,10 +4,10 @@ multi_dof_joints:
     parent_frame_id: frame1
     child_frame_id: frame1
 groups:
-  - name: gripper
-    joints:
-      - gripper_jaw_1
-      - gripper_jaw_2
+#  - name: gripper
+#    joints:
+#      - gripper_jaw_1
+#      - gripper_jaw_2
   - name: irb_120
     base_link: irb_120_base_link
     tip_link: gripper_body

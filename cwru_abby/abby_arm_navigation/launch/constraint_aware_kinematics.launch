@@ -1,9 +1,11 @@
+<?xml version='1.0' encoding='ASCII'?>
 <launch>
-    <include file="$(find abby_arm_navigation)/launch/abby_planning_environment.launch" />
-    <node pkg="arm_kinematics_constraint_aware" type="arm_kinematics_constraint_aware" name="abby_irb_120_kinematics">
-        <param name="group" type="string" value="irb_120" />
-        <param name="irb_120/root_name" type="string" value="irb_120_base_link" />
-        <param name="irb_120/tip_name" type="string" value="gripper_body" />
-        <param name="kinematics_solver" type="string" value="arm_kinematics_constraint_aware/KDLArmKinematicsPlugin" />
-    </node>
+  <include file="$(find abby_arm_navigation)/launch/abby_planning_environment.launch"/>
+  <node pkg="arm_kinematics_constraint_aware" type="arm_kinematics_constraint_aware" name="abby_irb_120_kinematics">
+    <param name="group" type="string" value="irb_120"/>
+    <param name="irb_120/root_name" type="string" value="irb_120_base_link"/>
+    <param name="irb_120/tip_name" type="string" value="gripper_body"/>
+    <param name="kinematics_solver" type="string" value="abby_irb_120_kinematics/IKFastKinematicsPlugin"/>
+    <param name="OLDkinematics_solver" type="string" value="arm_kinematics_constraint_aware/KDLArmKinematicsPlugin"/>
+  </node>
 </launch>
