@@ -1,33 +1,38 @@
 #! /usr/bin/env python
 
-import roslib; roslib.load_manifest('my_pkg_name')
+import roslib; roslib.load_manifest('abby_arm_actions')
 import rospy
+
 import actionlib
 
-from chores.msg import *
+from abby_arm_actions.msg import *
 
-class DoDishesServer:
-  def __init__(self):
-    self.server = actionlib.SimpleActionServer('do_dishes', DoDishesAction, self.execute, False)
-    self.server.start()
+class AbbyArmAction(object):
+  # create messages that are used to publish feedback/result
+  _feedback = ArmActionFeedback()
+  _result   = ArmActionResult()
 
-  def execute(self, goal):
-    # Do lots of awesome groundbreaking robot stuff here
-    self.server.set_succeeded()
-
-
+  def __init__(self, name):
+    self._action_name = name
+    self._as = actionlib.SimpleActionServer(self._action_name, ArmActionAction, execute_cb=self.execute_cb)
+    self._as.start()
+    self.stowArm = StowArm()
+    self.storeObject = StoreObject()
+    
+  def execute_cb(self, goal):
+    # helper variables
+    r = rospy.Rate(1)
+    success = True
+    
+    if goal.command == goal.STOW_ARM:
+        self.stowArm.runUntilSuccess()
+    elif goal.command == goal.STORE_OBJECT:
+        self.storeObject.storeObject()
+    else:
+        rospy.logerror("Undefined behavior requested.")
+    
+      
 if __name__ == '__main__':
-  rospy.init_node('do_dishes_server')
-  server = DoDishesServer()
+  rospy.init_node('abby_arm_action')
+  AbbyArmAction(rospy.get_name())
   rospy.spin()
-  
-  
-if __name__ == '__main__':
-    rospy.init_node('do_dishes_client')
-    client = actionlib.SimpleActionClient('do_dishes', DoDishesAction)
-    client.wait_for_server()
-
-    goal = DoDishesGoal()
-    # Fill in the goal here
-    client.send_goal(goal)
-    client.wait_for_result(rospy.Duration.from_sec(5.0))
