@@ -11,6 +11,7 @@
   <depend package="abby_arm_navigation"/>
   <depend package="arm_navigation_msgs"/>
   <depend package="move_arm"/>
+  <depend package="abby_gripper"/>
 
 </package>
 
