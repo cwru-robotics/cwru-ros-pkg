@@ -1,0 +1,35 @@
+#xyz bounding box ranges for the parts of the gripper model placed at 
+#3-list pos and 3x3 scipy matrix rot
+
+#origin of gripper is at the gripper_body link
+#gripper_body = [[0.046, 0.0125, 0.0], [-0.046, -0.0125, 0.088]]
+#gripper_jaw_1 = [[0.039, 0.0125, 0.088], [0.046, -0.0125, 0.115]]
+#gripper_jaw_2 = [[-0.039, 0.0125, 0.088], [-0.046, -0.0125, 0.115]]
+#space_box = [[0.039, 0.0125, 0.088], [-0.039, -0.0125, 0.115]]
+#gripper_boxes = [gripper_body, gripper_jaw_1, gripper_jaw_2]
+#space_boxes = [[space_box,],]
+
+gripper_boxes: [[[0.046, 0.0125, 0.0], [-0.046, -0.0125, 0.088]],[[0.039, 0.0125, 0.088], [0.046, -0.0125, 0.115]], [[-0.039, 0.0125, 0.088], [-0.046, -0.0125, 0.115]]]
+space_boxes: [[ [[0.039, 0.0125, 0.088], [-0.039, -0.0125, 0.115]] ]]
+
+joint_names: 
+  irb _120: ['gripper_jaw_1', 'gripper_jaw_2']
+pregrasp_joint_angles:
+  irb _120: [-0.039, -0.039]
+grasp_joint_angles: 
+  irb _120: [-0.03, -0.03]
+pregrasp_joint_efforts:
+  irb _120: [0, 0]
+grasp_joint_efforts:
+  irb _120: [0, 0]
+
+#gripper_body is the same as the gripper model origin frame
+actual_wrist_frame_in_model_frame: [[1.0,0.0,0.0,0.0],[0.0,1.0,0.0,0.0],[0.0,0.0,1.0,0.0],[0.0,0.0,0.0,1.0]]
+
+default_pregrasp_dist: 0.10
+min_good_grasp_points: 15
+wrist_to_fingertip_dist: 0.115
+wrist_to_palm_dist: 0.088
+gripper_opening: 0.078 
+height_good_for_side_grasps: 0.05
+side_grasp_start_height: 0.04
