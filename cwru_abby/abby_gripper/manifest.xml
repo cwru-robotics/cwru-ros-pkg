@@ -28,6 +28,8 @@
   <depend package="rosserial_arduino"/>
   <depend package="actionlib"/>
   <depend package="actionlib_msgs"/>
+  <depend package="object_manipulation_msgs"/>
+  <depend package="sensor_msgs"/>
 </package>
 
 
