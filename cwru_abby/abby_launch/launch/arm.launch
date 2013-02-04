@@ -7,12 +7,12 @@
         <arg name="robot_ip" value="$(arg irc5_ip)"/>
     </include>
         
-    <node pkg="robot_self_filter" type="self_filter" respawn="true" name="kinect_self_filter" output="screen">
+<!--    <node pkg="robot_self_filter" type="self_filter" respawn="true" name="kinect_self_filter" output="screen">
         <remap from="cloud_in" to="/camera/depth_registered/points"/>
         <remap from="cloud_out" to="/camera/depth_registered/filtered"/>
         <param name="sensor_frame" type="string" value="camera_rgb_frame"/>
         <rosparam command="load" file="$(find abby_config)/config/arm/self_filter.yaml"/>
     </node>
-    
+-->    
     <include if="$(arg rviz)" file="$(find abby_launch)/launch/rviz.launch"/>
 </launch>
