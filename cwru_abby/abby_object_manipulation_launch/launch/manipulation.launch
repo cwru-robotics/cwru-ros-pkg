@@ -11,7 +11,7 @@
 
   <!--object manipulator-->
 
-  <node name="object_manipulator" pkg="object_manipulator"
+  <node name="object_manipulator" pkg="abby_object_manipulator"
     type="object_manipulator_node" respawn="false" output="screen">
       <remap from="left_arm/constraint_aware_ik" to="/abby_irb_120_kinematics/get_constraint_aware_ik" />    
       <remap from="left_arm/get_fk" to="/abby_irb_120_kinematics/get_fk" />    
