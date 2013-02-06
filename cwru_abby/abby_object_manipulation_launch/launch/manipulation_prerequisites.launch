@@ -1,0 +1,34 @@
+<launch>
+  <arg name="do_preplan_scan" default="false" />
+  <arg name="do_monitoring" default="false" />
+  <arg name="kinect_frame_prefix" default="/camera" />
+  <arg name="kinect_camera_name" default="camera" />
+  <arg name="log_to_warehouse" default="false" />
+  <arg name="sim" default="false" />
+  <arg name="tod" default="false" />
+
+  <!-- load planning -->
+  <include file="$(find abby_arm_navigation_planning)/launch/abby_arm_navigation.launch">
+  </include>
+
+  <!-- load controllers -->
+  <include file="$(find pr2_arm_navigation_filtering)/launch/both_arms_filters.launch"/>
+  <param name="trajectory_filter/object_padd" value="0.04"/>
+
+  <!-- load ik -->
+  <include if="$(arg use_right_arm)" file="$(find pr2_arm_navigation_kinematics)/launch/right_arm_collision_free_ik.launch"/>
+  <include if="$(arg use_left_arm)"  file="$(find pr2_arm_navigation_kinematics)/launch/left_arm_collision_free_ik.launch"/>
+  <param name="pr2_right_arm_kinematics/object_padd" value="0.04"/>
+  <param name="pr2_left_arm_kinematics/object_padd" value="0.04"/>
+
+  <!-- interpolated IK -->
+  <node  if="$(arg use_right_arm)" name="interpolated_ik_node_right" pkg="interpolated_ik_motion_planner" 
+    type="interpolated_ik_motion_planner.py" args="r" respawn="false"/>
+  <node if="$(arg use_left_arm)" name="interpolated_ik_node_left" pkg="interpolated_ik_motion_planner" 
+    type="interpolated_ik_motion_planner.py" args="l" respawn="false"/>
+
+  <!-- joint trajectory normalization -->
+  <include file="$(find trajectory_filter_server)/launch/trajectory_unnormalize.launch"/>
+
+
+</launch>
