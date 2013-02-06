@@ -1,10 +1,10 @@
-#! /bin/python
+#! /usr/bin/env python
 
 import roslib; roslib.load_manifest('abby_gripper')
 import rospy;
 import actionlib;
-import object_manipulation_msgs;
-
+from object_manipulation_msgs.msg import *;
+from abby_gripper.srv import gripper;
 '''A hand posture controller for the 2-position parallel plate gripper on ABBY.
 Implements the object_manipulation_msgs/GraspHandPostureExecutionAction action
 server.
@@ -16,33 +16,32 @@ running there.
 
 class HandPostureController:
   # create messages that are used to publish feedback/result
-  _feedback = object_manipulation_msgs.msg.GraspHandPostureExecutionActionFeedback()
-  _result   = object_manipulation_msgs.msg.GraspHandPostureExecutionActionResult()
+  _feedback = GraspHandPostureExecutionActionFeedback()
+  _result   = GraspHandPostureExecutionActionResult()
 
   def __init__(self, name):
     self._action_name = name
-    self._as = actionlib.SimpleActionServer(self._action_name, object_manipulation_msgs.msg.GraspHandPostureExecutionAction, execute_cb=self.execute_cb)
+    self._as = actionlib.SimpleActionServer(self._action_name, GraspHandPostureExecutionAction, self.execute_cb, False)
     self._as.start()
     rospy.wait_for_service('abby_gripper/gripper')
     self.gripperClient = rospy.ServiceProxy('abby_gripper/gripper', gripper)
     
   def execute_cb(self, goal):
-    try:
-	  if goal.goal.goal == goal.goal.PRE_GRASP:
-        gripperGoal = gripperClient.OPEN
-      elif goal.goal.goal == goal.goal.GRASP:
-	    gripperGoal = gripperClient.OPENgripperClient.CLOSE
-	  elif goal.goal.goal == goal.goal.release:
-	    gripperGoal = gripperClient.OPEN
+    if goal.goal.goal == goal.goal.PRE_GRASP:
+      gripperGoal = gripperClient.OPEN
+    elif goal.goal.goal == goal.goal.GRASP:
+      gripperGoal = gripperClient.OPENgripperClient.CLOSE
+    elif goal.goal.goal == goal.goal.release:
+      gripperGoal = gripperClient.OPEN
     try:
       resp = gripperClient(gripperGoal)
       if resp.success == resp.SUCCESS and resp.position == gripperGoal:
         self._result.result = self._result.result.SUCCESS
-	    self._as.set_succeeded(self._result)
-	  else:
-	    rospy.logerror("Gripper service failed. Goal aborted.")
+        self._as.set_succeeded(self._result)
+      else:
+        rospy.logerror("Gripper service failed. Goal aborted.")
         self._result.result = self._result.result.FAILED
-	    self._as.set_aborted(self._result)
+        self._as.set_aborted(self._result)
     except rospy.ServiceException, e:
       rospy.logerror("Gripper service did not process request. Goal aborted.")
       self._result.result = self._result.result.ERROR
