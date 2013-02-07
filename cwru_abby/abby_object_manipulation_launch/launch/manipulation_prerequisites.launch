@@ -10,7 +10,28 @@
   <!-- load planning -->
   <include file="$(find abby_arm_navigation)/launch/abby_arm_navigation.launch">
   </include>
+  
+  <!-- load collision map -->
+  <node pkg="collider" type="collider_node" name="collider_node" respawn="true" output="screen">
+     <param name="fixed_frame" type="string" value="base_link" />
+     <param name="resolution" type="double" value="0.025" />
+     <param name="max_range" type="double" value="2.5" />
+     <param name="publish_static_over_dynamic_map" value="true" />
+     <param name="sensor_model_hit" value= "0.8" />
+     <param name="sensor_model_miss" value= "0.31" />
+     <param name="sensor_model_min" value= "0.12" />
+     <param name="sensor_model_max" value= "0.95" />   
 
+     <remap from="collision_map_out" to="collision_map_occ" />
+     <remap from="point_cloud_out" to="octomap_point_cloud" />
+
+     <rosparam command="load" 
+       file="$(find abby_object_manipulation_launch)/config/collision_map_sources.yaml"/>
+   
+     <!-- self filtering links -->
+     <rosparam command="load" file="$(find abby_config)/config/arm/self_filter.yaml" />
+  </node>
+  
   <!-- load controllers -->
   <!-- include file="$(find pr2_arm_navigation_filtering)/launch/both_arms_filters.launch"/-->
   <!-- param name="trajectory_filter/object_padd" value="0.04"/-->
