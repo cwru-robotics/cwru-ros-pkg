@@ -18,7 +18,7 @@
   <rosparam param="/robot_description_planning/default_object_padding">0.05</rosparam>
   
   <!-- Load Tabletop Perception -->
-  <include file="$(find abby_object_manipulation_launch)/launch/tabletop_perception" />
+  <include file="$(find abby_object_manipulation_launch)/launch/tabletop_perception.launch" />
   
   <!-- cluster bounding box finder--> 
   <node name="cluster_bounding_box_finder" pkg="object_manipulator" cwd="node"
