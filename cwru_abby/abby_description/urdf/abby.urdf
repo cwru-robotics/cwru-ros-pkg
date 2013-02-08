@@ -97,7 +97,7 @@
       <geometry>
         <mesh filename="package://abb_common/meshes/irb_120/visual/link_4.stl" scale="0.0254 0.0254 0.0254"/>
       </geometry>
-      <origin rpy="0 0 0" xyz="500.302187012 0.00151561224702 -0.000313229561613"/>
+      <origin rpy="0 0 0" xyz="0.302187012 0.00151561224702 -0.000313229561613"/>
       <material name="abb_orange">
         <color rgba="1 0.43 0 1"/>
       </material>
@@ -105,13 +105,13 @@
     <inertial>
       <mass value="1.32790527095"/>
       <inertia ixx="0.00284579825479" ixy="1.64819596414e-05" ixz="-2.12443634431e-05" iyy="0.0052535657425" iyz="1.31403377384e-05" izz="0.0040129019173"/>
-      <origin rpy="0 0 0" xyz="500.224891826 0.00192302092756 -0.000467285335568"/>
+      <origin rpy="0 0 0" xyz="0.224891826 0.00192302092756 -0.000467285335568"/>
     </inertial>
     <collision>
       <geometry>
         <mesh filename="package://abb_common/meshes/irb_120/collision/link_4.stl" scale="0.0254 0.0254 0.0254"/>
       </geometry>
-      <origin rpy="0 0 0" xyz="500.302187012 0.00151561224702 -0.000313229561613"/>
+      <origin rpy="0 0 0" xyz="0.302187012 0.00151561224702 -0.000313229561613"/>
     </collision>
   </link>
   <link name="irb_120_link_5">
@@ -184,14 +184,14 @@
     <child link="irb_120_link_4"/>
     <limit effort="300" lower="-2.80" upper="2.80" velocity="5.58"/>
     <axis xyz="1 0 0"/>
-    <origin rpy="0 0 0" xyz="-500.000188071 0.0701403024607 0.060593734446"/>
+    <origin rpy="0 0 0" xyz="-0.000188071 0.0701403024607 0.060593734446"/>
   </joint>
   <joint name="joint5" type="revolute">
     <parent link="irb_120_link_4"/>
     <child link="irb_120_link_5"/>
     <limit effort="300" lower="-2.10" upper="2.10" velocity="5.58"/>
     <axis xyz="0 0 -1"/>
-    <origin rpy="0 0 0" xyz="500.302186066 0.00151566707848 0.0616850168905"/>
+    <origin rpy="0 0 0" xyz="0.302186066 0.00151566707848 0.0616850168905"/>
   </joint>
   <joint name="joint6" type="revolute">
     <parent link="irb_120_link_5"/>
@@ -1018,7 +1018,7 @@
       <geometry>
         <mesh filename="package://abby_description/meshes/gripper_body.stl" scale="0.0254 0.0254 0.0254"/>
       </geometry>
-      <origin rpy="3.141592653 0 0" xyz="0 0 0.012"/>
+      <origin rpy="3.141592653 0 0" xyz="0 0 0.017"/>
       <material name="gripper:21_color">
         <color rgba="0.752941 0.752941 0.752941 1"/>
       </material>
@@ -1026,13 +1026,13 @@
     <inertial>
       <mass value="0.222800943405"/>
       <inertia ixx="0.000113884956016" ixy="0.0" ixz="0.0" iyy="0.000132512764251" iyz="-4.2661207134e-07" izz="9.078477651e-05"/>
-      <origin rpy="3.141592653 0 0" xyz="0 0 0.008255"/>
+      <origin rpy="3.141592653 0 0" xyz="0 0 0.013255"/>
     </inertial>
     <collision>
       <geometry>
         <mesh filename="package://abby_description/meshes/gripper_body.stl" scale="0.0254 0.0254 0.0254"/>
       </geometry>
-      <origin rpy="3.141592653 0 0" xyz="0 0 0.012"/>
+      <origin rpy="3.141592653 0 0" xyz="0 0 0.017"/>
     </collision>
   </link>
   <link name="gripper_jaw_1">

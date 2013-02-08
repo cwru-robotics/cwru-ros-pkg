@@ -6,7 +6,7 @@
 			<geometry>
 				<mesh filename="package://abby_description/meshes/gripper_body.stl" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
-			<origin rpy="3.141592653 0 0" xyz="0 0 0.012"/>
+			<origin rpy="3.141592653 0 0" xyz="0 0 0.017"/>
 			<material name="gripper:21_color">
 				<color rgba="0.752941 0.752941 0.752941 1"/>
 			</material>
@@ -14,13 +14,13 @@
 		<inertial>
 			<mass value="0.222800943405"/>
 			<inertia ixx="0.000113884956016" ixy="0.0" ixz="0.0" iyy="0.000132512764251" iyz="-4.2661207134e-07" izz="9.078477651e-05"/>
-			<origin rpy="3.141592653 0 0" xyz="0 0 0.008255"/>
+			<origin rpy="3.141592653 0 0" xyz="0 0 0.013255"/>
 		</inertial>
 		<collision>
 			<geometry>
 				<mesh filename="package://abby_description/meshes/gripper_body.stl" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
-			<origin rpy="3.141592653 0 0" xyz="0 0 0.012"/>
+			<origin rpy="3.141592653 0 0" xyz="0 0 0.017"/>
 		</collision>
 	</link>
 	<link name="gripper_jaw_1">
