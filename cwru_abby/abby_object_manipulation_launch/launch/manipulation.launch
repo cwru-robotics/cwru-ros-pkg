@@ -43,6 +43,17 @@
       <param name="randomize_grasps" value="false" />
   </node>
 
+
+
+  <!-- tabletop collision map processing -->
+  <node pkg="tabletop_collision_map_processing" name="tabletop_collision_map_processing" 
+        type="tabletop_collision_map_processing_node" respawn="false" output="screen">
+        <param name="get_model_mesh_srv" value="/objects_database_node/get_model_mesh" />
+	<param name="static_map_cloud_name" value="full_cloud_filtered" />
+	<param name="table_thickness" value="0.01" />
+  </node>
+  
+  
   <!-- cluster bounding box finder--> 
 
   <node name="cluster_bounding_box_finder" pkg="object_manipulator" cwd="node"

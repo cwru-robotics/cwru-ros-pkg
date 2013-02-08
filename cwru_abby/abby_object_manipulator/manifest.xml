@@ -29,7 +29,8 @@
   <depend package="arm_kinematics_constraint_aware"/>
   <depend package="abby_arm_navigation"/>
   <depend package="common_rosdeps" />
-
+  <depend package="tabletop_collision_map_processing" />
+  <depend package="tabletop_object_detector" />
   <!--depend package="profiling"/-->
 
   <export>
