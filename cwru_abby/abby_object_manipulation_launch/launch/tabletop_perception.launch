@@ -19,7 +19,7 @@
 -->
 
   <!-- segmentation -->
-	<include file="$(find tabletop_object_detector)/launch/tabletop_segmentation.launch">
+	<include file="$(find abby_manipulation_launch)/launch/tabletop_segmentation.launch">
 	  <arg name="tabletop_segmentation_points_in" value="$(arg tabletop_segmentation_points_input)" />
 	  <arg name="flatten_table" value="$(arg flatten_table)"/>
 5	  <arg name="tabletop_segmentation_clustering_voxel_size" value="0.003" />
