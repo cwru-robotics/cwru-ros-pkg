@@ -1,11 +1,11 @@
-#! /usr/env/bin python
+#! /usr/bin/python
 
 import roslib; roslib.load_manifest('abby_object_manipulator')
 from Queue import Queue
 import rospy
 import actionlib
 from object_manipulation_msgs.msg import *
-from object_manipulation_msgs.msg import Pose
+from geometry_msgs.msg import Pose
 from object_manipulation_msgs.srv import *
 from arm_navigation_msgs.msg import *
 from abby_gripper.srv import *
@@ -26,17 +26,24 @@ class BoxManipulator:
     def __init__(self):
         self._tasks = Queue()
         self._moveArm = actionlib.SimpleActionClient('move_irb_120', MoveArmAction)
+        rospy.loginfo('Connected to arm action server.')
+        self._gripperClient = rospy.ServiceProxy('abby_gripper/gripper', gripper)
+        rospy.loginfo('Connected to gripper service.')
+        self._attachPub = rospy.Publisher('attached_collision_object', AttachedCollisionObject)
+        rospy.loginfo('Publishing collision attachments on /attached_collision_object')
+        self._boundingBoxClient = rospy.ServiceProxy('find_cluster_bounding_box', FindClusterBoundingBox)
+        rospy.loginfo('Started place action server.')
         self._pickServer = actionlib.SimpleActionServer('object_manipulation_pickup', PickupAction, auto_start=False)
         self._pickServer.register_goal_callback(self._pickGoalCB)
         self._pickServer.register_preempt_callback(self._pickPreemptCB)
         self._pickServer.start()
+        rospy.loginfo('Started pickup action server.')
         self._placeServer = actionlib.SimpleActionServer('object_manipulation_place', PlaceAction, auto_start=False)
         self._placeServer.register_goal_callback(self._placeGoalCB)
         self._placeServer.register_preempt_callback(self._placePreemptCB)
         self._placeServer.start()
-        self._gripperClient = rospy.ServiceProxy('abby_gripper/gripper', gripper)
-        self._attachPub = rospy.Publisher('attached_collision_object', AttachedCollisionObject)
-        self._boundingBoxClient = rospy.ServiceProxy('find_cluster_bounding_box', FindClusterBoundingBox)
+        rospy.loginfo('Connected to bounding box service.')
+        rospy.loginfo('Box Manipulator Ready for Action Requests')
     
     def clearTasks(self):
         with self._tasks.mutex:
@@ -167,7 +174,7 @@ class BoxManipulator:
         #Therefore the angle of rotation about the z axis is appoximately
         # 2 * acos(q_w)
         #TODO Calculate theta about z axis in base_link frame
-        theta =
+        theta = math.pi/2
         #Determine what to rotate the pose quaternion by to get the vector quaternion
         conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, math.pi/6, 0)
         if useX and not useY:
@@ -307,12 +314,13 @@ class ManipulatorTask:
     TYPE_ATTACH = 3
     TYPE_DETACH = 4
     
-    def __init__(self, type=0, move_goal=arm_navigation_msgs.MoveArmActionGoal(), object_name=""):
+    def __init__(self, type=0, move_goal=MoveArmActionGoal(), object_name=""):
         self.type = type
         self.move_goal = move_goal
         self.object_name = object_name
 
 if __name__ == "__main__":
     rospy.init_node('box_manipulator')
+    rospy.loginfo('Box manipulator node started.')
     manipulator = BoxManipulator()
     rospy.spin()

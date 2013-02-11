@@ -21,7 +21,7 @@
 
   <!--object manipulator-->
   <node name="object_manipulator" pkg="abby_object_manipulator"
-    type="box__manipulator_node" respawn="false" output="screen">
+    type="BoxManipulator.py" respawn="false" output="screen">
   </node>  
   
   <!-- cluster bounding box finder--> 
