@@ -17,6 +17,7 @@ class BoxManipulator:
     #TODO Get these from the parameter server
     plannerServiceName = "/ompl_planning/plan_kinematic_path"
     armGroupName = "irb_120"
+    armActionName = 'move_irb_120'
     toolLinkName = "gripper_body"
     frameID = "/irb_120_base_link"
     preGraspDistance = .1 #meters
@@ -25,7 +26,8 @@ class BoxManipulator:
     attachLinkName = "gripper_jaw_1"
     def __init__(self):
         self._tasks = Queue()
-        self._moveArm = actionlib.SimpleActionClient('move_irb_120', MoveArmAction)
+        self._moveArm = actionlib.SimpleActionClient(self.armActionName, MoveArmAction)
+        self._moveArm.wait_for_server()
         rospy.loginfo('Connected to arm action server.')
         self._gripperClient = rospy.ServiceProxy('abby_gripper/gripper', gripper)
         rospy.loginfo('Connected to gripper service.')
@@ -46,16 +48,18 @@ class BoxManipulator:
         rospy.loginfo('Box Manipulator Ready for Action Requests')
     
     def clearTasks(self):
+        rospy.loginfo('Clearing task list.')
         with self._tasks.mutex:
-            self._tasks.clear()
+            self._tasks.queue.clear()
     
     def _pickGoalCB(self):
+        rospy.loginfo('Got a pick request')
         #Clear tasks on the queue
         self.clearTasks()
         #Cancel current arm task
         self._moveArm.cancel_all_goals()
         #Accept the goal and read the object information
-        goal = self._pickServer.acceptNewGoal().goal
+        goal = self._pickServer.accept_new_goal().goal
         #Create goal message for pregrasp position and add it to the task queue
         preGraspGoal = self._makePreGrasp(goal)
         if preGraspGoal == False:
@@ -69,47 +73,55 @@ class BoxManipulator:
         self._tasks.put_nowaitManipulatorTask((ManipulatorTask.TYPE_CLOSE))
         #Add attach object task to queue
         self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_ATTACH, object_name = goal.target.collision_name))
+        self.runNextTask()
     
     def _pickPreemptCB(self):
+        rospy.loginfo('Got a pick preempt request')
         #Clear tasks on the queue
         self.clearTasks()
         #Cancel current arm task
         self._moveArm.cancel_all_goals()
         #Set current goal preempted
-        self._pickServer.setPreempted()
+        self._pickServer.set_preempted()
     
     def _placeGoalCB(self):
+        rospy.loginfo('Got a place request')
         #Clear tasks on the queue
         self.clearTasks()
         #Cancel current arm task
         self._moveArm.cancel_all_goals()
         #Accept the goal and read the object information
-        goal = self._placeServer.acceptNewGoal().goal
+        goal = self._placeServer.accept_new_goal()
         #Create goal message for pregrasp position and add it to the task queue
-        self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_MOVE,self._makePlace))
+        self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_MOVE,self._makePlace(goal)))
         #Add open gripper task to queue
         self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_OPEN))
         #Add detach object task to queue
-        self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_DETACH, object_name = goal.target.collision_name))
+        self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_DETACH, object_name = goal.collision_object_name))
+        self.runNextTask()
     
     def _placePreemptCB(self):
+        rospy.loginfo('Got a place preempt request')
         #Clear tasks on the queue
         self.clearTasks()
         #Cancel current arm task
         self._moveArm.cancel_all_goals()
         #Set current goal preempted
-        self._placeServer.setPreempted()
+        self._placeServer.set_preempted()
     
     def _moveArmDoneCB(self, state, result):
         '''If the arm successfully moved to the position, move on to the next task.'''
-        if state == GoalStatus.SUCCEEDED:
+        if result.error_code.val == result.error_code.SUCCESS:
             self._tasks.task_done()
             self.runNextTask()
+        else:
+        	rospy.logerr("Arm motion failed! Error code:%d",result.error_code.val)
+        	self.clearTasks()
     
-    def _moveArmActiveCB(self, feedback):
+    def _moveArmActiveCB(self):
         pass
     
-    def _moveArmFeedbackCB(self):
+    def _moveArmFeedbackCB(self, feedback):
         pass
     
     def runNextTask(self):
@@ -119,36 +131,44 @@ class BoxManipulator:
         task = self._tasks.get(True)
         
         if task.type == task.TYPE_OPEN:
+            rospy.loginfo('Opening the gripper')
             self._gripperClient(gripperRequest.OPEN)
             self._tasks.task_done()
             self.runNextTask()
-        elif task.type == task.TYPE_CLOSED:
+        elif task.type == task.TYPE_CLOSE:
+            rospy.loginfo('Closing the gripper')
             self._gripperClient(gripperRequest.CLOSE)
             self._tasks.task_done()
             self.runNextTask()
-        elif task.type == TYPE_MOVE:
-            self._moveArm.sendGoal(task.move_goal, self._moveArmDoneCB, self._moveArmActiveCB, self._moveArmFeedbackCB)
-        elif task.type == TYPE_ATTACH:
-            obj = arm_navigation_msgs.AttachedCollisionObject
+        elif task.type == task.TYPE_MOVE:
+            rospy.loginfo('Waiting for arm action server')
+            self._moveArm.wait_for_server()
+            rospy.loginfo('Moving the arm')
+            self._moveArm.send_goal(task.move_goal, self._moveArmDoneCB, self._moveArmActiveCB, self._moveArmFeedbackCB)
+        elif task.type == task.TYPE_ATTACH:
+            rospy.loginfo('Attaching an object')
+            obj = AttachedCollisionObject
             obj.object.header.stamp = rospy.get_rostime()
             obj.object.header.frame_id = self.frameID
-            obj.operation.operation = arm_navigation_msgs.CollisionObjectOperation.ATTACH_AND_REMOVE_AS_OBJECT
+            obj.operation.operation = CollisionObjectOperation.ATTACH_AND_REMOVE_AS_OBJECT
             obj.object.id = task.object_name
             obj.link_name = self.attachLinkName
             obj.touch_links = self.touchLinks
             self._attachPub.publish(obj)
             self._tasks.task_done()
             self.runNextTask()
-        elif task.type == TYPE_DETACH:
-            obj = arm_navigation_msgs.AttachedCollisionObject
+        elif task.type == task.TYPE_DETACH:
+            rospy.loginfo('Detaching an object')
+            obj = AttachedCollisionObject
             obj.object.header.stamp = rospy.get_rostime()
             obj.object.header.frame_id = self.frameID
-            obj.operation.operation = arm_navigation_msgs.CollisionObjectOperation.DETACH_AND_ADD_AS_OBJECT
+            obj.operation.operation = CollisionObjectOperation.DETACH_AND_ADD_AS_OBJECT
             obj.object.id = task.object_name
             self._attachPub.publish(obj)
             self._tasks.task_done()
             self.runNextTask()
         else:
+            rospy.logwarn('Skippping unrecognized task in queue.')
             pass
         
             
@@ -163,7 +183,7 @@ class BoxManipulator:
         useX = (box.box_dims.x > self.gripperOpenWidth or box.box_dims.x < self.gripperClosedWidth)
         useY = (box.box_dims.y > self.gripperOpenWidth or box.box_dims.y < self.gripperClosedWidth)
         if not(useX or useY):
-            rospy.logError("Could not pick up the box because its dimensions are too large or small for the gripper")
+            rospy.logerr("Could not pick up the box because its dimensions are too large or small for the gripper")
             return False
         #Identify Approach Vector, defined by a position (the box centroid) and an orientation
         approachVector = Pose()
@@ -230,7 +250,7 @@ class BoxManipulator:
         preGraspGoal.goal.motion_plan_request = motion_plan_request
         return preGraspGoal
     
-    def makeGraspPath(self, preGraspGoal):
+    def _makeGraspPath(self, preGraspGoal):
         '''Given a pregrasp MoveArmGoal message, generate a MoveArmGoal message to perform the final
         approach to the object to grasp it.'''
         
@@ -269,7 +289,7 @@ class BoxManipulator:
         return graspGoal
     
     def _makePlace(self, placeGoal):
-        placePose = placeGoal.place_locations.pop().pose
+        placePose = placeGoal.place_locations.pop()
         
         goal = MoveArmGoal()
         goal.planner_service_name = self.plannerServiceName
@@ -283,7 +303,7 @@ class BoxManipulator:
         pos_constraint = PositionConstraint()
         pos_constraint.header.frame_id = placePose.header.frame_id
         pos_constraint.link_name = self.toolLinkName
-        pos_constraint.position = placePose.position
+        pos_constraint.position = placePose.pose.position
         pos_constraint.constraint_region_shape.type = Shape.BOX
         pos_constraint.constraint_region_shape.dimensions = [0.05, 0.05, 0.05]
         pos_constraint.constraint_region_orientation.x = 0;
@@ -296,7 +316,7 @@ class BoxManipulator:
         o_constraint = OrientationConstraint()
         o_constraint.header = pos_constraint.header
         o_constraint.link_name = pos_constraint.link_name
-        o_constraint.orientation = placePose.orientation
+        o_constraint.orientation = placePose.pose.orientation
         o_constraint.absolute_roll_tolerance = 0.04
         o_constraint.absolute_pitch_tolerance = 0.04
         o_constraint.absolute_yaw_tolerance = 0.04

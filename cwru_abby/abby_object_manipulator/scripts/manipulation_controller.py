@@ -43,6 +43,7 @@ from tabletop_object_detector.msg import TabletopDetectionResult
 from tabletop_collision_map_processing.srv import TabletopCollisionMapProcessing
 from household_objects_database_msgs.msg import DatabaseModelPoseList
 from object_manipulation_msgs.msg import *
+from geometry_msgs.msg import *
 '''This node coordinates messages and services for the object manipulation pipeline
 on Abby. It serves a similar purpose to tabletop_complete, but does not perform
 object detection.'''
@@ -50,13 +51,16 @@ object detection.'''
 class ObjectManipulationController:
     '''Not threadsafe'''
     def __init__(self):
+        rospy.loginfo('Waiting for tabletop_segmentation service')
         rospy.wait_for_service('tabletop_segmentation')
         self.segmentationService = rospy.ServiceProxy('tabletop_segmentation', TabletopSegmentation)
         rospy.loginfo('Connected to tabletop segmentation service')
+        rospy.loginfo('Waiting for tabletop_collision_map_processing service')
         rospy.wait_for_service('tabletop_collision_map_processing/tabletop_collision_map_processing')
         self.collisionMapService = rospy.ServiceProxy('tabletop_collision_map_processing/tabletop_collision_map_processing', TabletopCollisionMapProcessing)
         rospy.loginfo('Connected to collision map processing service')
-        self.pickupClient = actionlib.SimpleActionClient('object_manipulator_pickup', PickupAction)
+        self._pickupClient = actionlib.SimpleActionClient('object_manipulation_pickup', PickupAction)
+        self._placeClient = actionlib.SimpleActionClient('object_manipulation_place', PlaceAction)
     
     def segmentationReplyToDetectionReply(self, segmentationResult):
         '''Converts a TableTopSegmentationReply into a TabletopDetectionResult'''
@@ -98,19 +102,40 @@ class ObjectManipulationController:
         self.pickupClient.wait_for_server()
         self.pickupClient.send_goal(goal)
         self.pickupClient.wait_for_result(rospy.Duration.from_sec(10.0))
-        
+
+    def storeObject(self):
+        '''Sends a command to store the currently held object in the bin'''
+        rospy.loginfo('Storing the currently held object in the bin')
+        goal = PlaceGoal()
+        goal.arm_name = 'irb_120'
+        bin_location = PoseStamped()
+        bin_location.header.frame_id = '/irb_120_base_link'
+        bin_location.pose.position.x = 0.0816875
+        bin_location.pose.position.y = 0.207909
+        bin_location.pose.position.z = 0.243964
+        bin_location.pose.orientation.x =  0.847531
+        bin_location.pose.orientation.y =  0.297557
+        bin_location.pose.orientation.z = -0.140450
+        bin_location.pose.orientation.w =  0.416442
+        goal.place_locations.append(bin_location)
+        goal.collision_object_name = self.currentlyHeldObject.collision_name
+        rospy.loginfo('Sent place goal to box manipulator')
+        self._placeClient.send_goal_and_wait(goal, rospy.Duration.from_sec(60.0), rospy.Duration.from_sec(60.0))
 if __name__ == '__main__':
     rospy.init_node('object_manipulation_controller')
+    rospy.loginfo('Started the object manipulation controller')
     controller = ObjectManipulationController()
     timer = rospy.Rate(.2)
     while not rospy.is_shutdown():
         resp = controller.runSegmentation()
         controller.runSegmentation()
         mapResponse = controller.getMapResponse()
-        for index in range(len(mapResponse.graspable_objects)):
+        '''for index in range(len(mapResponse.graspable_objects)):
             rospy.loginfo("Picking up object number %d", index)
             controller.pickup(mapResponse, index)
-            
+        '''
+        controller.currentlyHeldObject = GraspableObject()
+        controller.storeObject()
         if resp.result == resp.SUCCESS:
             rospy.loginfo("Tabletop detection service returned %d clusters", len(resp.clusters))
         elif resp.result == resp.NO_TABLE:
@@ -118,6 +143,6 @@ if __name__ == '__main__':
         elif resp.result == resp.NO_CLOUD_RECEIVED:
             rospy.logwarn("No cloud received")
         elif resp.result == resp.OTHER_ERROR:
-            rospy.logerror("Tabletop segmentation error")
-        timer.sleep()
+            rospy.logerr("Tabletop segmentation error")
+        #timer.sleep()
         

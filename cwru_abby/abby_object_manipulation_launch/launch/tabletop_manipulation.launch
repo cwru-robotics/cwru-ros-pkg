@@ -18,7 +18,7 @@
   <rosparam param="/robot_description_planning/default_object_padding">0.05</rosparam>
   
   <!-- Load Tabletop Perception -->
-  <include file="$(find abby_object_manipulation_launch)/launch/tabletop_perception" />
+  <include file="$(find abby_object_manipulation_launch)/launch/tabletop_perception.launch" />
   
   <!-- cluster bounding box finder--> 
   <node name="cluster_bounding_box_finder" pkg="object_manipulator" cwd="node"
@@ -32,34 +32,8 @@
   
   <!--object manipulator-->
   <node name="object_manipulator" pkg="abby_object_manipulator"
-    type="object_manipulator_node" respawn="false" output="screen">
-      <remap from="left_arm/constraint_aware_ik" to="/abby_irb_120_kinematics/get_constraint_aware_ik" />    
-      <remap from="left_arm/get_fk" to="/abby_irb_120_kinematics/get_fk" />    
-      <remap from="left_arm/interpolated_ik" to="/l_interpolated_ik_motion_plan" />    
-      <remap from="left_arm/interpolated_ik_set_params" to="/l_interpolated_ik_motion_plan_set_params" />    
-      <remap from="left_arm/get_ik_solver_info" to="/abby_irb_120_kinematics/get_ik_solver_info" />    
-      <remap from="left_arm/get_state_validity" to="/planning_scene_validity_server/get_state_validity" />    
-      <remap from="left_arm/move_arm" to="/abby_move_irb_120" />    
-      <remap from="left_arm/joint_trajectory" to="/joint_trajectory_action" />    
-      <remap from="left_arm/hand_posture_execution" to="/grasp_posture_controller" />
-      <remap from="left_arm/grasp_status" to="/grasp_status" />
-
-      <remap from="switch_controller" to="pr2_controller_manager/switch_controller"/>
-      <remap from="list_controllers" to="pr2_controller_manager/list_controllers"/>
-
-      <remap from="left_arm/cart/command_pose" to="/l_cart/command_pose" />
-      <remap from="left_arm/cart/command_posture" to="/l_cart/command_posture" />
-      <remap from="left_arm/cart/gains" to="/l_cart/gains" />
-      <param name="left_arm_cartesian_controller" value="l_cart" />
-      <param name="left_arm_joint_controller" value="l_arm_controller" />
-
-      <param name="default_cluster_planner" value="/plan_point_cluster_grasp" />
-      <param name="default_database_planner" value="/database_grasp_planning" />  
-      <param name="default_probabilistic_planner" value="/probabilistic_grasp_planning" />
-      <param name="use_probabilistic_grasp_planner" value="$(arg use_probabilistic_grasp_planner)" />
-
-      <param name="randomize_grasps" value="false" />
-  </node>  
+    type="BoxManipulator.py" respawn="false" output="screen">
+  </node> 
 
   <!--gripper grasp posture controller-->
 
