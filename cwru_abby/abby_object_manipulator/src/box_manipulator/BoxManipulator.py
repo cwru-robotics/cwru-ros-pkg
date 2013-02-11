@@ -1,6 +1,16 @@
 #! /usr/env/bin python
 
+import roslib; roslib.load_manifest('abby_object_manipulator')
 from Queue import Queue
+import rospy
+import actionlib
+from object_manipulation_msgs.msg import *
+from object_manipulation_msgs.msg import Pose
+from object_manipulation_msgs.srv import *
+from arm_navigation_msgs.msg import *
+from abby_gripper.srv import *
+import math
+
 #TODO imports
 
 class BoxManipulator:
@@ -9,10 +19,10 @@ class BoxManipulator:
     armGroupName = "irb_120"
     toolLinkName = "gripper_body"
     frameID = "/irb_120_base_link"
-    gripperFingerLength = 0.35 #meters
+    preGraspDistance = .1 #meters
+    gripperFingerLength = 0.115 #meters
     gripperCollisionName = "gripper"
     attachLinkName = "gripper_jaw_1"
-    
     def __init__(self):
         self._tasks = Queue()
         self._moveArm = actionlib.SimpleActionClient('move_irb_120', MoveArmAction)
@@ -25,8 +35,8 @@ class BoxManipulator:
         self._placeServer.register_preempt_callback(self._placePreemptCB)
         self._placeServer.start()
         self._gripperClient = rospy.ServiceProxy('abby_gripper/gripper', gripper)
-        self._attachPub = rospy.Publisher('attached_collision_object', arm_navigation_msgs.AttachedCollisionObject)
-        self._boundingBoxClient = rospy.ServiceProx('find_cluster_bounding_box', FindClusterBoundingBox)
+        self._attachPub = rospy.Publisher('attached_collision_object', AttachedCollisionObject)
+        self._boundingBoxClient = rospy.ServiceProxy('find_cluster_bounding_box', FindClusterBoundingBox)
     
     def clearTasks(self):
         with self._tasks.mutex:
@@ -41,6 +51,8 @@ class BoxManipulator:
         goal = self._pickServer.acceptNewGoal().goal
         #Create goal message for pregrasp position and add it to the task queue
         preGraspGoal = self._makePreGrasp(goal)
+        if preGraspGoal == False:
+            return False;
         self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_MOVE,preGraspGoal))
         #Add open gripper task to queue
         self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_OPEN))
@@ -140,25 +152,57 @@ class BoxManipulator:
         
         #Fit box
         box = self._boundingBoxClient(pickupGoal.target.cluster)
-        #Identify Vector
-        #Vector is in the principal plane of the box most closely aligned with robot XZ. This plane will be tool YZ.
+        #Check that the box width and/or length are within the gripper limits
+        useX = (box.box_dims.x > self.gripperOpenWidth or box.box_dims.x < self.gripperClosedWidth)
+        useY = (box.box_dims.y > self.gripperOpenWidth or box.box_dims.y < self.gripperClosedWidth)
+        if not(useX or useY):
+            rospy.logError("Could not pick up the box because its dimensions are too large or small for the gripper")
+            return False
+        #Identify Approach Vector, defined by a position (the box centroid) and an orientation
+        approachVector = Pose()
+        approachVector.position = box.pose.position
+        #Vector is in the principal plane of the box most closely aligned with robot XZ. This plane will be tool YZ
         #Vector is at a downward 30 degree angle
-        #TODO VECTOR from bounding box fit goes here
+        #Orientation of box should be (approximately) a pure z rotation from the robot base_link
+        #Therefore the angle of rotation about the z axis is appoximately
+        # 2 * acos(q_w)
+        #TODO Calculate theta about z axis in base_link frame
+        theta =
+        #Determine what to rotate the pose quaternion by to get the vector quaternion
+        conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, math.pi/6, 0)
+        if useX and not useY:
+            if theta >= 90 and theta<=270:
+                conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, 0, math.pi) * conversionQuaternion
+        elif useY and not useX:
+            if theta >= 0 and theta<= 180:
+                conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, 0, -math.pi/2) * conversionQuaternion
+            else:
+                conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, 0, math.pi/2) * conversionQuaternion
+        else:
+            #Can use either face for pickup, so pick the one best aligned to the robot
+            if theta >= 45 and theta >= 135:
+                conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, 0, -math.pi/2) * conversionQuaternion
+            elif theta >= 135 and theta <= 225:
+                conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, 0, math.pi) * conversionQuaternion
+            elif theta >= 225 and theta <= 315:
+                conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, 0, math.pi/2) * conversionQuaternion
         #Determine Orientation from vector and create constraint object
         o_constraint = OrientationConstraint()
         o_constraint.header.frame_id = box.pose.header.frame_id
         o_constraint.link_name = self.toolLinkName
+        o_constraint.orientation = box.pose.orientation * conversionQuaternion
         o_constraint.absolute_roll_tolerance = 0.04
         o_constraint.absolute_pitch_tolerance = 0.04
         o_constraint.absolute_yaw_tolerance = 0.04
-        #TODO orientation calculation goes here
         
         #Determine position and tolerance from vector and box size
         pos_constraint = PositionConstraint()
         pos_constraint.header = pos_constraint.header
         pos_constraint.link_name = pos_constraint.link_name
+        #Position of gripper finger tips is 10 cm back from edge of bounding box
+        distance = self.preGraspDistance + self.gripperFingerLength
+        pos_constraint.position = box.pose.position
         #TODO position calculation goes here
-        #Position of gripper finger tips is 2 cm back from edge of bounding box
         #TODO position tolerance calculation goes here
         #Position tolerance (in final tool frame) is:
         #  x = gripper open width - box x width
@@ -221,7 +265,7 @@ class BoxManipulator:
         placePose = placeGoal.place_locations.pop().pose
         
         goal = MoveArmGoal()
-        goal.planner_service_name = "/ompl_planning/plan_kinematic_path"
+        goal.planner_service_name = self.plannerServiceName
         
         motion_plan_request = MotionPlanRequest()
         motion_plan_request.group_name = self.armGroupName
