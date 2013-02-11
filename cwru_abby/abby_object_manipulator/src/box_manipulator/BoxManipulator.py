@@ -311,4 +311,8 @@ class ManipulatorTask:
         self.type = type
         self.move_goal = move_goal
         self.object_name = object_name
-    
+
+if __name__ == "__main__":
+    rospy.init_node('box_manipulator')
+    manipulator = BoxManipulator()
+    rospy.spin()
