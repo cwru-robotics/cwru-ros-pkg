@@ -5,13 +5,29 @@ from Queue import Queue
 import rospy
 import actionlib
 from object_manipulation_msgs.msg import *
-from geometry_msgs.msg import Pose
+from geometry_msgs.msg import Pose, Quaternion, Point
 from object_manipulation_msgs.srv import *
 from arm_navigation_msgs.msg import *
 from abby_gripper.srv import *
 import math
+from math import sin, cos
+import numpy
 
-#TODO imports
+def multiplyTuple(tup1, tup2):
+    '''Piecewise multiply two tuples (useful for quaternion multiplication)'''
+    num1 = numpy.asarray(tup1)
+    num2 = numpy.asarray(tup2)
+    return tuple(num1*num2)
+
+
+def quaternionFromRPY(roll, pitch, yaw):
+    '''Given Tait-Bryan roll, pitch, and yaw angles, create a quaternion tuple 
+    in (x, y, z, w) order'''
+    w = cos(roll/2)*cos(pitch/2)*cos(yaw/2) + sin(roll/2)*sin(pitch/2)*sin(yaw/2)
+    x = sin(roll/2)*cos(pitch/2)*cos(yaw/2) - cos(roll/2)*sin(pitch/2)*sin(yaw/2)
+    y = cos(roll/2)*sin(pitch/2)*cos(yaw/2) + sin(roll/2)*cos(pitch/2)*sin(yaw/2)
+    z = cos(roll/2)*cos(pitch/2)*sin(yaw/2) - sin(roll/2)*sin(pitch/2)*cos(yaw/2)
+    return (x, y, z, w)
 
 class BoxManipulator:
     #TODO Get these from the parameter server
@@ -115,8 +131,8 @@ class BoxManipulator:
             self._tasks.task_done()
             self.runNextTask()
         else:
-        	rospy.logerr("Arm motion failed! Error code:%d",result.error_code.val)
-        	self.clearTasks()
+            rospy.logerr("Arm motion failed! Error code:%d",result.error_code.val)
+            self.clearTasks()
     
     def _moveArmActiveCB(self):
         pass
@@ -182,42 +198,83 @@ class BoxManipulator:
         #Check that the box width and/or length are within the gripper limits
         useX = (box.box_dims.x > self.gripperOpenWidth or box.box_dims.x < self.gripperClosedWidth)
         useY = (box.box_dims.y > self.gripperOpenWidth or box.box_dims.y < self.gripperClosedWidth)
+        if useX:
+            rospy.logdebug("Box width is within gripper parameters (%f m)",box.box_dims.x)
+        if useY:
+            rospy.logdebug("Box depth is within gripper parameters (%f m)",box.box_dims.y)
         if not(useX or useY):
             rospy.logerr("Could not pick up the box because its dimensions are too large or small for the gripper")
             return False
-        #Identify Approach Vector, defined by a position (the box centroid) and an orientation
-        approachVector = Pose()
-        approachVector.position = box.pose.position
-        #Vector is in the principal plane of the box most closely aligned with robot XZ. This plane will be tool YZ
+        #Do all geometry in robot's base_link frame
+        boxPose = self._tf_listener.transformPose('/base_link', box.pose)
+        #Turn box pose into a tf
+        self._tf_broadcaster.sendTransform(
+                (boxPose.position.x,boxPose.position.y,boxPose.position.z), 
+                (boxPose.orientation.x,boxPose.orientation.y,boxPose.orientation.z,boxPose.orientation.w),
+                rospy.Time.now(),
+                pickupGoal.collision_object_name,
+                boxPose.header.frame_id)
+        #Approach Vector is in the principal plane of the box most closely aligned with robot XZ. This plane will be tool YZ
         #Vector is at a downward 30 degree angle
         #Orientation of box should be (approximately) a pure z rotation from the robot base_link
         #Therefore the angle of rotation about the z axis is appoximately
         # 2 * acos(q_w)
-        #TODO Calculate theta about z axis in base_link frame
-        theta = math.pi/2
+        theta = 2 * math.acos(boxPose.pose.orientation.w)
+        rospy.logdebug('Angle is %f',theta)
         #Determine what to rotate the pose quaternion by to get the vector quaternion
-        conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, math.pi/6, 0)
+        #Start with a 30 degree downward rotation
+        conversionQuaternion = quaternionFromRPY(0, 2*math.pi/3, 0)
         if useX and not useY:
-            if theta >= 90 and theta<=270:
-                conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, 0, math.pi) * conversionQuaternion
+            rospy.logdebug("Grabbing box along x axis"))
+            width = box.box_dims.x
+            if theta >= math.pi/2 and theta <= 3*math.pi/2:
+                conversionQuaternion = multiplyTuple(quaternionFromRPY(0, 0, math.pi), conversionQuaternion)
         elif useY and not useX:
-            if theta >= 0 and theta<= 180:
-                conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, 0, -math.pi/2) * conversionQuaternion
+            rospy.logdebug("Grabbing box along y axis"))
+            width = box.box_dims.y
+            if theta >= 0 and theta <= math.pi:
+                conversionQuaternion = multiplyTuple(quaternionFromRPY(0, 0, -math.pi/2), conversionQuaternion)
             else:
-                conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, 0, math.pi/2) * conversionQuaternion
+                conversionQuaternion = multiplyTuple(quaternionFromRPY(0, 0, math.pi/2), conversionQuaternion)
         else:
             #Can use either face for pickup, so pick the one best aligned to the robot
-            if theta >= 45 and theta >= 135:
-                conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, 0, -math.pi/2) * conversionQuaternion
-            elif theta >= 135 and theta <= 225:
-                conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, 0, math.pi) * conversionQuaternion
-            elif theta >= 225 and theta <= 315:
-                conversionQuaternion = createQuaternionMsgFromRollPitchYaw(0, 0, math.pi/2) * conversionQuaternion
+            if theta >= math.pi/4 and theta >= 3*math.pi/4:
+                rospy.logdebug("Grabbing box along y axis"))
+                width = box.box_dims.y
+                conversionQuaternion = multiplyTuple(quaternionFromRPY(0, 0, -math.pi/2), conversionQuaternion)
+            elif theta >= 3*math.pi/4 and theta <= 5*math.pi/4:
+                rospy.logdebug("Grabbing box along x axis"))
+                width = box.box_dims.x
+                conversionQuaternion = multiplyTuple(quaternionFromRPY(0, 0, math.pi), conversionQuaternion)
+            elif theta >= 5*math.pi/4 and theta <= 7*math.pi/4:
+                rospy.logdebug("Grabbing box along y axis"))
+                width = box.box_dims.y
+                conversionQuaternion = multiplyTuple(quaternionFromRPY(0, 0, math.pi/2), conversionQuaternion)
+            else:
+                rospy.logdebug("Grabbing box along x axis"))
+                width = box.box_dims.x
+                
+        #Box TF rotated into orientation of gripper
+        self._tf_broadcaster.sendTransform(
+                (0,0,0), 
+                conversionQuaternion,
+                rospy.Time.now(),
+                pickupGoal.collision_object_name+'_rotated',
+                pickupGoal.collision_object_name)
+        #Pregrasp TF is rotated box TF translated back along the z axis
+        distance = self.preGraspDistance + self.gripperFingerLength
+        self._tf_broadcaster.sendTransform(
+                (0, 0, -distance),
+                (0, 0, 0, 1),
+                rospy.Time.now(),
+                pickupGoal.collision_object_name+'_pregrasp',
+                pickupGoal.collision_object_name+'_rotated')
+        
         #Determine Orientation from vector and create constraint object
         o_constraint = OrientationConstraint()
-        o_constraint.header.frame_id = box.pose.header.frame_id
+        o_constraint.header.frame_id = pickupGoal.collision_object_name+'_pregrasp'
         o_constraint.link_name = self.toolLinkName
-        o_constraint.orientation = box.pose.orientation * conversionQuaternion
+        o_constraint.orientation = Quaternion()
         o_constraint.absolute_roll_tolerance = 0.04
         o_constraint.absolute_pitch_tolerance = 0.04
         o_constraint.absolute_yaw_tolerance = 0.04
@@ -226,15 +283,16 @@ class BoxManipulator:
         pos_constraint = PositionConstraint()
         pos_constraint.header = pos_constraint.header
         pos_constraint.link_name = pos_constraint.link_name
-        #Position of gripper finger tips is 10 cm back from edge of bounding box
-        distance = self.preGraspDistance + self.gripperFingerLength
-        pos_constraint.position = box.pose.position
-        #TODO position calculation goes here
-        #TODO position tolerance calculation goes here
+        pos_constraint.position = Point()
         #Position tolerance (in final tool frame) is:
         #  x = gripper open width - box x width
         #  y = object height * precision multiplier (<=1)
         #  z = 1 cm
+        pos_constraint.constraint_region_shape.type = Shape.BOX
+        pos_constraint.constraint_region_shape.dimensions = [
+            self.gripperOpenWidth - width, 
+            width = box.box_dims.z*0.2,
+            0.01]
         
         preGraspGoal = MoveArmGoal()
         preGraspGoal.planner_service_name = self.plannerServiceName
