@@ -11,6 +11,7 @@ from arm_navigation_msgs.msg import *
 from abby_gripper.srv import *
 import math
 from math import sin, cos
+import copy
 import numpy
 
 def multiplyTuple(tup1, tup2):
@@ -263,16 +264,10 @@ class BoxManipulator:
                 pickupGoal.collision_object_name)
         #Pregrasp TF is rotated box TF translated back along the z axis
         distance = self.preGraspDistance + self.gripperFingerLength
-        self._tf_broadcaster.sendTransform(
-                (0, 0, -distance),
-                (0, 0, 0, 1),
-                rospy.Time.now(),
-                pickupGoal.collision_object_name+'_pregrasp',
-                pickupGoal.collision_object_name+'_rotated')
         
         #Determine Orientation from vector and create constraint object
         o_constraint = OrientationConstraint()
-        o_constraint.header.frame_id = pickupGoal.collision_object_name+'_pregrasp'
+        o_constraint.header.frame_id = pickupGoal.collision_object_name+'_rotated'
         o_constraint.link_name = self.toolLinkName
         o_constraint.orientation = Quaternion()
         o_constraint.absolute_roll_tolerance = 0.04
@@ -284,6 +279,7 @@ class BoxManipulator:
         pos_constraint.header = pos_constraint.header
         pos_constraint.link_name = pos_constraint.link_name
         pos_constraint.position = Point()
+        pos_constraint.position.z = -distance
         #Position tolerance (in final tool frame) is:
         #  x = gripper open width - box x width
         #  y = object height * precision multiplier (<=1)
@@ -312,18 +308,6 @@ class BoxManipulator:
         '''Given a pregrasp MoveArmGoal message, generate a MoveArmGoal message to perform the final
         approach to the object to grasp it.'''
         
-        #Determine position from pregrasp position and orientation
-        pos_constraint = PositionConstraint()
-        pos_constraint.header.frame_id = self.frameID
-        pos_constraint.link_name = self.toolLinkName
-        pos_constraint.weight = 1
-        #TODO position calculation goes here
-        #Calculate path position constraint shape
-        path_constraint = PositionConstraint()
-        path_constraint.header = pos_constraint.header
-        path_constraint.link_name = pos_constraint.link_name
-        path_constraint.weight = 1
-        #TODO path constraint goes here
         graspGoal = MoveArmGoal()
         graspGoal.planner_service_name = self.plannerServiceName
         motion_plan_request = MotionPlanRequest()
@@ -331,6 +315,14 @@ class BoxManipulator:
         motion_plan_request.num_planning_attempts = 1
         motion_plan_request.planner_id = ""
         motion_plan_request.allowed_planning_time = rospy.Duration(5,0)
+        
+        #Translate from pregrasp position to final position in a roughly straight line
+        pos_constraint = copy.deepcopy(preGraspGoal.goal.motion_plan_request.position_constraints[0])
+        distance = pos_constraint.position.z + self.preGraspDistance + self.gripperFingerLength
+        pos_constraint.position.z = distance
+        path_constraint = copy.deepcopy(preGraspGoal.goal.motion_plan_request.position_constraints[0])
+        path_constraint.position.z = distance/2;
+        path_constraint.constraint_region_shape.dimensions[2] += distance
         motion_plan_request.goal_constraints.position_constraints.append(pos_constraint)
         motion_plan_request.path_constraints.position_constraints.append(path_constraint)
         #Orientation constraint is the same as for pregrasp
