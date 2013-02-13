@@ -6,7 +6,7 @@ import actionlib
 from arm_navigation_msgs.msg import *
 
 class StowArm:
-    def __init(self):
+    def __init__(self):
         self.client = actionlib.SimpleActionClient('move_irb_120', MoveArmAction)
         
         rospy.logdebug("Setting up goal request message.")
@@ -35,14 +35,14 @@ class StowArm:
         self.goal.motion_plan_request = motion_plan_request
         
         rospy.loginfo("Waiting for action server...")
-        client.wait_for_server()
+        self.client.wait_for_server()
         rospy.loginfo("Connected to action server.")
         
     def sendOnce(self, timeOut = 60):
         rospy.loginfo('Sending stow goal...')
         self.client.send_goal(self.goal)
-        if client.wait_for_result(rospy.Duration(timeOut, 0)):
-            return client.get_result()
+        if self.client.wait_for_result(rospy.Duration(timeOut, 0)):
+            return self.client.get_result()
         else:
             rospy.logwarn('Timed out attempting to stow arm.')
             return False
