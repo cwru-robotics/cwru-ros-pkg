@@ -19,7 +19,7 @@
   
   <!-- Load Tabletop Perception -->
   <include file="$(find abby_object_manipulation_launch)/launch/tabletop_perception.launch">
-  	<param name="tabletop_segmentation_points_input" value="/camera/depth_registered/object_modeling_points_filtered"/>
+  	<arg name="cloud_in" value="/camera/depth_registered/object_modeling_points_filtered"/>
   </include>
   <!-- cluster bounding box finder--> 
   <node name="cluster_bounding_box_finder" pkg="object_manipulator" cwd="node"
