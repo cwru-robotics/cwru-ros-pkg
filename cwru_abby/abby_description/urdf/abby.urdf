@@ -1099,7 +1099,7 @@
   <joint name="arm_gripper" type="fixed">
     <parent link="irb_120_link_6"/>
     <child link="gripper_body"/>
-    <origin rpy="0 0 0" xyz="0 0 0"/>
+    <origin rpy="0 0 -0.7" xyz="0 0 0"/>
   </joint>
 </robot>
 
