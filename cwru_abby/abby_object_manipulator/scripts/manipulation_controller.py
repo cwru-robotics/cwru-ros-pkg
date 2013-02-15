@@ -101,8 +101,12 @@ class ObjectManipulationController:
         
         self._pickupClient.wait_for_server()
         self._pickupClient.send_goal(goal)
-        self._pickupClient.wait_for_result(rospy.Duration.from_sec(10.0))
-        self.currentlyHeldObject = goal.target
+        if self._pickupClient.wait_for_result(rospy.Duration.from_sec(10.0)):
+            result = self._pickupClient.get_result()
+            if result.status.status == result.status.SUCCEEEDED:
+                self.currentlyHeldObject = goal.target
+                return True;
+        return False;
 
     def storeObject(self):
         '''Sends a command to store the currently held object in the bin'''
@@ -132,16 +136,16 @@ if __name__ == '__main__':
         mapResponse = controller.getMapResponse()
         if resp.result == resp.SUCCESS:
             rospy.loginfo("Tabletop detection service returned %d clusters", len(resp.clusters))
+            break
         elif resp.result == resp.NO_TABLE:
             rospy.loginfo("No table detected")
         elif resp.result == resp.NO_CLOUD_RECEIVED:
             rospy.logwarn("No cloud received")
         elif resp.result == resp.OTHER_ERROR:
             rospy.logerr("Tabletop segmentation error")
-        for index in range(len(mapResponse.graspable_objects)):
-            rospy.loginfo("Picking up object number %d", index)
-            controller.pickup(mapResponse, index)
-            #controller.currentlyHeldObject = GraspableObject()
+    for index in range(len(mapResponse.graspable_objects)):
+        rospy.loginfo("Picking up object number %d", index)
+        if controller.pickup(mapResponse, index):
             controller.storeObject()
        #timer.sleep()
         

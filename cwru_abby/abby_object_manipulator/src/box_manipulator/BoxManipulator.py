@@ -48,7 +48,7 @@ class BoxManipulator:
     frameID = "/irb_120_base_link"
     preGraspDistance = .1 #meters
     gripperFingerLength = 0.115 #meters
-    gripperOpenWidth = 0.065 #meters
+    gripperOpenWidth = 0.075 #0.065 #meters
     gripperClosedWidth = 0.046 #meters
     gripperCollisionName = "gripper"
     attachLinkName = "gripper_jaw_1"
@@ -64,6 +64,7 @@ class BoxManipulator:
         self._boundingBoxClient = rospy.ServiceProxy('find_cluster_bounding_box', FindClusterBoundingBox)
         rospy.loginfo('Connected to bounding box service.')
         self._tf_listener = tf.TransformListener()
+        #self._tf_listener.waitForTransform("/base_link","/irb_120_base_link", rospy.Time.now()+rospy.Duration.from_sec(0.5), rospy.Duration(10.0))
         self._tf_broadcaster = tf.TransformBroadcaster()
         self._pickServer = actionlib.SimpleActionServer('object_manipulation_pickup', PickupAction, auto_start=False)
         self._pickServer.register_goal_callback(self._pickGoalCB)
@@ -90,10 +91,19 @@ class BoxManipulator:
         self._moveArm.cancel_all_goals()
         #Accept the goal and read the object information
         goal = self._pickServer.accept_new_goal()
+        box = self._boundingBoxClient(goal.target.cluster)
+        #Check that the box width and/or length are within the gripper limits
+        useX = not(box.box_dims.x > self.gripperOpenWidth or box.box_dims.x < self.gripperClosedWidth)
+        useY = not(box.box_dims.y > self.gripperOpenWidth or box.box_dims.y < self.gripperClosedWidth)
+        if not(useX or useY):
+            rospy.logerr("Could not pick up the box because its dimensions are too large or small for the gripper")
+            self._pickServer.set_aborted()
+            return False
         #Create goal message for pregrasp position and add it to the task queue
-        preGraspGoal = self._makePreGrasp(goal)
+        preGraspGoal = self._makePreGrasp(box, goal.collision_object_name)
         if preGraspGoal == False:
-            return False;
+            self._pickServer.set_aborted()
+            return False
         self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_MOVE,preGraspGoal))
         #Add open gripper task to queue
         self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_OPEN))
@@ -202,31 +212,22 @@ class BoxManipulator:
             pass
         
             
-    def _makePreGrasp(self, pickupGoal):
-        '''Given a PickupGoal message, fit a box to the point cloud in the target, identify an 
+    def _makePreGrasp(self, box, objectName):
+        '''Given a bounding box, identify an 
         approach vector, and designate a pregrasp position along that vector. Returns a MoveArmGoal
         message to move to the preGrasp position'''
         
-        #Fit box
-        box = self._boundingBoxClient(pickupGoal.target.cluster)
-        #Check that the box width and/or length are within the gripper limits
         useX = not(box.box_dims.x > self.gripperOpenWidth or box.box_dims.x < self.gripperClosedWidth)
         useY = not(box.box_dims.y > self.gripperOpenWidth or box.box_dims.y < self.gripperClosedWidth)
-        if useX:
-            rospy.logdebug("Box width is within gripper parameters (%f m)",box.box_dims.x)
-        if useY:
-            rospy.logdebug("Box depth is within gripper parameters (%f m)",box.box_dims.y)
-        if not(useX or useY):
-            rospy.logerr("Could not pick up the box because its dimensions are too large or small for the gripper")
-            return False
+         
         #Do all geometry in robot's base_link frame
         boxPose = self._tf_listener.transformPose('/base_link', box.pose)
         #Turn box pose into a tf
         self._tf_broadcaster.sendTransform(
                 (boxPose.pose.position.x,boxPose.pose.position.y,boxPose.pose.position.z), 
                 (boxPose.pose.orientation.x,boxPose.pose.orientation.y,boxPose.pose.orientation.z,boxPose.pose.orientation.w),
-                rospy.Time.now(),
-                pickupGoal.collision_object_name,
+                boxPose.header.stamp,
+                objectName,
                 boxPose.header.frame_id)
         #Approach Vector is in the principal plane of the box most closely aligned with robot XZ. This plane will be tool YZ
         #Vector is at a downward 30 degree angle
@@ -248,9 +249,9 @@ class BoxManipulator:
             rospy.loginfo("Can only grab box along y axis")
             width = box.box_dims.y
             if theta >= 0 and theta <= math.pi:
-                conversionQuaternion = quaternionFromEuler(0, 7*math.pi/6, math.pi/2)
+                conversionQuaternion = quaternionFromEuler(0, 5*math.pi/6, math.pi/2)
             else:
-                conversionQuaternion = quaternionFromEuler(0, 7*math.pi/6, -math.pi/2)
+                conversionQuaternion = quaternionFromEuler(0, 5*math.pi/6, -math.pi/2)
         else:
             #Can use either face for pickup, so pick the one best aligned to the robot
             if theta >= math.pi/4 and theta >= 3*math.pi/4:
@@ -274,21 +275,30 @@ class BoxManipulator:
         self._tf_broadcaster.sendTransform(
                 (0,0,0), 
                 conversionQuaternion,
-                rospy.Time.now(),
-                pickupGoal.collision_object_name+'_rotated',
-                pickupGoal.collision_object_name)
+                boxPose.header.stamp,
+                objectName+'_rotated',
+                objectName)
         #Pregrasp TF is rotated box TF translated back along the z axis
         distance = self.preGraspDistance + self.gripperFingerLength
         self._tf_broadcaster.sendTransform(
                 (0,0,-distance),
                 (0,0,0,1),
-                rospy.Time.now(),
-                pickupGoal.collision_object_name+'_pregrasp',
-                pickupGoal.collision_object_name+'_rotated')
-        (trans, rot) = self._tf_listener.lookupTransform(self.frameID, pickupGoal.collision_object_name+'_pregrasp',rospy.Time(0))
+                boxPose.header.stamp,
+                objectName+'_pregrasp',
+                objectName+'_rotated')
+        while not rospy.is_shutdown():
+            try:
+                self._tf_listener.waitForTransform(self.frameID, objectName+'_pregrasp',boxPose.header.stamp, rospy.Duration(1.0))
+                (trans, rot) = self._tf_listener.lookupTransform(self.frameID, objectName+'_pregrasp',boxPose.header.stamp)
+            except (tf.Exception, tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as ex:
+                rospy.logwarn(ex)
+                rospy.logwarn("Exception looking up transform from %s to %s. Retrying.",self.frameID, objectName+'_pregrasp')
+            else:
+                break
         #Determine Orientation from vector and create constraint object
         o_constraint = OrientationConstraint()
         o_constraint.header.frame_id = self.frameID
+        o_constraint.header.stamp = rospy.Time.now()
         o_constraint.link_name = self.toolLinkName
         o_constraint.orientation = Quaternion(rot[0],rot[1],rot[2],rot[3])
         o_constraint.absolute_roll_tolerance = 0.04
@@ -297,7 +307,7 @@ class BoxManipulator:
         
         #Determine position and tolerance from vector and box size
         pos_constraint = PositionConstraint()
-        pos_constraint.header = pos_constraint.header
+        pos_constraint.header = o_constraint.header
         pos_constraint.link_name = self.toolLinkName
         pos_constraint.position = Point(trans[0],trans[1],trans[2])
         #Position tolerance (in final tool frame) is:
