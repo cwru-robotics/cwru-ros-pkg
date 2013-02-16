@@ -14,30 +14,7 @@ from math import sin, cos
 import copy
 import numpy
 import tf
-
-def multiplyTuple(tup1, tup2):
-    '''Cross-multiply two tuples (useful for quaternion multiplication)'''
-    num1 = numpy.asarray(tup1)
-    num2 = numpy.asarray(tup2)
-    return tuple(numpy.cross(num1,num2))
-
-
-def quaternionFromRPY(roll, pitch, yaw):
-    '''Given Tait-Bryan roll, pitch, and yaw angles, create a quaternion tuple 
-    in (x, y, z, w) order'''
-    w = cos(roll/2)*cos(pitch/2)*cos(yaw/2) + sin(roll/2)*sin(pitch/2)*sin(yaw/2)
-    x = sin(roll/2)*cos(pitch/2)*cos(yaw/2) - cos(roll/2)*sin(pitch/2)*sin(yaw/2)
-    y = cos(roll/2)*sin(pitch/2)*cos(yaw/2) + sin(roll/2)*cos(pitch/2)*sin(yaw/2)
-    z = cos(roll/2)*cos(pitch/2)*sin(yaw/2) - sin(roll/2)*sin(pitch/2)*cos(yaw/2)
-    return (w, x, y, z)
-
-def quaternionFromEuler(phi, theta, psi):
-    '''Given Euler ZYZ angles, create a quaternion tuple in (x, y, z, w) order'''
-    w = cos(phi/2)*cos(theta/2)*cos(psi/2) - sin(phi/2)*cos(theta/2)*sin(psi/2)#sin(phi/2)*cos(theta/2)*cos(psi/2) - cos(phi/2)*sin(theta/2)*sin(psi/2)
-    x = cos(phi/2)*cos(psi/2)*sin(theta/2) + sin(phi/2)*sin(theta/2)*sin(psi/2)#cos(phi/2)*sin(theta/2)*cos(psi/2) + sin(phi/2)*cos(theta/2)*sin(psi/2)
-    y = cos(phi/2)*sin(theta/2)*sin(psi/2) - sin(phi/2)*cos(psi/2)*sin(theta/2)#cos(phi/2)*cos(theta/2)*sin(psi/2) - sin(phi/2)*sin(theta/2)*cos(psi/2)
-    z = cos(phi/2)*cos(theta/2)*sin(psi/2) + cos(theta/2)*cos(psi/2)*sin(phi/2)#cos(phi/2)*cos(theta/2)*cos(psi/2) + sin(phi/2)*sin(theta/2)*sin(psi/2)
-    return (x, y, z, w)
+import tf.transformations as transformations
 
 class BoxManipulator:
     #TODO Get these from the parameter server
@@ -221,20 +198,24 @@ class BoxManipulator:
         useY = not(box.box_dims.y > self.gripperOpenWidth or box.box_dims.y < self.gripperClosedWidth)
          
         #Do all geometry in robot's base_link frame
-        boxPose = self._tf_listener.transformPose('/base_link', box.pose)
-        #Turn box pose into a tf
+        #Turn box pose into a tf for visualization
         self._tf_broadcaster.sendTransform(
-                (boxPose.pose.position.x,boxPose.pose.position.y,boxPose.pose.position.z), 
-                (boxPose.pose.orientation.x,boxPose.pose.orientation.y,boxPose.pose.orientation.z,boxPose.pose.orientation.w),
-                boxPose.header.stamp,
+                (box.pose.position.x,box.pose.position.y,box.pose.position.z), 
+                (box.pose.orientation.x,box.pose.orientation.y,box.pose.orientation.z,box.pose.orientation.w),
+                box.pose.header.stamp,
                 objectName,
-                boxPose.header.frame_id)
+                box.pose.header.frame_id)
+        #Turn box pose into a tf matrix in the proper frame
+        boxPose = self._tf_listener.transformPose(self.frameID, box.pose)
+        boxMat = transformations.quaternion_matrix([boxPose.pose.orientation.x,boxPose.pose.orientation.y,boxPose.pose.orientation.z,boxPose.pose.orientation.w])
+        boxMat[:3, 3] = [boxPose.pose.position.x,boxPose.pose.position.y,boxPose.pose.position.z]
         #Approach Vector is in the principal plane of the box most closely aligned with robot XZ. This plane will be tool YZ
         #Vector is at a downward 30 degree angle
         #Orientation of box should be (approximately) a pure z rotation from the robot base_link
         #Therefore the angle of rotation about the z axis is appoximately
         # 2 * acos(q_w)
-        theta = 2 * math.acos(boxPose.pose.orientation.w)
+        boxPose_base = self._tf_listener.transformPose('/base_link', boxPose)
+        theta = 2 * math.acos(boxPose_base.pose.orientation.w)
         rospy.logdebug('Angle is %f',theta)
         #Determine what to rotate the pose quaternion by to get the vector quaternion
         #Start with a 30 degree downward rotation
@@ -242,65 +223,61 @@ class BoxManipulator:
             rospy.loginfo("Can only grab box along x axis")
             width = box.box_dims.x
             if theta >= math.pi/2 and theta <= 3*math.pi/2:
-                conversionQuaternion = quaternionFromEuler(0, 5*math.pi/6, 0)
+            	rotationMatrix = transformations.euler_matrix(0, 0, 5*math.pi/6, 0, 'rzyz')
             else:
-                conversionQuaternion = quaternionFromEuler(math.pi, 5*math.pi/6, 0)
+                rotationMatrix = transformations.euler_matrix(math.pi, 5*math.pi/6, 0, 'rzyz')
         elif useY and not useX:
             rospy.loginfo("Can only grab box along y axis")
             width = box.box_dims.y
             if theta >= 0 and theta <= math.pi:
-                conversionQuaternion = quaternionFromEuler(0, 5*math.pi/6, math.pi/2)
+                rotationMatrix = transformations.euler_matrix(0, 5*math.pi/6, math.pi/2, 'rzyz')
             else:
-                conversionQuaternion = quaternionFromEuler(0, 5*math.pi/6, -math.pi/2)
+                rotationMatrix = transformations.euler_matrix(0, 5*math.pi/6, -math.pi/2, 'rzyz')
         else:
             #Can use either face for pickup, so pick the one best aligned to the robot
             if theta >= math.pi/4 and theta >= 3*math.pi/4:
                 rospy.loginfo("Grabbing box along -x axis")
                 width = box.box_dims.y
-                conversionQuaternion = quaternionFromEuler(math.pi, 5*math.pi/6, 0)
+                rotationMatrix = transformations.euler_matrix(math.pi, 5*math.pi/6, 0, 'rzyz')
             elif theta >= 3*math.pi/4 and theta <= 5*math.pi/4:
                 rospy.loginfo("Grabbing box along y axis")
                 width = box.box_dims.x
-                conversionQuaternion = quaternionFromEuler(-math.pi/2, 5*math.pi/6, 0)
+                rotationMatrix = transformations.euler_matrix(-math.pi/2, 5*math.pi/6, 0, 'rzyz')
             elif theta >= 5*math.pi/4 and theta <= 7*math.pi/4:
                 rospy.loginfo("Grabbing box along x axis")
                 width = box.box_dims.y
-                conversionQuaternion = quaternionFromEuler(0, 5*math.pi/6, 0)
+                rotationMatrix = transformations.euler_matrix(0, 5*math.pi/6, 0, 'rzyz')
             else:
                 rospy.loginfo("Grabbing box along -y axis")
                 width = box.box_dims.x
-                conversionQuaternion = quaternionFromEuler(math.pi/2, 5*math.pi/6, 0)
-        print conversionQuaternion        
-        #Box TF rotated into orientation of gripper
+                rotationMatrix = transformations.euler_matrix(math.pi/2, 5*math.pi/6, 0, 'rzyz')
+        print rotationMatrix
+        #Rotated TF for visualization
         self._tf_broadcaster.sendTransform(
                 (0,0,0), 
-                conversionQuaternion,
-                boxPose.header.stamp,
+                transformations.quaternion_from_matrix(rotationMatrix),
+                box.pose.header.stamp,
                 objectName+'_rotated',
                 objectName)
         #Pregrasp TF is rotated box TF translated back along the z axis
         distance = self.preGraspDistance + self.gripperFingerLength
+        preGraspMat = transformations.translation_matrix(0,0,-distance)
+        fullMat = transformations.concatenate_matrices(boxMat, rotationMatrix, preGraspMat)
+        p = transformations.translation_from_matrix(fullMat)
+        q = transformations.quaternion_from_matrix(fullMat)
         self._tf_broadcaster.sendTransform(
-                (0,0,-distance),
-                (0,0,0,1),
-                boxPose.header.stamp,
+                p,
+                q,
+                box.pose.header.stamp,
                 objectName+'_pregrasp',
-                objectName+'_rotated')
-        while not rospy.is_shutdown():
-            try:
-                self._tf_listener.waitForTransform(self.frameID, objectName+'_pregrasp',boxPose.header.stamp, rospy.Duration(1.0))
-                (trans, rot) = self._tf_listener.lookupTransform(self.frameID, objectName+'_pregrasp',boxPose.header.stamp)
-            except (tf.Exception, tf.LookupException, tf.ConnectivityException, tf.ExtrapolationException) as ex:
-                rospy.logwarn(ex)
-                rospy.logwarn("Exception looking up transform from %s to %s. Retrying.",self.frameID, objectName+'_pregrasp')
-            else:
-                break
-        #Determine Orientation from vector and create constraint object
+                self.frameID)
+        
+        #Create Orientation constraint object
         o_constraint = OrientationConstraint()
         o_constraint.header.frame_id = self.frameID
         o_constraint.header.stamp = rospy.Time.now()
         o_constraint.link_name = self.toolLinkName
-        o_constraint.orientation = Quaternion(rot[0],rot[1],rot[2],rot[3])
+        o_constraint.orientation = Quaternion(q[0],q[1],q[2],q[3])
         o_constraint.absolute_roll_tolerance = 0.04
         o_constraint.absolute_pitch_tolerance = 0.04
         o_constraint.absolute_yaw_tolerance = 0.04
@@ -309,11 +286,13 @@ class BoxManipulator:
         pos_constraint = PositionConstraint()
         pos_constraint.header = o_constraint.header
         pos_constraint.link_name = self.toolLinkName
-        pos_constraint.position = Point(trans[0],trans[1],trans[2])
+        pos_constraint.position = Point(p[0],p[1],p[2])
         #Position tolerance (in final tool frame) is:
         #  x = gripper open width - box x width
         #  y = object height * precision multiplier (<=1)
         #  z = 1 cm
+        #Note that this is probably in the wrong frame, negating the advantage of all of the thinking in the preceding 4 lines
+        #TODO: If you're feeling ambitious, turn this into a mesh and make it the right shape
         pos_constraint.constraint_region_shape.type = Shape.BOX
         pos_constraint.constraint_region_shape.dimensions = [
             self.gripperOpenWidth - width, 
@@ -346,19 +325,27 @@ class BoxManipulator:
         motion_plan_request.planner_id = ""
         motion_plan_request.allowed_planning_time = rospy.Duration(5,0)
         
-        #Translate from pregrasp position to final position in a roughly straight line
-        pos_constraint = copy.deepcopy(preGraspGoal.motion_plan_request.goal_constraints.position_constraints[0])
-        distance = pos_constraint.position.z + self.preGraspDistance + self.gripperFingerLength
-        pos_constraint.position.z = distance
-        path_constraint = copy.deepcopy(preGraspGoal.motion_plan_request.goal_constraints.position_constraints[0])
-        path_constraint.position.z = distance/2;
-        path_constraint.constraint_region_shape.dimensions[2] += distance
-        motion_plan_request.goal_constraints.position_constraints.append(pos_constraint)
-        motion_plan_request.path_constraints.position_constraints.append(path_constraint)
         #Orientation constraint is the same as for pregrasp
         motion_plan_request.goal_constraints.orientation_constraints = preGraspGoal.motion_plan_request.goal_constraints.orientation_constraints
         motion_plan_request.path_constraints.orientation_constraints = preGraspGoal.motion_plan_request.goal_constraints.orientation_constraints
         graspGoal.motion_plan_request = motion_plan_request
+        
+        #Translate from pregrasp position to final position in a roughly straight line
+        o = motion_plan_request.goal_constraints.orientation_constraints[0]
+        p = preGraspGoal.motion_plan_request.goal_constraints.position_constraints[0]
+        preGraspMat = transformations.quaternion_matrix([o.x,o.y,o.z,o.w])
+        preGraspMat[:3, 3] = [p.x,p.y,p.z]
+        distance = self.preGraspDistance + self.gripperFingerLength
+        graspTransMat = transformations.translation_matrix(0,0,distance)
+        graspMat = transformations.concatenate_matrices(preGraspMat, graspTransMat)
+        p = transformations.translation_from_matrix(graspMat)
+        
+        pos_constraint = PositionConstraint()
+        pos_constraint.header = o_constraint.header
+        pos_constraint.link_name = self.toolLinkName
+        pos_constraint.position = Point(p[0],p[1],p[2])
+        motion_plan_request.goal_constraints.position_constraints.append(pos_constraint)
+        #TODO: Add path constraint to require a (roughly) cartesian move
         
         #Turn off collision operations between the gripper and all objects
         collisionOperation = CollisionOperation(self.gripperCollisionName, 
