@@ -23,25 +23,31 @@ class BoxManipulator:
     armActionName = 'move_irb_120'
     toolLinkName = "gripper_body"
     frameID = "/irb_120_base_link"
-    preGraspDistance = .1 #meters
+    preGraspDistance = .05 #meters
     gripperFingerLength = 0.115 #meters
-    gripperOpenWidth = 0.075 #0.065 #meters
+    gripperOpenWidth = 0.08 #0.065 #meters
     gripperClosedWidth = 0.046 #meters
-    gripperCollisionName = "gripper"
+    gripperCollisionName = "gripper_body"
     attachLinkName = "gripper_jaw_1"
     def __init__(self):
         self._tasks = Queue()
         self._moveArm = actionlib.SimpleActionClient(self.armActionName, MoveArmAction)
         self._moveArm.wait_for_server()
-        rospy.loginfo('Connected to arm action server.')
+        rospy.loginfo('Box manipulator Connected to arm action server.')
         self._gripperClient = rospy.ServiceProxy('abby_gripper/gripper', gripper)
-        rospy.loginfo('Connected to gripper service.')
+        rospy.loginfo('Box manipulator Connected to gripper service.')
         self._attachPub = rospy.Publisher('attached_collision_object', AttachedCollisionObject)
-        rospy.loginfo('Publishing collision attachments on /attached_collision_object')
+        rospy.loginfo('Box manipulator Publishing collision attachments on /attached_collision_object')
         self._boundingBoxClient = rospy.ServiceProxy('find_cluster_bounding_box', FindClusterBoundingBox)
-        rospy.loginfo('Connected to bounding box service.')
+        rospy.loginfo('Box manipulator Connected to bounding box service.')
         self._tf_listener = tf.TransformListener()
-        #self._tf_listener.waitForTransform("/base_link","/irb_120_base_link", rospy.Time.now()+rospy.Duration.from_sec(0.5), rospy.Duration(10.0))
+        while not rospy.is_shutdown():
+            try:
+                self._tf_listener.waitForTransform("/base_link","/irb_120_base_link", rospy.Time(0), rospy.Duration(2.0))
+            except (tf.Exception):
+                rospy.loginfo('Box manipulator still waiting on a transform')
+            else:
+                break;
         self._tf_broadcaster = tf.TransformBroadcaster()
         self._pickServer = actionlib.SimpleActionServer('object_manipulation_pickup', PickupAction, auto_start=False)
         self._pickServer.register_goal_callback(self._pickGoalCB)
@@ -85,11 +91,11 @@ class BoxManipulator:
         #Add open gripper task to queue
         self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_OPEN))
         #Add final approach task to queue
-        #self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_MOVE, self._makeGraspPath(preGraspGoal)))
+        self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_MOVE, self._makeGraspPath(preGraspGoal)))
         #Add close gripper task to queue
-        #self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_CLOSE))
+        self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_CLOSE))
         #Add attach object task to queue
-        #self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_ATTACH, object_name = goal.target.collision_name))
+        self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_ATTACH, object_name = goal.target.collision_name))
         self.runNextTask()
     
     def _pickPreemptCB(self):
@@ -200,8 +206,8 @@ class BoxManipulator:
         #Do all geometry in robot's base_link frame
         #Turn box pose into a tf for visualization
         self._tf_broadcaster.sendTransform(
-                (box.pose.position.x,box.pose.position.y,box.pose.position.z), 
-                (box.pose.orientation.x,box.pose.orientation.y,box.pose.orientation.z,box.pose.orientation.w),
+                (box.pose.pose.position.x,box.pose.pose.position.y,box.pose.pose.position.z),
+                (box.pose.pose.orientation.x,box.pose.pose.orientation.y,box.pose.pose.orientation.z,box.pose.pose.orientation.w),
                 box.pose.header.stamp,
                 objectName,
                 box.pose.header.frame_id)
@@ -230,7 +236,7 @@ class BoxManipulator:
             rospy.loginfo("Can only grab box along y axis")
             width = box.box_dims.y
             if theta >= 0 and theta <= math.pi:
-                rotationMatrix = transformations.euler_matrix(0, 5*math.pi/6, math.pi/2, 'rzyz')
+                rotationMatrix = transformations.euler_matrix(0, 7*math.pi/6, math.pi/2, 'rzyz')
             else:
                 rotationMatrix = transformations.euler_matrix(0, 5*math.pi/6, -math.pi/2, 'rzyz')
         else:
@@ -242,7 +248,7 @@ class BoxManipulator:
             elif theta >= 3*math.pi/4 and theta <= 5*math.pi/4:
                 rospy.loginfo("Grabbing box along y axis")
                 width = box.box_dims.x
-                rotationMatrix = transformations.euler_matrix(-math.pi/2, 5*math.pi/6, 0, 'rzyz')
+                rotationMatrix = transformations.euler_matrix(0, 7*math.pi/6, math.pi/2, 'rzyz')
             elif theta >= 5*math.pi/4 and theta <= 7*math.pi/4:
                 rospy.loginfo("Grabbing box along x axis")
                 width = box.box_dims.y
@@ -250,25 +256,25 @@ class BoxManipulator:
             else:
                 rospy.loginfo("Grabbing box along -y axis")
                 width = box.box_dims.x
-                rotationMatrix = transformations.euler_matrix(math.pi/2, 5*math.pi/6, 0, 'rzyz')
+                rotationMatrix = transformations.euler_matrix(0, 5*math.pi/6, -math.pi/2, 'rzyz')
         print rotationMatrix
         #Rotated TF for visualization
         self._tf_broadcaster.sendTransform(
                 (0,0,0), 
                 transformations.quaternion_from_matrix(rotationMatrix),
-                box.pose.header.stamp,
+                boxPose.header.stamp,
                 objectName+'_rotated',
                 objectName)
         #Pregrasp TF is rotated box TF translated back along the z axis
         distance = self.preGraspDistance + self.gripperFingerLength
-        preGraspMat = transformations.translation_matrix(0,0,-distance)
+        preGraspMat = transformations.translation_matrix([0,0,-distance])
         fullMat = transformations.concatenate_matrices(boxMat, rotationMatrix, preGraspMat)
         p = transformations.translation_from_matrix(fullMat)
         q = transformations.quaternion_from_matrix(fullMat)
         self._tf_broadcaster.sendTransform(
                 p,
                 q,
-                box.pose.header.stamp,
+                boxPose.header.stamp,
                 objectName+'_pregrasp',
                 self.frameID)
         
@@ -326,22 +332,21 @@ class BoxManipulator:
         motion_plan_request.allowed_planning_time = rospy.Duration(5,0)
         
         #Orientation constraint is the same as for pregrasp
-        motion_plan_request.goal_constraints.orientation_constraints = preGraspGoal.motion_plan_request.goal_constraints.orientation_constraints
-        motion_plan_request.path_constraints.orientation_constraints = preGraspGoal.motion_plan_request.goal_constraints.orientation_constraints
+        motion_plan_request.goal_constraints.orientation_constraints = copy.deepcopy(preGraspGoal.motion_plan_request.goal_constraints.orientation_constraints)
         graspGoal.motion_plan_request = motion_plan_request
         
         #Translate from pregrasp position to final position in a roughly straight line
-        o = motion_plan_request.goal_constraints.orientation_constraints[0]
-        p = preGraspGoal.motion_plan_request.goal_constraints.position_constraints[0]
+        o = motion_plan_request.goal_constraints.orientation_constraints[0].orientation
+        p = preGraspGoal.motion_plan_request.goal_constraints.position_constraints[0].position
         preGraspMat = transformations.quaternion_matrix([o.x,o.y,o.z,o.w])
         preGraspMat[:3, 3] = [p.x,p.y,p.z]
         distance = self.preGraspDistance + self.gripperFingerLength
-        graspTransMat = transformations.translation_matrix(0,0,distance)
+        graspTransMat = transformations.translation_matrix([0,0,distance])
         graspMat = transformations.concatenate_matrices(preGraspMat, graspTransMat)
         p = transformations.translation_from_matrix(graspMat)
         
         pos_constraint = PositionConstraint()
-        pos_constraint.header = o_constraint.header
+        pos_constraint.header = motion_plan_request.goal_constraints.orientation_constraints[0].header
         pos_constraint.link_name = self.toolLinkName
         pos_constraint.position = Point(p[0],p[1],p[2])
         motion_plan_request.goal_constraints.position_constraints.append(pos_constraint)
@@ -355,7 +360,7 @@ class BoxManipulator:
         graspGoal.operations.collision_operations.append(collisionOperation)
         
         return graspGoal
-    
+  
     def _makePlace(self, placeGoal):
         placePose = placeGoal.place_locations.pop()
         
@@ -383,11 +388,11 @@ class BoxManipulator:
         
         o_constraint = OrientationConstraint()
         o_constraint.header = pos_constraint.header
-        o_constraint.link_name = pos_constraint.link_name
+        o_constraint.link_name = self.toolLinkName
         o_constraint.orientation = placePose.pose.orientation
         o_constraint.absolute_roll_tolerance = 0.04
         o_constraint.absolute_pitch_tolerance = 0.04
-        o_constraint.absolute_yaw_tolerance = 0.04
+        o_constraint.absolute_yaw_tolerance = .555554
         o_constraint.weight = 1
         motion_plan_request.goal_constraints.orientation_constraints.append(o_constraint)
         

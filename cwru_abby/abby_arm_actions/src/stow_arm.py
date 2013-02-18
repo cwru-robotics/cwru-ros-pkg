@@ -27,7 +27,7 @@ class StowArm:
         #Joint Positions
         motion_plan_request.goal_constraints.joint_constraints[0].position = 0.00
         motion_plan_request.goal_constraints.joint_constraints[1].position = -1.57
-        motion_plan_request.goal_constraints.joint_constraints[2].position = 1.22
+        motion_plan_request.goal_constraints.joint_constraints[2].position = 0.75#1.22
         motion_plan_request.goal_constraints.joint_constraints[3].position = 0.0
         motion_plan_request.goal_constraints.joint_constraints[4].position = 0.03
         motion_plan_request.goal_constraints.joint_constraints[5].position = -0.84
