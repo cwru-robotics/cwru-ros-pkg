@@ -27,7 +27,7 @@ class BoxManipulator:
     gripperFingerLength = 0.115 #meters
     gripperOpenWidth = 0.08 #0.065 #meters
     gripperClosedWidth = 0.046 #meters
-    gripperCollisionName = "gripper_body"
+    gripperCollisionNames = ("gripper_body", "gripper_jaw_1", "gripper_jaw_2")
     attachLinkName = "gripper_jaw_1"
     def __init__(self):
         self._tasks = Queue()
@@ -257,7 +257,6 @@ class BoxManipulator:
                 rospy.loginfo("Grabbing box along -y axis")
                 width = box.box_dims.x
                 rotationMatrix = transformations.euler_matrix(0, 5*math.pi/6, -math.pi/2, 'rzyz')
-        print rotationMatrix
         #Rotated TF for visualization
         self._tf_broadcaster.sendTransform(
                 (0,0,0), 
@@ -340,11 +339,19 @@ class BoxManipulator:
         p = preGraspGoal.motion_plan_request.goal_constraints.position_constraints[0].position
         preGraspMat = transformations.quaternion_matrix([o.x,o.y,o.z,o.w])
         preGraspMat[:3, 3] = [p.x,p.y,p.z]
-        distance = self.preGraspDistance + self.gripperFingerLength
+        distance = self.preGraspDistance + self.gripperFingerLength/2
         graspTransMat = transformations.translation_matrix([0,0,distance])
         graspMat = transformations.concatenate_matrices(preGraspMat, graspTransMat)
         p = transformations.translation_from_matrix(graspMat)
-        
+       
+        #Publish grasp transform for visualization
+        self._tf_broadcaster.sendTransform(
+                (p[0],p[1],p[2]),
+                (o.x, o.y, o.x, o.w),
+                motion_plan_request.goal_constraints.orientation_constraints[0].header.stamp,
+                "grasp",
+                motion_plan_request.goal_constraints.orientation_constraints[0].header.frame_id)
+ 
         pos_constraint = PositionConstraint()
         pos_constraint.header = motion_plan_request.goal_constraints.orientation_constraints[0].header
         pos_constraint.link_name = self.toolLinkName
@@ -353,11 +360,12 @@ class BoxManipulator:
         #TODO: Add path constraint to require a (roughly) cartesian move
         
         #Turn off collision operations between the gripper and all objects
-        collisionOperation = CollisionOperation(self.gripperCollisionName, 
+        for collisionName in self.gripperCollisionNames:
+            collisionOperation = CollisionOperation(collisionName, 
                                     CollisionOperation.COLLISION_SET_ALL,
                                     0.0,
                                     CollisionOperation.DISABLE)
-        graspGoal.operations.collision_operations.append(collisionOperation)
+            graspGoal.operations.collision_operations.append(collisionOperation)
         
         return graspGoal
   
