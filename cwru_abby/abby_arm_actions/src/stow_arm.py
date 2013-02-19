@@ -50,7 +50,7 @@ class StowArm:
     def sendUntilSuccess(self, timeOut = 60):
         result = False
         r = rospy.Rate(1)
-        while not result:
+        while not result and not rospy.is_shutdown():
             result = self.sendOnce(timeOut)
             if not result:
                 r.sleep()
