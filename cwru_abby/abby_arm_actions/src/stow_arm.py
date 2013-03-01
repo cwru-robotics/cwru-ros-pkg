@@ -27,7 +27,7 @@ class StowArm:
         #Joint Positions
         motion_plan_request.goal_constraints.joint_constraints[0].position = 0.00
         motion_plan_request.goal_constraints.joint_constraints[1].position = -1.57
-        motion_plan_request.goal_constraints.joint_constraints[2].position = 1.22
+        motion_plan_request.goal_constraints.joint_constraints[2].position = 0.75#1.22
         motion_plan_request.goal_constraints.joint_constraints[3].position = 0.0
         motion_plan_request.goal_constraints.joint_constraints[4].position = 0.03
         motion_plan_request.goal_constraints.joint_constraints[5].position = -0.84
@@ -50,7 +50,7 @@ class StowArm:
     def sendUntilSuccess(self, timeOut = 60):
         result = False
         r = rospy.Rate(1)
-        while not result:
+        while not result and not rospy.is_shutdown():
             result = self.sendOnce(timeOut)
             if not result:
                 r.sleep()

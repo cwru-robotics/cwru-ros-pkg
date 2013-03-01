@@ -61,6 +61,11 @@ class ObjectManipulationController:
         rospy.loginfo('Connected to collision map processing service')
         self._pickupClient = actionlib.SimpleActionClient('object_manipulation_pickup', PickupAction)
         self._placeClient = actionlib.SimpleActionClient('object_manipulation_place', PlaceAction)
+        rospy.loginfo('Object manipulation controller waiting for pick and place servers.')
+        self._pickupClient.wait_for_server()
+        self._placeClient.wait_for_server()
+        rospy.loginfo('Object manipulation controller connected to pick and place servers.')
+        rospy.loginfo('Object manipulation controller started.')
     
     def segmentationReplyToDetectionReply(self, segmentationResult):
         '''Converts a TableTopSegmentationReply into a TabletopDetectionResult'''
@@ -101,8 +106,12 @@ class ObjectManipulationController:
         
         self._pickupClient.wait_for_server()
         self._pickupClient.send_goal(goal)
-        self._pickupClient.wait_for_result(rospy.Duration.from_sec(10.0))
-        self.currentlyHeldObject = goal.target
+        if self._pickupClient.wait_for_result(rospy.Duration.from_sec(10.0)):
+            result = self._pickupClient.get_result()
+            if result.manipulation_result.value == result.manipulation_result.SUCCESS:
+                self.currentlyHeldObject = goal.target
+                return True;
+        return False;
 
     def storeObject(self):
         '''Sends a command to store the currently held object in the bin'''
@@ -110,14 +119,14 @@ class ObjectManipulationController:
         goal = PlaceGoal()
         goal.arm_name = 'irb_120'
         bin_location = PoseStamped()
-        bin_location.header.frame_id = '/irb_120_base_link'
-        bin_location.pose.position.x = 0.0816875
-        bin_location.pose.position.y = 0.207909
-        bin_location.pose.position.z = 0.243964
-        bin_location.pose.orientation.x =  0.847531
-        bin_location.pose.orientation.y =  0.297557
-        bin_location.pose.orientation.z = -0.140450
-        bin_location.pose.orientation.w =  0.416442
+        bin_location.header.frame_id = '/frame1'
+        bin_location.pose.position.x = -0.198
+        bin_location.pose.position.y = -0.758
+        bin_location.pose.position.z =  0.668
+        bin_location.pose.orientation.x = -0.708
+        bin_location.pose.orientation.y =  0.057
+        bin_location.pose.orientation.z = -0.386
+        bin_location.pose.orientation.w =  0.589
         goal.place_locations.append(bin_location)
         goal.collision_object_name = self.currentlyHeldObject.collision_name
         rospy.loginfo('Sent place goal to box manipulator')
@@ -129,19 +138,22 @@ if __name__ == '__main__':
     timer = rospy.Rate(.2)
     while not rospy.is_shutdown():
         resp = controller.runSegmentation()
-        mapResponse = controller.getMapResponse()
         if resp.result == resp.SUCCESS:
             rospy.loginfo("Tabletop detection service returned %d clusters", len(resp.clusters))
+            mapResponse = controller.getMapResponse()
+            break
         elif resp.result == resp.NO_TABLE:
             rospy.loginfo("No table detected")
         elif resp.result == resp.NO_CLOUD_RECEIVED:
             rospy.logwarn("No cloud received")
         elif resp.result == resp.OTHER_ERROR:
             rospy.logerr("Tabletop segmentation error")
-        for index in range(len(mapResponse.graspable_objects)):
-            rospy.loginfo("Picking up object number %d", index)
-            controller.pickup(mapResponse, index)
-            #controller.currentlyHeldObject = GraspableObject()
+    #controller.currentlyHeldObject = GraspableObject()
+    #controller.storeObject()
+    for index in range(len(mapResponse.graspable_objects)):
+        rospy.loginfo("Picking up object number %d", index)
+        if controller.pickup(mapResponse, index):
             controller.storeObject()
-       #timer.sleep()
+    rospy.spin()
+    #timer.sleep()
         
