@@ -1,0 +1,37 @@
+<launch>
+  <arg name="use_probabilistic_grasp_planner" default="false"/>
+
+<include file="$(find pr2_gripper_grasp_planner_cluster)/launch/pr2_gripper_grasp_planner_cluster_server.launch"/>
+  
+  <!-- Probabilistic grasp planner requires a grasp database -->
+  <include if="$(arg use_probabilistic_grasp_planner)" 
+    file="$(find bayesian_grasp_planner)/launch/bayesian_grasp_planner_node.launch"/>
+
+
+  <!--gripper grasp posture controller-->
+
+  <!-- tabletop collision map processing -->
+  <node pkg="tabletop_collision_map_processing" name="tabletop_collision_map_processing" 
+        type="tabletop_collision_map_processing_node" respawn="false" output="screen">
+        <param name="get_model_mesh_srv" value="/objects_database_node/get_model_mesh" />
+	<param name="static_map_cloud_name" value="full_cloud_filtered" />
+	<param name="table_thickness" value="0.01" />
+  </node>
+
+
+  <!--object manipulator-->
+  <node name="object_manipulator" pkg="abby_object_manipulator"
+    type="BoxManipulator.py" respawn="false" output="screen">
+  </node>  
+  
+  <!-- cluster bounding box finder--> 
+
+  <node name="cluster_bounding_box_finder" pkg="object_manipulator" cwd="node"
+    type="cluster_bounding_box_finder_server.py" output="screen" respawn="false" >
+	<param name="z_up_frame" value="/base_link" />
+  </node>
+
+  <!-- pad objects when filtering from collision map-->
+  <rosparam param="/robot_description_planning/default_object_padding">0.05</rosparam>
+
+</launch>

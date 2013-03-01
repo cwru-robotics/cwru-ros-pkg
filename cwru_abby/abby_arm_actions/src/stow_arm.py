@@ -6,7 +6,7 @@ import actionlib
 from arm_navigation_msgs.msg import *
 
 class StowArm:
-    def __init(self):
+    def __init__(self):
         self.client = actionlib.SimpleActionClient('move_irb_120', MoveArmAction)
         
         rospy.logdebug("Setting up goal request message.")
@@ -27,7 +27,7 @@ class StowArm:
         #Joint Positions
         motion_plan_request.goal_constraints.joint_constraints[0].position = 0.00
         motion_plan_request.goal_constraints.joint_constraints[1].position = -1.57
-        motion_plan_request.goal_constraints.joint_constraints[2].position = 1.22
+        motion_plan_request.goal_constraints.joint_constraints[2].position = 0.75#1.22
         motion_plan_request.goal_constraints.joint_constraints[3].position = 0.0
         motion_plan_request.goal_constraints.joint_constraints[4].position = 0.03
         motion_plan_request.goal_constraints.joint_constraints[5].position = -0.84
@@ -35,14 +35,14 @@ class StowArm:
         self.goal.motion_plan_request = motion_plan_request
         
         rospy.loginfo("Waiting for action server...")
-        client.wait_for_server()
+        self.client.wait_for_server()
         rospy.loginfo("Connected to action server.")
         
     def sendOnce(self, timeOut = 60):
         rospy.loginfo('Sending stow goal...')
         self.client.send_goal(self.goal)
-        if client.wait_for_result(rospy.Duration(timeOut, 0)):
-            return client.get_result()
+        if self.client.wait_for_result(rospy.Duration(timeOut, 0)):
+            return self.client.get_result()
         else:
             rospy.logwarn('Timed out attempting to stow arm.')
             return False
@@ -50,7 +50,7 @@ class StowArm:
     def sendUntilSuccess(self, timeOut = 60):
         result = False
         r = rospy.Rate(1)
-        while not result:
+        while not result and not rospy.is_shutdown():
             result = self.sendOnce(timeOut)
             if not result:
                 r.sleep()

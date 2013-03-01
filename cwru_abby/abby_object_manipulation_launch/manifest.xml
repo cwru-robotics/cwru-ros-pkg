@@ -1,0 +1,21 @@
+<package>
+  <description brief="abby_object_manipulation_launch">
+
+     abby_object_manipulation_launch
+
+  </description>
+  <author>Edward Venator</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/abby_object_manipulation_launch</url>
+  <depend package="pr2_arm_navigation_perception"/>
+  <depend package="abby_arm_navigation"/>
+  <depend package="abby_gripper"/>
+  <depend package="object_manipulator"/>
+  <depend package="probabilistic_grasp_planner"/>
+  <depend package="bayesian_grasp_planner"/>
+  <depend package="pr2_gripper_grasp_planner_cluster"/>
+
+</package>
+
+
