@@ -1,6 +1,6 @@
 <launch>
     <!-- Start the urdf server and publish tfs -->
-	<param name="robot_description" textfile="$(find abby_description)/urdf/abby.urdf" />
+	<param name="robot_description" command="$(find xacro)/xacro.py '$(find abby_description)/urdf/abby.xacro'" />
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 	<node pkg="tf" type="static_transform_publisher" name="base_frame_broadcaster" args="-0.04203954 -0.07963916 0.11 1.570795 0 0 base_link frame1 100" />
 	
