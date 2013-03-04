@@ -106,11 +106,14 @@ class ObjectManipulationController:
         
         self._pickupClient.wait_for_server()
         self._pickupClient.send_goal(goal)
-        if self._pickupClient.wait_for_result(rospy.Duration.from_sec(10.0)):
+        if self._pickupClient.wait_for_result(rospy.Duration.from_sec(60.0)):
             result = self._pickupClient.get_result()
             if result.manipulation_result.value == result.manipulation_result.SUCCESS:
                 self.currentlyHeldObject = goal.target
+                rospy.loginfo("Successfully picked up object")
                 return True;
+            rospy.logwarn("Pickup failed. Error %d",result.manipulation_result.value)
+        rospy.logwarn("Pickup timed out after %f seconds", 60.0)
         return False;
 
     def storeObject(self):

@@ -23,12 +23,13 @@ class BoxManipulator:
     armActionName = 'move_irb_120'
     toolLinkName = "gripper_body"
     frameID = "/irb_120_base_link"
-    preGraspDistance = .05 #meters
+    preGraspDistance = .1 #meters
     gripperFingerLength = 0.115 #meters
     gripperOpenWidth = 0.08 #0.065 #meters
     gripperClosedWidth = 0.046 #meters
-    gripperCollisionNames = ("gripper_body", "gripper_jaw_1", "gripper_jaw_2")
+    touchLinks = gripperCollisionNames = ("gripper_body", "gripper_jaw_1", "gripper_jaw_2")
     attachLinkName = "gripper_jaw_1"
+    
     def __init__(self):
         self._tasks = Queue()
         self._moveArm = actionlib.SimpleActionClient(self.armActionName, MoveArmAction)
@@ -82,20 +83,20 @@ class BoxManipulator:
             rospy.logerr("Could not pick up the box because its dimensions are too large or small for the gripper")
             self._pickServer.set_aborted()
             return False
+        #Add open gripper task to queue
+        self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_OPEN))
         #Create goal message for pregrasp position and add it to the task queue
         preGraspGoal = self._makePreGrasp(box, goal.collision_object_name)
         if preGraspGoal == False:
             self._pickServer.set_aborted()
             return False
         self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_MOVE,preGraspGoal))
-        #Add open gripper task to queue
-        self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_OPEN))
         #Add final approach task to queue
         self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_MOVE, self._makeGraspPath(preGraspGoal)))
         #Add close gripper task to queue
         self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_CLOSE))
         #Add attach object task to queue
-        self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_ATTACH, object_name = goal.target.collision_name))
+        self._tasks.put_nowait(ManipulatorTask(ManipulatorTask.TYPE_ATTACH, object_name = goal.collision_object_name))
         self.runNextTask()
     
     def _pickPreemptCB(self):
@@ -169,7 +170,7 @@ class BoxManipulator:
             rospy.loginfo('Moving the arm')
             self._moveArm.send_goal(task.move_goal, self._moveArmDoneCB, self._moveArmActiveCB, self._moveArmFeedbackCB)
         elif task.type == task.TYPE_ATTACH:
-            rospy.loginfo('Attaching an object')
+            rospy.loginfo('Attaching object: %s', task.object_name)
             obj = AttachedCollisionObject()
             obj.object.header.stamp = rospy.get_rostime()
             obj.object.header.frame_id = self.frameID
@@ -308,7 +309,7 @@ class BoxManipulator:
         preGraspGoal.planner_service_name = self.plannerServiceName
         motion_plan_request = MotionPlanRequest()
         motion_plan_request.group_name = self.armGroupName
-        motion_plan_request.num_planning_attempts = 1
+        motion_plan_request.num_planning_attempts = 5
         motion_plan_request.planner_id = ""
         motion_plan_request.allowed_planning_time = rospy.Duration(5,0)
         pos_constraint.weight = 1
@@ -326,7 +327,7 @@ class BoxManipulator:
         graspGoal.planner_service_name = self.plannerServiceName
         motion_plan_request = MotionPlanRequest()
         motion_plan_request.group_name = self.armGroupName
-        motion_plan_request.num_planning_attempts = 1
+        motion_plan_request.num_planning_attempts = 5
         motion_plan_request.planner_id = ""
         motion_plan_request.allowed_planning_time = rospy.Duration(5,0)
         
@@ -342,6 +343,9 @@ class BoxManipulator:
         distance = self.preGraspDistance + self.gripperFingerLength/2
         graspTransMat = transformations.translation_matrix([0,0,distance])
         graspMat = transformations.concatenate_matrices(preGraspMat, graspTransMat)
+        print preGraspMat
+        print graspTransMat
+        print graspMat
         p = transformations.translation_from_matrix(graspMat)
        
         #Publish grasp transform for visualization
@@ -356,6 +360,8 @@ class BoxManipulator:
         pos_constraint.header = motion_plan_request.goal_constraints.orientation_constraints[0].header
         pos_constraint.link_name = self.toolLinkName
         pos_constraint.position = Point(p[0],p[1],p[2])
+        pos_constraint.constraint_region_shape.type = Shape.BOX
+        pos_constraint.constraint_region_shape.dimensions = [0.01, 0.01, 0.01]
         motion_plan_request.goal_constraints.position_constraints.append(pos_constraint)
         #TODO: Add path constraint to require a (roughly) cartesian move
         
@@ -366,7 +372,6 @@ class BoxManipulator:
                                     0.0,
                                     CollisionOperation.DISABLE)
             graspGoal.operations.collision_operations.append(collisionOperation)
-        
         return graspGoal
   
     def _makePlace(self, placeGoal):
@@ -377,7 +382,7 @@ class BoxManipulator:
         
         motion_plan_request = MotionPlanRequest()
         motion_plan_request.group_name = self.armGroupName
-        motion_plan_request.num_planning_attempts = 1
+        motion_plan_request.num_planning_attempts = 5
         motion_plan_request.planner_id = ""
         motion_plan_request.allowed_planning_time = rospy.Duration(5,0)
         
@@ -421,7 +426,7 @@ class ManipulatorTask:
         self.object_name = object_name
 
 if __name__ == "__main__":
-    rospy.init_node('box_manipulator', log_level=rospy.DEBUG)
+    rospy.init_node('box_manipulator')
     rospy.loginfo('Box manipulator node started.')
     manipulator = BoxManipulator()
     rospy.spin()
