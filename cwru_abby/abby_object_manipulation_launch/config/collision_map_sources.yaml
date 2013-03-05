@@ -1,0 +1,9 @@
+cloud_sources:
+  - name: /camera/depth_registered/points
+    frame_subsample: 1
+    point_subsample: 1
+    sensor_frame: camera_depth_optical_frame
+
+camera_info_topic: /camera/depth_registered/camera_info
+camera_stereo_offset_left: 0
+camera_stereo_offset_right: 0 #possibly 75

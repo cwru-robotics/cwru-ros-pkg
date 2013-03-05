@@ -1,0 +1,55 @@
+<launch>
+  <arg name="do_preplan_scan" default="false" />
+  <arg name="do_monitoring" default="false" />
+  <arg name="kinect_frame_prefix" default="/camera" />
+  <arg name="kinect_camera_name" default="camera" />
+  <arg name="log_to_warehouse" default="false" />
+  <arg name="sim" default="false" />
+  <arg name="tod" default="false" />
+
+  <!-- load planning -->
+  <include file="$(find abby_arm_navigation)/launch/abby_arm_navigation.launch">
+  </include>
+  
+  <!-- self filter Kinect points -->
+  <node pkg="robot_self_filter" type="self_filter" respawn="true" name="self_filter" 
+        output="screen">
+        <remap from="cloud_in" to="/$(arg kinect_camera_name)/depth_registered/points" />
+        <remap from="cloud_out" to="/$(arg kinect_camera_name)/depth_registered/points_filtered" />
+        <param name="sensor_frame" type="string" value="$(arg kinect_frame_prefix)_rgb_optical_frame" />
+        <param name="subsample_value" type="double" value=".02"/>
+     <rosparam command="load" file="$(find abby_config)/config/arm/self_filter.yaml" />
+  </node>
+
+    <!-- separate self filter Kinect points for creating object models with higher resolution-->
+  <node pkg="robot_self_filter_color" type="self_filter_color" respawn="true" name="color_self_filter" 
+      output="screen">
+      <remap from="cloud_in" to="/$(arg kinect_camera_name)/depth_registered/points" />
+      <remap from="cloud_out" to="/$(arg kinect_camera_name)/depth_registered/object_modeling_points_filtered" />
+      <param name="sensor_frame" type="string" value="$(arg kinect_frame_prefix)_rgb_optical_frame" />
+      <param name="subsample_value" type="double" value=".005"/>
+     <rosparam command="load" file="$(find abby_config)/config/arm/self_filter.yaml" />
+  </node>
+  <!-- load collision map -->
+  <node pkg="collider" type="collider_node" name="collider_node" respawn="true" output="screen">
+     <param name="fixed_frame" type="string" value="base_link" />
+     <param name="resolution" type="double" value="0.025" />
+     <param name="max_range" type="double" value="2.5" />
+     <param name="publish_static_over_dynamic_map" value="true" />
+     <param name="sensor_model_hit" value= "0.8" />
+     <param name="sensor_model_miss" value= "0.31" />
+     <param name="sensor_model_min" value= "0.12" />
+     <param name="sensor_model_max" value= "0.95" />   
+
+     <remap from="collision_map_out" to="collision_map_occ" />
+     <remap from="point_cloud_out" to="octomap_point_cloud" />
+
+     <rosparam command="load" 
+       file="$(find abby_object_manipulation_launch)/config/collision_map_sources.yaml"/>
+   
+     <!-- self filtering links -->
+     <rosparam command="load" file="$(find abby_config)/config/arm/self_filter.yaml" />
+  </node>
+
+
+</launch>

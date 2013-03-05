@@ -1,41 +1,12 @@
 <launch>
     <arg name="flatten_table" default="true" />
-    <arg name="tabletop_segmentation_points_input" default="camera/depth_registered/points"/>
-
-    <!-- tabletop collision map processing -->
-<!--    <node pkg="tabletop_collision_map_processing" name="tabletop_collision_map_processing" 
-        type="tabletop_collision_map_processing_node" respawn="false" output="screen"/>
-
-    <param name="tabletop_collision_map_processing/static_map_cloud_name" value="full_cloud_filtered" />
--->
-
-    <!-- Object mesh database -->
-<!--    <param name="/household_objects_database/database_host" value="localhost" />
-    <param name="/household_objects_database/database_port" value="5432" />
-    <param name="/household_objects_database/database_user" value="abby" />
-    <param name="/household_objects_database/database_pass" value="abby" />
-    <param name="/household_objects_database/database_name" value="objects" />
-    <node pkg="household_objects_database" name="objects_database_node" type="objects_database_node" respawn="true" output="screen" />
--->
+    <arg name="cloud_in" default="camera/depth_registered/points"/>
 
   <!-- segmentation -->
-	<include file="$(find abby_manipulation_launch)/launch/tabletop_segmentation.launch">
-	  <arg name="tabletop_segmentation_points_in" value="$(arg tabletop_segmentation_points_input)" />
+	<include file="$(find abby_object_manipulation_launch)/launch/tabletop_segmentation.launch">
+	  <arg name="cloud_in" value="$(arg cloud_in)" />
 	  <arg name="flatten_table" value="$(arg flatten_table)"/>
 5	  <arg name="tabletop_segmentation_clustering_voxel_size" value="0.003" />
 7	  <arg name="table_padding" value="0.02"/>
 	</include>
-    
-    <!-- Object recognition -->
-    <!-- Without an object database, this will just return bounding boxes -->
-<!--    <include file="$(find tabletop_object_detector)/launch/tabletop_object_recognition.launch">
-	    <arg name="model_set" value="REDUCED_MODEL_SET" />
-    </include>
--->
-	<!--complete node -->
-<!--	<node pkg="tabletop_object_detector" name="tabletop_complete_node" type="tabletop_complete_node"
-	respawn="true" output="screen">
-	  <param name="perform_fit_merge" value="true" />
-	</node>
--->
 </launch>

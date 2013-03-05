@@ -1,8 +1,10 @@
 <launch>
     <!-- Start the urdf server and publish tfs -->
-	<param name="robot_description" textfile="$(find abby_description)/urdf/abby.urdf" />
+	<param name="robot_description" command="$(find xacro)/xacro.py '$(find abby_description)/urdf/abby.xacro'" />
 	<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
 	<node pkg="tf" type="static_transform_publisher" name="base_frame_broadcaster" args="-0.04203954 -0.07963916 0.11 1.570795 0 0 base_link frame1 100" />
+	<node pkg="tf" type="static_transform_publisher" name="jaw_tip1_broadcaster" args="0 0.0125 0.044 0 0 0 gripper_jaw_1 gripper_jaw_1_tip 100" />
+	<node pkg="tf" type="static_transform_publisher" name="jaw_tip2_broadcaster" args="0 0.0125 0.044 0 0 0 gripper_jaw_2 gripper_jaw_2_tip 100" />
 	
     <!--Only start the robot driver nodes if the robot is actually running.
         Otherwise, start the joint_state_publisher -->
@@ -24,12 +26,14 @@
 
     <!-- If no_kinect not set, start kinect -->
     <arg name="no_kinect" default="False" />
-    <include file="$(find openni_launch)/launch/openni.launch" unless="$(arg no_kinect)"/>
+    <include file="$(find openni_launch)/launch/openni.launch" unless="$(arg no_kinect)">
+        <arg name="publish_tf" value="false" />
+    </include>
     <param name="depth_registration" value="true" />
     <!-- Really awesome kinect monitor to kill the openni_node stupidness -->
-    <node pkg="pr2_object_manipulation_launch" type="kinect_monitor.py" name="kinect_monitor" unless="$(arg no_kinect)">
+    <!-- node pkg="pr2_object_manipulation_launch" type="kinect_monitor.py" name="kinect_monitor" unless="$(arg no_kinect)">
         <param name="kinect_node_name" value="camera_nodelet_manager" />
         <param name="grace_period" value="15" />
         <remap from="camera_info" to="/camera/rgb/camera_info" />
-    </node>
+    </node-->
 </launch>

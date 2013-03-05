@@ -1,6 +1,6 @@
 <launch>
 
-    <arg name="tabletop_segmentation_points_in" default="camera/depth_registered/points" />
+    <arg name="cloud_in" default="camera/depth_registered/object_modeling_points_filtered" />
     <arg name="tabletop_segmentation_convert_to_base_link" default="true" />
     <arg name="tabletop_segmentation_clustering_voxel_size" default="0.003" />
     <arg name="flatten_table" default="false"/>
@@ -8,7 +8,7 @@
 
     <node pkg="tabletop_object_detector" name="tabletop_segmentation" type="tabletop_segmentation" respawn="true" output="screen">
 	<!--topic remapping-->
-        <remap from="cloud_in" to="$(arg tabletop_segmentation_points_in)" />
+        <remap from="cloud_in" to="$(arg cloud_in)" />
         <remap from="segmentation_srv" to="tabletop_segmentation" />
         <remap from="markers_out" to="tabletop_segmentation_markers" />
 
