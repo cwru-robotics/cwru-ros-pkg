@@ -26,7 +26,9 @@
 
     <!-- If no_kinect not set, start kinect -->
     <arg name="no_kinect" default="False" />
-    <include file="$(find openni_launch)/launch/openni.launch" unless="$(arg no_kinect)"/>
+    <include file="$(find openni_launch)/launch/openni.launch" unless="$(arg no_kinect)">
+        <arg name="publish_tf" value="false" />
+    </include>
     <param name="depth_registration" value="true" />
     <!-- Really awesome kinect monitor to kill the openni_node stupidness -->
     <!-- node pkg="pr2_object_manipulation_launch" type="kinect_monitor.py" name="kinect_monitor" unless="$(arg no_kinect)">

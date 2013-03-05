@@ -9,7 +9,7 @@
     <joint name="frame_arm" type="fixed">
         <parent link="frame1"/>
         <child link="irb_120_base_link"/>
-		<origin rpy="3.1415926535 1.57079632679 0" xyz="0.04464 -0.475 0.703"/>
+		<origin rpy="-1.571 1.446 1.571" xyz="0.04464 -0.473311 0.753907"/>
     </joint>
     <joint name="arm_gripper" type="fixed">
         <parent link="irb_120_link_6"/>
