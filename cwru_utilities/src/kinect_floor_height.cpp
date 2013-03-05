@@ -154,8 +154,8 @@ int main(int argc, char** argv)
     ROS_ERROR("%s", ex.what());
   }
   init_segmentation();
-  //ros::Subscriber pcl_sub = nh.subscribe<sensor_msgs::PointCloud2>("/camera/depth_registered/points", 1, floor_pcl_callback); 
-  ros::Subscriber pcl_sub = nh.subscribe<sensor_msgs::PointCloud2>("/camera/depth_registered/points", 1, wall_pcl_callback); 
-  ros::Subscriber laser_sub = nh.subscribe<sensor_msgs::LaserScan>("/base_laser1_scan", 1, wall_laser_callback);
+  ros::Subscriber pcl_sub = nh.subscribe<sensor_msgs::PointCloud2>("/camera/depth_registered/points", 1, floor_pcl_callback); 
+  //ros::Subscriber pcl_sub = nh.subscribe<sensor_msgs::PointCloud2>("/camera/depth_registered/points", 1, wall_pcl_callback); 
+  //ros::Subscriber laser_sub = nh.subscribe<sensor_msgs::LaserScan>("/base_laser1_scan", 1, wall_laser_callback);
   ros::spin();
 }

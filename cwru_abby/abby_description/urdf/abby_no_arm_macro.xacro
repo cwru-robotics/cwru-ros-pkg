@@ -681,6 +681,27 @@
         <child link="bin"/>
 		<origin rpy="1.57079619722 0 -1.57079632679" xyz="-0.035 -0.474758386705 0.592669"/>
     </joint>
+    <link name="tanks">
+        <visual>
+            <geometry>
+                <cylinder radius="0.055" length="0.50" />
+            </geometry>
+			<material name="metal">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <cylinder radius="0.055" length="0.50" />
+            </geometry>
+        </collision>
+    </link>
+    <joint name="frame-tanks" type="fixed">
+        <parent link="frame1"/>
+        <child link="tanks"/>
+		<origin rpy="0 0 0" xyz="0.03 -0.4 0.7"/>
+    </joint>
+        
   </xacro:macro>
 </robot>
 
