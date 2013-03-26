@@ -11,25 +11,6 @@
   <include file="$(find abby_arm_navigation)/launch/abby_arm_navigation.launch">
   </include>
   
-  <!-- self filter Kinect points -->
-  <node pkg="robot_self_filter" type="self_filter" respawn="true" name="self_filter" 
-        output="screen">
-        <remap from="cloud_in" to="/$(arg kinect_camera_name)/depth_registered/points" />
-        <remap from="cloud_out" to="/$(arg kinect_camera_name)/depth_registered/points_filtered" />
-        <param name="sensor_frame" type="string" value="$(arg kinect_frame_prefix)_rgb_optical_frame" />
-        <param name="subsample_value" type="double" value=".02"/>
-     <rosparam command="load" file="$(find abby_config)/config/arm/self_filter.yaml" />
-  </node>
-
-    <!-- separate self filter Kinect points for creating object models with higher resolution-->
-  <node pkg="robot_self_filter_color" type="self_filter_color" respawn="true" name="color_self_filter" 
-      output="screen">
-      <remap from="cloud_in" to="/$(arg kinect_camera_name)/depth_registered/points" />
-      <remap from="cloud_out" to="/$(arg kinect_camera_name)/depth_registered/object_modeling_points_filtered" />
-      <param name="sensor_frame" type="string" value="$(arg kinect_frame_prefix)_rgb_optical_frame" />
-      <param name="subsample_value" type="double" value=".005"/>
-     <rosparam command="load" file="$(find abby_config)/config/arm/self_filter.yaml" />
-  </node>
   <!-- load collision map -->
   <node pkg="collider" type="collider_node" name="collider_node" respawn="true" output="screen">
      <param name="fixed_frame" type="string" value="base_link" />

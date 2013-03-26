@@ -31,8 +31,8 @@
   <param name="odom_alpha2" value="1.2"/><!-- Estimated noise in rotation estimate due to translation, -->
   <param name="odom_alpha3" value="1.8"/><!-- Estimated noise in translation estimate due to translation, m -->
   <param name="odom_alpha4" value="1.2"/><!-- Estimated noise in translation estimate due to rotation, m -->
-  <param name="odom_frame_id" value="odom"/>
-  <param name="base_frame_id" value="base_link" />
+  <param name="odom_frame_id" value="/odom"/>
+  <param name="base_frame_id" value="/base_link" />
   <param name="global_frame_id" value="map" />
 </node>
 </launch>

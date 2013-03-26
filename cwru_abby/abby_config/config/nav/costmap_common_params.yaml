@@ -2,8 +2,8 @@
 robot_base_frame: /base_link
 
 #Global
-obstacle_range: 5.0
-raytrace_range: 6.0 
+obstacle_range: 2.0
+raytrace_range: 3.0 
 #Scale the exponential decay so that it is basically a step function that drops to 0 at the inflation radius
 cost_scaling_factor: 10.0 #11.8
 
@@ -14,18 +14,18 @@ footprint: [
   [-0.292, -0.370],
   [ 0.916, -0.370],
   [ 0.916, -0.184],
-  [ 1.153, -0.184],
-  [ 1.153,  0.055],
-  [ 0.909,  0.135],
-  [ 0.550,  0.135],
+#  [ 1.153, -0.184],
+#  [ 1.153,  0.055],
+#  [ 0.909,  0.135],
+#  [ 0.550,  0.135],
   [ 0.550,  0.322],
   [-0.292,  0.322]
 ]
 
 #Sensors
-observation_sources: "base_laser1 kinect"
+observation_sources: "base_laser1 kinect_mark kinect_clear"
 base_laser1: {
-  sensor_frame: base_laser1_link, 
+  sensor_frame: /base_laser1_link, 
   data_type: LaserScan, 
   topic: /base_laser1_scan, 
   marking: true, 
@@ -33,27 +33,24 @@ base_laser1: {
   max_obstacle_height: 0.5, 
   min_obstacle_height: 0.2
 }
-kinect: {
-  sensor_frame: 
-  camera/camera_depth_frame, 
+kinect_mark: {
+  sensor_frame: /camera_rgb_optical_frame, 
   data_type: PointCloud2, 
-  topic: /camera/depth_registered/points, 
-  marking: true, 
-  clearing: true, 
-  max_obstacle_height: 2.0, 
-  min_obstacle_height: 0.1
-}
-bounding_box: {
-  sensor_frame: bounding_box, 
-  data_type: PointCloud, 
-  topic: /bounding_box, 
+  topic: /camera/depth_registered/object_modeling_points_filtered, 
   marking: true, 
   clearing: false, 
-  obstacle_range: 400.0, 
-  max_obstacle_height: 2.0, 
-  min_obstacle_height: 1.8
+  max_obstacle_height: 3.0, 
+  min_obstacle_height: 0.25
 }
-
+kinect_clear: {
+  sensor_frame: /camera_rgb_optical_frame, 
+  data_type: PointCloud2, 
+  topic: /camera/depth_registered/object_modeling_points_filtered, 
+  marking: false, 
+  clearing: true, 
+  max_obstacle_height: 3.0, 
+  min_obstacle_height: -0.1
+}
 #Map Type
 map_type: voxel
 

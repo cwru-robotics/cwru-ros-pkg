@@ -181,14 +181,14 @@ namespace cwru_base {
     }
 
     int16_t v13_diff = std::abs(diagnostics_info_.VMonitor_13V_mV - 13800);
-    if (v13_diff > 400) {
+    if (v13_diff > 1000) {
       status_lvl = diagnostic_msgs::DiagnosticStatus::ERROR;
-      status_msg += "13.8V line voltage is more than 400mv from 13.8V; ";
-    } else if (v13_diff > 200) {
+      status_msg += "13.8V line voltage is more than 1v from 13.8V; ";
+    } else if (v13_diff > 400) {
       if (status_lvl < diagnostic_msgs::DiagnosticStatus::WARN) {
         status_lvl = diagnostic_msgs::DiagnosticStatus::WARN;
       }
-      status_msg += "13.8V line voltage is more than 200mv from 13.8V; ";
+      status_msg += "13.8V line voltage is more than 400mv from 13.8V; ";
     }
 
     int16_t v5_diff = std::abs(diagnostics_info_.VMonitor_5V_mV - 5000);

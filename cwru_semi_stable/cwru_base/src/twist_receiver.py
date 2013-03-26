@@ -25,6 +25,7 @@ import rospy
 from geometry_msgs.msg import Twist
 from std_srvs.srv import Empty, EmptyResponse
 import packets
+import math
 
 
 class ToCRIO:
@@ -66,9 +67,14 @@ to_crio = ToCRIO()
 def twist_receiver(msg, params):
     toCRIO = params[0]
     push_casters = params[1]
+    speed_limit = params[2]
+    spin_speed_limit = params[3]
     multiplier_z = 1 if rl_swap else -1
     multiplier_x = -1 if push_casters else 1
-    
+    if abs(msg.angular.z) > spin_speed_limit:
+        msg.angular.z = math.copysign(spin_speed_limit, msg.angular.z)
+    if abs(msg.linear.x) > speed_limit:
+        msg.linear.x = math.copysign(speed_limit, msg.linear.x)
     toCRIO.send_angular_rate_command(multiplier_z*msg.angular.z, multiplier_x*msg.linear.x)
 
 def handle_reboot_request(req):
@@ -90,9 +96,11 @@ def handle_enable_motors_request(req):
 
 if __name__ == "__main__":
     rospy.init_node('twist_receiver')
-    push_casters = rospy.get_param("~push_casters")
-    rl_swap = rospy.get_param("~rl_swap")
-    rospy.Subscriber('/cmd_vel', Twist, twist_receiver, (to_crio, push_casters, rl_swap))
+    push_casters = rospy.get_param("~push_casters", 0)
+    rl_swap = rospy.get_param("~rl_swap", 0)
+    speed_limit = rospy.get_param("~speed_limit", 2.0)
+    spin_speed_limit = rospy.get_param("~spin_speed_limit", 1.0)
+    rospy.Subscriber('/cmd_vel', Twist, twist_receiver, (to_crio, push_casters, rl_swap, speed_limit, spin_speed_limit))
     rospy.Service('reboot_crio', Empty, handle_reboot_request)
     rospy.Service('disable_motors', Empty, handle_disable_motors_request)
     rospy.Service('enable_motors', Empty, handle_enable_motors_request)

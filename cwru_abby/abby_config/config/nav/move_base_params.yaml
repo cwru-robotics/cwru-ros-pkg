@@ -1,9 +1,9 @@
 recovery_behaviors:
     - name: conservative_reset 
       type: clear_costmap_recovery/ClearCostmapRecovery
-    - name: playsound_recovery
-      type: playsound_recovery/PlaySoundRecovery  
     - name: aggressive_reset
       type: clear_costmap_recovery/ClearCostmapRecovery
-
-#base_local_planner: pose_follower/PoseFollower
+controller_frequency: 16.0
+#base_local_planner: pr2_navigation_controllers/PoseFollower
+base_local_planner: base_local_planner/TrajectoryPlannerROS
+#oscillation_timeout: 1.0

@@ -29,7 +29,17 @@
     <include file="$(find openni_launch)/launch/openni.launch" unless="$(arg no_kinect)">
         <arg name="publish_tf" value="false" />
     </include>
-    <param name="depth_registration" value="true" />
+    <!--param name="camera/driver/depth_registration" value="true" /-->
+    <param name="camera/driver/data_skip" value="3" />
+  
+  <!-- self filter Kinect points -->
+  <node pkg="robot_self_filter_color" type="self_filter_color" respawn="true" name="color_self_filter" output="screen" unless="$(arg no_kinect)">
+      <remap from="cloud_in" to="/camera/depth_registered/points" />
+      <remap from="cloud_out" to="/camera/depth_registered/object_modeling_points_filtered" />
+      <param name="sensor_frame" type="string" value="/camera_rgb_optical_frame" />
+      <param name="subsample_value" type="double" value=".005"/>
+     <rosparam command="load" file="$(find abby_config)/config/arm/self_filter.yaml" />
+  </node>
     <!-- Really awesome kinect monitor to kill the openni_node stupidness -->
     <!-- node pkg="pr2_object_manipulation_launch" type="kinect_monitor.py" name="kinect_monitor" unless="$(arg no_kinect)">
         <param name="kinect_node_name" value="camera_nodelet_manager" />
