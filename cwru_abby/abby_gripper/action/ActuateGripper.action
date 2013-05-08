@@ -1,8 +1,0 @@
-#goal definition
-uint8 position
----
-#result definition
-bool success
----
-#feedback
-uint8 position
