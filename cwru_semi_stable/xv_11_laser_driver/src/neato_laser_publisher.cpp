@@ -44,9 +44,6 @@ int main(int argc, char **argv)
   ros::NodeHandle n;
   ros::NodeHandle priv_nh("~");
 
-  ros::NodeHandle nn;
-  ros::NodeHandle priv_nn("~");
-
   std::string port;
   int baud_rate;
   std::string frame_id;
@@ -59,14 +56,12 @@ int main(int argc, char **argv)
   priv_nh.param("frame_id", frame_id, std::string("neato_laser"));
   priv_nh.param("firmware_version", firmware_number, 1);
 
-  priv_nn.setParam("rpms",rpms.data);
-
   boost::asio::io_service io;
 
   try {
     xv_11_laser_driver::XV11Laser laser(port, baud_rate, firmware_number, io);
     ros::Publisher laser_pub = n.advertise<sensor_msgs::LaserScan>("scan", 1000);
-    ros::Publisher motor_pub = nn.advertise<std_msgs::UInt16>("rpms",1000);
+    ros::Publisher motor_pub = n.advertise<std_msgs::UInt16>("rpms",1000);
 
     while (ros::ok()) {
       sensor_msgs::LaserScan::Ptr scan(new sensor_msgs::LaserScan);
