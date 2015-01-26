@@ -1,0 +1,11 @@
+<launch>
+<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node>
+<param name="rate" value="100" />
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+<!--node name="base_footprint_base_link_static_publisher" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 base_footprint base_link 100" /-->
+<!-- Convert an xacro and put on parameter server -->
+<param name="robot_description" command="$(find xacro)/xacro.py '$(find cwru_urdf)/cwruBot_urdf.xacro'" />
+
+<!-- Spawn a robot into Gazebo -->
+<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model cwruBot" />
+</launch>
