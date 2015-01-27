@@ -37,7 +37,7 @@ qtcreator-*
 /planning/cfg
 /planning/docs
 /planning/src
-
+/catkin/devel/*
 *~
 
 # Emacs
@@ -45,3 +45,4 @@ qtcreator-*
 
 # Catkin custom files
 CATKIN_IGNORE
+*.cmake
