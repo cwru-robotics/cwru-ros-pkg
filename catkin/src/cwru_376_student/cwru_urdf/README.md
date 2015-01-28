@@ -15,9 +15,12 @@ In another terminal run `rosrun gazebo_ros gazebo`
 This should produce a flat, gray ground-plane.  If this does not come up, kill this process and restart it.
 
 In another terminal, run:
- `roslaunch cwru_urdf cwruBot_urdf.launch`
+ `roslaunch cwru_urdf cwruBot.launch`
 
-In rviz (`rosrun rviz rviz`), choose "base_link" as the fixed frame in rviz, and add a display of LaserScan (on topic /laser/scan) to visualize the lidar.
+In rviz (`rosrun rviz rviz`), choose "base_link" as the fixed frame in rviz. 
+Add a display of LaserScan (on topic /laser/scan) to visualize the lidar.
+Add a topic of "DepthCloud" and set the topic to /kinect/depth/image_raw to see the point cloud from simulated Kinect sensor.
+Add a topic of "Camera" and set the topic to /kinect/rgb/image_raw to see video from simulation of the Kinect's color camera.
 
 Can test run the robot from a command line, e.g., with (e.g.):
 
@@ -26,8 +29,6 @@ Can test run the robot from a command line, e.g., with (e.g.):
 To cause the robot to move at 0.2m/s and rotate at 0.1rad/sec, making slow circles.
 Run `rostopic echo odom` to see the robot achieve the commanded speeds, and to see the pose evolve as the robot moves.
 
-May add models to gazebo (e.g., construction barrel) to see the LIDAR visualization.
+Add models to gazebo (e.g., construction barrel) to see the LIDAR, camera and kinect visualizations.
 
-## Anticipated extensions
-We expect to add a Kinect and color camera to the system.
     
