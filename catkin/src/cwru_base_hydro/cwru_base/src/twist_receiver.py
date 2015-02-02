@@ -76,6 +76,7 @@ def twist_receiver(msg, params):
         msg.angular.z = math.copysign(spin_speed_limit, msg.angular.z)
     if abs(msg.linear.x) > speed_limit:
         msg.linear.x = math.copysign(speed_limit, msg.linear.x)
+    rospy.loginfo("spd: %s, ang: %s", multiplier_x*msg.linear.x, multiplier_z*msg.angular.z)
     toCRIO.send_angular_rate_command(multiplier_z*msg.angular.z, multiplier_x*msg.linear.x)
 
 def handle_reboot_request(req):
