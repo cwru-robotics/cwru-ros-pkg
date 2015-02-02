@@ -39,6 +39,8 @@ class ToCRIO:
         self.outgoingUDP.sendto(packets.make_vector_driver_packet(heading, speed), self.address)
 
     def send_angular_rate_command(self, angular_rate, speed):
+        print(speed, " <- speed(linear) \n")
+        print(angular_rate, " <- speed(angular) \n")
         self.outgoingUDP.sendto(packets.make_angular_rate_driver_packet(angular_rate, speed), self.address)
 
     def send_waypoint_command(self, x, y, heading, speed):
