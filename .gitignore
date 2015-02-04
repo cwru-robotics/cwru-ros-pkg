@@ -39,7 +39,7 @@ qtcreator-*
 /planning/src
 /catkin/devel/*
 *~
-
+.catkin_workspace
 # Emacs
 .#*
 
