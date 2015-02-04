@@ -1,4 +1,4 @@
-/* Copyright (c) 2010, Eric Perko
+/* Copyright (c) 2010, Eric Perko, edits made by Luc Bettaieb (2015)
  * All rights reserved
  *
  * This program is free software: you can redistribute it and/or modify
@@ -23,11 +23,11 @@
 #include <boost/bind.hpp>
 #include <boost/date_time/posix_time/posix_time_types.hpp>
 #include <cwru_base/packets.h>
-#include <cwru_base/Pose.h>
-#include <cwru_base/PowerState.h>
-#include <cwru_base/Sonar.h>
-#include <cwru_base/cRIOSensors.h>
-#include <cwru_base/NavSatFix.h>
+#include <cwru_msgs/Pose.h>
+#include <cwru_msgs/PowerState.h>
+#include <cwru_msgs/Sonar.h>
+#include <cwru_msgs/cRIOSensors.h>
+#include <cwru_msgs/NavSatFix.h>
 #include <std_msgs/Bool.h>
 #include <diagnostic_updater/diagnostic_updater.h>
 #include <diagnostic_updater/publisher.h>
@@ -53,7 +53,7 @@ namespace cwru_base {
       void checkYawSensor(diagnostic_updater::DiagnosticStatusWrapper &stat);
       void checkVoltageLevels(diagnostic_updater::DiagnosticStatusWrapper &stat);
       void checkGPSValues(diagnostic_updater::DiagnosticStatusWrapper &stat);
-      void handleSonarPing(Sonar& ping, const float ping_value, const std::string frame_id, ros::Publisher& sonar_pub);
+      void handleSonarPing(cwru_msgs::Sonar& ping, const float ping_value, const std::string frame_id, ros::Publisher& sonar_pub);
       float swap_float(float in);
       double swap_double(double in);
       void setupDiagnostics();
@@ -69,8 +69,8 @@ namespace cwru_base {
       ros::Publisher gps_pub_;
       ros::Publisher power_pub_;
       diagnostic_updater::Updater updater_;
-      diagnostic_updater::DiagnosedPublisher<cwru_base::Pose> pose_pub_;
-      diagnostic_updater::DiagnosedPublisher<cwru_base::cRIOSensors> sensor_pub_;
+      diagnostic_updater::DiagnosedPublisher<cwru_msgs::Pose> pose_pub_;
+      diagnostic_updater::DiagnosedPublisher<cwru_msgs::cRIOSensors> sensor_pub_;
       double desired_pose_freq_;
       double lenc_high_warn_, lenc_low_warn_, lenc_high_err_, lenc_low_err_;
       double renc_high_warn_, renc_low_warn_, renc_high_err_, renc_low_err_;
@@ -82,11 +82,11 @@ namespace cwru_base {
 
   CrioReceiver::CrioReceiver(): 
     priv_nh_("~"),
-    pose_pub_(nh_.advertise<cwru_base::Pose>("pose",1),
+    pose_pub_(nh_.advertise<cwru_msgs::Pose>("pose",1),
         updater_,
         diagnostic_updater::FrequencyStatusParam(&desired_pose_freq_, &desired_pose_freq_, 3.0, 5),
         diagnostic_updater::TimeStampStatusParam()),
-    sensor_pub_(nh_.advertise<cwru_base::cRIOSensors>("crio_sensors",1),
+    sensor_pub_(nh_.advertise<cwru_msgs::cRIOSensors>("crio_sensors",1),
         updater_,
         diagnostic_updater::FrequencyStatusParam(&desired_pose_freq_, &desired_pose_freq_, 3.0, 5),
         diagnostic_updater::TimeStampStatusParam())
@@ -102,15 +102,15 @@ namespace cwru_base {
     encoders_nh_.param("renc_low_warn", renc_low_warn_, 14.9);
     encoders_nh_.param("renc_high_err", renc_high_err_, 16.);
     encoders_nh_.param("renc_low_err", renc_low_err_, 14.);
-    flipped_pose_pub_ = nh_.advertise<cwru_base::Pose>("flipped_pose",1);
+    flipped_pose_pub_ = nh_.advertise<cwru_msgs::Pose>("flipped_pose",1);
     estop_pub_ = nh_.advertise<std_msgs::Bool>("motors_enabled",1,true);
-    sonar1_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_1",1);
-    sonar2_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_2",1);
-    sonar3_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_3",1);
-    sonar4_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_4",1);
-    sonar5_pub_ = nh_.advertise<cwru_base::Sonar>("sonar_5",1);
-    gps_pub_ = nh_.advertise<cwru_base::NavSatFix>("gps_fix",1);
-    power_pub_ = nh_.advertise<cwru_base::PowerState>("power_state",1);
+    sonar1_pub_ = nh_.advertise<cwru_msgs::Sonar>("sonar_1",1);
+    sonar2_pub_ = nh_.advertise<cwru_msgs::Sonar>("sonar_2",1);
+    sonar3_pub_ = nh_.advertise<cwru_msgs::Sonar>("sonar_3",1);
+    sonar4_pub_ = nh_.advertise<cwru_msgs::Sonar>("sonar_4",1);
+    sonar5_pub_ = nh_.advertise<cwru_msgs::Sonar>("sonar_5",1);
+    gps_pub_ = nh_.advertise<cwru_msgs::NavSatFix>("gps_fix",1);
+    power_pub_ = nh_.advertise<cwru_msgs::PowerState>("power_state",1);
     setupDiagnostics();
   }
 
@@ -395,7 +395,7 @@ namespace cwru_base {
       swapped_packet.vel = -swapped_packet.vel;
     }
     pose_packet_ = swapped_packet;
-    Pose p, p2;
+    cwru_msgs::Pose p, p2;
     p.x = swapped_packet.x;
     p.y = swapped_packet.y;
     p.theta = swapped_packet.theta;
@@ -418,7 +418,7 @@ namespace cwru_base {
     pose_pub_.publish(p);
     flipped_pose_pub_.publish(p2);
 
-    Sonar ping;
+    cwru_msgs::Sonar ping;
     ping.header.stamp = current_time;
     handleSonarPing(ping, swapped_packet.sonar_ping_1, std::string("sonar_1_link"), sonar1_pub_);
     handleSonarPing(ping, swapped_packet.sonar_ping_2, std::string("sonar_2_link"), sonar2_pub_);
@@ -428,7 +428,7 @@ namespace cwru_base {
     ROS_DEBUG("Handled a Pose Packet");
   }
 
-  void CrioReceiver::handleSonarPing(Sonar& ping, const float ping_value, const std::string frame_id, ros::Publisher& sonar_pub) {
+  void CrioReceiver::handleSonarPing(cwru_msgs::Sonar& ping, const float ping_value, const std::string frame_id, ros::Publisher& sonar_pub) {
     ping.header.frame_id = frame_id;
     ping.dist = ping_value;
     sonar_pub.publish(ping);
@@ -442,7 +442,7 @@ namespace cwru_base {
     msg.data = !diagnostics_info_.eStopTriggered;
     estop_pub_.publish(msg);
 	
-	cwru_base::PowerState power_msg;
+	cwru_msgs::PowerState power_msg;
 	power_msg.header.stamp = current_time;
 	power_msg.header.frame_id = "crio";
 	power_msg.battery_voltage = diagnostics_info_.VMonitor_24V_mV / 1000.0;
@@ -451,7 +451,7 @@ namespace cwru_base {
 	power_msg.cRIO_voltage = diagnostics_info_.VMonitor_cRIO_mV / 1000.0;
 	power_pub_.publish(power_msg);
 	
-    cwru_base::cRIOSensors sensor_msg;
+    cwru_msgs::cRIOSensors sensor_msg;
     sensor_msg.header.stamp = current_time;
     sensor_msg.header.frame_id = "crio";
     sensor_msg.left_wheel_encoder = diagnostics_info_.LWheelTicks;
@@ -470,11 +470,11 @@ namespace cwru_base {
     CRIOGPSPacket swapped_packet = swapGPSPacket(packet);
     gps_packet_ = swapped_packet;
 
-    cwru_base::NavSatFix fix_msg;
+    cwru_msgs::NavSatFix fix_msg;
     fix_msg.header.stamp = current_time;
     fix_msg.header.frame_id = "crio_gps";
-    fix_msg.status.service = cwru_base::NavSatStatus::SERVICE_GPS;
-    fix_msg.position_covariance_type = cwru_base::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
+    fix_msg.status.service = cwru_msgs::NavSatStatus::SERVICE_GPS;
+    fix_msg.position_covariance_type = cwru_msgs::NavSatFix::COVARIANCE_TYPE_DIAGONAL_KNOWN;
 
     fix_msg.longitude = swapped_packet.longitude;
     fix_msg.latitude = swapped_packet.latitude;
@@ -484,22 +484,22 @@ namespace cwru_base {
 
     if (swapped_packet.solution_age > 2.0) {
       //Fix too old... throw it away
-      fix_msg.status.status = cwru_base::NavSatStatus::STATUS_NO_FIX;
+      fix_msg.status.status = cwru_msgs::NavSatStatus::STATUS_NO_FIX;
     } else if (swapped_packet.solution_status == 0) {
       //Solution has been computed
       if (swapped_packet.position_type == 16) {
         //Solution single - no DGPS corrections
-        fix_msg.status.status = cwru_base::NavSatStatus::STATUS_FIX;
+        fix_msg.status.status = cwru_msgs::NavSatStatus::STATUS_FIX;
       } else if ((swapped_packet.position_type == 20) || (swapped_packet.position_type == 64)) {
         //Omnistar or Omnistar HP solution - we have DGPS
-        fix_msg.status.status = cwru_base::NavSatStatus::STATUS_GBAS_FIX;
+        fix_msg.status.status = cwru_msgs::NavSatStatus::STATUS_GBAS_FIX;
       } else {
         //No clue what type of solution we have, so throw it out
-        fix_msg.status.status = cwru_base::NavSatStatus::STATUS_NO_FIX;
+        fix_msg.status.status = cwru_msgs::NavSatStatus::STATUS_NO_FIX;
       }
     } else {
       //No solution has been computed. Throw it out.
-      fix_msg.status.status = cwru_base::NavSatStatus::STATUS_NO_FIX;
+      fix_msg.status.status = cwru_msgs::NavSatStatus::STATUS_NO_FIX;
     }
 
     gps_pub_.publish(fix_msg);

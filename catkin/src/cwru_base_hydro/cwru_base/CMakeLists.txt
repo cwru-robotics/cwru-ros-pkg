@@ -9,6 +9,7 @@ find_package(catkin REQUIRED COMPONENTS
   rospy
   #sicktoolbox_wrapper
   std_msgs
+  cwru_msgs
   std_srvs
   tf
 )
@@ -24,15 +25,15 @@ find_package(Boost REQUIRED COMPONENTS system)
 
 
 ## Generate messages in the 'msg' folder
- add_message_files(
-   FILES
-   cRIOSensors.msg
-   NavSatFix.msg
-   NavSatStatus.msg
-   Pose.msg
-   PowerState.msg
-   Sonar.msg
- )
+# add_message_files(
+#   FILES
+#   cRIOSensors.msg
+#   NavSatFix.msg
+#   NavSatStatus.msg
+#   Pose.msg
+#   PowerState.msg
+#   Sonar.msg
+# )
 
 ## Generate services in the 'srv' folder
 # add_service_files(
@@ -49,10 +50,10 @@ find_package(Boost REQUIRED COMPONENTS system)
 # )
 
 ## Generate added messages and services with any dependencies listed here
-generate_messages(
-  DEPENDENCIES
-  std_msgs
-)
+#generate_messages(
+#  DEPENDENCIES
+#  std_msgs
+#)
 
 ###################################
 ## catkin specific configuration ##
@@ -67,7 +68,7 @@ catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES cwru_base
 #  CATKIN_DEPENDS diagnostic_updater geometry_msgs nav_msgs roscpp rospy sicktoolbox_wrapper std_msgs std_srvs tf
-  DEPENDS message_runtime
+#  DEPENDS message_runtime
 )
 
 ###########
