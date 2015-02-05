@@ -16,6 +16,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 
 # Executables
 cs_add_executable(example_ROS_service src/example_ROS_service.cpp)
+cs_add_executable(example_ROS_client src/example_ROS_client.cpp)
 # target_link_library(example my_lib)
 
 cs_install()
