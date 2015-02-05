@@ -2,46 +2,106 @@
 // Wyatt Newman, demo how to place markers in rviz
 #include <ros/ros.h>
 #include <visualization_msgs/Marker.h>
+#include <visualization_msgs/InteractiveMarkerFeedback.h>
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/PointStamped.h>
+#include <math.h>
 
-
+//some globals...
+geometry_msgs::Point vertex1;
+geometry_msgs::Point vertex2;
+geometry_msgs::Point vertex3;
+geometry_msgs::Point vertex_final;
+visualization_msgs::Marker marker;  // instantiate a marker object
+    
 void processFeedback1(
         const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback) {
     ROS_INFO_STREAM(feedback->marker_name << " is now at "
             << feedback->pose.position.x << ", " << feedback->pose.position.y
             << ", " << feedback->pose.position.z);
     //ROS_INFO_STREAM("reference frame is: "<<feedback->header.frame_id);
+    vertex1.x = feedback->pose.position.x;
+    vertex1.y = feedback->pose.position.y;
+    vertex1.z = 0.0;    
+}
+
+void processFeedback2(
+        const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback) {
+    ROS_INFO_STREAM(feedback->marker_name << " is now at "
+            << feedback->pose.position.x << ", " << feedback->pose.position.y
+            << ", " << feedback->pose.position.z);
+    //ROS_INFO_STREAM("reference frame is: "<<feedback->header.frame_id);
+    vertex2.x = feedback->pose.position.x;
+    vertex2.y = feedback->pose.position.y;
+    vertex2.z = 0.0;    
+}
+
+void processFeedback3(
+        const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback) {
+    ROS_INFO_STREAM(feedback->marker_name << " is now at "
+            << feedback->pose.position.x << ", " << feedback->pose.position.y
+            << ", " << feedback->pose.position.z);
+    //ROS_INFO_STREAM("reference frame is: "<<feedback->header.frame_id);
+    vertex3.x = feedback->pose.position.x;
+    vertex3.y = feedback->pose.position.y;
+    vertex3.z = 0.0;    
+}
+
+void processFeedbackFinalPose(
+        const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback) {
+    ROS_INFO_STREAM(feedback->marker_name << " is now at "
+            << feedback->pose.position.x << ", " << feedback->pose.position.y
+            << ", " << feedback->pose.position.z);
+    //ROS_INFO_STREAM("reference frame is: "<<feedback->header.frame_id);
+    vertex_final.x = feedback->pose.position.x;
+    vertex_final.y = feedback->pose.position.y;
+    vertex_final.z = 0.0;    
+}
+
+//add more points to "marker.points", starting from point1 and ending at point2
+// samples spaced at intervals of ds
+void add_path_points(geometry_msgs::Point point1,geometry_msgs::Point point2) {
+        double ds = 0.05;
+        double delta_x = point2.x - point1.x;
+        double delta_y = point2.y - point1.y;
+        double delta_s = sqrt(delta_x*delta_x+delta_y*delta_y);
+        int npts = floor(delta_s/ds);       
+        double dx = delta_x/npts;
+        double dy = delta_y/npts;
+
+        marker.points.push_back(point1);
+        for (int j = 0; j < npts; j++) {
+                point1.x +=dx;
+                point1.y +=dy;
+                marker.points.push_back(point1);
+        }
+        marker.points.push_back(point2);
 }
 
 int main(int argc, char** argv) {
     ros::init(argc, argv, "path_illustrator"); // this will be the node name;
     ros::NodeHandle nh;
 
+    // subscribe to interactive marker coordinates
     ros::Subscriber sub1 = nh.subscribe("/vertex1/feedback", 1, processFeedback1);
-        
-    ROS_INFO("hello, world");
-    ros::Rate timer(2); //timer to run at 2 Hz
-    // in rviz, "add" a "marker" and select this topic name: wsn_marker
+    ros::Subscriber sub2 = nh.subscribe("/vertex2/feedback", 1, processFeedback2);
+    ros::Subscriber sub3 = nh.subscribe("/vertex3/feedback", 1, processFeedback3);
+    ros::Subscriber subFinal = nh.subscribe("/path_end/feedback", 1, processFeedbackFinalPose);
+    
+    ros::Rate timer(2); //timer to run at 2 Hz--update paths this fast
+    // in rviz, "add" a "marker" and select this topic name: path_display
     ros::Publisher vis_pub = nh.advertise<visualization_msgs::Marker>( "path_display", 0 );            
-    visualization_msgs::Marker marker;  // instantiate a marker object
-    geometry_msgs::Point point;  // points will be used to specify where the markers go
+
+    // describe the markers to be displayed; all markers in the list will be the same style
     marker.header.frame_id = "/odom"; //base_link"; // select the reference frame 
     marker.header.stamp = ros::Time();
-    marker.ns = "my_namespace";
+    marker.ns = "path_namespace";
     marker.id = 0;
-    // use SPHERE if you only want a single marker
+    // use a SPHERE_LIST to create an array to display
     marker.type = visualization_msgs::Marker::SPHERE_LIST; //SPHERE;
     marker.action = visualization_msgs::Marker::ADD;
-    // if just using a single marker, specify the coordinates here, like this:
-
-    //marker.pose.position.x = 0.4;  
-    //marker.pose.position.y = -0.4;
-    //marker.pose.position.z = 0;
-    //ROS_INFO("x,y,z = %f %f, %f",marker.pose.position.x,marker.pose.position.y, marker.pose.position.z);    
-    // otherwise, for a list of markers, put their coordinates in the "points" array, as below
     
-    //whether a single marker or list of markers, need to specify marker properties
+    //specify marker properties
     // these will all be the same for SPHERE_LIST
     marker.pose.orientation.x = 0.0;
     marker.pose.orientation.y = 0.0;
@@ -51,30 +111,21 @@ int main(int argc, char** argv) {
     marker.scale.y = 0.02;
     marker.scale.z = 0.02;
     marker.color.a = 1.0;
-    marker.color.r = 1.0;
+    marker.color.r = 0.0;
     marker.color.g = 0.0;
-    marker.color.b = 0.0;
+    marker.color.b = 1.0; // we'll make these blue
 
-
-    //as an example, let's make a line of red spheres:
-    //double dist = 0.5; // robot distance from the wall, along x-axis in pelvis frame
-    double start_x = 0.0;
-    double start_y = 0.0; //
-    double start_z = 0.0; // 
-    double dx = 0.1;
-    double dy = 0.1;
-    point.x = start_x;
-    point.y = start_y;
-    point.z = start_z;
-        
-    for (int j = 0; j < 10; j++) {
-        point.x +=dx;
-        point.y +=dy;
-        marker.points.push_back(point);
+    while (ros::ok())
+    {     
+        marker.header.stamp = ros::Time();
+        marker.points.clear(); // clear out the array
+        add_path_points(vertex1,vertex2);
+        add_path_points(vertex2,vertex3);     
+        add_path_points(vertex3,vertex_final);          
+        vis_pub.publish( marker );  //publish the new path
+        ros::spinOnce(); //let callbacks perform an update
+        timer.sleep();
     }
-    
-    vis_pub.publish( marker );    
-    timer.sleep();
 }
 
 
