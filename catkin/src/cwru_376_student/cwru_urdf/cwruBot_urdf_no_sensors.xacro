@@ -1,0 +1,442 @@
+<?xml version="1.0"?>
+<!--robot xmlns:sensor="http://playerstage.sourceforge.net/gazebo/xmlschema/#sensor"
+       xmlns:controller="http://playerstage.sourceforge.net/gazebo/xmlschema/#controller"
+       xmlns:interface="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       xmlns:xacro="http://playerstage.sourceforge.net/gazebo/xmlschema/#interface"
+       name="harlie">
+       -->
+<robot 
+     xmlns:xacro="http://www.ros.org/wiki/xacro"
+     name="harlie">
+    <!--xacro:include filename="$(find cwru_urdf)/sensors/sick_lms291_laser.urdf.xacro" /-->
+    <xacro:property name="bodylen" value="0.5461" />
+    <xacro:property name="originX" value="-0.2445" />
+    <xacro:property name="bodywidth" value="0.4572" />
+    <xacro:property name="originY" value="0.0" />
+    <xacro:property name="bodyheight" value="0.7112" />
+    <xacro:property name="originZ" value="0.7366" />
+    <xacro:property name="batterylen" value="0.381" />
+    <xacro:property name="batOX" value="-0.05" />
+    <xacro:property name="batterywidth" value="0.3556" />
+    <xacro:property name="batOY" value="0" />
+    <xacro:property name="batteryheight" value="0.254" />
+    <xacro:property name="batOZ" value="0.22" />
+    <xacro:property name="wheeldrop" value="0.20" />
+    <xacro:property name="tirediam" value="0.3302" />
+    <xacro:property name="tirewidth" value="0.06985" />
+    <xacro:property name="track" value=".56515" />
+    <xacro:property name="M_PI" value="3.1415926535897931" />
+    <xacro:property name="boschwidth" value="0.0381" />
+    <xacro:property name="mastheight" value="1.2192" />
+    <xacro:property name="casterdrop" value="0.125" />
+    <xacro:property name="bracketwidth" value="0.1175" />
+    <xacro:property name="bracketheight" value="0.16" />
+    <xacro:property name="bracketthick" value="0.0508" />
+    <xacro:property name="bracketangle" value="0.7854" />
+    <xacro:property name="casterwidth" value="0.0826" />
+    <xacro:property name="casterdiam" value="0.2286" />
+    <xacro:property name="boschcolor" value=".6 .6 .6 1" />
+    <xacro:property name="basecolor" value="1 .26 .06 1" />
+    <xacro:property name="tirecolor" value=".3 .3 .3 1" />
+    <xacro:property name="base_laser_x" value="0.1016" />
+    <xacro:property name="base_laser_y" value="0.0" />
+    <xacro:property name="base_laser_z" value="0.5588" />
+    <xacro:macro name="default_inertial" params="mass">
+        <inertial>
+            <mass value="${mass}" />
+            <inertia ixx="0.01" ixy="0.001" ixz="0.001"
+         iyy="0.01" iyz="0.001"
+         izz="0.01" />
+        </inertial>
+    </xacro:macro>
+    <xacro:macro name="wheel" params="prefix reflect">
+        <link name="${prefix}_wheel">
+            <visual>
+                <geometry>
+                    <cylinder radius="${tirediam/2}" length="${tirewidth}"/>
+                </geometry>
+                <material name="${prefix}_tire">
+                    <color rgba="${tirecolor}"/>
+                </material>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder radius="${tirediam/2}" length="${tirewidth}"/>
+                </geometry>
+            </collision>
+            <xacro:default_inertial mass="1"/>
+        </link>
+        <joint name="${prefix}_wheel_joint" type="continuous">
+            <axis xyz="0 0 1"/>
+            <parent link="base_link"/>
+            <child link="${prefix}_wheel"/>
+            <origin xyz="0 ${reflect*track/2} ${wheeldrop}" rpy="0 ${M_PI/2} ${M_PI/2}"/>
+            <limit effort="100" velocity="15" />
+            <joint_properties damping="0.0" friction="0.0" />
+        </joint>
+    </xacro:macro>
+    <xacro:macro name="caster" params="prefix reflect">
+        <link name="castdrop_${prefix}">
+            <visual>
+                <geometry>
+                    <box size="${boschwidth} ${boschwidth} ${casterdrop}"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="castdrop">
+                    <color rgba="${basecolor}"/>
+                </material>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${boschwidth} ${boschwidth} ${casterdrop}"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </collision>
+            <xacro:default_inertial mass="1"/>
+        </link>
+        <joint name="cast2base_${prefix}" type="fixed">
+            <parent link="base_link"/>
+            <child link="castdrop_${prefix}"/>
+            <origin xyz="${-bodylen/2+originX+boschwidth/2} ${reflect*bodywidth/2-reflect*boschwidth/2} ${-casterdrop/2-bodyheight/2+originZ}" />
+        </joint>
+        <link name="brackettop_${prefix}">
+            <visual>
+                <geometry>
+                    <box size="${bracketwidth} ${bracketthick} .005"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+                <material name="casttop">
+                    <color rgba="0 0 0 1"/>
+                </material>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${bracketwidth} ${bracketthick} .005"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="0 0 0"/>
+            </collision>
+            <xacro:default_inertial mass="1"/>
+        </link>
+        <joint name="cast2bracket_${prefix}" type="continuous">
+            <axis xyz="0 0 1"/>
+            <parent link="castdrop_${prefix}"/>
+            <child link="brackettop_${prefix}"/>
+            <origin xyz="0 0 ${-casterdrop/2}" rpy="0 0 ${M_PI/2}"/>
+            <joint_properties damping="0.0" friction="0.0" />
+        </joint>
+        <link name="bracketside1_${prefix}">
+            <visual>
+                <geometry>
+                    <box size="${bracketthick} ${bracketheight} .005"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="${M_PI/2} ${-bracketangle} ${M_PI/2}"/>
+                <material name="castside">
+                    <color rgba="0 0 0 1"/>
+                </material>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${bracketthick} ${bracketheight} .005"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="${M_PI/2} ${-bracketangle} ${M_PI/2}"/>
+            </collision>
+            <xacro:default_inertial mass="1"/>
+        </link>
+        <joint name="brack2top1_${prefix}" type="fixed">
+            <parent link="brackettop_${prefix}"/>
+            <child link="bracketside1_${prefix}"/>
+            <origin xyz="${bracketwidth/2} .04 -${bracketheight/2-.02}" rpy="0 0 0" />
+        </joint>
+        <link name="bracketside2_${prefix}">
+            <visual>
+                <geometry>
+                    <box size="${bracketthick} ${bracketheight} .005"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="${M_PI/2} ${-bracketangle} ${M_PI/2}"/>
+                <material name="castside">
+                    <color rgba="0 0 0 1"/>
+                </material>
+            </visual>
+            <collision>
+                <geometry>
+                    <box size="${bracketthick} ${bracketheight} .005"/>
+                </geometry>
+                <origin xyz="0 0 0" rpy="${M_PI/2} ${-bracketangle} ${M_PI/2}"/>
+            </collision>
+            <xacro:default_inertial mass="1"/>
+        </link>
+        <joint name="brack2top2_${prefix}" type="fixed">
+            <parent link="brackettop_${prefix}"/>
+            <child link="bracketside2_${prefix}"/>
+            <origin xyz="${-bracketwidth/2} .04 -${bracketheight/2-.02}" rpy="0 0 0" />
+        </joint>
+        <link name="${prefix}_casterwheel">
+            <visual>
+                <geometry>
+                    <cylinder radius="${casterdiam/2}" length="${casterwidth}"/>
+                </geometry>
+                <material name="${prefix}_caster">
+                    <color rgba="${tirecolor}"/>
+                </material>
+            </visual>
+            <collision>
+                <geometry>
+                    <cylinder radius="${casterdiam/2}" length="${casterwidth}"/>
+                </geometry>
+            </collision>
+            <xacro:default_inertial mass="1"/>
+        </link>
+        <joint name="${prefix}_caster_joint" type="continuous">
+            <axis xyz="0 0 1"/>
+            <parent link="bracketside1_${prefix}"/>
+            <child link="${prefix}_casterwheel"/>
+            <origin xyz="${-casterwidth/2-.02} .053 -.053" rpy="0 ${M_PI/2} 0"/>
+            <limit effort="100" velocity="15" />
+            <joint_properties damping="0.0" friction="0.0" />
+        </joint>
+    </xacro:macro>
+    <xacro:caster prefix="left" reflect="1"/>
+    <xacro:caster prefix="right" reflect="-1"/>
+    <link name="base_link">
+        <visual>
+            <geometry>
+                <box size="${bodylen} ${bodywidth} ${bodyheight}"/>
+            </geometry>
+            <origin xyz="${originX} ${originY} ${originZ}" rpy="0 0 0"/>
+            <material name="body">
+                <color rgba="${boschcolor}"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${bodylen} ${bodywidth} ${bodyheight}"/>
+            </geometry>
+            <origin xyz="${originX} ${originY} ${originZ}" rpy="0 0 0"/>
+        </collision>
+        <inertial>
+            <mass value="158.75" />
+            <inertia ixx="5.5" ixy="-0.0097199" ixz="1.293988"
+         iyy="5.5" iyz="-0.0073"
+         izz="3.7" />
+        </inertial>
+    </link>
+    <link name="mastleft">
+        <visual>
+            <geometry>
+                <box size="${boschwidth} ${boschwidth} ${mastheight}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="mast">
+                <color rgba="${boschcolor}"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${boschwidth} ${boschwidth} ${mastheight}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </collision>
+        <xacro:default_inertial mass="1"/>
+    </link>
+    <joint name="mastleft2base" type="fixed">
+        <parent link="base_link"/>
+        <child link="mastleft"/>
+        <origin xyz="${bodylen/2+originX-boschwidth/2} ${bodywidth/2-boschwidth/2} ${mastheight/2-bodyheight/2+originZ}" />
+    </joint>
+    <link name="mastright">
+        <visual>
+            <geometry>
+                <box size="${boschwidth} ${boschwidth} ${mastheight}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="mast">
+                <color rgba="${boschcolor}"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${boschwidth} ${boschwidth} ${mastheight}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </collision>
+        <xacro:default_inertial mass="1"/>
+    </link>
+    <joint name="mastright2base" type="fixed">
+        <parent link="base_link"/>
+        <child link="mastright"/>
+        <origin xyz="${bodylen/2+originX-boschwidth/2} ${-bodywidth/2+boschwidth/2} ${mastheight/2-bodyheight/2+originZ}" />
+    </joint>
+    <link name="masttop">
+        <visual>
+            <geometry>
+                <box size="${boschwidth} ${bodywidth} ${boschwidth}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="mast">
+                <color rgba="${boschcolor}"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${boschwidth} ${bodywidth} ${boschwidth}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </collision>
+        <xacro:default_inertial mass="1"/>
+    </link>
+    <joint name="masttoptobase" type="fixed">
+        <parent link="base_link"/>
+        <child link="masttop"/>
+        <origin xyz="${bodylen/2+originX-boschwidth/2} 0 ${mastheight-bodyheight/2+originZ}" />
+    </joint>
+    <xacro:wheel prefix="left" reflect="1"/>
+    <xacro:wheel prefix="right" reflect="-1"/>
+    <link name="batterybox">
+        <visual>
+            <geometry>
+                <box size="${batterylen} ${batterywidth} ${batteryheight}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="batterybox">
+                <color rgba="0 0 0 1"/>
+            </material>
+        </visual>
+        <collision>
+            <geometry>
+                <box size="${batterylen} ${batterywidth} ${batteryheight}"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+        </collision>
+        <xacro:default_inertial mass="1"/>
+    </link>
+    <joint name="batterytobase" type="fixed">
+        <parent link="base_link"/>
+        <child link="batterybox"/>
+        <origin xyz="${batOX} ${batOY} ${batOZ}" rpy="0 0 0"/>
+    </joint>
+    <!--xacro:sick_lms291_laser name="base_laser1" parent="base" ros_topic="base_laser1_scan" update_rate="75.0" min_angle="-1.57" max_angle="1.57" num_rays="181" >
+        <origin xyz="${base_laser_x + bodylen/2+originX} ${base_laser_y} ${base_laser_z}" rpy="0 0 0" />
+    </xacro:sick_lms291_laser -->
+    <!--gazebo>
+        <controller:diffdrive_plugin name="differential_drive_controller" plugin="libdiffdrive_plugin.so">
+            <alwaysOn>true</alwaysOn>
+            <update>100</update>
+            <updateRate>100.0</updateRate>
+            <leftJoint>right_wheel_joint</leftJoint>
+            <rightJoint>left_wheel_joint</rightJoint>
+            <wheelSeparation>${track}</wheelSeparation>
+            <wheelDiameter>${tirediam}</wheelDiameter>
+            <torque>50</torque>
+            <interface:position name="position_iface_0"/>
+            <robotNamespace>/</robotNamespace>
+            <topicName>cmd_vel</topicName>
+        </controller:diffdrive_plugin>
+    </gazebo-->
+<gazebo>
+  <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+    <alwaysOn>true</alwaysOn>
+    <updateRate>100</updateRate>
+    <leftJoint>right_wheel_joint</leftJoint>
+    <rightJoint>left_wheel_joint</rightJoint>
+    <wheelSeparation>${track}</wheelSeparation>
+    <wheelDiameter>${tirediam}</wheelDiameter>
+    <torque>200</torque>
+    <commandTopic>cmd_vel</commandTopic>
+    <odometryTopic>odom</odometryTopic>
+    <odometryFrame>odom</odometryFrame>
+    <robotBaseFrame>base_link</robotBaseFrame>
+  </plugin>
+</gazebo>   
+
+<!-- try adding a base_footprint -->
+ <!--link name="base_footprint">
+        <visual>
+            <geometry>
+                <box size="0.5 0.5 0.001"/>
+            </geometry>
+            <origin xyz="0 0 0" rpy="0 0 0"/>
+            <material name="base_footprint">
+                <color rgba="0 0 0 1"/>
+            </material>
+        </visual>
+
+    </link>
+    
+    <joint name="footprintToBase" type="fixed">
+        <parent link="base_footprint"/>
+        <child link="base_link"/>
+        <origin xyz="0 0 0" rpy="0 0 0"/>
+    </joint -->
+    
+
+  <!-- example from Hokuyo Laser -->
+  <link name="lidar_link">
+      <collision>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+              <!-- coarse LIDAR model; a simple box -->
+              <box size="0.2 0.2 0.2"/>
+          </geometry>
+      </collision>
+
+      <visual>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+              <box size="0.2 0.2 0.2" />
+          </geometry>
+          <material name="sick_grey">
+              <color rgba="0.7 0.5 0.3 1.0"/>
+          </material>
+      </visual>
+
+      <inertial>
+          <mass value="2.0" />
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <inertia ixx="0.01" ixy="0" ixz="0" iyy="0.01" iyz="0" izz="0.01" />
+      </inertial>
+  </link>
+  <!--the above displays a box meant to imply Lidar-->
+  
+  <joint name="lidar_joint" type="fixed">
+      <axis xyz="0 1 0" />
+      <origin xyz="0.1 0 0.56" rpy="0 0 0"/>
+      <parent link="base_link"/>
+      <child link="lidar_link"/>
+  </joint>
+  <gazebo reference="lidar_link">
+    <sensor type="gpu_ray" name="sick_lidar_sensor">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>false</visualize>
+      <update_rate>40</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>181</samples>
+            <resolution>1</resolution>
+            <min_angle>-1.570796</min_angle>
+            <max_angle>1.570796</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.10</min>
+          <max>80.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise parameters based on published spec for Hokuyo laser
+               achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+               stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+               reading. -->
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_lidar_controller" filename="libgazebo_ros_gpu_laser.so">
+        <topicName>/laser/scan</topicName>
+        <frameName>lidar_link</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+    
+</robot>
