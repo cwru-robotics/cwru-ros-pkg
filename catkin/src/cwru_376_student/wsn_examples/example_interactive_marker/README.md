@@ -2,23 +2,22 @@
 
 The example code here illustrates some visualization features with markers.
 
-marker_example.cpp shows has hard-coded marker coordinates and hard-coded marker parameters.  It places a "wall" of small spheres in front of Atlas.
-To see the effect, run: `rosrun example_interactive_marker marker_example`. In rviz, "add" a "Marker" to the displays, and set the topic to:
-"wsn_marker." You should see a wall of small, red spheres grow in a raster pattern.
+The example "IM_example3" illustrates how to create an "interactive markers." The composite markers can be moved interactively
+in 2-D. (More generally, interactive markers can be specified to move in 6-D). Resulting marker poses are published within a message of type "visualization_messages/InteractiveMarkerFeedback".
 
-A second example is a pair: a listener and a publisher.  The listener "marker_listener.cpp" listens for "points" on the topic "marker_listener."
-As each message arrives, the callback function adds the received point to the marker list and republishes this for rviz display.
+"IM_example3" creates 4 interactive markers. Start up a roscore and rviz.  Marker coordinates are specified in the "odom" frame, so an odom frame must be published (e.g., from a physical robot, or from a simulated robot in Gazebo). 
 
-The complementary node is: example_marker_user_app.cpp.  This node generates the same raster pattern of small spheres within a plane, and it
-publishes each new marker coordinate to the topic "marker_listener."  The example app may be emulated to include its behavior within another program.
-E.g., one may compute points of interest within a program (such as reachability indications), and tell "marker_listener" to display each such point in rviz.
+With rviz running (and either a simulated or real robot), display the markers in rviz by running:
+`rosrun example_interactive_marker IM_example2` 
+The interactive markers can then be seen in rviz--after adding "InteractiveMarker" items that subscribe to the topics:
+vertex1/update, vertex2/update, vertex3/update and /path_end/update.
 
-To see these work, run both nodes and add a Marker to the rviz display with the topic "marker_publisher".
+All of these markers are constrained to lie in the x-y plane (z=0).   The first three markers are simple spheres that can only be translated in x and y.  The last marker also displays an arrow indicating a desired final heading, and this heading can be changed with a z-axis rotation control.
 
-The example "IM_example" is more complex.  It illustrates how to create an "interactive marker."  This example uses red, green and blue
-arrows in a triad to illustrate a frame orientation.  The composite marker can be moved interactively
-in 6-D.  Resulting marker pose is published within a message of type "visualization_messages/InteractiveMarkerFeedback" on the topic "/example_marker/feedback."  
-Details are explained in the embedded comments and in the document "Interactive_markers" within this repository's "documents/class_docs_2014" directory.
+A complementary node: `rosrun example_interactive_marker path_display`
+subscribes to the above 4 marker topics.  It computes sample points of a polyline connecting the above vertices (in order, updated at 2Hz).  The result is published as a marker list on topic "path_display".  This can be visualized in Rviz by adding a "Marker" item that subscribes to this topic.
+
+
 
 
     
