@@ -2,4 +2,4 @@
 Header header
 
 #List of path segments that should be executed
-precision_navigation_msgs/PathSegment[] segs
+cwru_msgs/PathSegment[] segs

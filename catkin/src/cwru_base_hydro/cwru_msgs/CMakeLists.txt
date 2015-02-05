@@ -32,6 +32,10 @@ find_package(Boost REQUIRED COMPONENTS system)
    Pose.msg
    PowerState.msg
    Sonar.msg
+   DesiredState.msg
+   ErrorCode.msg
+   Path.msg
+   PathSegment.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -52,7 +56,8 @@ find_package(Boost REQUIRED COMPONENTS system)
 generate_messages(
   DEPENDENCIES
   std_msgs
-  
+  geometry_msgs
+
 )
 
 ###################################
@@ -95,6 +100,7 @@ include_directories(
 ## as an example, message headers may need to be generated before nodes
 # add_dependencies(cwru_msgs_node cwru_msgs_generate_messages_cpp)
 
+add_dependencies(${p} ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate_messages_cpp)
 ## Specify libraries to link a library or executable target against
 # target_link_libraries(cwru_msgs_node
 #   ${catkin_LIBRARIES}
