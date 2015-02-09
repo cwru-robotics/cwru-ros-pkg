@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(example_ROS_service)
+project(example_ros_service)
 
 find_package(catkin_simple REQUIRED)
 
