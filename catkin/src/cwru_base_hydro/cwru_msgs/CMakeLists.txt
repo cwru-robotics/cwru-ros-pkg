@@ -32,14 +32,17 @@ find_package(Boost REQUIRED COMPONENTS system)
    Pose.msg
    PowerState.msg
    Sonar.msg
+   #Path.msg
+   #PathSegment.msg
+   
  )
 
 ## Generate services in the 'srv' folder
-# add_service_files(
-#   FILES
-#   Service1.srv
+add_service_files(
+   FILES
+   example_server_msg.srv
 #   Service2.srv
-# )
+)
 
 ## Generate actions in the 'action' folder
 # add_action_files(
