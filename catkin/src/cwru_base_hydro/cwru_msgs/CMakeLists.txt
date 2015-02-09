@@ -98,7 +98,6 @@ include_directories(
 
 ## Add cmake target dependencies of the executable/library
 ## as an example, message headers may need to be generated before nodes
-# add_dependencies(cwru_msgs_node cwru_msgs_generate_messages_cpp)
 
 add_dependencies(${p} ${catkin_EXPORTED_TARGETS} ${PROJECT_NAME}_generate_messages_cpp)
 ## Specify libraries to link a library or executable target against
