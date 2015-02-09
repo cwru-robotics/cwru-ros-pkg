@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>example_ROS_service</name>
+  <name>example_ros_service</name>
   <version>0.0.0</version>
-  <description>The example_ROS_service package</description>
+  <description>The example_ros_service package</description>
   
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
