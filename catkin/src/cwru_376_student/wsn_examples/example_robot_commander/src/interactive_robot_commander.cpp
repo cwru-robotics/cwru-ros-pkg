@@ -8,6 +8,7 @@
 #include <cwru_srv/simple_bool_service_message.h>
 #include <geometry_msgs/Point.h>
 #include <geometry_msgs/PointStamped.h>
+#include <nav_msgs/Odometry.h>
 #include <math.h>
 
 //globals:
@@ -31,6 +32,10 @@ void processFeedbackFinalPose(
     ROS_INFO_STREAM("orientation: z = "<<feedback->pose.orientation.z<<"; w = "<<feedback->pose.orientation.w);
 }
 
+void odomCallback(const nav_msgs::OdometryConstPtr &odom_msg) {
+    ROS_INFO_STREAM("x,y = "<<odom_msg->pose.pose.position.x<<"; "<<odom_msg->pose.pose.position.y);
+}
+
 bool triggerCallback(cwru_srv::simple_bool_service_messageRequest& request, cwru_srv::simple_bool_service_messageResponse& response)
 {
     ROS_INFO("path goal trigger callback activated");
@@ -51,7 +56,7 @@ ros::Publisher cmd_publisher = nh.advertise<geometry_msgs::Twist>("/robot0/cmd_v
 //ros::Publisher cmd_publisher = nh.advertise<geometry_msgs::Twist>("abby/cmd_vel",1);
 
 ros::Subscriber subFinal = nh.subscribe("/path_end/feedback", 1, processFeedbackFinalPose);
-
+ros::Subscriber subOdom = nh.subscribe("/odom", 1, odomCallback);
 ros::ServiceServer service = nh.advertiseService("trigger_path_goal", triggerCallback);
   
 ros::Rate sleep_timer(100); //let's make a 100Hz timer
