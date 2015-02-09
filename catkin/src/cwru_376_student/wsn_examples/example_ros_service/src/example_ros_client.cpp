@@ -5,16 +5,16 @@
 
 
 #include <ros/ros.h>
-#include <example_ROS_service/example_server_msg.h> // this message type is defined in the current package
+#include <example_ros_service/example_server_msg.h> // this message type is defined in the current package
 #include <iostream>
 #include <string>
 using namespace std;
 
 int main(int argc, char **argv) {
-    ros::init(argc, argv, "example_ROS_client");
+    ros::init(argc, argv, "example_ros_client");
     ros::NodeHandle n;
-    ros::ServiceClient client = n.serviceClient<example_ROS_service::example_server_msg>("lookup_by_name");
-    example_ROS_service::example_server_msg srv;
+    ros::ServiceClient client = n.serviceClient<example_ros_service::example_server_msg>("lookup_by_name");
+    example_ros_service::example_server_msg srv;
     bool found_on_list = false;
     string in_name;
     while (ros::ok()) {
