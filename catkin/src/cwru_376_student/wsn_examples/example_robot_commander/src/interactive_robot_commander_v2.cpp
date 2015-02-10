@@ -1,7 +1,13 @@
-//simple interactive motion commander:
+//simple interactive motion commander v2:
+// this version (v2) also responds to 2D Nav Goal inputs from Rviz;
+// such inputs trigger automatically--do not require external trigger
+// ALSO, with rviz in "map" as fixed frame, this version uses tf
+// to convert goal coords from map frame to odom frame
+
 // receive goal coords from interactive marker
 // receive "execute" signals via ROS service client
 // execute motion as: 1) spin towards goal; 2) move towards goal x,y; 3: spin to align w/ target orientation
+
 #include <ros/ros.h>
 #include <geometry_msgs/Twist.h>
 #include <visualization_msgs/InteractiveMarkerFeedback.h>
@@ -10,6 +16,7 @@
 #include <geometry_msgs/PointStamped.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <nav_msgs/Odometry.h>
+ #include <tf/transform_listener.h>
 #include <math.h>
 
 // mnemonics:
@@ -41,6 +48,11 @@ double del_phi_init_ = 0.0;
 double del_phi_final_ = 0.0;
 double phi_start_to_goal_ = 0.0;
 double del_dist_ = 0.0;
+
+
+tf::TransformListener* tfListener_;
+
+
 
 bool new_goal_ = false;
 
@@ -93,7 +105,6 @@ void processFeedbackFinalPose(
     ROS_INFO_STREAM(feedback->marker_name << "marker is now at "
             << feedback->pose.position.x << ", " << feedback->pose.position.y
             << ", " << feedback->pose.position.z);
-    ROS_INFO_STREAM("reference frame: "<<feedback->header.frame_id);
     //ROS_INFO_STREAM("reference frame is: "<<feedback->header.frame_id);
     marker_x_ = feedback->pose.position.x;
     marker_y_ = feedback->pose.position.y;
@@ -105,7 +116,44 @@ void processFeedbackFinalPose(
     ROS_INFO_STREAM("heading:   " << marker_phi_);
 }
 
+void navGoalCallback(
+        const geometry_msgs::PoseStamped::ConstPtr navPoseMsg) {
+    //tf::StampedTransform mapToOdom;
+    //tf::Stamped<tf::Pose> navGoalInMapFrame; 
+    //tf::Stamped<tf::Pose> navGoalInOdomFrame;    
+    //tf::poseStampedMsgToTF(*navPoseMsg, navGoalInMapFrame);
+    geometry_msgs::PoseStamped navGoalInOdomFrame;
+    //ROS_INFO_STREAM("reference frame is: "<<feedback->header.frame_id);
+    double map_goal_x = navPoseMsg->pose.position.x;
+    double map_goal_y = navPoseMsg->pose.position.y;
+    //double map_goal_phi;
+    //marker_x_ = feedback->pose.position.x;
+    //marker_y_ = feedback->pose.position.y;
 
+    //double quat_z = navPoseMsg->pose.orientation.z;
+    //double quat_w = navPoseMsg->pose.orientation.w;
+    //map_goal_phi = 2.0 * atan2(quat_z, quat_w); // cheap conversion from quaternion to heading for planar motion
+    ROS_INFO("new nav goal in map frame: x,y = %f, %f",map_goal_x,map_goal_y);
+    //ROS_INFO_STREAM("heading:   " << map_goal_phi);
+    //tfListener_->lookupTransform("odom", "map", ros::Time(0), mapToOdom);
+    //navGoalInOdomFrame = mapToOdom*navGoalInMapFrame;
+    
+    tfListener_->transformPose("odom",*navPoseMsg,navGoalInOdomFrame);
+    
+    
+    // tf::Transform handle_pose_in_torso_frame = door_to_torso * handle_pose_in_door_frame; 
+    //navGoalInOdomFrame = mapToOdom*navGoalInMapFrame;
+    marker_x_ = navGoalInOdomFrame.pose.position.x;
+    marker_y_ = navGoalInOdomFrame.pose.position.y;
+
+    double quat_z = navGoalInOdomFrame.pose.orientation.z;
+    double quat_w = navGoalInOdomFrame.pose.orientation.w;
+    marker_phi_ = 2.0 * atan2(quat_z, quat_w); // cheap conversion from quaternion to heading for planar motion
+    ROS_INFO("nav goal in  odom frame: x,y = %f, %f",marker_x_,marker_y_);
+    ROS_INFO("heading:   %f",marker_phi_);   
+    init_move();
+    
+}
 
 void odomCallback(const nav_msgs::Odometry& odom_rcvd) {
     // copy some of the components of the received message into global vars, for use by "main()"
@@ -122,10 +170,11 @@ void odomCallback(const nav_msgs::Odometry& odom_rcvd) {
 
 }
 
+
 bool triggerCallback(cwru_srv::simple_bool_service_messageRequest& request, cwru_srv::simple_bool_service_messageResponse& response) {
     ROS_INFO("path goal trigger callback activated");
-    init_move();
     response.resp = true; // not really useful in this case--and not necessary
+    init_move();
     return true;
 }
 
@@ -141,6 +190,7 @@ int main(int argc, char **argv) {
     //ros::Publisher cmd_publisher = nh.advertise<geometry_msgs::Twist>("abby/cmd_vel",1);
 
     ros::Subscriber subFinal = nh.subscribe("/path_end/feedback", 1, processFeedbackFinalPose);
+    ros::Subscriber subNavGoal = nh.subscribe("/move_base_simple/goal", 1, navGoalCallback);    
     
     ros::Subscriber subOdom = nh.subscribe("/odom", 1, odomCallback);
     ros::ServiceServer service = nh.advertiseService("trigger_path_goal", triggerCallback);
@@ -158,6 +208,28 @@ int main(int argc, char **argv) {
     marker_x_ = odom_x_;
     marker_y_ = odom_y_;   
     marker_phi_ = odom_phi_;
+    
+    //tf::TransformListener tfListener;
+    tfListener_ = new tf::TransformListener; 
+    tf::StampedTransform mapToOdom;    
+    bool tferr=true;
+    ROS_INFO("waiting for tf...");
+    while (tferr) {
+        tferr=false;
+        try {
+                //try to lookup transform from target frame "odom" to source frame "map"
+            //The direction of the transform returned will be from the target_frame to the source_frame. 
+             //Which if applied to data, will transform data in the source_frame into the target_frame. See tf/CoordinateFrameConventions#Transform_Direction
+                tfListener_->lookupTransform("odom", "map", ros::Time(0), mapToOdom);
+            } catch(tf::TransformException &exception) {
+                ROS_ERROR("%s", exception.what());
+                tferr=true;
+                ros::Duration(0.5).sleep(); // sleep for half a second
+                ros::spinOnce();                
+            }   
+    }
+    ROS_INFO("tf is good");
+    //tfListener.transform 
     
     //create a variable of type "Twist", as defined in: /opt/ros/hydro/share/geometry_msgs
     // any message published on a ROS topic must have a pre-defined format, so subscribers know how to
@@ -229,12 +301,13 @@ int main(int argc, char **argv) {
                     phase3_spin_to_go-= phase3_omega*dt;
                     if (phase3_spin_to_go*phase3_spin_sign<phi_tol) { //test for done with spin 
                         phase=STAND_STILL;
+                        ROS_INFO("STAND_STILL");
                     }
                 break;
 
             case STAND_STILL:
             default:
-                ROS_INFO("STAND_STILL");
+                //ROS_INFO("STAND_STILL");
                 twist_cmd.linear.x = 0.0;
                 twist_cmd.linear.y = 0.0;
                 twist_cmd.linear.z = 0.0;
