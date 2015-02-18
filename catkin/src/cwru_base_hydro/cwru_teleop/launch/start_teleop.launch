@@ -1,0 +1,11 @@
+<launch>
+
+    <node respawn="true" pkg="joy" type="joy_node" name="cwru_joy">
+	<param name="dev" type="string" value="/dev/input/js0" />
+	<param name="deadzone" value="0.12" />
+	<param name="autorepeat_rate" value="20.0" />
+    </node>
+
+    <node pkg="cwru_teleop" type="teleop_cwru_joy" name="teleop_cwru_joy">
+    </node>
+</launch>

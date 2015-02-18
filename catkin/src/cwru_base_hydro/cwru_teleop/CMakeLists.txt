@@ -1,17 +1,13 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(cwru_base)
-
+project(cwru_teleop)
 find_package(catkin REQUIRED COMPONENTS
-  diagnostic_updater
   geometry_msgs
-  nav_msgs
   roscpp
   rospy
-  #sicktoolbox_wrapper
   std_msgs
   cwru_msgs
-  std_srvs
-  tf
+  cwru_base
+  joy
 )
 
 ## System dependencies are found with CMake's conventions
@@ -19,7 +15,7 @@ find_package(Boost REQUIRED COMPONENTS system)
 
 catkin_package(
   INCLUDE_DIRS
-  CATKIN_DEPENDS roscpp geometry_msgs 
+  CATKIN_DEPENDS roscpp geometry_msgs joy std_msgs cwru_base cwru_msgs
   DEPENDS
 )
 
@@ -41,10 +37,10 @@ include_directories(
 # )
 
 ## Declare a cpp executable
-add_executable(crio_receiver src/crio_receiver.cpp)
+add_executable(teleop_cwru_joy src/teleop_cwru_joy.cpp)
 
 # THIS LINE ADDED TO FIX DEPENDENCY ISSUE FROM CWRU_MSGS
-add_dependencies(crio_receiver ${catkin_EXPORTED_TARGETS})
+# add_dependencies(teleop_cwru_joy ${catkin_EXPORTED_TARGETS})
 
-target_link_libraries(crio_receiver ${catkin_LIBRARIES})
+target_link_libraries(teleop_cwru_joy ${catkin_LIBRARIES})
 
