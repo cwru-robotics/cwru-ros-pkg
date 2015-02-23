@@ -1,0 +1,64 @@
+define block model
+(
+    size [0.5 0.5 0.75]
+    gui_nose 0
+)
+
+define sick_lms291 laser
+(
+
+    range_max 80.0
+    fov 180.0
+    samples 361
+    # generic model stuff
+    size [ 0.05 0.05 0.1]
+)
+
+define harlie position
+(
+    size [0.9144 0.6096 1.8288]
+    origin [0.0 0.0 0.0 0.0]
+    gui_nose 1
+    drive "diff"
+    sick_lms291(pose [ 0.2032 0.0 0 0.1524 ])
+)
+
+define floorplan model
+(
+    color "gray30"
+
+    #bouding box or something...
+    boundary 1
+
+    gui_nose 0
+    gui_grid 0
+
+    gui_outline 0
+    gripper_return 0
+    fiducial_return 0
+    laser_return 1
+)
+
+# set the resolution of the underlying raytracer in meters
+resolution 0.01
+
+interval_sim 100
+
+
+window
+(
+    size [745.0 448.0]
+
+    scale 20.0
+)
+
+#load the actual map
+floorplan
+(
+    name "2nd_floor_no_doors"
+    bitmap "../maps/2nd_floor_no_doors_stage.pgm"
+    size [200 200 10.0]
+    pose [ 0.0 0.0 0.0 0.0]
+)
+
+harlie( pose [ 0.0 0.0 0.0 0.0 ] name "harlie" color "blue")

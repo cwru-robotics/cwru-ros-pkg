@@ -1,0 +1,68 @@
+define block model
+(
+    size [0.75 0.75 1.0]
+    gui_nose 0
+    laser_return 1
+)
+
+define sick_lms291 ranger
+(
+    sensor(
+      range_max 80.0
+      fov 180.0
+      samples 181
+    )
+    # generic model stuff
+    size [ 0.05 0.05 0.1]
+)
+
+define harlie position
+(
+    size [0.9158 0.6096 0.1]
+    origin [-0.1539 0.0 0.0 0.0]
+    gui_nose 1
+    drive "diff"
+    sick_lms291(pose [ 0.2032 0.0 0 0.0524 ])
+)
+
+define floorplan model
+(
+    color "gray30"
+
+    #bouding box or something...
+    boundary 1
+
+    gui_nose 0
+    gui_grid 0
+
+    gui_outline 0
+    gripper_return 0
+    fiducial_return 0
+    laser_return 1
+)
+
+# set the resolution of the underlying raytracer in meters
+resolution 0.01
+
+interval_sim 100
+
+window
+(
+    size [745.0 448.0]
+
+    scale 20.0
+)
+
+#load the actual map
+floorplan
+(
+    name "2nd_floor_one_door"
+    bitmap "../maps/2nd_floor_one_door_stage.pgm"
+    size [79.45 90.45 1.0]
+    pose [ 21.6 39.4 0.0 0.0]
+)
+
+harlie( pose [ 8.42 15.09 0.0 -137.16] name "harlie" color "blue")
+block( color "orange" )
+block( color "orange" )
+block( color "orange" )
