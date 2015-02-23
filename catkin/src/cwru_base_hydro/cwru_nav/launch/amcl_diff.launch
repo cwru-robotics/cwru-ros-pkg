@@ -1,0 +1,38 @@
+<launch>
+<node pkg="amcl" type="amcl" name="amcl">
+	<!-- Filter Parameters -->
+  <param name="min_particles" value="1000"/>
+  <param name="max_particles" value="10000"/>
+  <param name="kld_err" value="0.1"/>
+  <param name="kld_z" value="0.99"/>
+  <param name="update_min_d" value="0.05"/><!-- Translational motion that triggers an update, meters -->
+  <param name="update_min_a" value="0.1"/><!-- Rotational motion that triggers an update, radians -->
+  <param name="resample_interval" value="1"/><!-- Number of updates before resampling -->
+  <param name="transform_tolerance" value="0.1"/><!-- How many seconds to future-date created transform -->
+  <param name="recovery_alpha_slow" value="0.001"/><!-- Filter coefficient for slow likelihood filter for random particle injection -->
+  <param name="recovery_alpha_fast" value="0.75"/><!-- Filter coefficient for fast likelihood filter for random particle injection -->
+  <param name="gui_publish_rate" value="10.0"/><!-- Publish scans from best pose at a max of 10 Hz -->
+  
+	<!-- Laser Model Parameters -->
+  <param name="laser_max_beams" value="30"/><!-- How many beams per scan to sample -->
+  <param name="laser_z_hit" value="0.5"/>
+  <param name="laser_z_short" value="0.05"/>
+  <param name="laser_z_max" value="0.05"/>
+  <param name="laser_z_rand" value="0.5"/>
+  <param name="laser_sigma_hit" value="0.2"/>
+  <param name="laser_lambda_short" value="0.1"/>
+  <param name="laser_likelihood_max_dist" value="2.0"/>
+  <param name="laser_model_type" value="likelihood_field"/>
+  <remap from="scan" to="/base_laser1_scan" />
+  
+  <!-- Odometry Model Parameters -->
+  <param name="odom_model_type" value="diff"/>
+  <param name="odom_alpha1" value="1.2"/><!-- Estimated noise in rotation estimate due to rotational motion, -->
+  <param name="odom_alpha2" value="1.2"/><!-- Estimated noise in rotation estimate due to translation, -->
+  <param name="odom_alpha3" value="1.8"/><!-- Estimated noise in translation estimate due to translation, m -->
+  <param name="odom_alpha4" value="1.2"/><!-- Estimated noise in translation estimate due to rotation, m -->
+  <param name="odom_frame_id" value="/odom"/>
+  <param name="base_frame_id" value="/base_link" />
+  <param name="global_frame_id" value="map" />
+</node>
+</launch>
