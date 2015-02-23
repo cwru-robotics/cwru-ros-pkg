@@ -10,3 +10,4 @@ Your forked repositories should sync with updates from this repository from now 
 #### Current ROS Dependencies
 Our package will be continuously updated as more functionality is added.  Please make sure your development system (and whatever robot you're trying to run our package on) has all of the dependencies listed below.  You should be able to install the dependencies by running `sudo apt-get install (name of dependency)`
 * ros-hydro-joy (for cwru_teleop)
+* ros-hydro-sound-play
