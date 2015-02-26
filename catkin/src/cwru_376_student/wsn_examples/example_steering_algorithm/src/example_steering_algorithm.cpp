@@ -195,7 +195,7 @@ void SteeringController::my_clever_steering_algorithm() {
     controller_speed = des_state_vel_; //you call that clever ?!?!?!? should speed up/slow down to null out 
     controller_omega = des_state_omega_; //ditto
  
-    controller_omega = MAX_OMEGA*(controller_omega/MAX_OMEGA); // saturate omega command at specified limits
+    controller_omega = MAX_OMEGA*sat(controller_omega/MAX_OMEGA); // saturate omega command at specified limits
     
     // send out our very clever speed/spin commands:
     twist_cmd_.linear.x = controller_speed;
