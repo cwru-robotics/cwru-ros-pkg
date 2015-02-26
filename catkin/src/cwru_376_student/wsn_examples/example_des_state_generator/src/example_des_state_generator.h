@@ -110,12 +110,12 @@ private:
     std::queue<cwru_msgs::PathSegment> segment_queue_; // path segment objects--as generated from crude polyline path (above)
 
     geometry_msgs::Pose last_map_pose_rcvd_;
-    geometry_msgs::Pose odom_pose_;
     geometry_msgs::Pose new_pose_des_;
-    nav_msgs::Odometry current_odom_;
     nav_msgs::Odometry des_state_;
 
     //state values from odometry; these will get filled in by odom callback
+    nav_msgs::Odometry current_odom_;    
+    geometry_msgs::Pose odom_pose_;    
     double odom_vel_;
     double odom_omega_;
     double odom_x_;
