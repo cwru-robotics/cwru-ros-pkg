@@ -18,7 +18,7 @@ float64 seg_length
 #Reference point
 geometry_msgs/Point ref_point
 
-#Initial tanget angle
+#Initial tangent angle
 geometry_msgs/Quaternion init_tan_angle
 
 #Curvature
