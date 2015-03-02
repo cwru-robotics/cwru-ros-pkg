@@ -1,0 +1,31 @@
+<launch>
+<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node>
+<param name="rate" value="100" />
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+<!--node name="base_footprint_base_link_static_publisher" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 base_footprint base_link 100" /-->
+<!-- Convert an xacro and put on parameter server -->
+
+
+
+
+<!-- Spawn a robot into Gazebo -->
+  <!-- Robot pose -->
+  <arg name="x" default="0"/>
+  <arg name="y" default="0"/>
+  <arg name="z" default="0"/>
+  <arg name="roll" default="1.5708"/>
+  <arg name="pitch" default="0"/>
+  <arg name="yaw" default="0"/>
+
+<!--param name="robot_description" command="$(find xacro)/xacro.py '$(find abb_common)/urdf/irb_120.urdf.xacro'" /-->
+  <param name="robot_description"
+         command="$(find xacro)/xacro.py '$(find abb_common)/urdf/irb_120.urdf.xacro'"/>
+
+<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" 
+     args="-param robot_description -urdf -model abbyArm 
+             -x $(arg x) -y $(arg y) -z $(arg z)
+              -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"/>
+
+<node name="abb_pub_base" pkg="abb_pub_base" type="abb_pub_base" />
+
+</launch>
