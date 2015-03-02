@@ -1,0 +1,5 @@
+this node forces the abb irb120 model to have its based fixed to the world frame (keeps it from falling over).
+
+HOWEVER, links 4,5,6 are severed from link3 in Gazebo!
+
+
