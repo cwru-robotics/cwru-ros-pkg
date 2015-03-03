@@ -19,7 +19,7 @@
 // odd syntax: have to pass nodehandle pointer into constructor for constructor to build subscribers, etc
 ExampleRosClass::ExampleRosClass(ros::NodeHandle* nodehandle):nh_(*nodehandle)
 { // constructor
-    ROS_INFO("in class constructor of InteractivePathMaker");
+    ROS_INFO("in class constructor of ExampleRosClass");
     initializeSubscribers(); // package up the messy work of creating subscribers; do this overhead in constructor
     initializePublishers();
     initializeServices();
