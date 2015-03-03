@@ -1,8 +1,10 @@
-//example path sender
-// wsn, Feb 2015
+//example path sender starting pen
+// wsn, March 2015
 // test node compatible with example_des_state_generator.cpp;
 // transmits a hard-coded path to desired-state generator node via service "appendPathService"
 // the message must contain a nav_msgs/Path object
+// hard-coded nodes compatible with the map: startingPenMap in cwru_urdf
+// poses (x,y) = (0,0), (5,0), (5,5), (-3,5), (-3,0), (0,0)
 
 #include <stdlib.h>
 #include <string>
@@ -61,29 +63,53 @@ int main(int argc, char **argv) {
     
     // fill in the interesting data: (x,y) and phi = location and heading
     //vertex 1:
-    x=1.0;
-    y=2.0;
-    phi=0.123;
+    x=0;
+    y=0;
+    phi=0;
     ROS_INFO("vertex: x,y,phi = %f, %f %f",x,y,phi);
     vertex.pose = xyPhi2Pose(x,y,phi); //x,y,phi
     path_message.request.path.poses.push_back(vertex);
 
     //vertex 2:
-    x=3.0;
-    y=4.0;
-    phi=0.567;
+    x=5.0;
+    y=0.0;
+    phi=0.0;
     ROS_INFO("vertex: x,y,phi = %f, %f %f",x,y,phi);
     vertex.pose = xyPhi2Pose(x,y,phi); //x,y,phi  
     path_message.request.path.poses.push_back(vertex);
     
     //vertex 3:
     x=5.0;
-    y=6.0;
-    phi=2.345;
+    y=5.0;
+    phi=1.57;
     ROS_INFO("vertex: x,y,phi = %f, %f %f",x,y,phi);
     vertex.pose = xyPhi2Pose(x,y,phi); //x,y,phi  
     path_message.request.path.poses.push_back(vertex);
 
+        //vertex 4:
+    x=-3.0;
+    y=5.0;
+    phi=3.14;
+    ROS_INFO("vertex: x,y,phi = %f, %f %f",x,y,phi);
+    vertex.pose = xyPhi2Pose(x,y,phi); //x,y,phi  
+    path_message.request.path.poses.push_back(vertex);
+    
+         //vertex 5:
+    x=-3.0;
+    y=0.0;
+    phi= -1.57;
+    ROS_INFO("vertex: x,y,phi = %f, %f %f",x,y,phi);
+    vertex.pose = xyPhi2Pose(x,y,phi); //x,y,phi  
+    path_message.request.path.poses.push_back(vertex);
+    
+         //vertex 6:
+    x=0.0;
+    y=0.0;
+    phi= 0;
+    ROS_INFO("vertex: x,y,phi = %f, %f %f",x,y,phi);
+    vertex.pose = xyPhi2Pose(x,y,phi); //x,y,phi  
+    path_message.request.path.poses.push_back(vertex);
+    
     //transmit this path message:
     if (client.call(path_message)) {
         ROS_INFO("got ack from server");
