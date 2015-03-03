@@ -20,6 +20,7 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 # Executables
 cs_add_executable(des_state_generator src/example_des_state_generator.cpp)
 cs_add_executable(example_path_sender src/example_path_sender.cpp)
+cs_add_executable(example_path_sender_starting_pen src/example_path_sender_starting_pen.cpp)
 # target_link_library(example my_lib)
 
 cs_install()
