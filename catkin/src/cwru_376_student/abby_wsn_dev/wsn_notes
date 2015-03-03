@@ -1,0 +1,9 @@
+created irb120 model, based on Gazebo tutoriao of rrbot
+
+roslaunch rrbot_gazebo rrbot_world.launch
+
+had to elim collision model for 1st two links to get rid of instability.
+
+next step--create motor controllers
+
+
