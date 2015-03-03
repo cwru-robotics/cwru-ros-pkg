@@ -25,6 +25,7 @@
 #include <geometry_msgs/PointStamped.h>
 #include <geometry_msgs/PoseStamped.h>
 #include <nav_msgs/Odometry.h>
+ #include <tf/transform_listener.h>
 
 //Eigen is useful for linear algebra
 #include <Eigen/Eigen>
@@ -63,7 +64,11 @@ private:
     ros::Publisher steering_errs_publisher_;
     
     ros::ServiceServer simple_service_; //a do-nothing service--but easily modified to be useful
-
+    
+    tf::TransformListener* tfListener_;
+    tf::StampedTransform mapToOdom_; 
+    tf::StampedTransform baseLink_wrt_map_;    
+    tf::StampedTransform odomToMap_;
     geometry_msgs::Twist twist_cmd_;
     geometry_msgs::TwistStamped twist_cmd2_;    
     double current_speed_des_;
