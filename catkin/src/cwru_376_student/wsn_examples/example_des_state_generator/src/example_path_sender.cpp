@@ -57,6 +57,7 @@ int main(int argc, char **argv) {
     double x,y,phi;
 
     vertex.header.stamp = ros::Time::now(); // look up the time and put it in the header; use same time stamp for all vertices in this path
+    vertex.header.frame_id = "map"; // specify this, so tf will know how to transform it
     
     // fill in the interesting data: (x,y) and phi = location and heading
     //vertex 1:
