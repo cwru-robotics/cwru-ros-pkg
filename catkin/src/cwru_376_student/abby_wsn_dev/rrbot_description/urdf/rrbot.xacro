@@ -67,7 +67,7 @@
     <parent link="link1"/>
     <child link="link2"/>
     <origin xyz="0 0 0.0" rpy="0 0 0"/>
-    <limit effort="10" lower="-2.87979" upper="2.87979" velocity="4.36332"/>
+    <limit effort="100" lower="-2.87979" upper="2.87979" velocity="4.36332"/>
     <axis xyz="0 0 1"/>
     <dynamics damping="0.7"/>
   </joint>
@@ -105,7 +105,7 @@
     <child link="link3"/>
     <origin rpy="0 0 0" xyz="0 0 0.29"/>
     <axis xyz="0 1 0"/>
-    <limit effort="10" lower="-1.91986" upper="1.91986" velocity="4.36332"/>    
+    <limit effort="100" lower="-1.91986" upper="1.91986" velocity="4.36332"/>    
     <dynamics damping="1.7"/>
   </joint>
 
@@ -169,7 +169,7 @@
     <child link="link4"/>
     <origin rpy="0 0 0" xyz="0 0 0.27"/>
     <axis xyz="0 1 0"/>
-   <limit effort="10" lower="-1.91986" upper="1.22173" velocity="4.36332"/>    
+   <limit effort="100" lower="-1.91986" upper="1.22173" velocity="4.36332"/>    
     <dynamics damping="1.7"/>
   </joint>  
  
@@ -205,7 +205,7 @@
     <child link="link5"/>
     <origin rpy="0 0 0" xyz="0 0 0.07"/>
     <axis xyz="1 0 0"/>
-    <limit effort="10" lower="-2.79253" upper="2.79253" velocity="5.58505"/>    
+    <limit effort="20" lower="-2.79253" upper="2.79253" velocity="5.58505"/>    
     <dynamics damping="1.7"/>
   </joint>  
    
@@ -241,7 +241,7 @@
     <child link="link6"/>
    <origin rpy="0 0 0" xyz="0.302 0 0"/>
     <axis xyz="0 1 0"/>
-     <limit effort="10" lower="-2.094395" upper="2.094395" velocity="5.58505"/>   
+     <limit effort="20" lower="-2.094395" upper="2.094395" velocity="5.58505"/>   
     <dynamics damping="1.7"/>
   </joint> 
 
@@ -277,7 +277,7 @@
     <child link="link7"/>
     <origin rpy="0 0 0" xyz="0.072 0 0"/>
     <axis xyz="1 0 0"/>
-     <limit effort="10" lower="-6.98132" upper="6.98132" velocity="7.33038"/>   
+     <limit effort="20" lower="-6.98132" upper="6.98132" velocity="7.33038"/>   
     <dynamics damping="0.7"/>
   </joint> 
     
@@ -347,6 +347,10 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-  
+<gazebo>
+  <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
+    <robotNamespace>/rrbot</robotNamespace>
+  </plugin>
+</gazebo>  
  
 </robot>
