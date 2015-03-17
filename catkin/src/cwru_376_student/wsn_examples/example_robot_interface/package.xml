@@ -42,10 +42,14 @@
   <buildtool_depend>catkin_simple</buildtool_depend>
   <build_depend>roscpp</build_depend>
 <build_depend>std_msgs</build_depend>
-<build_depend>trajectory_msgs</build_depend>
+<build_depend>trajectory_msgs</build_depend>  
+<build_depend>irb120_ik</build_depend>
+<build_depend>joint_space_planner</build_depend>
   <run_depend>roscpp</run_depend>
 <run_depend>std_msgs</run_depend>
 <run_depend>trajectory_msgs</run_depend>
+<run_depend>irb120_ik</run_depend>
+<run_depend>joint_space_planner</run_depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- You can specify that this package is a metapackage here: -->
