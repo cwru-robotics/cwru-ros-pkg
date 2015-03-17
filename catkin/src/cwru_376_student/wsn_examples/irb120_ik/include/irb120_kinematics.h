@@ -66,14 +66,14 @@ const double DH_q_max2 = deg2rad*110;
 const double DH_q_max3 = deg2rad*70;
 const double DH_q_max4 = deg2rad*160;
 const double DH_q_max5 = deg2rad*120;
-const double DH_q_max6 = deg2rad*400;
+const double DH_q_max6 = deg2rad*180; //deg2rad*400; //deliberately reduce this, to avoid excess solutions
 
 const double DH_q_min1 = -deg2rad*165;
 const double DH_q_min2 = -deg2rad*110;
 const double DH_q_min3 = -deg2rad*110; //looks odd--not symmetric, but seems to be correct
 const double DH_q_min4 = -deg2rad*160;
 const double DH_q_min5 = -deg2rad*120;
-const double DH_q_min6 = -deg2rad*400;
+const double DH_q_min6 = -deg2rad*180; //-deg2rad*400;
 
 const double DH_a_params[]={DH_a1,DH_a2,DH_a3,DH_a4,DH_a5,DH_a6};
 const double DH_d_params[6] = {DH_d1, DH_d2, DH_d3, DH_d4, DH_d5, DH_d6};

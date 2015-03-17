@@ -30,6 +30,9 @@ cs_add_library(irb120_kinematics src/irb120_kinematics.cpp)
 cs_add_executable(irb120_kinematics_test_main src/irb120_kinematics_test_main.cpp)
 target_link_libraries(irb120_kinematics_test_main irb120_kinematics)
 
+cs_add_executable(reachability_from_above src/reachability_from_above.cpp)
+target_link_libraries(reachability_from_above irb120_kinematics)
+
 cs_install()
 cs_export()
     

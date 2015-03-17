@@ -88,7 +88,7 @@ int main(int argc, char **argv) {
 
                 //std::cout<< "q_err: "<<q_err<<std::endl;
             }
-            std::cout << "precise fit for soln " << i_min << std::endl;
+            std::cout << "precise fit for soln " << i_min << std::endl <<std::endl;
             std::cout << "des fwd kin wrist point: " << A_wrist(0, 3) << ", " << A_wrist(1, 3) << ", " << A_wrist(2, 3) << std::endl;
             std::cout << "fwd kin wrist points from these solutions:" << std::endl;
             for (int i = 0; i < nsolns; i++) {

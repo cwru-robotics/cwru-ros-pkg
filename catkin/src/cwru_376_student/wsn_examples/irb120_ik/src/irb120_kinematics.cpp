@@ -247,16 +247,16 @@ bool Irb120_IK_solver::compute_q123_solns(Eigen::Affine3d const& desired_hand_po
     //std::cout << "w_wrt_1a = " << w_wrt_1a.transpose() << std::endl;
     r_goal = sqrt(w_wrt_1a[0] * w_wrt_1a[0] + w_wrt_1a[1] * w_wrt_1a[1]);
 
-    ROS_INFO("r_goal = %f", r_goal);
+    //ROS_INFO("r_goal = %f", r_goal);
     //is the desired wrist position reachable? if not, return false
     // does not yet consider joint limits
     if (r_goal >= L_humerus + L_forearm) {
-        ROS_INFO("goal is too far away!");
+        //ROS_INFO("goal is too far away!");
         return false;
     }
     // can also have problems if wrist goal is too close to shoulder
     if (r_goal <= fabs(L_humerus - L_forearm)) {
-        ROS_INFO("goal is too close!");
+        //ROS_INFO("goal is too close!");
         return false;
     }
 
@@ -442,16 +442,19 @@ bool Irb120_IK_solver::solve_spherical_wrist(Vectorq6x1 q_in,Eigen::Matrix3d R_d
     double cq6=n_des.dot(-n5);
     double sq6=n_des.dot(-t5);
     q6 =atan2(sq6, cq6);
-    ROS_INFO("q4,q5,q6 = %f, %f, %f",q4,q5,q6);
+    //ROS_INFO("q4,q5,q6 = %f, %f, %f",q4,q5,q6);
     q_soln = q_in;
     q_soln[3] = q4;
     q_soln[4] = q5;
     q_soln[5] = q6;
+    q_solns.clear();
     q_solns.push_back(q_soln);
     //2nd wrist soln: 
     q_soln[3] = q4b;
     q_soln[4] *= -1.0; // flip wrist opposite direction
     q_soln[5] = q6+M_PI; // fix the periodicity later; 
+       // ROS_INFO("alt q4,q5,q6 = %f, %f, %f",q_soln[3],q_soln[4],q_soln[5]);
+    q_solns.push_back(q_soln);        
     return is_singular;
 }
 
