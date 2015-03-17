@@ -19,13 +19,16 @@
 
 <!--param name="robot_description" command="$(find xacro)/xacro.py '$(find abb_common)/urdf/irb_120.urdf.xacro'" /-->
   <param name="robot_description"
-         command="$(find xacro)/xacro.py '$(find abb_common)/urdf/irb_120.urdf.xacro'"/>
+         command="$(find xacro)/xacro.py '$(find abb_common)/urdf/irb120.urdf.xacro'"/>
 
+  <!--param name="robot_description"
+         command="$(find xacro)/xacro.py '$(find abb_common)/urdf/irb_120.urdf.xacro'"/-->
+         
 <node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" 
      args="-param robot_description -urdf -model abbyArm 
              -x $(arg x) -y $(arg y) -z $(arg z)
               -R $(arg roll) -P $(arg pitch) -Y $(arg yaw)"/>
 
-<node name="abb_pub_base" pkg="abb_pub_base" type="abb_pub_base" />
+<!--node name="abb_pub_base" pkg="abb_pub_base" type="abb_pub_base" /-->
 
 </launch>

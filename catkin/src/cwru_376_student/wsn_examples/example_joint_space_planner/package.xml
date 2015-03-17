@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>example_robot_interface</name>
+  <name>example_joint_space_planner</name>
   <version>0.0.0</version>
-  <description>The example_robot_interface package</description>
+  <description>The example_joint_space_planner package</description>
   
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->
@@ -41,15 +41,15 @@
   <buildtool_depend>catkin</buildtool_depend>
   <buildtool_depend>catkin_simple</buildtool_depend>
   <build_depend>roscpp</build_depend>
+<build_depend>eigen</build_depend>
 <build_depend>std_msgs</build_depend>
 <build_depend>trajectory_msgs</build_depend>  
 <build_depend>irb120_ik</build_depend>
-<build_depend>joint_space_planner</build_depend>
   <run_depend>roscpp</run_depend>
+<run_depend>eigen</run_depend>
 <run_depend>std_msgs</run_depend>
 <run_depend>trajectory_msgs</run_depend>
 <run_depend>irb120_ik</run_depend>
-<run_depend>joint_space_planner</run_depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- You can specify that this package is a metapackage here: -->

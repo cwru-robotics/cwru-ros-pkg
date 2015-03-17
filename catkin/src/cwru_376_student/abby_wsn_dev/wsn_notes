@@ -1,0 +1,215 @@
+created irb120 model, based on Gazebo tutoriao of rrbot
+
+roslaunch rrbot_gazebo rrbot_world.launch
+
+had to elim collision model for 1st two links to get rid of instability.
+
+next step--create motor controllers
+
+----------March 9-----
+did: 
+*roscore
+*xxx THIS IS REDUNDANT xxxrosrun gazebo_ros gazebo
+*roslaunch rrbot_gazebo rrbot_world.launch
+*roslaunch rrbot_control rrbot_control.launch
+
+looks encouraging...claims to recognize /rrbot/joint1_position_controller/command topic
+
+from here: http://gazebosim.org/tutorials/?tut=ros_control
+
+did this: xxxx SKIP THIS STEP??
+rosservice call /rrbot/controller_manager/switch_controller "{start_controllers: ['joint1_position_controller','joint2_position_controller'], stop_controllers: [], strictness: 2}"
+
+
+rostopic pub -1 /rrbot/joint1_position_controller/command std_msgs/Float64 "data: 1.5"
+ DID cause jnt1 to move!
+ 
+rostopic pub -1 /rrbot/joint2_position_controller/command std_msgs/Float64 "data: 1.0"
+ DID cause jnt2 to move!  (poor gains)
+ 
+ --------- March 10:  abby_wsn_dev ---------
+ 
+ edited rrbot_control.yaml; could not restart gazebo (unrelated?)
+ 
+ (started 2 joint controllers only)
+ 
+ rebooted; Gazebo OK (problem with dual launches of gazebo?)
+ 
+ moved joints--still sluggish, and also oscillatory
+ 
+ rrbot.xacro does specify 6 transmissions and motors
+ rrbot.gazebo: 
+ rrbot_control/launch/rrbot_contro.launch:  specifies launching joint controllers;
+    add a joint3 controller; (launch then did load 3 controllers)
+    
+ rostopic pub -1 /rrbot/joint3_position_controller/command std_msgs/Float64 "data: 1.0"   
+ worked!! (now have 3-joint control)
+ 
+ here is output from successful 3-joint rrbot_control launch:
+ roslaunch rrbot_control rrbot_control.launch
+... logging to /home/wyatt/.ros/log/03fde4d2-c73a-11e4-911c-c48508582a82/roslaunch-Wall-E-4948.log
+Checking log directory for disk usage. This may take awhile.
+Press Ctrl-C to interrupt
+Done checking log file disk usage. Usage is <1GB.
+
+started roslaunch server http://Wall-E:58652/
+
+SUMMARY
+========
+
+PARAMETERS
+ * /rosdistro
+ * /rosversion
+ * /rrbot/joint1_position_controller/joint
+ * /rrbot/joint1_position_controller/pid/d
+ * /rrbot/joint1_position_controller/pid/i
+ * /rrbot/joint1_position_controller/pid/p
+ * /rrbot/joint1_position_controller/type
+ * /rrbot/joint2_position_controller/joint
+ * /rrbot/joint2_position_controller/pid/d
+ * /rrbot/joint2_position_controller/pid/i
+ * /rrbot/joint2_position_controller/pid/p
+ * /rrbot/joint2_position_controller/type
+ * /rrbot/joint3_position_controller/joint
+ * /rrbot/joint3_position_controller/pid/d
+ * /rrbot/joint3_position_controller/pid/i
+ * /rrbot/joint3_position_controller/pid/p
+ * /rrbot/joint3_position_controller/type
+ * /rrbot/joint_state_controller/publish_rate
+ * /rrbot/joint_state_controller/type
+
+NODES
+  /
+    robot_state_publisher (robot_state_publisher/robot_state_publisher)
+  /rrbot/
+    controller_spawner (controller_manager/spawner)
+
+ROS_MASTER_URI=http://Wall-E:11311
+
+core service [/rosout] found
+process[rrbot/controller_spawner-1]: started with pid [4966]
+process[robot_state_publisher-2]: started with pid [4967]
+/opt/ros/hydro/lib/robot_state_publisher/robot_state_publisher
+[INFO] [WallTime: 1426002565.726153] [0.000000] Controller Spawner: Waiting for service controller_manager/load_controller
+[INFO] [WallTime: 1426002565.730589] [0.000000] Controller Spawner: Waiting for service controller_manager/switch_controller
+[INFO] [WallTime: 1426002565.734326] [1158.016000] Controller Spawner: Waiting for service controller_manager/unload_controller
+[INFO] [WallTime: 1426002565.737069] [1158.018000] Loading controller: joint_state_controller
+[INFO] [WallTime: 1426002565.745236] [1158.027000] Loading controller: joint1_position_controller
+[INFO] [WallTime: 1426002565.815641] [1158.097000] Loading controller: joint2_position_controller
+[INFO] [WallTime: 1426002565.883101] [1158.164000] Loading controller: joint3_position_controller
+[INFO] [WallTime: 1426002565.949328] [1158.230000] Controller Spawner: Loaded controllers: joint_state_controller, joint1_position_controller, joint2_position_controller, joint3_position_controller
+[INFO] [WallTime: 1426002565.954270] [1158.235000] Started controllers: joint_state_controller, joint1_position_controller, joint2_position_controller, joint3_position_controller
+
+
+--------
+increase P gains to 10,000; remove I gain; increase D gains to 100
+rqt_plot shows torque saturation at +/- 10N-m (joint1)
+
+In rrbot.xacro, increase joint effort saturations to 100
+e.g.:    <limit effort="100" lower="-1.91986" upper="1.22173" velocity="4.36332"/>  
+
+hmm...broke the robot?  
+hmm...started working.  Don't know why. 
+also, j3 controller responds, but did not use service to start it. (this step unnecessary???)
+very oscillatory;
+set gains P=1000, d= 100
+gzclient died; complaints from gazebo about reloading controller; killed and restarted
+
+response looks quite good; extend to more joints...
+
+gazebo gives this complaint:
+[ INFO] [1426004952.305248761, 0.538000000]: Starting gazebo_ros_control plugin in namespace: /rrbot
+[ERROR] [1426004952.520166017, 0.538000000]: Tried to advertise a service that is already advertised in this node [/rrbot/controller_manager/list_controllers]
+[ERROR] [1426004952.520231484, 0.538000000]: Tried to advertise a service that is already advertised in this node [/rrbot/controller_manager/list_controller_types]
+[ERROR] [1426004952.520282352, 0.538000000]: Tried to advertise a service that is already advertised in this node [/rrbot/controller_manager/load_controller]
+[ERROR] [1426004952.520318553, 0.538000000]: Tried to advertise a service that is already advertised in this node [/rrbot/controller_manager/unload_controller]
+[ERROR] [1426004952.520352415, 0.538000000]: Tried to advertise a service that is already advertised in this node [/rrbot/controller_manager/switch_controller]
+[ERROR] [1426004952.520392027, 0.538000000]: Tried to advertise a service that is already advertised in this node [/rrbot/controller_manager/reload_controller_libraries]
+[ INFO] [1426004952.520447728, 0.538000000]: Loaded gazebo_ros_control.
+
+Did NOT start controllers manually via service (seems to be part of controller launch)
+
+rostopic pub -1 /rrbot/joint4_position_controller/command std_msgs/Float64 "data: 1.0"
+rostopic pub -1 /rrbot/joint5_position_controller/command std_msgs/Float64 "data: 1.0" 
+rostopic pub -1 /rrbot/joint6_position_controller/command std_msgs/Float64 "data: 1.0" 
+
+all 6 joints work!  (low saturation efforts and gains on joints 4-6; could use tuning)
+
+-----NEXT---
+want node to publish to 
+/rrbot/joint6_position_controller/command, etc
+
+try:
+rosrun example_robot_interface example_robot_interface
+rosrun example_robot_interface test_traj_sin_sender
+  (v1 of sender: saw J1 do step motions at 1Hz)
+ 
+ sending sin wave w/ updates at 10Hz shows controller-effort sawtooth; should send joint commands faster than this
+ 
+ extended test_traj_sin_sender to 6 joints--looks good; rqt_plot of joint positions is good;
+  used angle increments of 0.1 rad, amplitude = 0.5 rad, npts = 100;
+  looks pretty good, with example_robot_interface updating commands at 10Hz
+  
+view in rviz (choose "world" as fixed frame)
+ link7 frame has origin on tool flange face, x-axis points out, normal to flange
+ 
+ Modified example_robot_interface:
+ now responds to duration argument;
+ 
+ tested with: rosrun example_robot_interface test_traj_sin_sender 
+ 
+ ----RECAP------
+ *roscore
+ *roslaunch rrbot_gazebo rrbot_world.launch
+ *roslaunch rrbot_control rrbot_control.launch
+ *rosrun example_robot_interface example_robot_interface
+ 
+ then command motions with:
+ *rosrun example_robot_interface test_traj_sin_sender (replace this with application)
+ 
+ 
+---- next: IK?
+  (make this a library)
+  
+  final frame (in Gazebo, link7; in rviz, also link7)
+  at home pose, final (tool-flange) frame points aligned with base frame (x-axis points out of flange, along world x, etc)
+  BUT, DH says final frame at home pose is:
+   [ 0  0  1
+     0  1  0
+     -1 0  0]
+   origin at [0.374; 0; 0.63] seems to agree with Gazebo (accounting for some droop)
+     is exact with gravity set to 0 (and RPY = 0,0,0)
+     
+     
+  TEST TEST TEST:
+  ran rosrun example_robot_interface test_traj_point_sender
+    w/ joint cmds set to 0.1, 0.2 ...0.6
+    set gravity in Gazebo to zero
+    observed link7 position and orientation (RPY)
+    
+  In irb120_kinematics_test_main, set R-P-Y values to output of Gazebo;
+    converted these to Rotation matrix to see target 3x3
+    Specified fwd_kin of same q_cmd (0.1, 0.2... 0.6)
+    ran: rosrun irb120_ik irb120_kinematics_test_main
+    Got precise agreement, Gazebo and irb120_kinematics
+    
+  FWD KIN WORKS;  NEXT, DO INV KIN
+  
+  ---------March 11----------
+  implemented IK w/rt wrist point (q1,q2,q3 solutions).
+  ran test main, which generated random q values, called fwd kin,
+  used A_fwd_DH result to call ik_solver.ik_solve(A_fwd_DH);
+  print out wrist coords.  WORKS!!
+  
+  added tests to limit solutions to solutions within joint ranges
+  
+  
+  
+  
+     
+     
+   
+  
+
+
+
