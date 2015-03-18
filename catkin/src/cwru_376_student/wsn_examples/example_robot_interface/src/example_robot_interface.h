@@ -22,20 +22,21 @@
 //message types used in this example code;  include more message types, as needed
 #include <std_msgs/Bool.h> 
 #include <std_msgs/Float32.h>
+#include <std_msgs/Float64.h>
 
 #include <cwru_srv/simple_bool_service_message.h> // this is a pre-defined service message, contained in shared "cwru_srv" package
 
 #include "trajectory_msgs/JointTrajectory.h"
 #include "trajectory_msgs/JointTrajectoryPoint.h"
 
-const double UPDATE_RATE=1.0; // define the update rate for sending trajectory points
+const double UPDATE_RATE=10.0; // define the update rate for sending trajectory points 
 
 // define a class, including a constructor, member variables and member functions
 class ExampleRobotInterface
 {
 public:
     ExampleRobotInterface(ros::NodeHandle* nodehandle); //"main" will need to instantiate a ROS nodehandle, then pass it to the constructor
-
+    ros::Duration dt_move_;
     void sendTrajPointCmd(); // send the current trajectory point, if available, and advance the pointer
 private:
     // put private member data here;  "private" data will only be available to member functions of this class;
@@ -43,13 +44,21 @@ private:
     // some objects to support subscriber, service, and publisher
     ros::Subscriber sub_joint_trajectory_; //these will be set up within the class constructor, hiding these ugly details
     ros::Publisher  joint_command_publisher_;
-    
+    ros::Publisher  joint1_command_publisher_;
+    ros::Publisher  joint2_command_publisher_;
+    ros::Publisher  joint3_command_publisher_;
+    ros::Publisher  joint4_command_publisher_;
+    ros::Publisher  joint5_command_publisher_;
+    ros::Publisher  joint6_command_publisher_;    
     trajectory_msgs::JointTrajectory new_trajectory_;
     trajectory_msgs::JointTrajectoryPoint current_trajectory_point_;
     int npts_traj_;
     int ith_point_;
     int njoints_;
-        
+    std_msgs::Float64 pos_cmd_;
+
+    ros::Duration current_t_from_start_;
+    ros::Duration prev_t_from_start_;        
     // member methods as well:
     void initializeSubscribers(); // we will define some helper methods to encapsulate the gory details of initializing subscribers, publishers and services
     void initializePublishers();

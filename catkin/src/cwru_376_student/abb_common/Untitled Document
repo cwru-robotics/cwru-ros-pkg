@@ -1,0 +1,10 @@
+managed to launch irb120 model w/ launch file here.
+
+HOWEVER, arm is severed btwn links 3 and 4 in Gazebo model!!
+
+need to fix this. 
+
+also, rosrun abb_pub_base abb_pub_base to force the robot-arm base to a fixed pose on the ground plane.
+(included this node in the launch file) 
+
+robot launches OK in Gazebo, then the links fall apart!  (more links are dying)
