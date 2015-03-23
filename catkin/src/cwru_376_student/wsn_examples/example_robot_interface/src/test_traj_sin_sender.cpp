@@ -40,12 +40,12 @@ int main(int argc, char** argv)
     trajectory_msgs::JointTrajectoryPoint trajectory_point2; 
     
     new_trajectory.points.clear();
-    new_trajectory.joint_names.push_back("joint1");
-    new_trajectory.joint_names.push_back("joint2");
-    new_trajectory.joint_names.push_back("joint3");
-    new_trajectory.joint_names.push_back("joint4");
-    new_trajectory.joint_names.push_back("joint5");
-    new_trajectory.joint_names.push_back("joint6");    
+    new_trajectory.joint_names.push_back("joint_1");
+    new_trajectory.joint_names.push_back("joint_2");
+    new_trajectory.joint_names.push_back("joint_3");
+    new_trajectory.joint_names.push_back("joint_4");
+    new_trajectory.joint_names.push_back("joint_5");
+    new_trajectory.joint_names.push_back("joint_6");    
     ros::Rate sleep_timer(10.0); // update rate
     
     // may need this to get publisher advertisement recognized
@@ -77,10 +77,10 @@ int main(int argc, char** argv)
     
     // try sending a sinusoid or square wave
     double sign = -1.0; // to make square wave
-    double amp = 0.5; // amplitude of square wave or sin wave
+    double amp = 1.0; // amplitude of square wave or sin wave
     double dtheta = 0.1; // step size of sin wave
     double theta = 0.0; // should start from a reasonable angle...
-    double dt = 0.2;
+    double dt = 0.1;
     double t = 0.0;
     ros::Duration t_from_start(0); //initialize duration to 0
     trajectory_point1.time_from_start =    t_from_start; 
@@ -90,11 +90,11 @@ int main(int argc, char** argv)
         for (int i=0;i<100;i++) {
             //sign*= -1.0;
             theta+=dtheta;
-            trajectory_point1.positions[0] = amp*sin(theta); //sign*amp;
-            trajectory_point1.positions[1] = amp*sin(theta); 
-            trajectory_point1.positions[2] = amp*sin(theta); 
-            trajectory_point1.positions[3] = amp*sin(theta); 
-            trajectory_point1.positions[4] = amp*sin(theta); 
+            trajectory_point1.positions[0] = 0.0; //amp*sin(theta); //sign*amp;
+            trajectory_point1.positions[1] = 0.0; //amp*sin(theta); 
+            trajectory_point1.positions[2] = 0.0; //amp*sin(theta); 
+            trajectory_point1.positions[3] = 0.0; //amp*sin(theta); 
+            trajectory_point1.positions[4] = 0.0; //amp*sin(theta); 
             trajectory_point1.positions[5] = amp*sin(theta);  
             t += dt;
             
