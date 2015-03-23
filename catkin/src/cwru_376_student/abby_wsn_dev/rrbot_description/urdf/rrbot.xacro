@@ -347,10 +347,10 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission>
-<gazebo>
+<!--gazebo>
   <plugin name="gazebo_ros_control" filename="libgazebo_ros_control.so">
     <robotNamespace>/rrbot</robotNamespace>
   </plugin>
-</gazebo>  
+</gazebo-->  
  
 </robot>
