@@ -51,12 +51,12 @@ void ExampleRobotInterface::initializeSubscribers() {
 void ExampleRobotInterface::initializePublishers() {
     ROS_INFO("Initializing Publishers");
     joint_command_publisher_ = nh_.advertise<trajectory_msgs::JointTrajectoryPoint>("joint_point_command", 1, true);
-    joint1_command_publisher_ = nh_.advertise<std_msgs::Float64>("/rrbot/joint1_position_controller/command", 1, true);
-    joint2_command_publisher_ = nh_.advertise<std_msgs::Float64>("/rrbot/joint2_position_controller/command", 1, true);
-    joint3_command_publisher_ = nh_.advertise<std_msgs::Float64>("/rrbot/joint3_position_controller/command", 1, true);
-    joint4_command_publisher_ = nh_.advertise<std_msgs::Float64>("/rrbot/joint4_position_controller/command", 1, true);
-    joint5_command_publisher_ = nh_.advertise<std_msgs::Float64>("/rrbot/joint5_position_controller/command", 1, true);
-    joint6_command_publisher_ = nh_.advertise<std_msgs::Float64>("/rrbot/joint6_position_controller/command", 1, true);
+    joint1_command_publisher_ = nh_.advertise<std_msgs::Float64>("/abby/joint1_position_controller/command", 1, true);
+    joint2_command_publisher_ = nh_.advertise<std_msgs::Float64>("/abby/joint2_position_controller/command", 1, true);
+    joint3_command_publisher_ = nh_.advertise<std_msgs::Float64>("/abby/joint3_position_controller/command", 1, true);
+    joint4_command_publisher_ = nh_.advertise<std_msgs::Float64>("/abby/joint4_position_controller/command", 1, true);
+    joint5_command_publisher_ = nh_.advertise<std_msgs::Float64>("/abby/joint5_position_controller/command", 1, true);
+    joint6_command_publisher_ = nh_.advertise<std_msgs::Float64>("/abby/joint6_position_controller/command", 1, true);
     //add more publishers, as needed
     // note: COULD make minimal_publisher_ a public member function, if want to use it within "main()"
 }

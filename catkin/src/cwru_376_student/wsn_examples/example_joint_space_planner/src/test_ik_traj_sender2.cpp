@@ -90,11 +90,11 @@ int main(int argc, char** argv)
     }
     //ros::Duration t_from_start(0); //initialize duration to 0
     double t=0.0;
-    double dt = 3;          
+    //double dt = 3;          
     trajectory_point1.time_from_start =    ros::Duration(0);   
-    trajectory_point2.time_from_start =    ros::Duration(2);  
+    //trajectory_point2.time_from_start =    ros::Duration(2);  
     new_trajectory.points.push_back(trajectory_point1); // add this single trajectory point to the trajectory vector   
-    new_trajectory.points.push_back(trajectory_point2); // add this single trajectory point to the trajectory vector      
+    //new_trajectory.points.push_back(trajectory_point2); // add this single trajectory point to the trajectory vector      
     new_trajectory.header.stamp = ros::Time::now();      
     
     ros::Rate sleep_timer(1.0); //1Hz update rate
@@ -169,7 +169,8 @@ int main(int argc, char** argv)
    
 
    // try to execute the plan:
-     dt = 0.4;
+     double dt = 0.4;
+     //t+= 5.0; // go from home to first point in N sec; for simu, this does not behave same as on actual robot;
    for (int ilayer=0;ilayer<nlayer;ilayer++)
    {
       qvec = optimal_path[ilayer];
