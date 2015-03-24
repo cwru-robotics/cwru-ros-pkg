@@ -1,6 +1,0 @@
-<?xml version="1.0" ?>
-<robot name="abby" xmlns:xacro="http://ros.org/wiki/xacro">
-    <!--xacro:include filename="$(find cwru_description)/urdf/kinect.urdf.xacro"/>
-
-</robot>
-

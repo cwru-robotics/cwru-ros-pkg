@@ -1,6 +1,0 @@
-<?xml version="1.0" ?>
-<robot name="abby_gripper" xmlns:xacro="http://ros.org/wiki/xacro">
-	<xacro:include filename="$(find abby_description)/urdf/gripper_macro.xacro" />
-	<xacro:abby_gripper />
-</robot>
-

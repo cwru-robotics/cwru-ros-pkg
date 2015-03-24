@@ -1,8 +1,0 @@
-<launch>
-
-<!--load abby urdf model into Gazebo -->
-<!-- rosrun gazebo_ros spawn_model -file ./abby_no_arm_urdf.xacro -urdf  -model abby-->
-
-<node name="spawn_urdf" pkg= "gazebo_ros" type="spawn_model" args="-file $(find abby_description)/urdf/abby_no_arm_urdf.xacro -urdf  -model abby" />
-
-</launch>

@@ -1,9 +1,0 @@
-min_sensor_dist: 1
-self_see_default_padding: .05
-self_see_links:
-    - name: irb_120_link_2
-    - name: irb_120_link_3
-    - name: irb_120_link_4
-    - name: irb_120_link_5
-    - name: irb_120_link_6
-    - name: gripper_body
