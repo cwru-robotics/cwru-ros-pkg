@@ -67,12 +67,12 @@ int main(int argc, char** argv)
     trajectory_point2.positions.clear();  
     
     new_trajectory.points.clear();
-    new_trajectory.joint_names.push_back("joint1");
-    new_trajectory.joint_names.push_back("joint2");
-    new_trajectory.joint_names.push_back("joint3");
-    new_trajectory.joint_names.push_back("joint4");
-    new_trajectory.joint_names.push_back("joint5");
-    new_trajectory.joint_names.push_back("joint6");   
+    new_trajectory.joint_names.push_back("joint_1");
+    new_trajectory.joint_names.push_back("joint_2");
+    new_trajectory.joint_names.push_back("joint_3");
+    new_trajectory.joint_names.push_back("joint_4");
+    new_trajectory.joint_names.push_back("joint_5");
+    new_trajectory.joint_names.push_back("joint_6");   
     
     //specify two points: initially, all home angles
     for (int ijnt=0;ijnt<6;ijnt++) {

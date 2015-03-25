@@ -40,12 +40,12 @@ int main(int argc, char** argv)
     trajectory_msgs::JointTrajectoryPoint trajectory_point2; 
     
     new_trajectory.points.clear();
-    new_trajectory.joint_names.push_back("joint1");
-    new_trajectory.joint_names.push_back("joint2");
-    new_trajectory.joint_names.push_back("joint3");
-    new_trajectory.joint_names.push_back("joint4");
-    new_trajectory.joint_names.push_back("joint5");
-    new_trajectory.joint_names.push_back("joint6");    
+    new_trajectory.joint_names.push_back("joint_1");
+    new_trajectory.joint_names.push_back("joint_2");
+    new_trajectory.joint_names.push_back("joint_3");
+    new_trajectory.joint_names.push_back("joint_4");
+    new_trajectory.joint_names.push_back("joint_5");
+    new_trajectory.joint_names.push_back("joint_6");    
     ros::Rate sleep_timer(10.0); // update rate
     
     // may need this to get publisher advertisement recognized
@@ -97,12 +97,12 @@ int main(int argc, char** argv)
         for (int i=0;i<100;i++) {
             //sign*= -1.0;
             theta+=dtheta;
-            //trajectory_point1.positions[0] = amp*sin(theta); //sign*amp;
-            //trajectory_point1.positions[1] = amp*sin(theta); 
-            //trajectory_point1.positions[2] = amp*sin(theta); 
-            //trajectory_point1.positions[3] = amp*sin(theta); 
-            //trajectory_point1.positions[4] = amp*sin(theta); 
-            //trajectory_point1.positions[5] = amp*sin(theta);  
+            trajectory_point1.positions[0] = amp*sin(theta); //sign*amp;
+            trajectory_point1.positions[1] = amp*sin(theta); 
+            trajectory_point1.positions[2] = amp*sin(theta); 
+            trajectory_point1.positions[3] = amp*sin(theta); 
+            trajectory_point1.positions[4] = amp*sin(theta); 
+            trajectory_point1.positions[5] = amp*sin(theta);  
             t += dt;
             
             trajectory_point1.time_from_start =    ros::Duration(t);
