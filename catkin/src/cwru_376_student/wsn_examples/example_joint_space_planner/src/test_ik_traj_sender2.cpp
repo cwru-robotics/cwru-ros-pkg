@@ -120,7 +120,7 @@ int main(int argc, char** argv)
    qvec<<0,0,0,0,0,0;
    int nsolns=0;
    int nlayer = 0;
-   for (double y_var = -0.4; y_var<0.4; y_var+=0.02) {
+   for (double y_var = -0.4; y_var<0.4; y_var+=0.01) {
         p[0] = x_des;
         p[1]=  y_var;
         p[2] = z_des;

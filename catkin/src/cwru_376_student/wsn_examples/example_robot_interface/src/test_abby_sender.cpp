@@ -33,8 +33,8 @@ int main(int argc, char** argv)
 
     ros::NodeHandle nh; // create a node handle; need to pass this to the class constructor
     
-    ros::Publisher pub = nh.advertise<trajectory_msgs::JointTrajectory>("/command", 1);  
-    ros::Publisher pubtest = nh.advertise<std_msgs::Float32>("test_topic",1);
+    ros::Publisher pub = nh.advertise<trajectory_msgs::JointTrajectory>("/joint_path_command", 1);  
+    //ros::Publisher pubtest = nh.advertise<std_msgs::Float32>("test_topic",1);
     std_msgs::Float32 pi;
     pi.data=3.14;
     //ros::Publisher pub = nh.advertise<trajectory_msgs::JointTrajectory>("/command", 1);   //Ed's topic for Abby traj download?
@@ -44,12 +44,12 @@ int main(int argc, char** argv)
     trajectory_msgs::JointTrajectoryPoint trajectory_point2; 
     
     new_trajectory.points.clear();
-    new_trajectory.joint_names.push_back("joint1");
-    new_trajectory.joint_names.push_back("joint2");
-    new_trajectory.joint_names.push_back("joint3");
-    new_trajectory.joint_names.push_back("joint4");
-    new_trajectory.joint_names.push_back("joint5");
-    new_trajectory.joint_names.push_back("joint6");    
+    new_trajectory.joint_names.push_back("joint_1");
+    new_trajectory.joint_names.push_back("joint_2");
+    new_trajectory.joint_names.push_back("joint_3");
+    new_trajectory.joint_names.push_back("joint_4");
+    new_trajectory.joint_names.push_back("joint_5");
+    new_trajectory.joint_names.push_back("joint_6");    
     ros::Rate sleep_timer(10.0); // update rate
     
     // may need this to get publisher advertisement recognized
@@ -96,11 +96,11 @@ int main(int argc, char** argv)
         for (int i=0;i<90;i++) {
             //sign*= -1.0;
             theta+=dtheta;
-            //trajectory_point1.positions[0] = amp*sin(theta); //sign*amp;
-            //trajectory_point1.positions[1] = amp*sin(theta); 
-            //trajectory_point1.positions[2] = amp*sin(theta); 
-            //trajectory_point1.positions[3] = amp*sin(theta); 
-            //trajectory_point1.positions[4] = amp*sin(theta); 
+            trajectory_point1.positions[0] = amp*sin(theta); //sign*amp;
+            trajectory_point1.positions[1] = amp*sin(theta); 
+            trajectory_point1.positions[2] = amp*sin(theta); 
+            trajectory_point1.positions[3] = amp*sin(theta); 
+            trajectory_point1.positions[4] = amp*sin(theta); 
             trajectory_point1.positions[5] = amp*sin(theta);   //oscillate tool flange only; leave all other joints at 0.0
             t += dt;
             
@@ -119,7 +119,7 @@ int main(int argc, char** argv)
      // stick around for a while; if die too early, perhaps message does not get sent (??)
             pub.publish(new_trajectory);
             while(ros::ok()) {
-                pubtest.publish(pi);
+                //pubtest.publish(pi);
                             ros::spinOnce();
                sleep_timer.sleep();
             }
