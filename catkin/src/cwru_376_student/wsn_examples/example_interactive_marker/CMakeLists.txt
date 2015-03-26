@@ -16,11 +16,13 @@ catkin_simple()
 
 # Executables
 cs_add_executable(IM_example src/IM_example.cpp)
+cs_add_executable(IM_6dof_example src/IM_6dof_example.cpp)
 cs_add_executable(IM_example2 src/IM_example2.cpp)
 cs_add_executable(IM_example3 src/IM_example3.cpp)
 cs_add_executable(path_display src/path_display.cpp)
 cs_add_executable(marker_example src/marker_example.cpp)
 cs_add_executable(marker_listener src/marker_listener.cpp)
+cs_add_executable(simple_marker_listener src/simple_marker_listener.cpp)
 cs_add_executable(marker_listener_v2 src/marker_listener_v2.cpp)
 cs_add_executable(example_marker_user_app src/example_marker_user_app.cpp)
 cs_add_executable(example_marker_user_app_v2 src/example_marker_user_app_v2.cpp)

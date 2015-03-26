@@ -17,6 +17,10 @@ All of these markers are constrained to lie in the x-y plane (z=0).   The first 
 A complementary node: `rosrun example_interactive_marker path_display`
 subscribes to the above 4 marker topics.  It computes sample points of a polyline connecting the above vertices (in order, updated at 2Hz).  The result is published as a marker list on topic "path_display".  This can be visualized in Rviz by adding a "Marker" item that subscribes to this topic.
 
+The example "IM_6dof_example" displays a 6-DOF interactive marker.  Start it up with:
+`rosrun  example_interactive_marker IM_6dof_example`
+This marker publishes its pose on topic example_marker/feedback. 
+In rviz, add a display "InteractiveMarkers" and select the topic example_marker/feedback. 
 
 
 
