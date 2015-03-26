@@ -166,10 +166,10 @@ def catkin_make(team_repo_dir, packages=None, with_deps=False, debug=False):
 
     # preserve env variables from our bashrc that will be overwritten
     ros_workspace = os.environ['ROS_WORKSPACE']
-    gazebo_model_path = os.environ['GAZEBO_MODEL_PATH']
+    #gazebo_model_path = os.environ['GAZEBO_MODEL_PATH']
 
     bash_source('/opt/ros/hydro/setup.sh')
-    bash_source('/usr/share/drcsim/setup.sh')
+    #bash_source('/usr/share/drcsim/setup.sh')
 
     build_success = False
     catkin_command = None
@@ -215,7 +215,7 @@ def catkin_make(team_repo_dir, packages=None, with_deps=False, debug=False):
 
     # restore env variables
     os.environ['ROS_WORKSPACE'] = ros_workspace
-    os.environ['GAZEBO_MODEL_PATH'] = gazebo_model_path
+    #os.environ['GAZEBO_MODEL_PATH'] = gazebo_model_path
     os.environ['ROS_PACKAGE_PATH'] = '%s:%s' % (
         team_repo_dir,
         os.environ['ROS_PACKAGE_PATH'])
