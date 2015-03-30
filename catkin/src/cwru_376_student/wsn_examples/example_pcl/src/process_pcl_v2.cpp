@@ -1,3 +1,7 @@
+// process_pcl_v2.cpp: wsn, March, 2015
+// example code to show some point-cloud processing, including interaction with Rviz selected points
+
+
 #include <stdlib.h>
 #include <math.h>
 #include <iostream>
@@ -11,8 +15,11 @@
 #include <pcl/ros/conversions.h>
 #include <pcl/features/normal_3d.h>
 
+
+
 #include <Eigen/Eigen>
 #include <Eigen/Dense>
+//#include <Transform.h>
 #include <tf/transform_listener.h>
 #include <tf/transform_broadcaster.h>
 
@@ -30,9 +37,12 @@ using namespace pcl::io;
 geometry_msgs::Point computeCentroid(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud);
 void computeRsqd(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud, Eigen::Vector3f centroid, std::vector<float> &rsqd_vec);
 Eigen::Vector3f computeCentroid(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud,std::vector<int>iselect);
+void transform_cloud(PointCloud<pcl::PointXYZ>::Ptr pclSelect, Eigen::Matrix3f R_xform);
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr g_pclKinect; //(new PointCloud<pcl::PointXYZ>);
-
+pcl::PointCloud<pcl::PointXYZ>::Ptr g_cloud_out;
+//tf::transform transform;
+Eigen::Matrix3f g_R_transform;
 // wakes up when a new "selected Points" message arrives
 void selectCB(const sensor_msgs::PointCloud2ConstPtr& cloud) {
     pcl::PointCloud<pcl::PointXYZ>::Ptr pclSelect(new pcl::PointCloud<pcl::PointXYZ>);
@@ -84,6 +94,9 @@ void selectCB(const sensor_msgs::PointCloud2ConstPtr& cloud) {
     cout<<"unfiltered centroid: "<<centroidEvec3f.transpose()<<endl;
     centroidEvec3f = computeCentroid(pclSelect,iselect);
     cout<<"refined centroid:    "<<centroidEvec3f.transpose()<<endl;
+    
+    transform_cloud(pclSelect,g_R_transform); // test rotating a point cloud: use selected points
+    
     
     //ROS_INFO("Got the centroid");
     //ROS_INFO("Position: x = %f, y = %f, z = %f", centroid.x, centroid.y, centroid.z);
@@ -150,6 +163,21 @@ void computeRsqd(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud,Eigen::Vector3f centro
      rsqd_vec[i] = evec3f.dot(evec3f);
     }
 }
+
+void transform_cloud(PointCloud<pcl::PointXYZ>::Ptr inputCloud, Eigen::Matrix3f R_xform) {
+    // use the global pointcloud:
+    g_cloud_out->header   = inputCloud->header;
+    g_cloud_out->is_dense = inputCloud->is_dense;
+    g_cloud_out->width    = inputCloud->width;
+    g_cloud_out->height   = inputCloud->height;
+    int npts = inputCloud->points.size();
+        cout<<"transforming npts = "<<npts<<endl;
+    g_cloud_out->points.resize(npts);
+    for (int i = 0; i < npts; ++i) {
+      g_cloud_out->points[i].getVector3fMap () = R_xform * inputCloud->points[i].getVector3fMap ();
+    }
+    
+} 
 
 void printPoints() {
     float x, y, z;
@@ -241,6 +269,14 @@ int main(int argc, char** argv) {
     ros::Subscriber getPCLPoints = nh.subscribe<sensor_msgs::PointCloud2> ("/kinect/depth/points", 1, kinectCB);
     ros::Subscriber selectedPoints = nh.subscribe<sensor_msgs::PointCloud2> ("/selected_points", 1, selectCB);
     pcl::NormalEstimation<pcl::PointXYZ, pcl::Normal> ne;
+    pcl::PointCloud<pcl::PointXYZ>::Ptr cloud_out(new pcl::PointCloud<pcl::PointXYZ>);
+    g_cloud_out = cloud_out;
+    
+    g_R_transform.col(0)<<1,0,0;
+    g_R_transform.col(2)<< 0, -sqrt(2.0)/2.0, -sqrt(2.0)/2.0;
+    g_R_transform.col(1) = g_R_transform.col(2).cross(g_R_transform.col(0));
+    cout<<"R_transform: "<<endl;
+    cout<<g_R_transform<<endl;
     
     while (ros::ok()) {
         ros::spinOnce();

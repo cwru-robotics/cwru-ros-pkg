@@ -24,8 +24,10 @@ SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++0x")
 # Executables
 # cs_add_executable(example src/example.cpp)
 cs_add_executable(process_pcl src/process_pcl.cpp)
+cs_add_executable(process_pcl_v2 src/process_pcl_v2.cpp)
 # target_link_library(example my_lib)
 target_link_libraries(process_pcl ${PCL_LIBRARIES})
+target_link_libraries(process_pcl_v2 ${PCL_LIBRARIES})
 cs_install()
 cs_export()
     
