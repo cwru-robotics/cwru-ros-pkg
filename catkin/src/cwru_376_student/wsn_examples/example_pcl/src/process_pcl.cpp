@@ -19,6 +19,7 @@
 #include <pcl_ros/transforms.h>
 #include <pcl/filters/extract_indices.h>
 #include <pcl-1.7/pcl/impl/point_types.hpp>
+#include <pcl/common/impl/centroid.hpp>
 
 //PointCloud::Ptr pclCloud(new PointCloud); // Holds the whole pcl cloud
 //typedef pcl::PointCloud<pcl::PointXYZ> PointCloud;
@@ -27,6 +28,8 @@ using namespace Eigen;
 using namespace pcl;
 using namespace pcl::io;
 geometry_msgs::Point computeCentroid(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud);
+void computeRsqd(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud, Eigen::Vector3f centroid, std::vector<float> &rsqd_vec);
+Eigen::Vector3f computeCentroid(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud,std::vector<int>iselect);
 
 pcl::PointCloud<pcl::PointXYZ>::Ptr g_pclKinect; //(new PointCloud<pcl::PointXYZ>);
 
@@ -38,11 +41,52 @@ void selectCB(const sensor_msgs::PointCloud2ConstPtr& cloud) {
     //ROS_INFO("frame id is: %s",cloud->header.frame_id);
     cout<<"header frame: "<<cloud->header.frame_id<<endl;
     int npts = pclSelect->width*pclSelect->height;
+
+    //    Eigen::Vector4f centroidV4f;
+    //pcl::compute3dCentroid(pclSelect,centroidV4f);
+    //ROS_INFO("try pcl fnc...");
+    //cout<<"centroidV4f: "<<centroidV4f.transpose()<<endl;
     
     geometry_msgs::Point centroid;
+    Eigen::Vector3f centroidEvec3f;
     centroid = computeCentroid(pclSelect);
-    ROS_INFO("Got the centroid");
-    ROS_INFO("Position: x = %f, y = %f, z = %f", centroid.x, centroid.y, centroid.z);
+    centroidEvec3f(0) = centroid.x;
+    centroidEvec3f(1) = centroid.y;
+    centroidEvec3f(2) = centroid.z;    
+    std::vector<float> rsqd_vec;
+    computeRsqd(pclSelect,centroidEvec3f,rsqd_vec);
+    ROS_INFO("rsqd vec: ");
+    float variance=0.0;
+    for (int i=0;i<rsqd_vec.size();i++) {
+        variance+=rsqd_vec[i];
+        cout<<rsqd_vec[i]<<", ";      
+    }
+    cout<<endl;
+    variance/=( (float) npts);
+
+    //cout<<rsqd_vec[0];
+    // now, eliminate any outliers; actually, keep only points withing 1 std;
+    std::vector<int> iselect;
+    for (int i=0;i<npts;i++) {
+        if (rsqd_vec[i]<variance) {
+            iselect.push_back(i);
+        }
+    }
+    ROS_INFO("select indices: ");
+    for (int i=0;i<iselect.size();i++) {
+        cout<<iselect[i]<<", ";
+    }
+    cout<<endl;
+    cout<<"npts = "<<npts<<endl;
+    cout<<"npts selected: "<<iselect.size()<<endl;
+     cout<<"variance = "<<variance<<endl;
+    cout<<"std_dev: "<<sqrt(variance)<<endl;   
+    cout<<"unfiltered centroid: "<<centroidEvec3f.transpose()<<endl;
+    centroidEvec3f = computeCentroid(pclSelect,iselect);
+    cout<<"refined centroid:    "<<centroidEvec3f.transpose()<<endl;
+    
+    //ROS_INFO("Got the centroid");
+    //ROS_INFO("Position: x = %f, y = %f, z = %f", centroid.x, centroid.y, centroid.z);
     
     geometry_msgs::PointStamped centroidStamped;
     centroidStamped.header = cloud->header; //"utorso"; //targetFrame;
@@ -56,8 +100,10 @@ void selectCB(const sensor_msgs::PointCloud2ConstPtr& cloud) {
     Eigen::Vector4f plane_params;
     std::vector<int> indices;
     for (int i=0;i<npts;i++) indices.push_back(i);      
-      n.computePointNormal (*pclSelect, indices, plane_params, curvature);
-      std::cout<<"plane_params: "<<plane_params.transpose()<<std::endl;    
+    n.computePointNormal (*pclSelect, indices, plane_params, curvature);
+    std::cout<<"plane_params:           "<<plane_params.transpose()<<std::endl;  
+    n.computePointNormal (*pclSelect, iselect, plane_params, curvature);
+    std::cout<<"plane_params, filtered: "<<plane_params.transpose()<<std::endl;        
 }
 
 
@@ -78,6 +124,31 @@ geometry_msgs::Point computeCentroid(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud) {
     centroid.y = centroid.y / size;
     centroid.z = centroid.z / size;
     return centroid;
+}
+
+Eigen::Vector3f computeCentroid(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud,std::vector<int>iselect) {
+    Eigen::Vector3f centroid;
+    centroid << 0,0,0;
+    int nselect = iselect.size();
+    for (int i=0;i<nselect;i++) {
+        centroid += pcl_cloud->points[iselect[i]].getVector3fMap();
+    }
+    if (nselect>0) {
+       centroid/= ((float) nselect);
+    }
+    return centroid;
+}
+
+void computeRsqd(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud,Eigen::Vector3f centroid, std::vector<float> &rsqd_vec) {
+    Eigen::Vector3f evec3f;
+    int npts = pcl_cloud->points.size();
+    rsqd_vec.clear();
+    rsqd_vec.resize(npts);
+    for (int i=0; i<npts ;i++) {
+     evec3f = pcl_cloud->points[i].getVector3fMap();
+     evec3f-= centroid;
+     rsqd_vec[i] = evec3f.dot(evec3f);
+    }
 }
 
 void printPoints() {
