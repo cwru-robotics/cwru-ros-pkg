@@ -11,4 +11,8 @@ Test this node with simple test node, test_traj_sender, which sends a simple, ha
 `rosrun example_robot_interface test_traj_sender`
 
 ## Running tests/demos
+Try this with simulator first:
+`roslaunch abby_gazebo abby_world.launch`
+`rosrun example_robot_interface test_abby_sender2 joint_states:= /abby/joint_states`
+Will get prompted for joint numbers and joint angles, then robot will go to these points.
     

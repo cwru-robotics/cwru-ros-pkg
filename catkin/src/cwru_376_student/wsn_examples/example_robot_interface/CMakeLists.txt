@@ -25,6 +25,7 @@ cs_add_executable(test_traj_sender src/test_traj_sender.cpp)
 cs_add_executable(test_traj_sin_sender src/test_traj_sin_sender.cpp)
 cs_add_executable(test_traj_point_sender src/test_traj_point_sender.cpp)
 cs_add_executable(test_abby_sender src/test_abby_sender.cpp)
+cs_add_executable(test_abby_sender2 src/test_abby_sender2.cpp)
 cs_add_executable(test_ik_traj_sender src/test_ik_traj_sender.cpp)
 #cs_add_executable(test_ik_traj_sender2 src/test_ik_traj_sender2.cpp)
 #target_link_libraries(test_ik_traj_sender2 irb120_ik) #don't need this; already referenced in package.xml
