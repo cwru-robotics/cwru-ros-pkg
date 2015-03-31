@@ -51,16 +51,8 @@ void stuff_trajectory( Vectorq6x1 qvec, trajectory_msgs::JointTrajectory &new_tr
     
     trajectory_msgs::JointTrajectoryPoint trajectory_point1;
     trajectory_msgs::JointTrajectoryPoint trajectory_point2; 
-     
-    
+       
     new_trajectory.points.clear();
-    new_trajectory.joint_names.push_back("joint_1");
-    new_trajectory.joint_names.push_back("joint_2");
-    new_trajectory.joint_names.push_back("joint_3");
-    new_trajectory.joint_names.push_back("joint_4");
-    new_trajectory.joint_names.push_back("joint_5");
-    new_trajectory.joint_names.push_back("joint_6");   
-
     new_trajectory.header.stamp = ros::Time::now();  
     
     trajectory_point1.positions.clear();    
@@ -68,19 +60,18 @@ void stuff_trajectory( Vectorq6x1 qvec, trajectory_msgs::JointTrajectory &new_tr
     //fill in the points of the trajectory: initially, all home angles
     for (int ijnt=0;ijnt<6;ijnt++) {
         trajectory_point1.positions.push_back(g_q_state[ijnt]); // stuff in position commands for 6 joints
-        //should also fill in trajectory_point.time_from_start
         trajectory_point2.positions.push_back(0.0); // stuff in position commands for 6 joints        
     }
-    trajectory_point1.time_from_start =    ros::Duration(0);  
-    trajectory_point2.time_from_start =    ros::Duration(2.0);      
+    trajectory_point1.time_from_start =    ros::Duration(0);          // fill in trajectory_point.time_from_start
+    trajectory_point2.time_from_start =    ros::Duration(2.0);        // take 2 seconds to move to here
 
     // start from current pose!
     new_trajectory.points.push_back(trajectory_point1); // add this single trajectory point to the trajectory vector     
     
     // fill in the target pose: really should fill in a sequence of poses leading to this goal
-   trajectory_point2.time_from_start =    ros::Duration(2.0);  
+    // ABB IRC5 controller will interpolate to produce a smooth motion nonetheless (but simulator will not)
     for (int ijnt=0;ijnt<6;ijnt++) {
-            trajectory_point2.positions[ijnt] = qvec[ijnt];
+            trajectory_point2.positions[ijnt] = qvec[ijnt]; // target pose from qvec argument
     }  
 
     new_trajectory.points.push_back(trajectory_point2); // append this point to trajectory
@@ -109,6 +100,13 @@ int main(int argc, char** argv)
     ros::ServiceServer service = nh.advertiseService("move_trigger", triggerService);  
  
     trajectory_msgs::JointTrajectory new_trajectory; // an empty trajectory
+    new_trajectory.joint_names.push_back("joint_1");
+    new_trajectory.joint_names.push_back("joint_2");
+    new_trajectory.joint_names.push_back("joint_3");
+    new_trajectory.joint_names.push_back("joint_4");
+    new_trajectory.joint_names.push_back("joint_5");
+    new_trajectory.joint_names.push_back("joint_6");   
+    
     Vectorq6x1 qvec;       
     for (int i=0;i<6;i++) qvec[i]=0.0; // home angles, by default
   
