@@ -45,11 +45,13 @@
 <build_depend>pcl_conversions</build_depend>
 <build_depend>sensor_msgs</build_depend>
 <build_depend>tf</build_depend>
+<build_depend>cwru_srv</build_depend>
   <run_depend>roscpp</run_depend>
 <run_depend>pcl_ros</run_depend>
 <run_depend>pcl_conversions</run_depend>
 <run_depend>sensor_msgs</run_depend>
 <run_depend>tf</run_depend>
+<run_depend>cwru_srv</run_depend>
   <!-- The export tag contains other, unspecified, tags -->
   <export>
     <!-- You can specify that this package is a metapackage here: -->

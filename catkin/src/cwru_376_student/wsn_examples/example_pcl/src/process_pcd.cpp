@@ -1,6 +1,6 @@
-// process_pcl_v2.cpp: wsn, March, 2015
-// example code to show some point-cloud processing, including interaction with Rviz selected points
-
+// process_pcd_save.cpp: wsn, April, 2015
+// example code to acquire a pointcloud from a topic, and save a snapshot to disk
+// as a PCD file.
 
 #include <stdlib.h>
 #include <math.h>
@@ -15,7 +15,7 @@
 #include <pcl/ros/conversions.h>
 #include <pcl/features/normal_3d.h>
 
-
+#include <cwru_srv/simple_int_service_message.h> // this is a pre-defined service message, contained in shared "cwru_srv" package
 
 #include <Eigen/Eigen>
 #include <Eigen/Dense>
@@ -41,30 +41,80 @@ Eigen::Vector3f computeCentroid(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud,std::ve
 void transform_cloud(PointCloud<pcl::PointXYZ>::Ptr inputCloud, Eigen::Matrix3f R_xform, PointCloud<pcl::PointXYZ>::Ptr outputCloud);
 void filter_cloud_z(PointCloud<pcl::PointXYZ>::Ptr inputCloud, double z_nom, double z_eps, vector<int> &indices);
 void copy_cloud(PointCloud<pcl::PointXYZ>::Ptr inputCloud, vector<int> &indices,PointCloud<pcl::PointXYZ>::Ptr outputCloud);
-pcl::PointCloud<pcl::PointXYZ>::Ptr g_pclKinect; //(new PointCloud<pcl::PointXYZ>);
-pcl::PointCloud<pcl::PointXYZ>::Ptr g_cloud_out(new pcl::PointCloud<pcl::PointXYZ>);
-pcl::PointCloud<pcl::PointXYZ>::Ptr g_display_cloud(new pcl::PointCloud<pcl::PointXYZ>);
+
+void find_plane(Eigen::Vector4f plane_params, std::vector<int> &indices_z_eps); 
+
+void process_patch(std::vector<int> &iselect_filtered, Eigen::Vector3f &centroidEvec3f, Eigen::Vector4f &plane_params);
+
+// a bunch of pointcloud holders, all global
+
+//pcl::PointCloud<pcl::PointXYZ>::Ptr g_pclKinect(new PointCloud<pcl::PointXYZ>);
+pcl::PointCloud<pcl::PointXYZ>::Ptr g_cloud_from_disk (new pcl::PointCloud<pcl::PointXYZ>); //this one is read from PCD file on disk
+pcl::PointCloud<pcl::PointXYZ>::Ptr g_cloud_out(new pcl::PointCloud<pcl::PointXYZ>); // holder for processed point clouds
+pcl::PointCloud<pcl::PointXYZ>::Ptr g_display_cloud(new pcl::PointCloud<pcl::PointXYZ>); // this cloud gets published--viewable in rviz
+pcl::PointCloud<pcl::PointXYZ>::Ptr g_pclSelect(new pcl::PointCloud<pcl::PointXYZ>); // holds published points, per Rviz tool
 // PointXYZRGB would be colorized
-//tf::transform transform;
-Eigen::Matrix3f g_R_transform;
+
+Eigen::Matrix3f g_R_transform; // a matrix useful for rotating the data
+
+const int IDENTIFY_PLANE=0;
+const int FIND_ON_TABLE=1;
+
+int g_pcl_process_mode = 0;
+
+bool modeService(cwru_srv::simple_int_service_messageRequest& request, cwru_srv::simple_int_service_messageResponse& response)
+{
+    ROS_INFO("mode select service callback activated");
+    response.resp = true; // boring, but valid response info
+    g_pcl_process_mode = request.req;
+    cout<<"Mode set to: "<<g_pcl_process_mode<<endl;
+    return true;
+}
+
 // wakes up when a new "selected Points" message arrives
 void selectCB(const sensor_msgs::PointCloud2ConstPtr& cloud) {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr pclSelect(new pcl::PointCloud<pcl::PointXYZ>);
-    pcl::fromROSMsg(*cloud, *pclSelect);
-    ROS_INFO("Select %d * %d points", pclSelect->width, pclSelect->height);
+
+    pcl::fromROSMsg(*cloud, *g_pclSelect);
+    ROS_INFO("RECEIVED NEW PATCH w/  %d * %d points", g_pclSelect->width, g_pclSelect->height);
     //ROS_INFO("frame id is: %s",cloud->header.frame_id);
     cout<<"header frame: "<<cloud->header.frame_id<<endl;
-    int npts = pclSelect->width*pclSelect->height;
+    int npts = g_pclSelect->width*g_pclSelect->height;
+    std::vector<int> iselect_filtered; //indices of patch that do not contain outliers
+    std::vector<int> indices_of_plane; //indices of patch that do not contain outliers    
+    Eigen::Vector4f plane_params;
     
-    geometry_msgs::Point centroid;
     Eigen::Vector3f centroidEvec3f;
     
+    process_patch(iselect_filtered, centroidEvec3f, plane_params); // operate on selected points to remove outliers and
+      //find centroid and plane params
     
-    centroidEvec3f = computeCentroid(pclSelect); // compute the centroid of this point cloud (selected patch)
-  
+    switch(g_pcl_process_mode)  { // what we do here depends on our mode; mode is settable via a service
+            case IDENTIFY_PLANE:
+                ROS_INFO("MODE 0: identifying plane based on selection...");
+                find_plane(plane_params,indices_of_plane);
+                
+                break;
+                
+        case FIND_ON_TABLE:
+            ROS_INFO("filtering for objects on most recently defined plane: not implemented yet");
+            
+            break;
+        default:
+            ROS_WARN("this mode is not implemented");
+            
+    }   
+}
+
+// process patch: filter selected points to remove outliers;
+// then compute the centroid and the plane parameters of the filtered points
+// return these values in centroidEvec3f and plane_params
+void process_patch(std::vector<int> &iselect_filtered, Eigen::Vector3f &centroidEvec3f, Eigen::Vector4f &plane_params) {
+    ROS_INFO("PROCESSING THE PATCH: ");
+    int npts = g_pclSelect->width*g_pclSelect->height;
+    centroidEvec3f = computeCentroid(g_pclSelect); // compute the centroid of this point cloud (selected patch)
     std::vector<float> rsqd_vec;
-    computeRsqd(pclSelect,centroidEvec3f,rsqd_vec);
-    ROS_INFO("computing rsqd vec: ");
+    computeRsqd(g_pclSelect,centroidEvec3f,rsqd_vec);
+    //ROS_INFO("computing rsqd vec: ");
     float variance=0.0;
     for (int i=0;i<rsqd_vec.size();i++) {
         variance+=rsqd_vec[i];
@@ -74,36 +124,34 @@ void selectCB(const sensor_msgs::PointCloud2ConstPtr& cloud) {
     variance/=( (float) npts);
 
     // now, eliminate any outliers; actually, keep only points withing 1 std;
-    std::vector<int> iselect_all;
-    std::vector<int> iselect_filtered;
-    for (int i=0;i<npts;i++) {
-        iselect_all.push_back(i); //not choosey--pick all the points
+     for (int i=0;i<npts;i++) {
         if (rsqd_vec[i]<variance) {
             iselect_filtered.push_back(i); // choosey: retain only points within 1 std dev
         }
-    }
-    //ROS_INFO("selected indices: ");
-    //for (int i=0;i<iselect_filtered.size();i++) {
-    //    cout<<iselect_filtered[i]<<", ";
-    //}
-    //cout<<endl;
+    }   
     cout<<"npts = "<<npts<<endl;
-    cout<<"npts selected: "<<iselect_filtered.size()<<endl;
+    cout<<"npts of filtered patch: "<<iselect_filtered.size()<<endl;
     cout<<"variance = "<<variance<<endl;
-    cout<<"std_dev: "<<sqrt(variance)<<endl;   
-    cout<<"unfiltered centroid: "<<centroidEvec3f.transpose()<<endl;
-    centroidEvec3f = computeCentroid(pclSelect,iselect_filtered);
+    cout<<"std_dev: "<<sqrt(variance)<<endl;       
+    centroidEvec3f = computeCentroid(g_pclSelect,iselect_filtered);
     cout<<"refined centroid:    "<<centroidEvec3f.transpose()<<endl;
-    
+
     NormalEstimation<PointXYZ, Normal> n; // object to compute the normal to a set of points
 
-    float curvature; 
-    Eigen::Vector4f plane_params;
+    float curvature;     
     
-    n.computePointNormal (*pclSelect, iselect_all, plane_params, curvature); // compute normal of the selected points
-    std::cout<<"plane_params:           "<<plane_params.transpose()<<std::endl;  
-    n.computePointNormal (*pclSelect, iselect_filtered, plane_params, curvature); // redo for the filtered points
-    std::cout<<"plane_params, filtered: "<<plane_params.transpose()<<std::endl;   
+    n.computePointNormal (*g_pclSelect, iselect_filtered, plane_params, curvature); // find plane params for filtered patch
+    std::cout<<"plane_params, filtered patch: "<<plane_params.transpose()<<std::endl;       
+    
+}
+// this function operates on the global cloud pointer g_cloud_from_disk;
+// g_cloud_out contains a cloud rotated s.t. identified plane has normal (0,0,1), 
+//  indices_z_eps contain the indices of the points on the identified plane;
+//  g_display_cloud is a reduced version of g_cloud_from_disk, w/ only the planar points (expressed in original frame)
+void find_plane(Eigen::Vector4f plane_params, std::vector<int> &indices_z_eps) {
+    float curvature;  
+    std::vector<int> iselect_all;
+    NormalEstimation<PointXYZ, Normal> n; // object to compute the normal to a set of points 
     
     Eigen::Vector3f  plane_normal;
     Eigen::Vector3f  x_dir;
@@ -119,53 +167,41 @@ void selectCB(const sensor_msgs::PointCloud2ConstPtr& cloud) {
     // use the following to transform kinect points into the plane frame; could do translation as well, but not done here
     Eigen::Matrix3f R_transpose = g_R_transform.transpose();
     
-    transform_cloud(pclSelect,R_transpose,g_cloud_out); // try rotating the selected points  
+    //transform_cloud(g_pclSelect,R_transpose,g_cloud_out); // try rotating the selected points  
     // g_cloud_out from above operation should now all have the same z-value, if these points are coplanar
     // let's compute the normal of these points to check:
-    n.computePointNormal (*g_cloud_out, iselect_all, plane_params, curvature);
+    //iselect_all.clear();  // this is silly... should have a version of computeNormal that does not require a list of indices,
+      //if we want ALL points to be considered
+     //for (int i=0;i<g_cloud_out->points.size();i++) {
+      //      iselect_all.push_back(i); // choosey: retain only points within 1 std dev
+      //  }
+   
+    //n.computePointNormal (*g_cloud_out, iselect_all, plane_params, curvature);
     //we should find that the computed normal is (0,0,1)
-    std::cout<<"plane_params, rotated: "<<plane_params.transpose()<<std::endl;    
+    //std::cout<<"plane_params, rotated: "<<plane_params.transpose()<<std::endl;    
  
     double z_plane_nom = -plane_params[3]; // distance of plane from sensor origin--same as distance measured along plane normal
     // after rotating the points to align with the plane of the selected patch, all z-values should be approximately the same,
     // = z_plane_nom
     double z_eps = 0.01; // choose a tolerance for plane inclusion +/- z; 1cm??
-     vector<int> indices_z_eps; // vector that will hold indices of points that qualify as close enough to the selected plane
-    filter_cloud_z(g_cloud_out,z_plane_nom,z_eps,indices_z_eps);   //list all point indices that seem to lie on indicated plane
-    copy_cloud(pclSelect, indices_z_eps,g_display_cloud); // create an output point cloud, which is selected from points of input cloud
+    // vector<int> indices_z_eps; // vector that will hold indices of points that qualify as close enough to the selected plane
+    //filter_cloud_z(g_cloud_out,z_plane_nom,z_eps,indices_z_eps);   //list all point indices that seem to lie on indicated plane
+    //copy_cloud(g_pclSelect, indices_z_eps,g_display_cloud); // create an output point cloud, which is selected from points of input cloud
     // the above only extracts qualifying points from the selected patch--primarily useful for testing
     
     //OK...let's try transforming the ENTIRE point cloud:
-    transform_cloud(g_pclKinect,R_transpose,g_cloud_out); // rotate the entire point cloud
+    transform_cloud(g_cloud_from_disk,R_transpose,g_cloud_out); // rotate the entire point cloud
     // g_cloud_out is now expressed in the frame of the selected plane;
     // let's extract all of the points (i.e., name the indices of these points) for which the z value corresponds to the chosen plane
     filter_cloud_z(g_cloud_out,z_plane_nom,z_eps,indices_z_eps);
     // point indices of interest are in indices_z_eps; use this to extract this subset from the parent cloud to create a new cloud
-    copy_cloud(g_pclKinect, indices_z_eps,g_display_cloud); //g_display_cloud is being published regularly by "main"
+    copy_cloud(g_cloud_from_disk, indices_z_eps,g_display_cloud); //g_display_cloud is being published regularly by "main"
 
 }
 
 
-/*
-geometry_msgs::Point computeCentroid(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud) {
-    geometry_msgs::Point centroid;
-    centroid.x = 0;
-    centroid.y = 0;
-    centroid.z = 0;
-    uint32_t size = pcl_cloud->width * pcl_cloud->height;
-    std::cout<<"frame: "<<pcl_cloud->header.frame_id<<std::endl;
-    for(size_t i = 0; i != size; ++i) {
-        centroid.x += pcl_cloud->points[i].x;
-        centroid.y += pcl_cloud->points[i].y;
-        centroid.z += pcl_cloud->points[i].z;
-    }
-    centroid.x = centroid.x / size;
-    centroid.y = centroid.y / size;
-    centroid.z = centroid.z / size;
-    return centroid;
-}
- * */
-
+// given a point cloud, compute the centroid. Mostly useful for small patches, since centroid of the whole cloud is not too useful
+// will operate only on the points listed by index in iselect
 Eigen::Vector3f computeCentroid(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud,std::vector<int>iselect) {
     Eigen::Vector3f centroid;
     centroid << 0,0,0;
@@ -195,7 +231,8 @@ Eigen::Vector3f computeCentroid(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud) {
     return centroid;
 }
 
-
+// compute the distance-squared of each point from the provided centroid
+// presumably useful for outlier removal filtering
 void computeRsqd(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud,Eigen::Vector3f centroid, std::vector<float> &rsqd_vec) {
     Eigen::Vector3f evec3f;
     int npts = pcl_cloud->points.size();
@@ -208,6 +245,8 @@ void computeRsqd(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud,Eigen::Vector3f centro
     }
 }
 
+// given an input cloud, rotate ALL points using matrix R_xform, and put the result in outputCloud
+// This should be generalized for an affine transform (translation plus rotation)
 void transform_cloud(PointCloud<pcl::PointXYZ>::Ptr inputCloud, Eigen::Matrix3f R_xform, PointCloud<pcl::PointXYZ>::Ptr outputCloud) {
     // use the global pointcloud:
     outputCloud->header   = inputCloud->header;
@@ -262,51 +301,6 @@ void filter_cloud_z(PointCloud<pcl::PointXYZ>::Ptr inputCloud, double z_nom, dou
 }
 
 
-void printPoints() {
-    float x, y, z;
-    int ans;
-    std::cout<<"frame: "<<g_pclKinect->header.frame_id<<std::endl;
-    int width = g_pclKinect->width;
-    int height = g_pclKinect->height;
-    double xmin, xmax, ymin, ymax, zmin, zmax;
-    zmin = 1000;
-    zmax = -1000;
-    xmin = 1000;
-    xmax = -1000;
-    ymin = 1000;
-    ymax = -1000;
-    uint32_t size = width * height;
-    for (int iheight = 0; iheight < height; iheight++) {
-        for (int iwidth = 0; iwidth < width; iwidth++) {
-            int i = iheight * width + iwidth;
-            x = g_pclKinect->points[i].x;
-            y = g_pclKinect->points[i].y;
-            z = g_pclKinect->points[i].z;
-            cout << "x,y,z = " << x << ", " << y << ", " << z << endl;
-            if (y>ymax) ymax = y;
-            if (y<ymin) ymin = y;
-            if (x>xmax) xmax = x;
-            if (x<xmin) xmin = x;
-            if (z>zmax) zmax = z;
-            if (z<zmin) zmin = z;
-        }
-        cout<<"row "<<iheight<<endl;
-        cout<<"xmin, xmax ="<<xmin<<", "<<xmax<<endl;
-        cout<<"ymin, ymax ="<<ymin<<", "<<ymax<<endl;
-        cout<<"zmin, zmax ="<<zmin<<", "<<zmax<<endl;        
-        //cout << "enter 1: ";
-        //cin >> ans;
-    }
-
-}
-
-void kinectCB(const sensor_msgs::PointCloud2ConstPtr& cloud) {
-    pcl::PointCloud<pcl::PointXYZ>::Ptr pclKinect(new PointCloud<pcl::PointXYZ>);
-    pcl::fromROSMsg(*cloud, *pclKinect);
-    g_pclKinect = pclKinect;
-    //ROS_INFO("kinectCB %d * %d points", pclKinect->width, pclKinect->height);
- 
-}
 
 int main(int argc, char** argv) {
     // Do some initialization here
@@ -314,16 +308,34 @@ int main(int argc, char** argv) {
     ros::NodeHandle nh;
     ros::Rate rate(2);
     // Subscribers
-    ros::Subscriber getPCLPoints = nh.subscribe<sensor_msgs::PointCloud2> ("/kinect/depth/points", 1, kinectCB);
+    //ros::Subscriber getPCLPoints = nh.subscribe<sensor_msgs::PointCloud2> ("/kinect/depth/points", 1, kinectCB);
     ros::Subscriber selectedPoints = nh.subscribe<sensor_msgs::PointCloud2> ("/selected_points", 1, selectCB);
     
     ros::Publisher pubCloud = nh.advertise<sensor_msgs::PointCloud2> ("/plane_model", 1);
-    sensor_msgs::PointCloud2 ros_cloud;
+    ros::Publisher pubPcdCloud = nh.advertise<sensor_msgs::PointCloud2> ("/kinect_pointcloud", 1);   
     
+   ros::ServiceServer service = nh.advertiseService("process_mode", modeService);
+   
+    sensor_msgs::PointCloud2 ros_cloud;
+
+  
+  if (pcl::io::loadPCDFile<pcl::PointXYZ> ("test_pcd.pcd", *g_cloud_from_disk) == -1) //* load the file
+  {
+    PCL_ERROR ("Couldn't read file test_pcd.pcd \n");
+    return (-1);
+  }
+  std::cout << "Loaded "
+            << g_cloud_from_disk->width * g_cloud_from_disk->height
+            << " data points from test_pcd.pcd  "<< std::endl;
+  
+  g_cloud_from_disk->header.frame_id = "world"; //kinect_pc_frame"; // why is this necessary?  Did PCD delete the reference frame id?
     
     while (ros::ok()) {
+        pcl::toROSMsg(*g_cloud_from_disk, ros_cloud);        
         pcl::toROSMsg(*g_display_cloud, ros_cloud);
+        pubPcdCloud.publish(g_cloud_from_disk);
         pubCloud.publish(ros_cloud);
+        
         ros::spinOnce();
         rate.sleep();
     }
