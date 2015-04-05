@@ -1,7 +1,8 @@
-// process_pcd_save.cpp: wsn, April, 2015
+// process_pcd_dev.cpp: wsn, April, 2015
 // example code to acquire a pointcloud from disk, then perform various processing steps interactively.
 // processing is invoked by point-cloud selections in rviz, as well as "mode" settings via a service
 // e.g.:  rosservice call process_mode 0 induces processing in mode zero (plane fitting)
+// adding more code for cylinder registration
 
 
 #include <stdlib.h>
@@ -41,6 +42,7 @@ void computeRsqd(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud, Eigen::Vector3f centr
 Eigen::Vector3f computeCentroid(PointCloud<pcl::PointXYZ>::Ptr pcl_cloud, std::vector<int>iselect);
 void transform_cloud(PointCloud<pcl::PointXYZ>::Ptr inputCloud, Eigen::Matrix3f R_xform, PointCloud<pcl::PointXYZ>::Ptr outputCloud);
 void transform_cloud(PointCloud<pcl::PointXYZ>::Ptr inputCloud, Eigen::Matrix3f R_xform, Eigen::Vector3f offset, PointCloud<pcl::PointXYZ>::Ptr outputCloud);
+void transform_cloud(PointCloud<pcl::PointXYZ>::Ptr inputCloud, Eigen::Affine3f A,  PointCloud<pcl::PointXYZ>::Ptr outputCloud);
 void filter_cloud_z(PointCloud<pcl::PointXYZ>::Ptr inputCloud, double z_nom, double z_eps, vector<int> &indices);
 void filter_cloud_above_z(PointCloud<pcl::PointXYZ>::Ptr inputCloud, double z_threshold, vector<int> &indices);
 
@@ -69,15 +71,17 @@ Eigen::Matrix3f g_R_transform; // a matrix useful for rotating the data
 //define some processing modes; set these interactively via service
 const int IDENTIFY_PLANE = 0;
 const int FIND_PNTS_ABOVE_PLANE = 1;
-const int COMPUTE_CYLINDRICAL_FIT_ERR = 2;
-const int MAKE_CAN_CLOUD = 3;
-const int FIND_ON_TABLE = 4;
+const int COMPUTE_CYLINDRICAL_FIT_ERR_INIT = 2;
+const int COMPUTE_CYLINDRICAL_FIT_ERR_ITERATE = 3;
+//const int MAKE_CAN_CLOUD = 4;
+const int FIND_ON_TABLE = 5;
 
 const double Z_EPS = 0.01; //choose a tolerance for plane fitting, e.g. 1cm
 const double R_EPS = 0.05; // choose a tolerance for cylinder-fit outliers
 
-const double R_CYLINDER = 0.08; //estimated from ruler tool...example to fit a cyclinder of this radius to data
-
+const double R_CYLINDER = 0.085; //estimated from ruler tool...example to fit a cyclinder of this radius to data
+const double H_CYLINDER = 0.3; // estimated height of cylinder
+Eigen::Vector3f g_cylinder_origin; // origin of model for cylinder registration
 
 int g_pcl_process_mode = 0; // mode--set by service
 bool g_trigger = false; // a trigger, to tell "main" to process points in the currently selected mode
@@ -86,6 +90,10 @@ bool g_processed_patch = false; // a state--to let us know if a default set of p
 //more globals--to share info on planes and patches
 Eigen::Vector4f g_plane_params;
 Eigen::Vector3f g_patch_centroid;
+Eigen::Vector3f g_plane_normal;
+Eigen::Vector3f g_plane_origin;
+Eigen::Affine3f g_A_plane;
+double g_z_plane_nom;
 std::vector<int> g_indices_of_plane; //indices of patch that do not contain outliers 
 
 //use this service to set processing modes interactively
@@ -171,31 +179,39 @@ void find_plane(Eigen::Vector4f plane_params, std::vector<int> &indices_z_eps) {
     std::vector<int> iselect_all;
     NormalEstimation<PointXYZ, Normal> n; // object to compute the normal to a set of points 
 
-    Eigen::Vector3f plane_normal;
+   //Eigen::Vector3f plane_normal;
     Eigen::Vector3f x_dir;
-    for (int i = 0; i < 3; i++) plane_normal[i] = plane_params[i]; //for selected patch, get plane normal from point-cloud processing result
+    for (int i = 0; i < 3; i++) g_plane_normal[i] = plane_params[i]; //for selected patch, get plane normal from point-cloud processing result
 
     x_dir << 1, 0, 0; // keep x-axis the same...nominally
-    x_dir = x_dir - plane_normal * (plane_normal.dot(x_dir)); // force x-dir to be orthogonal to z-dir
+    x_dir = x_dir - g_plane_normal * (g_plane_normal.dot(x_dir)); // force x-dir to be orthogonal to z-dir
     x_dir /= x_dir.norm(); // want this to be unit length as well
     //populate g_R_transform with the direction vectors of the plane frame, with respect to the kinect frame
     g_R_transform.col(0) = x_dir;
-    g_R_transform.col(2) = plane_normal; // want the z-axis to be the plane normal    
+    g_R_transform.col(2) = g_plane_normal; // want the z-axis to be the plane normal    
     g_R_transform.col(1) = g_R_transform.col(2).cross(g_R_transform.col(0)); //make y-axis consistent right-hand triad
+    // let's define an origin on this plane as well.  The patch centroid should do
+    g_plane_origin = g_patch_centroid;
+    // define the transform s.t. A*pt_wrt_plane coords = pt_wrt_sensor_coords
+    g_A_plane.linear()= g_R_transform;
+    g_A_plane.translation() = g_plane_origin;
+    
     // use the following to transform kinect points into the plane frame; could do translation as well, but not done here
     Eigen::Matrix3f R_transpose = g_R_transform.transpose();
 
-    double z_plane_nom = plane_params[3]; // distance of plane from sensor origin--same as distance measured along plane normal
+    g_z_plane_nom = plane_params[3]; // distance of plane from sensor origin--same as distance measured along plane normal
     // after rotating the points to align with the plane of the selected patch, all z-values should be approximately the same,
     // = z_plane_nom
     double z_eps = Z_EPS; // choose a tolerance for plane inclusion +/- z; 1cm??
 
     //OK...let's try transforming the ENTIRE point cloud:
-    transform_cloud(g_cloud_from_disk, R_transpose, g_cloud_transformed); // rotate the entire point cloud
+    //transform_cloud(g_cloud_from_disk, R_transpose, g_cloud_transformed); // rotate the entire point cloud
+    transform_cloud(g_cloud_from_disk, g_A_plane.inverse(), g_cloud_transformed); // transform the entire point cloud    
     // g_cloud_transformed is now expressed in the frame of the selected plane;
     // let's extract all of the points (i.e., name the indices of these points) for which the z value corresponds to the chosen plane,
     // within tolerance z_eps
-    filter_cloud_z(g_cloud_transformed, z_plane_nom, z_eps, indices_z_eps);
+    //filter_cloud_z(g_cloud_transformed, g_z_plane_nom, z_eps, indices_z_eps);
+    filter_cloud_z(g_cloud_transformed, 0.0, z_eps, indices_z_eps); //transform --> z-values of points on plane should be 0.0
     // point indices of interest are in indices_z_eps; use this to extract this subset from the parent cloud to create a new cloud
     copy_cloud(g_cloud_from_disk, indices_z_eps, g_display_cloud); //g_display_cloud is being published regularly by "main"
 
@@ -288,6 +304,24 @@ void transform_cloud(PointCloud<pcl::PointXYZ>::Ptr inputCloud, Eigen::Matrix3f 
         outputCloud->points[i].getVector3fMap() = pt; //R_xform * inputCloud->points[i].getVector3fMap ();
     }
 }
+
+//for this version, provide an affine transform:
+void transform_cloud(PointCloud<pcl::PointXYZ>::Ptr inputCloud, Eigen::Affine3f A,  PointCloud<pcl::PointXYZ>::Ptr outputCloud) {
+    outputCloud->header = inputCloud->header;
+    outputCloud->is_dense = inputCloud->is_dense;
+    outputCloud->width = inputCloud->width;
+    outputCloud->height = inputCloud->height;
+    int npts = inputCloud->points.size();
+    cout << "transforming npts = " << npts << endl;
+    outputCloud->points.resize(npts);
+    Eigen::Vector3f pt;
+    for (int i = 0; i < npts; ++i) {
+        outputCloud->points[i].getVector3fMap() = A * inputCloud->points[i].getVector3fMap(); // + 
+        //cout<<"transformed pt: "<<pt.transpose()<<endl;
+        //outputCloud->points[i].getVector3fMap() = pt; //R_xform * inputCloud->points[i].getVector3fMap ();
+    }    
+}
+
 //function to copy ALL of the cloud points
 void copy_cloud(PointCloud<pcl::PointXYZ>::Ptr inputCloud, PointCloud<pcl::PointXYZ>::Ptr outputCloud) {
     int npts = inputCloud->points.size(); //how many points to extract?
@@ -471,7 +505,7 @@ int main(int argc, char** argv) {
 
     std::vector<int> indices_pts_above_plane;
 
-
+    //load a pointcloud from file: 
     if (pcl::io::loadPCDFile<pcl::PointXYZ> ("test_pcd.pcd", *g_cloud_from_disk) == -1) //* load the file
     {
         PCL_ERROR("Couldn't read file test_pcd.pcd \n");
@@ -481,14 +515,15 @@ int main(int argc, char** argv) {
             << g_cloud_from_disk->width * g_cloud_from_disk->height
             << " data points from test_pcd.pcd  " << std::endl;
 
-    g_cloud_from_disk->header.frame_id = "world"; //kinect_pc_frame"; // why is this necessary?  Did PCD delete the reference frame id?
+    g_cloud_from_disk->header.frame_id = "world"; //looks like PCD does not encode the reference frame id
     double z_threshold=0.0;
     double E;
     double dEdCx=0.0;
     double dEdCy=0.0;
-    float cx,cy;  
+ 
     int ans;
-    Eigen::Vector3f can_center;
+    Eigen::Vector3f can_center_wrt_plane;
+    Eigen::Affine3f A_plane_to_sensor;
     while (ros::ok()) {
         if (g_trigger) {
             g_trigger = false; // reset the trigger
@@ -501,57 +536,63 @@ int main(int argc, char** argv) {
                     break;
                 case FIND_PNTS_ABOVE_PLANE:
                     ROS_INFO("filtering for points above identified plane");
-                    z_threshold = g_plane_params[3] + Z_EPS;
+                    // w/ affine transform, z-coord of points on plane (in plane frame) should be ~0
+                    z_threshold = 0.0+Z_EPS; //g_plane_params[3] + Z_EPS;
                     ROS_INFO("filtering for points above %f ", z_threshold);
 
                     filter_cloud_above_z(g_cloud_transformed, z_threshold, indices_pts_above_plane);
                     //extract these points--but in original, non-rotated frame; useful for display
                     copy_cloud(g_cloud_from_disk, indices_pts_above_plane, g_display_cloud);
                     break;
-                case COMPUTE_CYLINDRICAL_FIT_ERR:
-                    //double cx,cy;
-                    // base coords on centroid of most recent patch, and offset normal to this patch by radius of cylinder
+                case COMPUTE_CYLINDRICAL_FIT_ERR_INIT:
 
+                    ROS_INFO("creating a can cloud");
+                    make_can_cloud(g_display_cloud, R_CYLINDER, H_CYLINDER);
+                    // rough guess--estimate coords of cylinder from  centroid of most recent patch                    
                     for (int i=0;i<3;i++) {
-                        can_center[i] = g_patch_centroid[i]-R_CYLINDER*g_plane_params[i];
+                        g_cylinder_origin[i] = g_patch_centroid[i]; // DO BETTER THAN THIS
                     }
+                    
+                    // fix the z-height, based on plane height:
+                    g_cylinder_origin = g_cylinder_origin + (g_z_plane_nom - g_plane_normal.dot(g_cylinder_origin))*g_plane_normal;
+                    //g_cylinder_origin is now the initial guess for the origin of the cylinder, expressed in sensor coords
 
                     // now, cast this into the rotated coordinate frame:
-                    can_center = g_R_transform.transpose()*can_center;
-                    cx = can_center[0];
-                    cy = can_center[1];
-                    compute_radial_error(g_cloud_transformed,indices_pts_above_plane,R_CYLINDER,can_center,E,dEdCx,dEdCy);
-                    cout<<"E: "<<E<<"; dEdCx: "<<dEdCx<<"; dEdCy: "<<dEdCy<<endl;                   
-                    while (true) {
-                        cout<<"current cx,cy = "<<cx<<", "<<cy<<endl;
-                        //cout<<"enter new cx: ";
-                        //cin>>cx;
-                        cx-= 0.2*E/dEdCx;
-                        cy-= 0.2*E/dEdCy;
-                        can_center[0]=cx;
-                        //cout<<"enter new cy: ";
-                        //cin>>cy;
-                        can_center[1]=cy;                        
-                    ROS_INFO("attempting to fit points to cylinder, radius %f, cx = %f, cy = %f",R_CYLINDER,can_center[0],can_center[1]);
-                    cout<<"enter 1 to continue: ";
-                    cin>>ans;
-                    compute_radial_error(g_cloud_transformed,indices_pts_above_plane,R_CYLINDER,can_center,E,dEdCx,dEdCy);
+                    can_center_wrt_plane = g_A_plane.inverse()*g_cylinder_origin; 
+
+                    cout<<"initial guess for cylinder fit: "<<endl;
+                    cout<<" attempting fit at c = "<<can_center_wrt_plane.transpose()<<endl;                
+
+                    compute_radial_error(g_cloud_transformed,indices_pts_above_plane,R_CYLINDER,can_center_wrt_plane,E,dEdCx,dEdCy);
                     cout<<"E: "<<E<<"; dEdCx: "<<dEdCx<<"; dEdCy: "<<dEdCy<<endl;
                     cout<<"R_xform: "<<g_R_transform<<endl;
-                    transform_cloud(g_canCloud, g_R_transform, g_R_transform*can_center, g_display_cloud);
-                    //g_canCloud
-                    }
+                    A_plane_to_sensor.linear() = g_R_transform;
+                    A_plane_to_sensor.translation() = g_cylinder_origin;
+                    transform_cloud(g_canCloud, A_plane_to_sensor, g_display_cloud);
 
                     break;
+                case COMPUTE_CYLINDRICAL_FIT_ERR_ITERATE:         
+                        cout<<"current cx,cy = "<<can_center_wrt_plane[0]<<", "<<can_center_wrt_plane[1]<<endl;
+                       // try to do something smart.  can try using dEdCy and dEdCx
+                        
+                        can_center_wrt_plane[0]+= 0.0;  //THIS IS DUMB; DO SOMETHING SMART TO IMPROVE CENTER ESTIMATE
+                        can_center_wrt_plane[1]+= 0.0; 
                     
-                case MAKE_CAN_CLOUD:
-                    ROS_INFO("creating/displaying a can cloud");
-                    make_can_cloud(g_display_cloud, R_CYLINDER, 0.2);
+                    ROS_INFO("attempting to fit points to cylinder, radius %f, cx = %f, cy = %f",R_CYLINDER,can_center_wrt_plane[0],can_center_wrt_plane[1]);
+                    compute_radial_error(g_cloud_transformed,indices_pts_above_plane,R_CYLINDER,can_center_wrt_plane,E,dEdCx,dEdCy);
+                    cout<<"E: "<<E<<"; dEdCx: "<<dEdCx<<"; dEdCy: "<<dEdCy<<endl;
+
+                    g_cylinder_origin=    g_A_plane*can_center_wrt_plane; 
+                    A_plane_to_sensor.translation() = g_cylinder_origin;
+                    transform_cloud(g_canCloud, A_plane_to_sensor, g_display_cloud);
+                  
                     break;
+                    
+
 
                 case FIND_ON_TABLE:
                     ROS_INFO("filtering for objects on most recently defined plane: not implemented yet");
-
+                    //really, this is steps 0,1,2 and 3, above
                     break;
                 default:
                     ROS_WARN("this mode is not implemented");
