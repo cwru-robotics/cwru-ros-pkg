@@ -1,14 +1,14 @@
 # cwru_urdf
-Here is a simple model of the CWRU wheelchair-based mobile robots.  The geometric modeling is low resolution, but adequate.  This version includes simulated LIDAR via a gazebo plugin and differential steering via another gazebo plugin.  
+Here is a simple model of the CWRU wheelchair-based mobile robots.  The geometric modeling is low resolution, but adequate.  This version includes simulated LIDAR via a gazebo plugin and differential steering via another gazebo plugin.  "cwruBot" is similar to "Jinx."
 
-The cwruBot accepts speed/spin commands via topic cmd_vel.  It outputs odometry on the /odom topic and simulated LIDAR on the /laser/scan topic.  
+cwruBot accepts speed/spin commands via topic cmd_vel.  It outputs odometry on the /odom topic and simulated LIDAR on the /laser/scan topic.  
 
 Inertias, max wheel torque and max speeds should not be trusted.
 
 The robot will stall if it runs into a heavy object--but it is able to push around lighter objects (e.g. construction cones).
 
 ## Example usage
-In a terminal, run `roscore`
+For cwruBot simulation, in a terminal, run `roscore`
 
 In another terminal run `rosrun gazebo_ros gazebo`  
 
@@ -31,19 +31,21 @@ Run `rostopic echo odom` to see the robot achieve the commanded speeds, and to s
 
 Add models to gazebo (e.g., construction barrel) to see the LIDAR, camera and kinect visualizations.
 
+ABBY SIMULATION:
 Model of Abby's base (as of 4/8/15, lacking collision models for all but wheels):
 `roslaunch cwru_urdf abby_no_arm.launch`
 
 Combined, arm+base:
 `roslaunch cwru_urdf abby_w_arm.launch`
 
+ABBY HARDWARE + RVIZ:
 To run rviz with a model of Abby, running in combination with the actual hardware:
 	start up the RAPID ROS_industrial program on the IRC5 (see https://www.youtube.com/watch?v=aont5qhqzo4)
 	roscore
  	roslaunch industrial_robot_client robot_interface_download.launch robot_ip:=192.168.0.50
 	roslaunch cwru_urdf partial_abby_w_arm_rviz.launch
 
-The robot is now ready for user control.  E.g., run the interactive test program:
+Abby is now ready for user control.  E.g., run the interactive test program:
 	rosrun example_robot_interface test_abby_sender2
 
 
