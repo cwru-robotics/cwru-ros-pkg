@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <package>
-  <name>example_irb120_IM_interface</name>
+  <name>example_irb120_im_interface</name>
   <version>0.0.0</version>
-  <description>The example_irb120_IM_interface package</description>
+  <description>The example_irb120_im_interface package</description>
   
   <!-- One maintainer tag required, multiple allowed, one person per tag -->
   <!-- Example:  -->

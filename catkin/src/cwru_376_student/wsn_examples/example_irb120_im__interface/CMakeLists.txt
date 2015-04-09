@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 2.8.3)
-project(example_irb120_IM_interface)
+project(example_irb120_im_interface)
 
 find_package(catkin_simple REQUIRED)
 find_package(Eigen REQUIRED)
