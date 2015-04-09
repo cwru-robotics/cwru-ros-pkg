@@ -296,10 +296,10 @@
 	</link>
 
 	<joint name="frame--SICK_LMS2911" type="fixed">
-            <!-- -->
+            <!-- 
       		<axis xyz="0 1 0" />
       		<origin xyz="0.1 0 0.56" rpy="0 0 0"/>
-           <!-- -->
+            -->
 		<parent link="frame1"/>
 		<child link="SICK_LMS2911"/>
 		<origin rpy="1.5707959092 0 -3.14159265358" xyz="-0.0255468119868 -0.474758386705 0.311455920061"/>
