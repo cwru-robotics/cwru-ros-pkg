@@ -37,4 +37,14 @@ Model of Abby's base (as of 4/8/15, lacking collision models for all but wheels)
 Combined, arm+base:
 `roslaunch cwru_urdf abby_w_arm.launch`
 
+To run rviz with a model of Abby, running in combination with the actual hardware:
+	start up the RAPID ROS_industrial program on the IRC5 (see https://www.youtube.com/watch?v=aont5qhqzo4)
+	roscore
+ 	roslaunch industrial_robot_client robot_interface_download.launch robot_ip:=192.168.0.50
+	roslaunch cwru_urdf partial_abby_w_arm_rviz.launch
+
+The robot is now ready for user control.  E.g., run the interactive test program:
+	rosrun example_robot_interface test_abby_sender2
+
+
 
