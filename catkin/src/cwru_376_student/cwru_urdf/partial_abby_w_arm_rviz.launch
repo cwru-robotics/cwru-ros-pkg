@@ -1,0 +1,30 @@
+<!--for use w/ rviz, but does not launch gazebo -->
+
+<launch>
+<!-- Convert an xacro and put on parameter server -->
+<param name="robot_description" command="$(find xacro)/xacro.py '$(find cwru_urdf)/abby_w_arm_urdf_rviz_only.xacro'" />
+
+<!--node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node-->
+<param name="rate" value="100" />
+
+<node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" />
+
+<!-- publish wheel transforms for rviz -->
+<node pkg="tf" type="static_transform_publisher" name="l_wheel_broadcaster" args="0.01 -0.217 0.148 0 0 0.707 0.707 frame_solid:11 l_drive_wheel1 10" />
+<node pkg="tf" type="static_transform_publisher" name="r_wheel_broadcaster" args="-0.50 -0.217 0.148 0 0 0.707 0.707 frame_solid:11 r_drive_wheel1 20" />
+
+<node pkg="tf" type="static_transform_publisher" name="r_caster1_broadcaster" args="-0.445 -0.155 0.625 0 0 0 1 frame_solid:11 r_caster1 10" />
+
+<node pkg="tf" type="static_transform_publisher" name="r_caster_wheel1_broadcaster" args="-0.485 -0.292 0.68 0 0 0.707 0.707 frame_solid:11 r_caster_wheel1 10" />
+
+<node pkg="tf" type="static_transform_publisher" name="l_caster1_broadcaster" args="-0.01 -0.155 0.625 0 0 0 1 frame_solid:11 l_caster1 10" />
+
+<node pkg="tf" type="static_transform_publisher" name="l_caster_wheel1_broadcaster" args="-0.05 -0.292 0.68 0 0 0.707 0.707 frame_solid:11 l_caster_wheel1 10" />
+
+<!--node pkg="tf" type="static_transform_publisher" name="camera_depth_optical_frame" args="0.000 0 0.000 0 0 0 1 base_link camera_depth_optical_frame 100"/-->
+
+<node pkg="tf" type="static_transform_publisher" name="camera_depth_optical_frame" args="0.000 -0.045 0.000 -0.500 0.500 -0.500 0.500 kinect_link camera_depth_optical_frame 100"/>
+
+
+<node name="rviz" pkg="rviz" type="rviz" args="-d $(find cwru_urdf)/abby.rviz"></node>
+</launch>

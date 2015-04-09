@@ -696,6 +696,44 @@
         <axis xyz="0 1 0"/>
 		<origin rpy="0 -0.443332433305 -1.57079632679" xyz="-0.509833626015 -0.217162738527 0.147715939697"/>
 	</joint>
+
+  <!-- TRY ADDING a Kinect sensor: first the visual/collision/inertial box -->
+    <link name="kinect_link">
+      <collision>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+              <!-- coarse model; a simple box -->
+              <box size="0.05 0.2 0.05"/>
+          </geometry>
+      </collision>
+
+      <visual>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+              <box size="0.05 0.2 0.05" />
+          </geometry>
+          <material name="kinect_gray">
+              <color rgba="0.2 0.2 0.2 1.0"/>
+          </material>
+      </visual>
+
+      <inertial>
+          <mass value="0.1" />
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001" />
+      </inertial>
+  </link>
+  <!--the above displays a box meant to imply Kinect-->
+  <!--now set the position/orientation of the above box: -->
+  <joint name="kinect_joint" type="fixed">
+      <axis xyz="0 1 0" />
+      <origin xyz="0.45 0 1.65" rpy="0 0.92 0"/>
+      <parent link="base_link"/>
+      <child link="kinect_link"/>
+  </joint>
+
+
+
 <gazebo>
   <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
     <alwaysOn>true</alwaysOn>
