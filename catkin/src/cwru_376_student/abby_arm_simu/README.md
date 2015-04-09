@@ -14,6 +14,9 @@ in another window,
 `rosrun example_joint_space_planner`
 or
 `rosrun example_robot_interface test_ik_traj_sender`
+or
+`rosrun example_robot_interface test_abby_sender2` 
+
 
 
     

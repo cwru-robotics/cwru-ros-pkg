@@ -31,4 +31,10 @@ Run `rostopic echo odom` to see the robot achieve the commanded speeds, and to s
 
 Add models to gazebo (e.g., construction barrel) to see the LIDAR, camera and kinect visualizations.
 
-    
+Model of Abby's base (as of 4/8/15, lacking collision models for all but wheels):
+`roslaunch cwru_urdf abby_no_arm.launch`
+
+Combined, arm+base:
+`roslaunch cwru_urdf abby_w_arm.launch`
+
+
