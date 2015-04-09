@@ -294,11 +294,54 @@
 			<origin rpy="0 0 0" xyz="-0.0683999139953 -0.00245779587475 -0.0929987962566"/>
 		</collision-->
 	</link>
+
 	<joint name="frame--SICK_LMS2911" type="fixed">
+            <!-- -->
+      		<axis xyz="0 1 0" />
+      		<origin xyz="0.1 0 0.56" rpy="0 0 0"/>
+           <!-- -->
 		<parent link="frame1"/>
 		<child link="SICK_LMS2911"/>
 		<origin rpy="1.5707959092 0 -3.14159265358" xyz="-0.0255468119868 -0.474758386705 0.311455920061"/>
 	</joint>
+
+ <gazebo reference="SICK_LMS2911">
+    <sensor type="gpu_ray" name="sick_lidar_sensor">
+      <pose>0 0 0 0 0 0</pose>
+      <visualize>false</visualize>
+      <update_rate>40</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>181</samples>
+            <resolution>1</resolution>
+            <min_angle>-1.570796</min_angle>
+            <max_angle>1.570796</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.10</min>
+          <max>80.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise parameters based on published spec for Hokuyo laser
+               achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+               stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+               reading. -->
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_lidar_controller" filename="libgazebo_ros_gpu_laser.so">
+       <!-- <topicName>/laser/scan</topicName> --> 
+                <topicName>/scan</topicName>
+        <frameName>SICK_LMS2911</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
 	<link name="base_plate1">
 		<visual>
 			<geometry>
@@ -710,6 +753,43 @@
         <axis xyz="0 1 0"/>
 		<origin rpy="0 -0.443332433305 -1.57079632679" xyz="-0.509833626015 -0.217162738527 0.147715939697"/>
 	</joint>
+
+ <!-- TRY ADDING a Kinect sensor: first the visual/collision/inertial box -->
+    <link name="kinect_link">
+      <collision>
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <geometry>
+              <!-- coarse model; a simple box -->
+              <box size="0.05 0.2 0.05"/>
+          </geometry>
+      </collision>
+
+      <visual>
+          <origin xyz="0 0 0" rpy="0 0 0" />
+          <geometry>
+              <box size="0.05 0.2 0.05" />
+          </geometry>
+          <material name="kinect_gray">
+              <color rgba="0.2 0.2 0.2 1.0"/>
+          </material>
+      </visual>
+
+      <inertial>
+          <mass value="0.1" />
+          <origin xyz="0 0 0" rpy="0 0 0"/>
+          <inertia ixx="0.001" ixy="0" ixz="0" iyy="0.001" iyz="0" izz="0.001" />
+      </inertial>
+  </link>
+  <!--the above displays a box meant to imply Kinect-->
+  <!--now set the position/orientation of the above box: -->
+  <joint name="kinect_joint" type="fixed">
+      <axis xyz="0 1 0" />
+      <origin xyz="0.45 0 1.65" rpy="0 0.92 0"/>
+      <parent link="base_link"/>
+      <child link="kinect_link"/>
+  </joint>
+
+
 <gazebo>
   <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
     <alwaysOn>true</alwaysOn>
@@ -1055,6 +1135,53 @@
       <mechanicalReduction>1</mechanicalReduction>
     </actuator>
   </transmission> 
+
+<!-- SENSOR: have to add a static transform publication to fix calibration of point clouds; see launch file -->
+<gazebo reference="kinect_link">
+    <sensor type="depth" name="openni_camera_camera">       
+        <always_on>1</always_on>
+        <visualize>true</visualize>             
+        <camera>
+            <horizontal_fov>1.047</horizontal_fov>  
+            <image>
+                <width>640</width>
+                <height>480</height>
+                <format>R8G8B8</format>
+            </image>
+            <depth_camera>
+
+            </depth_camera>
+            <clip>
+                <near>0.1</near>
+                <far>100</far>
+            </clip>
+        </camera>
+        <plugin name="camera_controller" filename="libgazebo_ros_openni_kinect.so">
+            <alwaysOn>true</alwaysOn>
+                <updateRate>10.0</updateRate>
+                <cameraName>kinect</cameraName>
+                <frameName>kinect_pc_frame</frameName>                   
+            <imageTopicName>rgb/image_raw</imageTopicName>
+            <depthImageTopicName>depth/image_raw</depthImageTopicName>
+            <pointCloudTopicName>depth/points</pointCloudTopicName>
+            <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>              
+            <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>            
+            <pointCloudCutoff>0.4</pointCloudCutoff>                
+                <hackBaseline>0.07</hackBaseline>
+                <distortionK1>0.0</distortionK1>
+                <distortionK2>0.0</distortionK2>
+                <distortionK3>0.0</distortionK3>
+                <distortionT1>0.0</distortionT1>
+                <distortionT2>0.0</distortionT2>
+            <CxPrime>0.0</CxPrime>
+            <Cx>0.0</Cx>
+            <Cy>0.0</Cy>
+            <focalLength>0.0</focalLength>
+            </plugin>
+    </sensor>
+</gazebo>
+
+
  
 </robot>
 
