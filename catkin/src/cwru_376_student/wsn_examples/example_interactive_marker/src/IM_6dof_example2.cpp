@@ -1,10 +1,15 @@
 // IM_6DOF_example.cpp
 // Wyatt Newman, based on ROS tutorial 4.2 on Interactive Markers
+// example 2 differs from example 1 only in that the marker frame_ID is set to "base_link"
 #include <ros/ros.h>
 #include <iostream>
 #include <interactive_markers/interactive_marker_server.h>
 #include <geometry_msgs/Point.h>
- 
+
+
+    
+    
+    
 void processFeedback(
         const visualization_msgs::InteractiveMarkerFeedbackConstPtr &feedback) {
     ROS_INFO_STREAM(feedback->marker_name << " is now at "
@@ -26,7 +31,7 @@ int main(int argc, char** argv) {
     // create an interactive marker for our server
     visualization_msgs::InteractiveMarker int_marker;
     // later, change the reference frame to the "map" frame
-    int_marker.header.frame_id = "/world"; // the reference frame for pose coordinates
+    int_marker.header.frame_id = "base_link"; ///world"; // the reference frame for pose coordinates
     int_marker.name = "des_hand_pose"; //name the marker
     int_marker.description = "Interactive Marker";
 
@@ -34,9 +39,9 @@ int main(int argc, char** argv) {
     //sphere_marker.type = visualization_msgs::Marker::SPHERE;     
     geometry_msgs::Point temp_point_start;
     /** specify/push-in the origin for this marker */
-    temp_point_start.x = 0.38; 
+    temp_point_start.x = 1.5; 
     temp_point_start.y = 0.0;
-    temp_point_start.z = 0.67;
+    temp_point_start.z = 1;
     //sphere_marker.points.push_back(temp_point_start);
     //sphere_marker.color.r = 1.0; // make this marker red
     //sphere_marker.color.g = 0.0;
@@ -208,6 +213,8 @@ int main(int argc, char** argv) {
 
     // 'commit' changes and send to all clients
     server.applyChanges();
+    
+
 
     // start the ROS main loop
     ROS_INFO("going into spin...");
