@@ -23,7 +23,9 @@
 
 <!--node pkg="tf" type="static_transform_publisher" name="camera_depth_optical_frame" args="0.000 0 0.000 0 0 0 1 base_link camera_depth_optical_frame 100"/-->
 
-<node pkg="tf" type="static_transform_publisher" name="camera_depth_optical_frame_bdcst" args="0.000 -0.045 0.000 -0.500 0.500 -0.500 0.500 kinect_link camera_depth_optical_frame 100"/>
+<!--node pkg="tf" type="static_transform_publisher" name="camera_link_frame_bdcst" args="0.000 -0.045 0.000 -0.500 0.500 -0.500 0.500 kinect_link camera_link 100"/-->
+
+<node pkg="tf" type="static_transform_publisher" name="camera_link_frame_bdcst" args="0 0 0  0 0 0 1 kinect_link camera_link 100"/>
 
 <include file="$(find openni_launch)/launch/openni.launch"/>
 
