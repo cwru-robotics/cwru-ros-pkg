@@ -17,6 +17,7 @@ catkin_simple()
 # Executables
 cs_add_executable(IM_example src/IM_example.cpp)
 cs_add_executable(IM_6dof_example src/IM_6dof_example.cpp)
+cs_add_executable(IM_6dof_example2 src/IM_6dof_example2.cpp)
 cs_add_executable(IM_example2 src/IM_example2.cpp)
 cs_add_executable(IM_example3 src/IM_example3.cpp)
 cs_add_executable(path_display src/path_display.cpp)
