@@ -39,14 +39,33 @@ Combined, arm+base:
 `roslaunch cwru_urdf abby_w_arm.launch`
 
 ABBY HARDWARE + RVIZ:
-To run rviz with a model of Abby, running in combination with the actual hardware:
+For development, keep the IRC5 plugged into the 208V socket on the wall, and keep the base on the battery charger.
+Turn on the PC via the "FIRST" style breaker (near the compressor on the top of the base)
+Connect abby's PC to the internet (unplug the blue ethernet cable from the PC, then plug in, e.g., the long, green ethernet cable connected to the campus network).
+Clone your repository 
+
+Then, switch the ethernet cable on the PC back to the local router (blue cable)
+
+Start up rviz in combination with the actual hardware:
 *	start up the RAPID ROS_industrial program on the IRC5 (see https://www.youtube.com/watch?v=aont5qhqzo4)
-*	roscore
-* 	roslaunch industrial_robot_client robot_interface_download.launch robot_ip:=192.168.0.50
-*	roslaunch cwru_urdf partial_abby_w_arm_rviz.launch
+*	in a terminal on abby's PC, run: roscore
+* 	in another terminal: roslaunch industrial_robot_client robot_interface_download.launch robot_ip:=192.168.0.50
+*	in another terminal: roslaunch cwru_urdf abby_w_arm_rviz.launch
 
 Abby is now ready for user control.  E.g., run the interactive test program:
-	rosrun example_robot_interface test_abby_sender2
+	`rosrun example_robot_interface test_abby_sender2`
 
+Or, run 2 more nodes to have Abby respond to interactive markers in rviz:
+
+* rosrun example_interactive_marker IM_6dof_example2
+* rosrun example_irb120_im_interface example_irb120_IM_interface_v2
+*  move the interactive marker, then: rosservice call move_trigger 1 
+
+If you hit a joint limit with the arm, you will need to switch to "manual mode" on the controller (via the key), then use 
+the teach pendant to jog the arm back to a save position.  Switch back to "automatic" mode and re-enable the motors and restart the
+ROS interface programs on the IRC5.
+
+Also, if you lose connection between the PC and the IRC5 (as inicated on the teach pendant display), kill and restart:
+`roslaunch industrial_robot_client robot_interface_download.launch robot_ip:=192.168.0.50`
 
 
