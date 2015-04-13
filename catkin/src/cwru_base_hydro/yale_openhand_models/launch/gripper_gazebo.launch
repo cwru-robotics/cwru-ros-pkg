@@ -1,0 +1,10 @@
+<launch>
+  <!-- Start up the world for the gripper!-->
+  <include file="$(find yale_openhand_models)/launch/gripper_world.launch">
+  </include>
+
+  <!-- Start the controllers for the Yale openhand gripper !-->
+  <include file="$(find yale_openhand_models)/launch/gripper_control.launch">
+  </include>
+
+</launch>

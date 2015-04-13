@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+
+<robot name="model_T_1p0p0">
+  
+  <link name="base_link">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+	<cylinder radius=".25" length=".25" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+	<cylinder radius=".25" length=".25" />
+      </geometry>
+    </collision>
+  </link>
+  <joint name="base_to_finger" type="fixed">
+    <parent link="base_link" />
+    <child link="finger_base" />
+    <origin xyz="0 0 0.125" rpy="0 0 0" />
+  </joint>
+
+  <link name="finger_base">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+	<mesh filename="package://openhand-hardware/model t/stl/c1_t.STL" scale="0.01 0.01 0.01"/>
+      </geometry>
+    </visual>
+    <collision>
+      <origin xyz="0 0 0" rpy="0 0 0" />
+      <geometry>
+	<box size="0.1 0.1 0.1"/>
+      </geometry>
+    </collision>
+  </link>
+  <link name="prox_phal">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0.3" />
+      <geometry>
+	<mesh filename="package://openhand-hardware/model t/stl/finger_pp_ext_A_t.STL" scale="0.01 0.01 0.01" />
+      </geometry>
+    </visual>
+  </link>
+
+  <joint name="first_knuckle" type="revolute" >
+    <axis xyz="0 0 1" />
+    <limit lower="0" upper="3.14" effort="10" velocity="10" />
+    <parent link="finger_base" />
+    <child link="prox_phal"/>
+    <origin rpy="0 1.57 0" xyz="0 0.5 0" />
+  </joint>
+</robot>
