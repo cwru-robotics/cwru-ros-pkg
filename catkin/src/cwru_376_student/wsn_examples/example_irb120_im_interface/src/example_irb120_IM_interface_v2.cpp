@@ -102,6 +102,7 @@ void stuff_trajectory( Vectorq6x1 qvec, trajectory_msgs::JointTrajectory &new_tr
      
     
     new_trajectory.points.clear();
+    new_trajectory.joint_names.clear();
     new_trajectory.joint_names.push_back("joint_1");
     new_trajectory.joint_names.push_back("joint_2");
     new_trajectory.joint_names.push_back("joint_3");
