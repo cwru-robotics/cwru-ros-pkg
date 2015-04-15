@@ -1,0 +1,16 @@
+global_costmap:
+  #Coordinate Frame/TF
+  global_frame: /map
+  transform_tolerance: 0.5
+  
+  #Rate
+  update_frequency: 1.5
+  publish_frequency: 1.0
+  
+  #Map Management
+  static_map: true
+  width: 200.0
+  height: 200.0
+  origin_x: -100.0
+  origin_y: -100.0
+  resolution: 0.05
