@@ -277,7 +277,8 @@
 			<geometry>
 				<mesh filename="package://abby_description/meshes/lms291_ipt_2ad4e53c.stl" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
-			<origin rpy="0 0 0" xyz="-0.0683999139953 -0.00245779587475 -0.0929987962566"/>
+			<!--origin rpy="1.5708 0 -1.5708" xyz="-0.0683999139953 -0.00245779587475 -0.0929987962566"/-->
+                        <origin rpy="1.5708 0 -1.5708" xyz="-0.06834 -0.00245779587475 0.1"/>
 			<material name="SICK_LMS2911_color">
 				<color rgba="0.752941 0.752941 0.752941 1"/>
 			</material>
@@ -296,13 +297,14 @@
 	</link>
 
 	<joint name="frame--SICK_LMS2911" type="fixed">
-            <!-- 
+            <!-- --> 
       		<axis xyz="0 1 0" />
-      		<origin xyz="0.1 0 0.56" rpy="0 0 0"/>
-            -->
-		<parent link="frame1"/>
+      		<origin xyz="0.55 0 0.31" rpy="0 0 0"/>
+            <!-- -->
+		<!--parent link="frame1"/-->
+                <parent link="base_link"/>
 		<child link="SICK_LMS2911"/>
-		<origin rpy="1.5707959092 0 -3.14159265358" xyz="-0.0255468119868 -0.474758386705 0.311455920061"/>
+		<!--origin rpy="1.5707959092 0 -3.14159265358" xyz="-0.0255468119868 -0.474758386705 0.311455920061"/-->
 	</joint>
 
  <gazebo reference="SICK_LMS2911">
@@ -810,7 +812,9 @@
   <joint name="fixed" type="fixed">
     <parent link="base_link"/>
     <child link="link1"/>
-    <origin xyz="0.41 0 0.85" rpy="0 1.5708 0"/>    
+    <!--origin xyz="0.41 0 0.85" rpy="0 1.5708 0"/-->   
+    <!-- raise the arm up 15" -->
+    <origin xyz="0.41 0 1.23" rpy="0 1.5708 0"/>     
   </joint>
   
  <link name="link1">
