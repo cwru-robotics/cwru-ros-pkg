@@ -9,7 +9,19 @@
   <xacro:include filename="$(find abby_description)/urdf/materials.xacro" />  
    <!--'$(find abby_description)/urdf/irb120.xacro' -->
    
-   
+
+  
+
+ 
+  <xacro:include filename="$(find yale_openhand_models)/urdf/wsn_model_t.xacro" />  
+
+
+  <joint name="gripper_base_joint" type="fixed">
+    <parent link="link7" />
+    <child link="gripper_base_link" />
+    <origin rpy="0 1.5708 0 " xyz="0 0 0"/>
+  </joint>
+
 	<link name="base_link">
 		<!--visual>
 			<geometry>
@@ -299,7 +311,7 @@
 	<joint name="frame--SICK_LMS2911" type="fixed">
             <!-- --> 
       		<axis xyz="0 1 0" />
-      		<origin xyz="0.55 0 0.31" rpy="0 0 0"/>
+      		<origin xyz="0.55 0 0.285" rpy="0 0 0"/>  <!--0.285 seems consistent w/ 14" from lidar bottom to floor on abby-->
             <!-- -->
 		<!--parent link="frame1"/-->
                 <parent link="base_link"/>
@@ -309,7 +321,7 @@
 
  <gazebo reference="SICK_LMS2911">
     <sensor type="gpu_ray" name="sick_lidar_sensor">
-      <pose>0 0 0 0 0 0</pose>
+      <pose>0.13 0 0  0 0 0</pose>
       <visualize>false</visualize>
       <update_rate>40</update_rate>
       <ray>
