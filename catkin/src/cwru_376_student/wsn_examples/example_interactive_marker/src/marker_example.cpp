@@ -14,7 +14,8 @@ int main(int argc, char** argv) {
     ros::Publisher vis_pub = nh.advertise<visualization_msgs::Marker>( "sphere_list_marker", 0 );            
     visualization_msgs::Marker marker;  // instantiate a marker object
     geometry_msgs::Point point;  // points will be used to specify where the markers go
-    marker.header.frame_id = "/pelvis"; //base_link"; // select the reference frame 
+    //marker.header.frame_id = "/pelvis"; //base_link"; // select the reference frame 
+    marker.header.frame_id = "/base_link"; //base_link"; // select the reference frame
     marker.header.stamp = ros::Time();
     marker.ns = "my_namespace";
     marker.id = 0;
@@ -45,7 +46,7 @@ int main(int argc, char** argv) {
 
 
     //as an example, let's build a wall of red spheres:
-    double dist = 0.5; // robot distance from the wall, along x-axis in pelvis frame
+    double dist = 1.0; //0.5; // robot distance from the wall, along x-axis in pelvis frame
     double corner_y = -0.5; // y-coordinate of right edge of the wall
     double corner_z = 0.0; // z-coordinate of lower-right corner of wall, as seen by Atlas
     point.x = dist;
