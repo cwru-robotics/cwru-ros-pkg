@@ -1,6 +1,4 @@
 <?xml version="1.0"?>
-
-<!-- <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="model_T_1p0p0"> -->
 <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="gripper">
   <xacro:property name="stl_scale_factor" value="0.001" />
   <xacro:property name="pi" value="3.14159265359" />
@@ -10,8 +8,9 @@
   <xacro:property name="prox_length" value="62.5" />
   <xacro:property name="dist_length" value="38" />
 
-  <xacro:include filename="gripper.gazebo" />
-
+  <!--<xacro:include filename="gripper.gazebo" /-->
+  <xacro:include filename="$(find yale_openhand_models)/urdf/gripper.gazebo" /> 
+  
   <xacro:property name="controller" value="EffortJointInterface" />
   
   <xacro:macro name="trans" params="joint_name">
@@ -25,10 +24,10 @@
     </transmission>
   </xacro:macro>
   
-  <link name="base_link"/>
+  <link name="gripper_base_link"/>
 
   <joint name="base_joint" type="fixed">
-    <parent link="base_link" />
+    <parent link="gripper_base_link" />
     <child link="d1_a_t" />
   </joint>
 
@@ -213,5 +212,5 @@
     </link>
 
   </xacro:macro>
-  
-</robot>
+  </robot>
+<!--/robot -->
