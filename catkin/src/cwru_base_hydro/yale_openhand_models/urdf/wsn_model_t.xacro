@@ -9,7 +9,7 @@
   <xacro:property name="dist_length" value="38" />
 
   <!--<xacro:include filename="gripper.gazebo" /-->
-  <xacro:include filename="$(find yale_openhand_models)/urdf/gripper.gazebo" /> 
+  <!-- xacro:include filename="$(find yale_openhand_models)/urdf/gripper.gazebo" / --> 
   
   <xacro:property name="controller" value="EffortJointInterface" />
   

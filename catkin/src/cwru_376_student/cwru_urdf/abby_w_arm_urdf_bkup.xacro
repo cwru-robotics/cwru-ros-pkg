@@ -1,21 +1,19 @@
 <?xml version="1.0" ?>
+
+  
 <robot 
      xmlns:xacro="http://www.ros.org/wiki/xacro"
      name="abby">
    <xacro:property name="track" value=".56515" />
    <xacro:property name="tirediam" value="0.3302" />
-
+   <xacro:include filename="$(find abby_description)/urdf/irb120.gazebo" />
   <!-- Import Rviz colors -->
   <xacro:include filename="$(find abby_description)/urdf/materials.xacro" />  
    <!--'$(find abby_description)/urdf/irb120.xacro' -->
- <!--
- <include filename="$(find yale_openhand_models)/urdf/model_t.xacro" />  
-  <joint name="gripper_base_joint" type="fixed">
-    <parent link="link7" />
-    <child link="gripper_base_link" />
-  </joint>
-  -->
- 
+   
+
+  
+
    <xacro:include filename="$(find yale_openhand_models)/urdf/wsn_model_t.xacro" /> 
  
 
@@ -24,12 +22,24 @@
     <parent link="link7" />
     <child link="gripper_base_link" />
     <origin rpy="0 1.5708 0 " xyz="0 0 0"/>
-  </joint>  
-  
+  </joint>
+
 	<link name="base_link">
+		<!--visual>
+			<geometry>
+				<mesh filename="package://abby_description/meshes/al_frame_iam_3826baa4.stl" scale="0.0254 0.0254 0.0254"/>
+			</geometry>
+			<origin rpy="0 0 0" xyz="0.0446356739978 0.177065647653 -0.0893087163603"/>
+			<material name="frame1_color">
+				<color rgba="0.752941 0.752941 0.752941 1"/>
+			</material>
+		</visual-->
+		<!--inertial>
+			<mass value="0.01"/>
+			<inertia ixx="0.01" ixy="0.01" ixz="0.01" iyy="0.01" iyz="0.01" izz="0.01"/>
+			<origin rpy="0 0 0" xyz="0 0 0"/>
+		</inertial-->
 	</link>
-        
-        
 		<joint name="base_to_frame1" type="fixed">
 		<parent link="base_link"/>
 		<child link="frame1"/>
@@ -281,7 +291,7 @@
 			<geometry>
 				<mesh filename="package://abby_description/meshes/lms291_ipt_2ad4e53c.stl" scale="0.0254 0.0254 0.0254"/>
 			</geometry>
-			<!--origin rpy="0 0 0" xyz="-0.0683999139953 -0.00245779587475 -0.0929987962566"/-->
+			<!--origin rpy="1.5708 0 -1.5708" xyz="-0.0683999139953 -0.00245779587475 -0.0929987962566"/-->
                         <origin rpy="1.5708 0 -1.5708" xyz="-0.06834 -0.00245779587475 0.1"/>
 			<material name="SICK_LMS2911_color">
 				<color rgba="0.752941 0.752941 0.752941 1"/>
@@ -299,15 +309,55 @@
 			<origin rpy="0 0 0" xyz="-0.0683999139953 -0.00245779587475 -0.0929987962566"/>
 		</collision-->
 	</link>
+
 	<joint name="frame--SICK_LMS2911" type="fixed">
+            <!-- --> 
       		<axis xyz="0 1 0" />
       		<origin xyz="0.55 0 0.285" rpy="0 0 0"/>  <!--0.285 seems consistent w/ 14" from lidar bottom to floor on abby-->
             <!-- -->
 		<!--parent link="frame1"/-->
                 <parent link="base_link"/>
-		<child link="SICK_LMS2911"/>                
+		<child link="SICK_LMS2911"/>
+		<!--origin rpy="1.5707959092 0 -3.14159265358" xyz="-0.0255468119868 -0.474758386705 0.311455920061"/-->
 	</joint>
-        
+
+ <gazebo reference="SICK_LMS2911">
+    <sensor type="gpu_ray" name="sick_lidar_sensor">
+      <pose>0.13 0 0  0 0 0</pose>
+      <visualize>false</visualize>
+      <update_rate>40</update_rate>
+      <ray>
+        <scan>
+          <horizontal>
+            <samples>181</samples>
+            <resolution>1</resolution>
+            <min_angle>-1.570796</min_angle>
+            <max_angle>1.570796</max_angle>
+          </horizontal>
+        </scan>
+        <range>
+          <min>0.10</min>
+          <max>80.0</max>
+          <resolution>0.01</resolution>
+        </range>
+        <noise>
+          <type>gaussian</type>
+          <!-- Noise parameters based on published spec for Hokuyo laser
+               achieving "+-30mm" accuracy at range < 10m.  A mean of 0.0m and
+               stddev of 0.01m will put 99.7% of samples within 0.03m of the true
+               reading. -->
+          <mean>0.0</mean>
+          <stddev>0.01</stddev>
+        </noise>
+      </ray>
+      <plugin name="gazebo_ros_lidar_controller" filename="libgazebo_ros_gpu_laser.so">
+       <!-- <topicName>/laser/scan</topicName> --> 
+                <topicName>/scan</topicName>
+        <frameName>SICK_LMS2911</frameName>
+      </plugin>
+    </sensor>
+  </gazebo>
+
 	<link name="base_plate1">
 		<visual>
 			<geometry>
@@ -663,6 +713,7 @@
 		<axis xyz="0 1 0"/>
 		<origin rpy="-2.44191411285e-07 0.632428512243 -1.570796684" xyz="0.0374395826544 -0.13652471423 0.0571493788518"/>
 	</joint>
+	<!--wsn: 4/20/15, try swapping l and r drive wheels to get correct cmd_vel motion -->
 	<link name="r_drive_wheel1">
 		<visual>
 			<geometry>
@@ -720,7 +771,7 @@
 		<origin rpy="0 -0.443332433305 -1.57079632679" xyz="-0.509833626015 -0.217162738527 0.147715939697"/>
 	</joint>
 
-  <!-- TRY ADDING a Kinect sensor: first the visual/collision/inertial box -->
+ <!-- TRY ADDING a Kinect sensor: first the visual/collision/inertial box -->
     <link name="kinect_link">
       <collision>
           <origin xyz="0 0 0" rpy="0 0 0"/>
@@ -752,11 +803,27 @@
       <axis xyz="0 1 0" />
       <!--origin xyz="0.55 0.03 1.585" rpy="0.06 0.95 0"/ -->
       <!-- elevate the kinect higher, and slight shift to the right -->
-      <origin xyz="0.57 0.02 1.87" rpy="0.04 0.955 0"/> 
+      <origin xyz="0.57 0.02 1.87" rpy="0.04 0.955 0"/>      
       <parent link="base_link"/>
       <child link="kinect_link"/>
   </joint>
-	
+
+
+<gazebo>
+  <plugin name="differential_drive_controller" filename="libgazebo_ros_diff_drive.so">
+    <alwaysOn>true</alwaysOn>
+    <updateRate>100</updateRate>
+    <leftJoint>l_drive_wheel_joint</leftJoint>
+    <rightJoint>r_drive_wheel_joint</rightJoint>
+    <wheelSeparation>${track}</wheelSeparation>
+    <wheelDiameter>${tirediam}</wheelDiameter>
+    <torque>200</torque>
+    <commandTopic>cmd_vel</commandTopic>
+    <odometryTopic>odom</odometryTopic>
+    <odometryFrame>odom</odometryFrame>
+    <robotBaseFrame>base_link</robotBaseFrame>
+  </plugin>
+</gazebo> 	
 
 
   <joint name="base_to_arm" type="fixed">
@@ -764,7 +831,7 @@
     <child link="link1"/>
     <!--origin xyz="0.41 0 0.85" rpy="0 1.5708 0"/-->   
     <!-- raise the arm up 15" -->
-    <origin xyz="0.41 0 1.23" rpy="0 1.5708 0"/>        
+    <origin xyz="0.41 0 1.23" rpy="0 1.5708 0"/>     
   </joint>
   
  <link name="link1">
@@ -1022,6 +1089,120 @@
      <limit effort="20" lower="-6.98132" upper="6.98132" velocity="7.33038"/>   
     <dynamics damping="0.7"/>
   </joint> 
+    
+
+ 
+  <transmission name="tran1">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor1">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+
+  <transmission name="tran2">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor2">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  <transmission name="tran3">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor3">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  
+    <transmission name="tran4">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_4">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor4">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  
+    <transmission name="tran5">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_5">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor5">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission>
+  
+    <transmission name="tran6">
+    <type>transmission_interface/SimpleTransmission</type>
+    <joint name="joint_6">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+    </joint>
+    <actuator name="motor6">
+      <hardwareInterface>EffortJointInterface</hardwareInterface>
+      <mechanicalReduction>1</mechanicalReduction>
+    </actuator>
+  </transmission> 
+
+<!-- SENSOR: have to add a static transform publication to fix calibration of point clouds; see launch file -->
+<gazebo reference="kinect_link">
+    <sensor type="depth" name="openni_camera_camera">       
+        <always_on>1</always_on>
+        <visualize>true</visualize>             
+        <camera>
+            <horizontal_fov>1.047</horizontal_fov>  
+            <image>
+                <width>640</width>
+                <height>480</height>
+                <format>R8G8B8</format>
+            </image>
+            <depth_camera>
+
+            </depth_camera>
+            <clip>
+                <near>0.1</near>
+                <far>100</far>
+            </clip>
+        </camera>
+        <plugin name="camera_controller" filename="libgazebo_ros_openni_kinect.so">
+            <alwaysOn>true</alwaysOn>
+                <updateRate>10.0</updateRate>
+                <cameraName>kinect</cameraName>
+                <frameName>kinect_pc_frame</frameName>                   
+            <imageTopicName>rgb/image_raw</imageTopicName>
+            <depthImageTopicName>depth/image_raw</depthImageTopicName>
+            <pointCloudTopicName>depth/points</pointCloudTopicName>
+            <cameraInfoTopicName>rgb/camera_info</cameraInfoTopicName>              
+            <depthImageCameraInfoTopicName>depth/camera_info</depthImageCameraInfoTopicName>            
+            <pointCloudCutoff>0.4</pointCloudCutoff>                
+                <hackBaseline>0.07</hackBaseline>
+                <distortionK1>0.0</distortionK1>
+                <distortionK2>0.0</distortionK2>
+                <distortionK3>0.0</distortionK3>
+                <distortionT1>0.0</distortionT1>
+                <distortionT2>0.0</distortionT2>
+            <CxPrime>0.0</CxPrime>
+            <Cx>0.0</Cx>
+            <Cy>0.0</Cy>
+            <focalLength>0.0</focalLength>
+            </plugin>
+    </sensor>
+</gazebo>
+
+
  
 </robot>
 
