@@ -8,10 +8,18 @@
   <!-- Import Rviz colors -->
   <xacro:include filename="$(find abby_description)/urdf/materials.xacro" />  
    <!--'$(find abby_description)/urdf/irb120.xacro' -->
-   
+ <!--
+ <include filename="$(find yale_openhand_models)/urdf/modle_t.xacro" />  
+  <joint name="gripper_base_joint" type="fixed">
+    <parent link="link7" />
+    <child link="gripper_base_link" />
+  </joint>
+  -->
    
 	<link name="base_link">
 	</link>
+        
+        
 		<joint name="base_to_frame1" type="fixed">
 		<parent link="base_link"/>
 		<child link="frame1"/>
@@ -727,7 +735,9 @@
   <!--now set the position/orientation of the above box: -->
   <joint name="kinect_joint" type="fixed">
       <axis xyz="0 1 0" />
-      <origin xyz="0.55 0.03 1.585" rpy="0.06 0.95 0"/>
+      <!--origin xyz="0.55 0.03 1.585" rpy="0.06 0.95 0"/ -->
+      <!-- elevate the kinect higher, and slight shift to the right -->
+      <origin xyz="0.57 0.02 1.87" rpy="0.04 0.955 0"/>
       <parent link="base_link"/>
       <child link="kinect_link"/>
   </joint>
