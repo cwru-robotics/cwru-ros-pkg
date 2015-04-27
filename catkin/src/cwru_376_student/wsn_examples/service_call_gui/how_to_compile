@@ -1,0 +1,4 @@
+
+gcc -o service_call_gui service_call_gui.c $(pkg-config --cflags --libs gtk+-2.0 gmodule-2.0)
+
+see glade tutorial at: http://blog.borovsak.si/2009/09/glade3-tutorial-1-introduction.html
