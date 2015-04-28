@@ -22,5 +22,6 @@
 	<rosparam command="load" file="$(find cwru_configs)/abby/base/base.yaml" />
   </node>
   <node pkg="sound_play" type="soundplay_node.py" name="sound_play" />
+  <include file="$(find openni_launch)/launch/openni.launch"/>
 
 </launch>
