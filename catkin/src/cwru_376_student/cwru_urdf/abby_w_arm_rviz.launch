@@ -27,7 +27,5 @@
 
 <node pkg="tf" type="static_transform_publisher" name="camera_link_frame_bdcst" args="0 0 0  0 0 0 1 kinect_link camera_link 100"/>
 
-<include file="$(find openni_launch)/launch/openni.launch"/>
-
 <node name="rviz" pkg="rviz" type="rviz" args="-d $(find cwru_urdf)/abby.rviz"></node>
 </launch>
