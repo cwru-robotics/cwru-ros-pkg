@@ -1,0 +1,26 @@
+3/21/15:
+
+started w/ rosbag from cwruBot of kinect/depth/points
+
+Code process_pcl.cpp does:
+*subscribe to topic /kinect/depth/points
+*also subscribes to /selected_points
+*computes normals of selected patches of points.
+
+*run roscore
+*run: rosrun example_pcl process_pcl 
+
+*start up rviz.  Set fixed frame to kinect frame: kinect_pc_frame, and add pointCloud2, w/ topic kinect/depth/points
+
+*do: rosbag play 2015-03-18-15-52-42.bag (using example recorded file 2015-03-18-15-52-42.bag )
+
+view shows up in rviz.  
+
+in rviz, click on "published selected points"
+
+process_pcl will compute centroid and normal of selected patch
+
+--next:
+  select 3 patches, define plane, transform points to frame of plane, filter points to keep only pts
+   w/|z| < Z_TOL
+
