@@ -1,9 +1,6 @@
-<<<<<<< HEAD
 # Created by https://www.gitignore.io
 
 ### ROS ###
-=======
->>>>>>> hydro/hydro
 build/
 bin/
 lib/
@@ -43,21 +40,11 @@ qtcreator-*
 /planning/cfg
 /planning/docs
 /planning/src
-<<<<<<< HEAD
 
 *~
 
-=======
-/catkin/devel/*
-*~
-.catkin_workspace
->>>>>>> hydro/hydro
 # Emacs
 .#*
 
 # Catkin custom files
 CATKIN_IGNORE
-<<<<<<< HEAD
-=======
-*.cmake
->>>>>>> hydro/hydro
