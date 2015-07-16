@@ -1,0 +1,41 @@
+<?xml version="10.0"?>
+
+<robot name="model_o" >
+
+  <link name="base_link" />
+  
+  <joint name="joint_1" type="fixed">
+    <parent link="base_link" />
+    <child link="d1_o" />
+    <origin rpy="0 0 0" xyz="0 0 0" />
+  </joint>
+
+  <link name="d1_o">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0.5 0.65 0.3" />
+      <mass value="1.0" />
+      <inertia ixx="1e-1" ixy="0" ixz="0" iyy="1e-1" iyz="0" izz="1e-1" />
+    </inertial>
+
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+	<mesh filename="package://openhand-hardware/model o/stl/d1_o.STL" scale="0.01 0.01 0.01" />
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0"/>
+      <geometry>
+	<mesh filename="package://openhand-hardware/model o/stl/d1_o_simple.STL" scale="0.01 0.01 0.01" />
+      </geometry>
+    </collision>      
+    <!-- <collision> -->
+    <!--   <origin rpy="0 0 0" xyz="0.5 0.65 0.3"/> -->
+    <!--   <geometry> -->
+    <!-- 	<box size="1 1.3 0.6" /> -->
+    <!--   </geometry> -->
+    <!-- </collision> -->
+  </link>
+
+</robot>

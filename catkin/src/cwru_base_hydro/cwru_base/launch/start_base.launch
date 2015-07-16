@@ -1,0 +1,26 @@
+<launch>
+	<include file="$(find cwru_configs)/$(optenv ROBOT sim)/base/static_transform.launch" />
+  <node pkg="cwru_base" type="crio_receiver" name="crio_receiver" output="screen">
+	<rosparam command="load" file="$(find cwru_configs)/$(optenv ROBOT sim)/base/diagnostics.yaml" />
+	<rosparam command="load" file="$(find cwru_configs)/$(optenv ROBOT sim)/base/base.yaml" />
+  </node>
+    <node pkg="cwru_base" type="odom_translator.py" name="odom_translator">
+        <rosparam command="load" file="$(find cwru_configs)/$(optenv ROBOT sim)/base/base.yaml" />
+    </node>
+  
+  <include file="$(find cwru_configs)/$(optenv ROBOT sim)/base/sonar.launch" />
+  
+  <node pkg="sicktoolbox_wrapper" type="sicklms" name="base_laser1" respawn="true">
+      <param name="port" type="string" value="/dev/ttyUSB0" />    
+      <param name="baud" type="int" value="500000" />
+      <param name="frame_id" type="string" value="/base_laser1_link" />
+      <param name="resolution" type="double" value="1.0" />
+      <remap from="scan" to="base_laser1_scan" />
+  </node>
+  
+  <node pkg="cwru_base" type="twist_receiver.py" name="twist_receiver">
+	<rosparam command="load" file="$(find cwru_configs)/$(optenv ROBOT sim)/base/base.yaml" />
+  </node>
+  <node pkg="sound_play" type="soundplay_node.py" name="sound_play" />
+
+</launch>

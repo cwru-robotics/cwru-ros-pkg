@@ -1,0 +1,51 @@
+gripper:
+  #Publish all joint states
+  joint_state_controller:
+    type: joint_state_controller/JointStateController
+    publish_rate: 50
+
+  #Effort Controllers
+  # First
+  mcp_first_joint_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: mcp_first_joint
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+
+  dc_first_joint_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: dc_first_joint
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+
+  # Second
+  mcp_second_joint_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: mcp_second_joint
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+
+  dc_second_joint_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: dc_second_joint
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+
+  # Third
+  mcp_third_joint_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: mcp_third_joint
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+
+  dc_third_joint_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: dc_third_joint
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+
+  # Fourth
+  mcp_fourth_joint_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: mcp_fourth_joint
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+
+  dc_fourth_joint_effort_controller:
+    type: effort_controllers/JointEffortController
+    joint: dc_fourth_joint
+    pid: {p: 100.0, i: 0.01, d: 10.0}
+

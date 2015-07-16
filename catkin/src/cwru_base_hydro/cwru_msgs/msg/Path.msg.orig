@@ -1,0 +1,9 @@
+#Standard header.
+Header header
+
+#List of path segments that should be executed
+<<<<<<< HEAD
+PathSegment[] segs
+=======
+cwru_msgs/PathSegment[] segs
+>>>>>>> 25dd335f7d670f2ed81b8f2262104044a9a56412

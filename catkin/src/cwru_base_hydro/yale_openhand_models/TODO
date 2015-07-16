@@ -1,0 +1,8 @@
+TODO:
+
+Decrease the resolution of the mesh files.
+
+Shift origin and orientation of the mesh files to allow use of DH
+   parameters in the URDF of the grippers.
+
+Attach controllers to the models.

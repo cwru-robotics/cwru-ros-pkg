@@ -1,0 +1,11 @@
+<launch>
+  <param name="amcl/initial_pose_x" type="double" value="7.8" />
+  <param name="amcl/initial_pose_y" type="double" value="14.5"/>
+  <param name="amcl/initial_pose_a" type="double" value="4" />
+  
+  <!--- Run AMCL -->
+  <include file="$(find cwru_nav)/launch/amcl_diff.launch" />
+
+  <!-- Startup the map of the second floor -->
+  <node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/2nd_floor_one_door.yaml" />
+</launch>

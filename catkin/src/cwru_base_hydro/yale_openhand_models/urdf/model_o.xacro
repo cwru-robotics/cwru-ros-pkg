@@ -1,0 +1,207 @@
+<?xml version="1.0"?>
+
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="model_o">
+  <xacro:property name="pi" value="3.14159265359" />
+
+  <link name="base_link"/>
+
+  <joint name="j1" type="fixed">
+    <parent link="base_link" />
+    <child link="d1_o" />
+    <origin rpy="0 0 0" xyz="0 0 0" />
+  </joint>
+
+  <link name="d1_o">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <mass value="1.0" />
+      <inertia ixx="1e-16" ixy="0" ixz="0" iyy="1e-16" iyz="0" izz="1e-16"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.5 -0.68 0" />
+      <geometry>
+	<mesh filename="package://yale_openhand_models/meshes/model_o/d1_o.STL" scale="0.01 0.01 0.01" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="-0.5 -0.68 0" />
+      <geometry>
+	<mesh filename="package://yale_openhand_models/meshes/model_o/d1_o_simple.STL" scale="0.01 0.01 0.01" />
+      </geometry>
+    </collision>
+    <!-- <collision> -->
+    <!--   <origin rpy="0 0 0" xyz="0 0 0.3" /> -->
+    <!--   <geometry> -->
+    <!-- 	<box size="1 1.3 .6" /> -->
+    <!--   </geometry> -->
+    <!-- </collision> -->
+  </link>
+
+  <joint name="j_2" type="fixed">
+    <parent link="d1_o" />
+    <child link="a1_o" />
+    <origin rpy="0 0 0" xyz="0 0 0.565" />
+  </joint>
+
+  <link name="a1_o">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <mass value="1e-16"/>
+      <inertia ixx="1e-16" ixy="0" ixz="0" iyy="1e-16" iyz="0" izz="1e-16"/>
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="-0.5 -0.68 0" />
+      <geometry>
+	<mesh filename="package://yale_openhand_models/meshes/model_o/a1_o.STL" scale="0.01 0.01 0.01" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 0.03" />
+      <geometry>
+	<box size="1 1.3 0.06" />
+      </geometry>
+    </collision>
+  </link>
+
+  <xacro:bases suffix="one" xoffset="0" yoffset="-0.38" zoffset="0.06" lowerr="${-pi/8}" upperr="${pi/8}" rot="${0}"/>
+  <xacro:bases suffix="two" xoffset="-0.255" yoffset="0.325" zoffset="0.06" lowerr="${0}" upperr="${pi/4}" rot="${pi}"/> 
+  <xacro:bases suffix="three" xoffset="0.255" yoffset="0.325" zoffset="0.06" lowerr="${-pi/4}" upperr="${0}" rot="${pi}"/> 
+
+  <xacro:macro name="bases" params="suffix xoffset yoffset zoffset rot lowerr upperr">
+    <joint name="j3_${suffix}" type="revolute">
+      <parent link="a1_o" />
+      <child link="c1_o_${suffix}" />
+      <origin rpy="0 ${-pi/2} ${rot}" xyz="${xoffset} ${yoffset} ${zoffset}" />
+      <axis xyz="1 0 0" />
+      <limit lower="${lowerr}" upper="${upperr}" effort="10" velocity="10" />
+    </joint>
+
+    <link name="c1_o_${suffix}">
+      <inertial>
+	<origin rpy="0 0 0" xyz="0 0 0" />
+	<mass value="1e-16"/>
+	<inertia ixx="1e-16" ixy="0" ixz="0" iyy="1e-16" iyz="0" izz="1e-16"/>
+      </inertial>
+      <visual>
+	<origin rpy="${pi/2} ${pi/2} 0" xyz="0 0.1775 0.1635 "/>
+	<geometry>
+	  <mesh filename="package://yale_openhand_models/meshes/model_o/c1_o.STL" scale="0.01 0.01 0.01" />
+	</geometry>
+      </visual>
+      <collision>
+	<origin rpy="0 ${pi/2} 0" xyz="0.025 0 0" />
+	<geometry>
+	  <cylinder radius="0.18" length="0.05" />
+	</geometry>
+      </collision>
+      <collision>
+	<origin rpy="0 0 0" xyz="0.11 0 0.12" />
+	<geometry>
+	  <box size="0.22 0.18 0.08" />
+	</geometry>
+      </collision>
+      <collision>
+	<origin rpy="0 0 0" xyz="0.215 0 0.12" />
+	<geometry>
+	  <cylinder radius="0.09" length="0.08" />
+	</geometry>
+      </collision>
+      <collision>
+	<origin rpy="0 0 0" xyz="0.11 0 -0.12" />
+	<geometry>
+	  <box size="0.22 0.18 0.08" />
+	</geometry>
+      </collision>
+      <collision>
+	<origin rpy="0 0 0" xyz="0.215 0 -0.12" />
+	<geometry>
+	  <cylinder radius="0.09" length="0.08" />
+	</geometry>
+      </collision>
+    </link>
+
+    <joint name="p1_${suffix}" type="revolute">
+      <parent link="c1_o_${suffix}" />
+      <child link="finger_pp_ext_mold1_A_o_${suffix}" />
+      <origin rpy="0 0 0" xyz="0.215 0 0" />
+      <axis xyz="0 0 1" />
+      <limit lower="${-pi/2}" upper="${pi/2}" effort="10" velocity="10" />
+    </joint>
+
+    <link name="finger_pp_ext_mold1_A_o_${suffix}">
+      <inertial>
+	<origin rpy="0 0 0" xyz="0 0 0" />
+	<mass value="1e-16"/>
+	<inertia ixx="1e-16" ixy="0" ixz="0" iyy="1e-16" iyz="0" izz="1e-16"/>
+      </inertial>
+      <visual>
+	<origin rpy="0 ${pi} ${pi/3.75}" xyz="0.755 0.005 0.08" />
+	<!-- <origin rpy="0 ${pi} ${pi/3.75}" xyz="0.51 -0.5615 0.08" /> -->
+	<geometry>
+	  <mesh filename="package://yale_openhand_models/meshes/model_o/finger_pp_ext_mold1_A_o.STL" scale="0.01 0.01 0.01"/>
+	</geometry>
+      </visual>
+      <collision>
+	<origion rpy="0 0 0" xyz="0 0 0"/>
+	<geometry>
+	  <cylinder radius="0.100" length="0.150" />
+	</geometry>
+      </collision>
+      <collision>
+	<origin rpy="0 0 0" xyz="0.3125 0 0" />
+	<geometry>
+	  <box size="0.625 0.20 0.150" />
+	</geometry>
+      </collision>
+      <collision>
+	<origin rpy="0 0 0" xyz="0.625 0 0.055" />
+	<geometry>
+	  <cylinder radius="0.095" length="0.04" />
+	</geometry>
+      </collision>
+      <collision>
+	<origin rpy="0 0 0" xyz="0.625 0 -0.055" />
+	<geometry>
+	  <cylinder radius="0.095" length="0.04" />
+	</geometry>
+      </collision>
+    </link>
+
+    <joint name="p2_${suffix}" type="revolute">
+      <parent link="finger_pp_ext_mold1_A_o_${suffix}" />
+      <child link="finger_pp_B_o_${suffix}" />
+      <origin rpy="0 0 0" xyz="0.625 0 0" />
+      <axis xyz="0 0 1" />
+      <limit lower="${-pi/2}" upper="${pi/2}" effort="10" velocity="10" />
+    </joint>
+
+    <link name="finger_pp_B_o_${suffix}">
+      <inertial>
+	<origin rpy="0 0 0" xyz="0 0 0" />
+	<mass value="1e-16"/>
+	<inertia ixx="1e-16" ixy="0" ixz="0" iyy="1e-16" iyz="0" izz="1e-16"/>
+      </inertial>
+      <visual>
+	<origin rpy="0 0 ${pi/1.65}" xyz="0.486 0.026 -0.08" />
+	<geometry>
+	  <mesh filename="package://yale_openhand_models/meshes/model_o/finger_pp_B_o.STL" scale="0.01 0.01 0.01" />
+	</geometry>
+      </visual>
+      <collision>
+	<origin rpy="0 0 0" xyz="0 0 0" />
+	<geometry>
+	  <cylinder radius="0.090" length="0.08" />
+	</geometry>
+      </collision>
+      <collision>
+	<origin rpy="0 0 0" xyz="0.290 0.050 0" />
+	<geometry>
+	  <box size="0.40 0.18 0.16" />
+	</geometry>
+      </collision>
+    </link>
+
+
+  </xacro:macro>
+
+</robot>

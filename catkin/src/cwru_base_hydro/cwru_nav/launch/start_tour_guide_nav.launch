@@ -1,0 +1,23 @@
+<launch>
+  <!--- Run AMCL -->
+  <group ns="amcl">
+    <include file="$(find cwru_nav)/amcl_diff.launch" />
+    <node pkg="map_server" type="map_server" name="localization_map_server" args="$(find cwru_maps)/maps/3rd_floor_removed_behind_glass/map.yaml" >
+    </node>
+  </group>
+
+  <include file="$(find cwru_nav)/launch/start_map_as_sensor.launch" />
+  <include file="$(find cwru_nav)/launch/sonar_filter.launch" />
+
+  <node pkg="map_server" type="map_server" name="obstacle_map_server" args="$(find cwru_maps)/maps/3rd_floor_obstacles/map.yaml" />
+
+ <node launch-prefix="xterm -e gdb --args" pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+
+    <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_local_params.yaml" command="load" />
+    <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/costmap_global_params.yaml" command="load" />
+    <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/base_local_planner_params.yaml" command="load" />
+    <rosparam file="$(find cwru_configs)/$(optenv ROBOT sim)/nav/move_base_params.yaml" command="load" />
+  </node>
+</launch>

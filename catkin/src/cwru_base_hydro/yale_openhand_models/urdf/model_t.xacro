@@ -1,0 +1,217 @@
+<?xml version="1.0"?>
+
+<!-- <robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="model_T_1p0p0"> -->
+<robot xmlns:xacro="http://www.ros.org/wiki/xacro" name="gripper">
+  <xacro:property name="stl_scale_factor" value="0.001" />
+  <xacro:property name="pi" value="3.14159265359" />
+  <xacro:property name="base_height" value="12.5" />
+  <xacro:property name="base_radius" value="50.5" />
+
+  <xacro:property name="prox_length" value="62.5" />
+  <xacro:property name="dist_length" value="38" />
+
+  <xacro:include filename="gripper.gazebo" />
+
+  <xacro:property name="controller" value="EffortJointInterface" />
+  
+  <xacro:macro name="trans" params="joint_name">
+    <transmission name="${joint_name}_trans">
+      <type>transmission_interface/SimpleTransmission</type>
+      <joint name="${joint_name}"/>
+      <actuator name="${joint_name}_actuator">
+	<hardwareInterface>${controller}</hardwareInterface>
+	<mechanicalReduction>1</mechanicalReduction>
+      </actuator>
+    </transmission>
+  </xacro:macro>
+  
+  <link name="base_link"/>
+
+  <joint name="base_joint" type="fixed">
+    <parent link="base_link" />
+    <child link="d1_a_t" />
+  </joint>
+
+  <link name="d1_a_t">
+    <inertial>
+      <origin rpy="0 0 0" xyz="0 0 0" />
+      <mass value="1e-2" />
+      <inertia ixx="1e-3" ixy="0" ixz="0" iyy="1e-3" iyz="0" izz="1e-3" />
+    </inertial>
+    <visual>
+      <origin rpy="0 0 0" xyz="0 0 ${stl_scale_factor * 29}" />
+      <geometry>
+	<cylinder radius="${stl_scale_factor * base_radius}" length="${stl_scale_factor * 58}" />
+      </geometry>
+    </visual>
+    <collision>
+      <origin rpy="0 0 0" xyz="0 0 ${stl_scale_factor * 29}" />
+      <geometry>
+	<cylinder radius="${stl_scale_factor * base_radius}" length="${stl_scale_factor * 58}" />
+      </geometry>
+    </collision>
+  </link>
+
+  <joint name="base_joint_2" type="fixed">
+    <parent link="d1_a_t" />
+    <child link="a1" />
+    <origin rpy="0 0 0" xyz="0 0 ${stl_scale_factor * 58}" />
+  </joint>
+
+  <link name="a1">
+    <visual>
+      <origin xyz="${-base_radius * stl_scale_factor} ${base_radius * stl_scale_factor} ${base_height * stl_scale_factor}" rpy="${pi} 0 0" />
+      <geometry>
+	<mesh filename="package://yale_openhand_models/meshes/model_t/a1_p_t.STL" scale="${stl_scale_factor} ${stl_scale_factor} ${stl_scale_factor}" />
+      </geometry>
+    </visual>
+
+    <collision>
+      <origin xyz="0 0 ${stl_scale_factor * base_height / 2}" rpy="0 0 0" />
+      <geometry>
+	<cylinder radius="${stl_scale_factor * base_radius}" length="${stl_scale_factor * base_height}" />
+      </geometry>
+    </collision>
+  </link>
+
+  <xacro:finger prefix="first" side="1" num="0"/>
+  <xacro:finger prefix="third" side="-1" num="0"/>
+  <xacro:finger prefix="second" side="1" num="1"/>
+  <xacro:finger prefix="fourth" side="-1" num="1"/>
+
+  <xacro:macro name="finger" params="prefix side num">
+
+    <joint name="finger_base_${prefix}_joint" type="fixed">
+      <parent link="a1" />
+      <child link="finger_base_${prefix}" />
+      <origin xyz="${side * stl_scale_factor * (9.6 - num * 36.7)} ${side * stl_scale_factor * 1.25} ${stl_scale_factor * (base_height - 6.0)}" rpy="${pi/2} 0 ${side * pi/2}" />
+    </joint>
+
+    <link name="finger_base_${prefix}">
+      <inertial>
+	<origin rpy="0 0 0" xyz="0 0 0" />
+	<mass value="0.8" />
+	<inertia ixx="1e-2" ixy="0" ixz="0" iyy="1e-2" iyz="0" izz="1e-2" />
+      </inertial>
+
+      <visual>
+	<origin xyz="0  ${stl_scale_factor * 31.5} ${12 * stl_scale_factor}" rpy="${-pi} 0 0" />
+	<geometry>
+	  <mesh filename="package://yale_openhand_models/meshes/model_t/c1_t.STL"  scale="${stl_scale_factor} ${stl_scale_factor} ${stl_scale_factor}" />
+	</geometry>
+      </visual>
+
+      <collision>
+	<origin xyz="${stl_scale_factor * 12.5} ${stl_scale_factor * 15} ${-stl_scale_factor * 0.5}" rpy="0 0 0" />
+	<geometry>
+	  <box size="${stl_scale_factor * 20} ${stl_scale_factor * 20} ${stl_scale_factor * 25}"/>
+	</geometry>
+      </collision>
+
+      <collision>
+	<origin rpy="0 0 0" xyz="${stl_scale_factor * 12.85}  ${stl_scale_factor * 22.55} ${stl_scale_factor * (0.5 - 11)}" />
+	<geometry>
+	  <cylinder radius="${stl_scale_factor * 9}" length="${stl_scale_factor * 4}" />
+	</geometry>
+      </collision>
+
+      <collision>
+	<origin rpy="0 0 0" xyz="${stl_scale_factor * 12.85}  ${stl_scale_factor * 22.55} ${stl_scale_factor * (0.5 - 11)}" />
+	<geometry>
+	  <cylinder radius="${stl_scale_factor * 9}" length="${stl_scale_factor * 4}" />
+	</geometry>
+      </collision>
+    </link>
+  
+    <joint name="mcp_${prefix}_joint" type="revolute" >
+      <parent link="finger_base_${prefix}" />
+      <child link="prox_phal_${prefix}"/>
+      <origin rpy="0 0 ${pi/2 - 42.25 * pi/180}" xyz="${stl_scale_factor * 12.85} ${stl_scale_factor * 22.55} ${-stl_scale_factor * 0.5}" />
+      <axis xyz="0 0 1" />
+      <limit lower="${-pi/4}" upper="${pi/4}" effort="10" velocity="10" />
+    </joint>
+    <xacro:trans joint_name="mcp_${prefix}_joint" />
+    
+    <link name="prox_phal_${prefix}">
+      <inertial>
+	<origin rpy="0 0 0" xyz="0 0 0" />
+	<mass value="1e-2" />
+	<inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4" />
+      </inertial>
+
+      <visual>
+	<origin rpy="${pi} 0 ${-pi/2 - 42.25 * pi/180}" xyz="${stl_scale_factor * 75.25} ${stl_scale_factor * 0.75} ${stl_scale_factor * 8.1}" />
+	<geometry>
+	  <mesh filename="package://yale_openhand_models/meshes/model_t/finger_pp_ext_A_t.STL" scale="${stl_scale_factor} ${stl_scale_factor} ${stl_scale_factor}"/>
+	</geometry>
+      </visual>
+
+      <collision>
+	<origin xyz="${stl_scale_factor * prox_length/2} 0 0" rpy="0 0 0" />
+	<geometry>
+	  <box size="${stl_scale_factor * prox_length} ${stl_scale_factor * 20} ${stl_scale_factor * 16} " />
+	</geometry>
+      </collision>
+
+      <collision>
+	<origin rpy="0 0 0" xyz="${stl_scale_factor * 62.5}  ${stl_scale_factor * 0} ${stl_scale_factor * 6}" />
+	<geometry>
+	  <cylinder radius="${stl_scale_factor * 9}" length="${stl_scale_factor * 4}" />
+	</geometry>
+      </collision>
+
+      <collision>
+	<origin rpy="0 0 0" xyz="${stl_scale_factor * 62.5}  ${stl_scale_factor * 0} ${-stl_scale_factor * 6}" />
+	<geometry>
+	  <cylinder radius="${stl_scale_factor * 9}" length="${stl_scale_factor * 4}" />
+	</geometry>
+      </collision>
+    </link>
+    
+    <joint name="dc_${prefix}_joint" type="revolute">
+      <parent link="prox_phal_${prefix}" />
+      <child link="dist_phal_${prefix}" />
+      <axis xyz="0 0 1" rpy="0 0 0" />
+      <limit lower="${-pi/2}" upper="${pi/2}" effort="10" velocity="10" />
+      <origin rpy="0 0 ${18 * pi/180}" xyz="${stl_scale_factor * 62.5} 0 0" />
+    </joint>
+<xacro:trans joint_name="dc_${prefix}_joint" />    
+    <link name="dist_phal_${prefix}">
+      <inertial>
+	<origin rpy="0 0 0" xyz="0 0 0" />
+	<mass value="1e-2" />
+	<inertia ixx="1e-4" ixy="0" ixz="0" iyy="1e-4" iyz="0" izz="1e-4" />
+      </inertial>
+
+      <visual>
+	<origin rpy="0 0 ${pi/2 + 18 * pi/180}" xyz=" ${stl_scale_factor * 48.35} ${stl_scale_factor * 1.75} ${-stl_scale_factor * 8}" />
+	<geometry>
+	  <mesh filename="package://yale_openhand_models/meshes/model_t/finger_pp_B_t.STL" scale="${stl_scale_factor} ${stl_scale_factor} ${stl_scale_factor}" />
+	</geometry>
+      </visual>
+
+      <collision>
+	<origin rpy="0 0 0" xyz="${stl_scale_factor * (dist_length/2 + 9)} 0 0" />
+	<geometry>
+	  <box size="${stl_scale_factor * dist_length} ${stl_scale_factor * 20} ${stl_scale_factor * 16}" />
+	</geometry>
+      </collision>
+
+      <collision>
+	<origin rpy="0 0 0" xyz="0 0 0" />
+	<geometry>
+	  <cylinder radius="${stl_scale_factor * 9}" length="${stl_scale_factor * 8}" />
+	</geometry>
+      </collision>
+
+      <collision>
+	<origin rpy="0 0 0" xyz="${stl_scale_factor * 4.5} 0 0" />
+	<geometry>
+	  <box size="${stl_scale_factor * 9} ${stl_scale_factor * 18} ${stl_scale_factor * 8}" />
+	</geometry>
+      </collision>
+    </link>
+
+  </xacro:macro>
+  
+</robot>

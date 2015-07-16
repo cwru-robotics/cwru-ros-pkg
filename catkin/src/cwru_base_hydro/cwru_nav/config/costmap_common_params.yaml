@@ -1,0 +1,21 @@
+map_type: voxel
+
+obstacle_range: 5.0
+raytrace_range: 6.0 
+footprint: [[0.3048, 0.3048], [0.3048, -0.3048], [-0.711, -0.3048], [-0.711, 0.3048]]
+#footprint_padding: 0.25
+inflation_radius: 1.0
+
+#Scale the exponential decay so that it is basically a step function that drops to 0 at the inflation radius
+#cost_scaling_factor: 0.0
+cost_scaling_factor: 11.8
+
+observation_sources: base_laser1
+
+base_laser1: {sensor_frame: base_laser1_link, data_type: LaserScan, topic: /base_laser1_scan, marking: true, clearing: true, max_obstacle_height: 0.6, min_obstacle_height: 0.4}
+front_sonar: {sensor_frame: front_sonar, data_type: LaserScan, topic: /front_sonar_scan, marking: true, clearing: true, max_obstacle_height: 0.8, min_obstacle_height: 0.6}
+#laser_scan_sensor: {sensor_frame: frame_name, data_type: LaserScan, topic: topic_name, marking: true, clearing: true}
+#
+bounding_box: {sensor_frame: bounding_box, data_type: PointCloud, topic: /bounding_box, marking: true, clearing: false, obstacle_range: 400.0, max_obstacle_height: 2.0, min_obstacle_height: 1.8}
+
+vision_cloud: {sensor_frame: vision_cloud, data_type: PointCloud, topic: /vision_cloud, marking: true, clearing: true, max_obstacle_height: 0.2, min_obstacle_height: 0.0}

@@ -1,0 +1,33 @@
+<launch>
+  <node pkg="laser_filters" type="scan_to_scan_filter_chain"
+      name="sonar_filter_1">
+    <rosparam command="load" file="$(find cwru_nav)/sonar_config.yaml" />
+    <remap from="scan" to="sonar_scan_1" />
+    <remap from="scan_filtered" to="sonar_scan_1_clearing" />
+  </node>
+
+ <node pkg="laser_filters" type="scan_to_scan_filter_chain"
+      name="sonar_filter_2">
+    <rosparam command="load" file="$(find cwru_nav)/sonar_config.yaml" />
+    <remap from="scan" to="sonar_scan_2" />
+    <remap from="scan_filtered" to="sonar_scan_2_clearing" />
+  </node>
+ <node pkg="laser_filters" type="scan_to_scan_filter_chain"
+      name="sonar_filter_3">
+    <rosparam command="load" file="$(find cwru_nav)/sonar_config.yaml" />
+    <remap from="scan" to="sonar_scan_3" />
+    <remap from="scan_filtered" to="sonar_scan_3_clearing" />
+  </node>
+ <node pkg="laser_filters" type="scan_to_scan_filter_chain"
+      name="sonar_filter_4">
+    <rosparam command="load" file="$(find cwru_nav)/sonar_config.yaml" />
+    <remap from="scan" to="sonar_scan_4" />
+    <remap from="scan_filtered" to="sonar_scan_4_clearing" />
+  </node>
+ <node pkg="laser_filters" type="scan_to_scan_filter_chain"
+      name="sonar_filter_5">
+    <rosparam command="load" file="$(find cwru_nav)/sonar_config.yaml" />
+    <remap from="scan" to="sonar_scan_5" />
+    <remap from="scan_filtered" to="sonar_scan_5_clearing" />
+  </node>
+</launch>

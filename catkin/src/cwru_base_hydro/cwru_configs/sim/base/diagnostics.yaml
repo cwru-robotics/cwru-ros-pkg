@@ -1,0 +1,9 @@
+encoders:
+  lenc_high_warn: 15.1
+  lenc_low_warn: 14.9
+  lenc_high_err: 16.0
+  lenc_low_err: 14.0
+  renc_high_warn: 15.1
+  renc_low_warn: 14.9
+  renc_high_err: 16.0
+  renc_low_err: 14.0

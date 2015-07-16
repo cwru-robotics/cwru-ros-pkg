@@ -1,0 +1,63 @@
+<launch>
+
+  <!-- these are the arguments you can pass this launch file, for example paused:=true -->
+  <arg name="paused" default="false"/>
+  <arg name="use_sim_time" default="true"/>
+  <arg name="gui" default="true"/>
+  <arg name="headless" default="false"/>
+  <arg name="debug" default="false"/>
+
+  <!-- We resume the logic in empty_world.launch, changing only the name of the world to be launched -->
+  <include file="$(find gazebo_ros)/launch/empty_world.launch">
+    <arg name="world_name" value="$(find abby_gazebo)/worlds/abby.world"/>
+    <arg name="debug" value="$(arg debug)" />
+    <arg name="gui" value="$(arg gui)" />
+    <arg name="paused" value="$(arg paused)"/>
+    <arg name="use_sim_time" value="$(arg use_sim_time)"/>
+    <arg name="headless" value="$(arg headless)"/>
+  </include>
+
+<param name="robot_description" command="$(find xacro)/xacro.py '$(find cwru_urdf)/abby_w_arm_urdf.xacro'" />
+
+<!-- Spawn a robot into Gazebo -->
+<node name="spawn_urdf" pkg="gazebo_ros" type="spawn_model" args="-param robot_description -urdf -model abby" />
+
+  <!-- ros_control abby launch file -->
+  <include file="$(find abby_control)/launch/irb120_control.launch">
+ </include>
+  <!--rosrun example_robot_interface example_robot_interface -->
+  <node name="ros_i_interface" pkg="example_robot_interface" type="example_robot_interface" respawn="true" output="screen"/>
+
+<node name="joint_state_publisher" pkg="joint_state_publisher" type="joint_state_publisher" ></node>
+<param name="rate" value="100" />
+<!--node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher" /-->
+<!--node pkg="tf" type="static_transform_publisher" name="base_link_xf" args="-0.06 -0.045 0.105 0 0 0.707 0.707 base_frame frame1 100"/-->
+
+<!--node name="base_footprint_base_link_static_publisher" pkg="tf" type="static_transform_publisher" args="0 0 0 0 0 0 1 base_footprint base_link 100" /-->
+<!-- Convert an xacro and put on parameter server -->
+
+<!-- publish wheel transforms for rviz -->
+<node pkg="tf" type="static_transform_publisher" name="l_wheel_broadcaster" args="0.01 -0.217 0.148 0 0 0.707 0.707 frame_solid:11 l_drive_wheel1 10" />
+<node pkg="tf" type="static_transform_publisher" name="r_wheel_broadcaster" args="-0.50 -0.217 0.148 0 0 0.707 0.707 frame_solid:11 r_drive_wheel1 20" />
+
+<node pkg="tf" type="static_transform_publisher" name="r_caster1_broadcaster" args="-0.445 -0.155 0.625 0 0 0 1 frame_solid:11 r_caster1 10" />
+
+<node pkg="tf" type="static_transform_publisher" name="r_caster_wheel1_broadcaster" args="-0.485 -0.292 0.68 0 0 0.707 0.707 frame_solid:11 r_caster_wheel1 10" />
+
+<node pkg="tf" type="static_transform_publisher" name="l_caster1_broadcaster" args="-0.01 -0.155 0.625 0 0 0 1 frame_solid:11 l_caster1 10" />
+
+<node pkg="tf" type="static_transform_publisher" name="l_caster_wheel1_broadcaster" args="-0.05 -0.292 0.68 0 0 0.707 0.707 frame_solid:11 l_caster_wheel1 10" />
+
+<!-- fix the point-cloud transform; this is just a little off, since robot model is tilting forward slightly  -->
+<node pkg="tf" type="static_transform_publisher" name="kinect_calib" args="0 0 0 -0.500 0.500 -0.500 0.500 kinect_link kinect_pc_frame 100"/>
+
+<!-- may need additional transforms to line up video, which is slightly shifted from point cloud; comment out for now  -->
+<!--node pkg="tf" type="static_transform_publisher" name="camera_depth_frame" args="0.000 -0.020 0.000 0.000 0.000 0.000 1.000  $(arg camera_name)/camera_link $(arg camera_name)/camera_depth_frame 100"/>
+
+<node pkg="tf" type="static_transform_publisher" name="camera_depth_optical_frame" args="0.000 -0.020 0.000 -0.500 0.500 -0.500 0.500 $(arg camera_name)/camera_link $(arg camera_name)/camera_depth_optical_frame 100"/>
+
+<node pkg="tf" type="static_transform_publisher" name="camera_rgb_frame" args="0.000 -0.045 0.000 0.000 0.000 0.000 1.000 $(arg camera_name)/camera_link $(arg camera_name)/camera_rgb_frame 100"/>
+
+<node pkg="tf" type="static_transform_publisher" name="camera_rgb_optical_frame" args="0.000 -0.045 0.000 -0.500 0.500 -0.500 0.500  $(arg camera_name)/camera_link $(arg camera_name)/camera_rgb_optical_frame 100"/-->
+
+</launch>

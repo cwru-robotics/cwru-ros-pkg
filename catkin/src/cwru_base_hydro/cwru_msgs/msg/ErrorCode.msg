@@ -1,0 +1,3 @@
+int32 PLANNING_FAILED=-1
+int32 SUCCESS=1
+int32 val

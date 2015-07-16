@@ -1,0 +1,22 @@
+<launch>
+    <node pkg="cwru_base" type="sonar_translator.py" name="sonar_1_translator">
+		  <remap from="sonar" to="sonar_1" />
+		  <remap from="sonar_scan" to="sonar_scan_1" />
+    </node>
+    <node pkg="cwru_base" type="sonar_translator.py" name="sonar_2_translator">
+		<remap from="sonar" to="sonar_2" />
+		<remap from="sonar_scan" to="sonar_scan_2" />
+    </node>
+    <node pkg="cwru_base" type="sonar_translator.py" name="sonar_3_translator">
+		<remap from="sonar" to="sonar_3" />
+		<remap from="sonar_scan" to="sonar_scan_3" />
+    </node>
+    <node pkg="cwru_base" type="sonar_translator.py" name="sonar_4_translator">
+		<remap from="sonar" to="sonar_4" />
+		<remap from="sonar_scan" to="sonar_scan_4" />
+    </node>
+    <node pkg="cwru_base" type="sonar_translator.py" name="sonar_5_translator">
+		<remap from="sonar" to="sonar_5" />
+		<remap from="sonar_scan" to="sonar_scan_5" />
+    </node>
+</launch>
