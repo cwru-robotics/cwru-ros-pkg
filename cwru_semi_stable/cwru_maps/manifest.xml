@@ -1,13 +1,18 @@
 <package>
-  <description brief="cwru_maps">
+	<description brief="cwru_maps">
 
-     cwru_maps
+		cwru_maps
 
-  </description>
-  <author>Eric Perko</author>
-  <license>LGPL</license>
-  <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/cwru_maps</url>
+	</description>
+	<author>Eric Perko</author>
+	<license>LGPL</license>
+	<review status="unreviewed" notes=""/>
+	<url>http://ros.org/wiki/cwru_maps</url>
+	<depend package="gazebo" />
+
+	<export>
+		<gazebo gazebo_media_path="${prefix}" />
+	</export>
 
 </package>
 
