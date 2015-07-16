@@ -1,7 +1,0 @@
-<library path="lib/libplaysound_recovery">
-	<class name="playsound_recovery/PlaySoundRecovery" type="playsound_recovery::PlaySoundRecovery" base_class_type="nav_core::RecoveryBehavior">
-		<description>
-			A recovery behavior that plays a sound in order to influence whatever object is blocking us to move.
-		</description>
-	</class>
-</library>

@@ -1,6 +1,0 @@
-<launch>
-	<node name="cwru_goal_planner" pkg="cwru_goal_planner" type="kml_goal_reader.py">
-	    <rosparam file="$(find cwru_goal_planner)/config/gps_constants.yaml" command="load" />
-	    <param name="filename" value="$(find cwru_goal_planner)/goals/igvc_practice.kml" />
-	</node>
-</launch>

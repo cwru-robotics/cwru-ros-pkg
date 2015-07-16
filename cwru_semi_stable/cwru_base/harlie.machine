@@ -1,3 +1,0 @@
-<launch>
-    <machine name="mainCPU" address="192.168.1.150" user="harlie" ros-root="$(env ROS_ROOT)" ros-package-path="$(env ROS_PACKAGE_PATH)" default="true" /> 
-</launch>

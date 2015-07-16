@@ -1,5 +1,0 @@
-<launch>
-	<node name="cwru_goal_planner" pkg="cwru_goal_planner" type="simple_goal_reader.py">
-	    <param name="filename" value="$(find cwru_goal_planner)/goals/quad_figure_eight.yaml" />
-	</node>
-</launch>

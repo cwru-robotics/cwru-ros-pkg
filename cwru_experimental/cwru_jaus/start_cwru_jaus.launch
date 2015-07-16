@@ -1,6 +1,0 @@
-<launch>
-	<node pkg="cwru_jaus" type="cwru_jaus" name="cwru_jaus_node" output="screen">
-	    <remap from="harlie_pose" to="/pose" />		
-	    <rosparam file="$(find cwru_goal_planner)/config/gps_constants.yaml" command="load" />
-	</node>	
-</launch>

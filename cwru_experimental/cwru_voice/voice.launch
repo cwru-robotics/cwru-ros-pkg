@@ -1,5 +1,0 @@
-<launch>
-
-<node pkg="cwru_voice" type="voice_cmd.py" name="voice_cmd" />
-    <node pkg="cwru_voice" type="say.py" name="say" />
-</launch>

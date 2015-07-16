@@ -1,3 +1,0 @@
-<launch>
-    <machine name="mainCPU" address="harlie.case.edu" user="harlie" ros-root="$(env ROS_ROOT)" ros-package-path="$(env ROS_PACKAGE_PATH)" default="true" /> 
-</launch>

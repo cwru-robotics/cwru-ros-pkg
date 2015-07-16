@@ -1,6 +1,0 @@
-scan_filter_chain:
-- name: sonar_filter
-  type: LaserScanSonarFilter
-  params:
-    alpha: 0.02
-

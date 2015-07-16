@@ -1,7 +1,0 @@
-<launch>
-
-<include file="$(find cwru_urdf)/cwru_urdf.launch" />
-
-<node name="spawn_harlie" pkg="gazebo" type="spawn_model" args="-urdf -param robot_description -model harlie" respawn="false" output="screen" />
-
-</launch>

@@ -1,7 +1,0 @@
-<launch>
-    <param name="/use_sim_time" value="true" />
-    <include file="$(find cwru_sim_stage)/move_base.launch" />
-    <node name="map_server" pkg="map_server" type="map_server" args="$(find cwru_maps)/maps/2nd_floor_one_door.yaml" />
-    <node pkg="stage" type="stageros" name="stageros" args="$(find cwru_maps)/worlds/2nd_floor_one_door.world" respawn="false" /> 
-    <node name="sound_play" pkg="sound_play" type="soundplay_node.py" />
-</launch>

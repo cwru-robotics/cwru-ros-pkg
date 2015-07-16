@@ -1,9 +1,0 @@
-<class_libraries>
-  <library path="lib/libcwru_laser_scan_filters">
-    <class name="LaserScanSonarFilter" type="laser_filters::LaserScanSonarFilter" 
-	    base_class_type="filters::FilterBase<sensor_msgs::LaserScan>">
-      <description>
-	This is a filter which is used for sonar filter so we can clear sonar data without marking it
-      </description>
-    </class>
-</class_libraries>

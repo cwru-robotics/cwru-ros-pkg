@@ -1,7 +1,0 @@
-<library path="lib/libwagon_handle_steering">
-	<class name="wagon_handle_steering/WagonHandleSteering" type="wagon_handle_steering::WagonHandleSteering" base_class_type="nav_core::BaseLocalPlanner">
-    <description>
-      A implementation of a local planner that uses a wagon handle algorithm to follow the plan
-    </description>
-  </class>
-</library>

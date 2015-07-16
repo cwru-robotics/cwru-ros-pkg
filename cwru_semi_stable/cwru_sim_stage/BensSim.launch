@@ -1,7 +1,0 @@
-<launch>
-    <param name="/use_sim_time" value="true" />
-    <param name="/global_frame_id" value="/odom" />
-    <include file="$(find cwru_sim_stage)/Bens_Sim_Move_Base.launch" />
-    <node pkg="stage" type="stageros" name="stageros" args="$(find cwru_maps)/worlds/Bens.world" respawn="false" /> 
-    <include file="$(find cwru_sim_stage)/nav_view.launch"/>
-</launch>

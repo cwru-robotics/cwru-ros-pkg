@@ -1,5 +1,0 @@
-Header header
-float32 battery_voltage
-float32 cRIO_voltage
-float32 v13_8_voltage
-float32 motor_voltage

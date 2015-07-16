@@ -1,3 +1,0 @@
-<launch>
-	<include file="$(find cwru_configs)/$(optenv ROBOT sim)/vision/launch_cameras.launch" />
-</launch>

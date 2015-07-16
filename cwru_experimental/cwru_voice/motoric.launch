@@ -1,5 +1,0 @@
-<launch>
-<node pkg="cwru_voice" type="motoric_cmd.py" name="motoric_cmd" />
-<node pkg="cwru_voice" type="say.py" name="say" />
-<node pkg="cwru_voice" type="verbal_joystick.py" name="verbal_joystick" />
-</launch>

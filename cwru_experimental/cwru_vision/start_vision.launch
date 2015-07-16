@@ -1,7 +1,0 @@
-<launch>
-	<node pkg="cwru_vision" type="harlie_vision" name="harlie_vision_node">
-		<remap from="image_rect_color" to="/front_camera/image_rect_color" />
-	</node>
-	<node pkg="cwru_vision" type="image_to_point_cloud.py" name="point_cloud_transmogrifier"/>
-	<node pkg="tf" type="static_transform_publisher" name="vision_cloud_tf_broadcaster" args="0.0 0.0 0.0 0.0 0.0 0.0 base_link vision_cloud 100" />
-</launch>
